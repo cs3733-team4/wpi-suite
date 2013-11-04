@@ -44,3 +44,6 @@ Janeway/janeway.conf
 
 RequirementManager/build
 RequirementManager/bin
+
+bin/
+*.project
