@@ -360,7 +360,8 @@ public class Requirement extends AbstractModel {
 			this.setEstimateEdited(true);
 		}	
 		
-		int diff = estimate - this.estimate;
+		//this was unused
+		//int diff = estimate - this.estimate;
 		this.estimate = estimate;
 	}
 

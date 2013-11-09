@@ -66,4 +66,11 @@
 			inheritAll="false"/>
 	</target>
 
+	<target name="depend.Calendar"
+		depends="depend.Janeway">
+		<ant dir="${dependencies.basedir}/IncrediblyGorgeousCalendar"
+			target="${dependency.target}"
+			inheritAll="false"/>
+	</target>
+
 </project>

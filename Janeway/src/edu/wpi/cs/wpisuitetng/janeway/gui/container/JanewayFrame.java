@@ -67,8 +67,16 @@ public class JanewayFrame extends JFrame {
 
 		// Set the window size and position based on screen size
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		
+		//this was just plain awful for users with two monitors, it's better now
 		int width = (int)(dim.width * 0.85);
 		int height = (int)(dim.height * 0.85);
+		if (width > 1632 || height > 918)
+		{ // this user has a greater than 1920x1080 screen, ie, double monitors, and the windows size must be fixed
+			width  = 900;
+			height = 600;
+		}
+		
 		int xPos = (dim.width - width) / 2;
 		int yPos = (int)((dim.height - height) / 2 * .75);
 		setBounds(xPos, yPos, width, height);

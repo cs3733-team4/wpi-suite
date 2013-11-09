@@ -135,6 +135,7 @@ ItemListener, RequirementPanelListener, RequirementSelectorListener {
 
 		JScrollPane descrScroll = new JScrollPane();
 		boxDescription = new JTextArea();
+		boxDescription.setWrapStyleWord(true);
 		boxDescription.setLineWrap(true);
 		boxDescription.setBorder(defaultBorder);
 		boxDescription.addKeyListener(this);

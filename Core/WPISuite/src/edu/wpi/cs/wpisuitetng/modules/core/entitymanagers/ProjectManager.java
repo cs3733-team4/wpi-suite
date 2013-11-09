@@ -157,7 +157,7 @@ public class ProjectManager implements EntityManager<Project>{
 	public Project[] getEntityByName(Session s, String projectName) throws NotFoundException, WPISuiteException
 	{
 		Project[] m = new Project[1];
-		if(projectName.equalsIgnoreCase(""))
+		if("".equalsIgnoreCase(projectName))
 		{
 			throw new NotFoundException("No (blank) Project name given.");
 		}
