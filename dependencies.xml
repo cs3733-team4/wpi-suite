@@ -10,7 +10,7 @@
 
 	<!-- This target should have dependencies such that all projects are depended upon -->
 	<target name="depend.all"
-		depends="depend.Janeway, depend.WPISuite, depend.DefectTracker, depend.PostBoard, depend.RequirementManager">
+		depends="depend.Janeway, depend.WPISuite, depend.DefectTracker, depend.PostBoard, depend.RequirementManager, depend.Calendar">
 	</target>
 
 	<!--
