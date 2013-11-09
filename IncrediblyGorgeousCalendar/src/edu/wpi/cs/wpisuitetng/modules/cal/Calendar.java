@@ -10,6 +10,8 @@
 package edu.wpi.cs.wpisuitetng.modules.cal;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +20,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
 
 import edu.wpi.cs.wpisuitetng.janeway.modules.IJanewayModule;
 import edu.wpi.cs.wpisuitetng.janeway.modules.JanewayTabModel;
@@ -42,11 +46,20 @@ public class Calendar implements IJanewayModule {
 		// Setup button panel
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new FlowLayout());
-		buttonPanel.add(new JButton("DIS B A BUTTIN"));
-
+		buttonPanel.add(new JButton("Add Event"));
+		buttonPanel.add(new JButton("Edit Event Event"));
+		buttonPanel.add(new JButton(" "));
+		buttonPanel.add(new JButton("Day"));
+		buttonPanel.add(new JButton("Month"));
+		buttonPanel.add(new JButton("Year"));
+		buttonPanel.setMaximumSize(new Dimension(1920, 50));
+		
+		JPanel mainPanel = new MainPanel();
 		tabs = new ArrayList<JanewayTabModel>();
-		JanewayTabModel tab = new JanewayTabModel("Calendar", new ImageIcon(), buttonPanel, new JPanel());
+		JanewayTabModel tab = new JanewayTabModel("Calendar", new ImageIcon(), buttonPanel, mainPanel);
+		
 		tabs.add(tab);
+		
 	}
 
 	/**
@@ -63,6 +76,7 @@ public class Calendar implements IJanewayModule {
 	@Override
 	public List<JanewayTabModel> getTabs() {
 		return tabs;
+		
 	}
 
 }
