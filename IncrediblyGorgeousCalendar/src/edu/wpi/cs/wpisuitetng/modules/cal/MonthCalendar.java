@@ -6,11 +6,10 @@ package edu.wpi.cs.wpisuitetng.modules.cal;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-import org.joda.time.DateTime;
-import org.joda.time.MutableDateTime;
+
+import javax.swing.*;
+
+import org.joda.time.*;
 
 /**
  *
@@ -18,41 +17,40 @@ import org.joda.time.MutableDateTime;
  */
 public class MonthCalendar extends JPanel
 {
-	JPanel inside = new JPanel(), top = new JPanel();
+	private JPanel inside = new JPanel(), top = new JPanel();
+	private DateTime time;
+
 	public MonthCalendar(DateTime on)
 	{
-        setBackground(new java.awt.Color(255, 255, 255));
-        inside.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 1, 1, 0, new java.awt.Color(0, 0, 0)));
+		time = on;
+
+		// layout code
+        setBackground(UIManager.getDefaults().getColor("Table.background"));
 		setLayout(new BorderLayout());
         inside.setLayout(new java.awt.GridLayout(6, 7));
+		top.setLayout(new GridLayout(1, 7));
 		add(top, BorderLayout.NORTH);
 		add(inside, BorderLayout.CENTER);
-		top.setLayout(new GridLayout(1, 7));
+		// end layout code
 
 		MutableDateTime fom = new MutableDateTime(on);
 		fom.setDayOfMonth(1);
 		fom.setMillisOfDay(0);
-		int first = (fom.getDayOfWeek() % 7);
+		int first = fom.getDayOfWeek();
 		fom.addDays(-first);
 
-		// generate days
-		MutableDateTime weeks = new MutableDateTime(fom);
+		// generate days on top
 		for (int i = 0; i < 7; i++)
 		{
-			JLabel jl = new JLabel(weeks.dayOfWeek().getAsText());
+			JLabel jl = new JLabel(fom.dayOfWeek().getAsText());
 			jl.setHorizontalAlignment(SwingConstants.CENTER);
-			weeks.addDays(1);
+			fom.addDays(1);
 			top.add(jl);
 		}
-
-		for (int i = 0; i < (6*7); i++)
-		{
-			inside.add(new MonthDay(fom.toDateTime(), randItems(fom.toDateTime()), (fom.getMonthOfYear() == on.getMonthOfYear() ? (isToday(fom) ? DayStyle.Today: DayStyle.Normal): DayStyle.OutOfMonth)));
-			fom.addDays(1);
-		}
+		generateDays(fom);
 	}
 
-	private MonthItem[] randItems(DateTime dt)
+	private MonthItem[] randItems(ReadableDateTime dt)
 	{
 		MutableDateTime mtd = new MutableDateTime(dt);
 		mtd.addHours(9);
@@ -89,10 +87,73 @@ public class MonthCalendar extends JPanel
 		return new MonthItem[]{};
 	}
 
-	private boolean isToday(MutableDateTime fom)
+	private boolean isToday(ReadableDateTime fom)
 	{
 		DateTime now = DateTime.now();
 		return fom.getYear() == now.getYear() && fom.getDayOfYear() == now.getDayOfYear();
 	}
 
+	public void next()
+	{
+		MutableDateTime fom = new MutableDateTime(time);
+		fom.addMonths(1);
+		time = fom.toDateTime();
+		generateDays(fom);
+	}
+
+	public void previous()
+	{
+		MutableDateTime fom = new MutableDateTime(time);
+		fom.addMonths(-1);
+		time = fom.toDateTime();
+		generateDays(fom);
+	}
+
+	/**
+	 * Fill calendar with month in referenceDay
+	 * @param referenceDay what month should we display
+	 */
+	protected void generateDays(MutableDateTime referenceDay)
+	{
+		// reset to the first of the month at midnight, then find Sunday
+		referenceDay.setDayOfMonth(1);
+		referenceDay.setMillisOfDay(0);
+		int first = referenceDay.getDayOfWeek();
+		referenceDay.addDays(-first);
+
+		// remove all old days
+		inside.removeAll();
+
+		// generate days, 6*7 covers all possible months, so we just loop through and add each day
+		for (int i = 0; i < (6*7); i++)
+		{
+			MonthDay md = new MonthDay(referenceDay.toDateTime(), randItems(referenceDay), getMarker(referenceDay));
+			inside.add(md);
+			md.reBorder(i < 7, (i % 7 ) == 0, i >= 5 * 7);
+			referenceDay.addDays(1); // go to next day
+		}
+
+		// repaint when changed
+		inside.revalidate();
+	}
+
+	/**
+	 * Gets the DayStyle of given date
+	 * @param date
+	 * @return
+	 */
+	protected DayStyle getMarker(ReadableDateTime date)
+	{
+		if (date.getMonthOfYear() == time.getMonthOfYear())
+		{
+			return (isToday(date) ? DayStyle.Today: DayStyle.Normal);
+		}
+		else
+			return DayStyle.OutOfMonth;
+	}
+
+	public DateTime getTime()
+	{
+		return time;
+	}
 }

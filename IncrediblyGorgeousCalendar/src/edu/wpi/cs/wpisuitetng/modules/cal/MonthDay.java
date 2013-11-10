@@ -4,11 +4,16 @@
  */
 package edu.wpi.cs.wpisuitetng.modules.cal;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Comparator;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
+
 import org.joda.time.DateTime;
 
 /**
@@ -18,39 +23,53 @@ import org.joda.time.DateTime;
 public class MonthDay extends JPanel
 {
 	JLabel header = new JLabel();
+	private boolean borderTop;
+
 	public MonthDay(DateTime day, MonthItem[] items, DayStyle style)
 	{
-
-		int grayit = 0;
+		Color grayit, textit = UIManager.getDefaults().getColor("Label.foreground"),
+			bg = UIManager.getDefaults().getColor("Table.background");
 		switch (style)
 		{
 			case Normal:
-				grayit = 204;
+				grayit = UIManager.getDefaults().getColor("Table.focusCellBackground");
+				textit = UIManager.getDefaults().getColor("Table.focusCellForeground");
+				if (bg.equals(grayit))
+				{
+					if ((bg.getBlue() + bg.getGreen() + bg.getRed()) / 3.0 > 255.0 / 2) // light
+						grayit = grayit.darker();
+					else
+						grayit = grayit.brighter();
+				}
 				break;
 			case OutOfMonth:
-				grayit = 245;
+				grayit = bg;
 				break;
 			case Today:
-				System.out.println("Today!");
-				grayit = 153;
+				grayit = UIManager.getDefaults().getColor("textHighlight");
+				textit = UIManager.getDefaults().getColor("textHighlightText");
 				break;
+			default:
+				throw new IllegalStateException("DayStyle is not a valid DayStyle!");
 		}
-        setBackground(new java.awt.Color(255, 255, 255));
-        setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 1, new java.awt.Color(0, 0, 0)));
-        setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.Y_AXIS));
+		setBackground(bg);
+		setForeground(textit);
+		borderTop = grayit.equals(bg);
+		setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.Y_AXIS));
 
-        header.setBackground(new java.awt.Color(grayit, grayit, grayit));
-        header.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
-        header.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        header.setText(Integer.toString(day.getDayOfMonth()));
-        header.setAutoscrolls(true);
-        header.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        header.setMaximumSize(new java.awt.Dimension(10000, 17));
-        header.setOpaque(true);
-        add(header);
+		header.setBackground(grayit);
+		header.setForeground(textit);
+		header.setFont(new java.awt.Font("DejaVu Sans", style == DayStyle.Today ? Font.BOLD : Font.PLAIN, 12));
+		header.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+		header.setText(Integer.toString(day.getDayOfMonth()));
+		header.setAutoscrolls(true);
+		header.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+		header.setMaximumSize(new java.awt.Dimension(10000, 17));
+		header.setOpaque(true);
+		add(header);
 
-		Arrays.sort(items, new Comparator<MonthItem>() {
-
+		Arrays.sort(items, new Comparator<MonthItem>()
+		{
 			@Override
 			public int compare(MonthItem o1, MonthItem o2)
 			{
@@ -61,5 +80,10 @@ public class MonthDay extends JPanel
 		{
 			add(monthItem);
 		}
+	}
+
+	public void reBorder(boolean top, boolean left, boolean bottom)
+	{
+		setBorder(javax.swing.BorderFactory.createMatteBorder((top || borderTop) ? 1 : 0, left ? 1 : 0, bottom ? 1 : 0, 1, UIManager.getDefaults().getColor("Separator.foreground")));
 	}
 }

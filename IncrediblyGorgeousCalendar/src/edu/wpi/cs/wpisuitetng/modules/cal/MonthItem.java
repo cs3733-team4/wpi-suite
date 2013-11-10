@@ -4,8 +4,11 @@
  */
 package edu.wpi.cs.wpisuitetng.modules.cal;
 
+import java.awt.Font;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
+
 import org.joda.time.DateTime;
 
 /**
@@ -18,24 +21,29 @@ public class MonthItem extends JPanel
 	private DateTime when;
 	public MonthItem(DateTime when, String descr)
 	{
-        setBackground(new java.awt.Color(254, 254, 254));
+        setBackground(UIManager.getDefaults().getColor("Table.background"));
         setMaximumSize(new java.awt.Dimension(32767, 24));
         setMinimumSize(new java.awt.Dimension(0, 0));
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.X_AXIS));
 
-        time.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
-        time.setForeground(new java.awt.Color(1, 1, 1));
+        time.setFont(new java.awt.Font("DejaVu Sans", Font.BOLD, 12));
         time.setText(simpleTime(when));
         time.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 3));
         add(time);
 
         desc.setText(descr);
+        desc.setFont(new java.awt.Font("DejaVu Sans", Font.PLAIN, 12));
         desc.setMinimumSize(new java.awt.Dimension(10, 15));
         add(desc);
 
 		setWhen(when);
 	}
 
+	/**
+	 * Generate small version of the time
+	 * @param when
+	 * @return
+	 */
 	private String simpleTime(DateTime when)
 	{
 		String ret;
