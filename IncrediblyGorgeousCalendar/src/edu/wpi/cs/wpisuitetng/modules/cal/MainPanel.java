@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
+import org.joda.time.DateTime;
+
 import edu.wpi.cs.wpisuitetng.janeway.modules.JanewayTabModel;
 
 public class MainPanel extends JPanel {
@@ -26,7 +28,7 @@ public class MainPanel extends JPanel {
 		
 
 		JTabbedPane tabPane = new JTabbedPane();
-		tabPane.addTab("Calendar View", new JPanel());
+		tabPane.addTab("Calendar View", new MonthCalendar(DateTime.now()));
 		mainCalendar.setLayout(new BorderLayout());
 		mainCalendar.add(tabPane, BorderLayout.CENTER);
 	}
