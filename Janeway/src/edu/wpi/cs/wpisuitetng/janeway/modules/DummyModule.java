@@ -54,7 +54,8 @@ public class DummyModule implements IJanewayModule {
 		
 		tabs = new ArrayList<JanewayTabModel>();
 		JanewayTabModel tab = new JanewayTabModel("Dummy Module", new ImageIcon(), buttonPanel, mainPanel);
-		tabs.add(tab);
+		//lets just keep this out for now
+		//tabs.add(tab);
 	}
 
 	/**

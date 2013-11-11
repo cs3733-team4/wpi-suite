@@ -9,8 +9,6 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
@@ -18,20 +16,11 @@ import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
-import javax.swing.border.Border;
-
 import edu.wpi.cs.wpisuitetng.janeway.modules.IJanewayModule;
 import edu.wpi.cs.wpisuitetng.janeway.modules.JanewayTabModel;
 
 
-/**
- * @author ted meyer
- * @version $Revision: 1.0 $
- */
 public class Calendar implements IJanewayModule {
 
 
@@ -39,7 +28,7 @@ public class Calendar implements IJanewayModule {
 	private ArrayList<JanewayTabModel> tabs;
 	
 	/**
-	 * Construct a new DummyModule for demonstration purposes
+	 * Construct a new Calendar Tab Module
 	 */
 	public Calendar() {
 		

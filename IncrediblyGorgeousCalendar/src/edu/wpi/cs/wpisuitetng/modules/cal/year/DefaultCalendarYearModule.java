@@ -6,13 +6,14 @@ public class DefaultCalendarYearModule implements CalendarYearModule {
 
 	int month, year;
 	CalendarYearModule previous, next;
+	MiniMonth calendar;
 	
-	public DefaultCalendarYearModule(int month, int year)
+	public DefaultCalendarYearModule(int month, int year, int preload)
 	{
 		this.month = month;
 		this.year = year;
-		this.preloadFollowing(1);
-		this.preloadPrevious(1);
+		this.preloadFollowing(preload);
+		this.preloadPrevious(preload);
 	}
 	
 	@Override
@@ -33,11 +34,11 @@ public class DefaultCalendarYearModule implements CalendarYearModule {
 			{
 				if (month == 1)
 				{
-					previous = new DefaultCalendarYearModule(12, year-1);
+					previous = new DefaultCalendarYearModule(12, year-1, depth-1);
 				}
 				else
 				{
-					previous = new DefaultCalendarYearModule(month-1, year);
+					previous = new DefaultCalendarYearModule(month-1, year, depth-1);
 				}
 			}
 			else {
@@ -58,11 +59,11 @@ public class DefaultCalendarYearModule implements CalendarYearModule {
 			{
 				if (month == 12)
 				{
-					next = new DefaultCalendarYearModule(1, year+1);
+					next = new DefaultCalendarYearModule(1, year+1, depth-1);
 				}
 				else
 				{
-					next = new DefaultCalendarYearModule(month+1, year);
+					next = new DefaultCalendarYearModule(month+1, year, depth-1);
 				}
 			}
 			else {
@@ -77,8 +78,11 @@ public class DefaultCalendarYearModule implements CalendarYearModule {
 
 	@Override
 	public JComponent renderComponent() {
-		// TODO Auto-generated method stub
-		return null;
+		if (calendar == null)
+		{
+			calendar = new MiniMonth(this.month, this.year);
+		}
+		return calendar;
 	}
 
 }
