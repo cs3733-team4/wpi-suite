@@ -34,5 +34,10 @@ public interface CalendarYearModule {
 	 * @return
 	 */
 	public JComponent renderComponent();
-	
+
+	/**
+	 * 
+	 * @return the month that this calendar holder represents
+	 */
+	int getCurrentMonth();
 }
