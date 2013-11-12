@@ -1,5 +1,8 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.formulae;
 
+import org.joda.time.DateTime;
+import org.joda.time.MutableDateTime;
+
 public class Months {
 	
 	/**
@@ -68,40 +71,20 @@ public class Months {
 		return Months.getDayOfMonth(year, month, 1);
 	}
 	
-	/**
-	 * 
-	 * @param monthNumber the number of the month
-	 * @return the name of the month
-	 */
-	public static String getMonthName(int monthNumber)
+
+	
+	
+	public static DateTime nextMonth(DateTime time)
 	{
-		switch (monthNumber){
-			case 1:
-				return "January";
-			case 2:
-				return "February";
-			case 3:
-				return "March";
-			case 4:
-				return "April";
-			case 5:
-				return "May";
-			case 6:
-				return "June";
-			case 7:
-				return "July";
-			case 8:
-				return "August";
-			case 9:
-				return "September";
-			case 10:
-				return "October";
-			case 11:
-				return "November";
-			case 12:
-				return "December";
-		}
-		
-		return "Milnisium";
+		MutableDateTime mdt = new MutableDateTime(time);
+		mdt.addMonths(1);
+		return mdt.toDateTime();
+	}
+	
+	public static DateTime prevMonth(DateTime time)
+	{
+		MutableDateTime mdt = new MutableDateTime(time);
+		mdt.addMonths(-1);
+		return mdt.toDateTime();
 	}
 }

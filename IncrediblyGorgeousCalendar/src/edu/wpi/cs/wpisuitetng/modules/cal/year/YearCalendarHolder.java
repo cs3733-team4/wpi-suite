@@ -1,6 +1,8 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.year;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -8,6 +10,9 @@ import javax.swing.JPanel;
 import javax.swing.JLabel;
 
 import org.joda.time.DateTime;
+import org.joda.time.MutableDateTime;
+
+import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Months;
 
 public class YearCalendarHolder extends JPanel {
 	
@@ -20,7 +25,7 @@ public class YearCalendarHolder extends JPanel {
 		setUpUI(date);
 	}
 	
-	private void setUpUI(DateTime date)
+	private void setUpUI(final DateTime date)
 	{
 		monthName = this.getMonthLabel(date);
 		this.removeAll();
@@ -47,6 +52,28 @@ public class YearCalendarHolder extends JPanel {
 		
 		this.add(miniCalendar, BorderLayout.CENTER);
 		this.add(titleBar, BorderLayout.NORTH);
+		
+		ActionListener prevListener = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				setUpUI(Months.prevMonth(date));
+			}
+		};
+		
+		ActionListener nextListener = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				setUpUI(Months.nextMonth(date));
+			}
+		};
+		
+		next.addActionListener(nextListener);
+		prev.addActionListener(prevListener);
+		
+		this.revalidate();
+		this.repaint();
 	}
 	
 	private JLabel getMonthLabel(DateTime dt)
