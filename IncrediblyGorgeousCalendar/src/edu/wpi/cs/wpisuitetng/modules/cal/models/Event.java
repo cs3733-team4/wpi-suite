@@ -129,6 +129,6 @@ public class Event extends AbstractModel {
 		return this.repeatOn;
 	}
 	
-	public DateTime start
+	public DateTime start;
 	
 }
