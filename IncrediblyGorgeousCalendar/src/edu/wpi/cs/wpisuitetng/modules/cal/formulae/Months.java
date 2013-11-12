@@ -29,10 +29,11 @@ public class Months {
 		if (month == 2)
 			return 28 + (isLeapYear(year)?1:0);
 		
-		if (month == 4 || month == 6 || month == 9 || month == 11)
+		if ((month == 4) || (month == 6) || (month == 9) || (month == 11))
 			return 30;
 		
-		return 31;
+		else
+			return 31;
 	}
 	
 	/**
@@ -65,5 +66,42 @@ public class Months {
 	public static int getStartingDay(int year, int month)
 	{
 		return Months.getDayOfMonth(year, month, 1);
+	}
+	
+	/**
+	 * 
+	 * @param monthNumber the number of the month
+	 * @return the name of the month
+	 */
+	public static String getMonthName(int monthNumber)
+	{
+		switch (monthNumber){
+			case 1:
+				return "January";
+			case 2:
+				return "February";
+			case 3:
+				return "March";
+			case 4:
+				return "April";
+			case 5:
+				return "May";
+			case 6:
+				return "June";
+			case 7:
+				return "July";
+			case 8:
+				return "August";
+			case 9:
+				return "September";
+			case 10:
+				return "October";
+			case 11:
+				return "November";
+			case 12:
+				return "December";
+		}
+		
+		return "Milnisium";
 	}
 }

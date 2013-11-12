@@ -4,9 +4,9 @@ import javax.swing.JComponent;
 
 public class DefaultCalendarYearModule implements CalendarYearModule {
 
-	int month, year;
-	CalendarYearModule previous, next;
-	MiniMonth calendar;
+	private int month, year;
+	private CalendarYearModule previous, next;
+	private MiniMonth calendar;
 	
 	public DefaultCalendarYearModule(int month, int year, int preload)
 	{
@@ -27,7 +27,8 @@ public class DefaultCalendarYearModule implements CalendarYearModule {
 	}
 
 	@Override
-	public void preloadPrevious(int depth) {
+	public void preloadPrevious(int depth)
+	{
 		if (depth > 0)
 		{
 			if (previous == null)
@@ -52,7 +53,8 @@ public class DefaultCalendarYearModule implements CalendarYearModule {
 	}
 
 	@Override
-	public void preloadFollowing(int depth) {
+	public void preloadFollowing(int depth)
+	{
 		if (depth > 0)
 		{
 			if (previous == null)
@@ -77,12 +79,18 @@ public class DefaultCalendarYearModule implements CalendarYearModule {
 	}
 
 	@Override
-	public JComponent renderComponent() {
+	public JComponent renderComponent()
+	{
 		if (calendar == null)
 		{
 			calendar = new MiniMonth(this.month, this.year);
 		}
 		return calendar;
 	}
-
+	
+	@Override
+	public int getCurrentMonth()
+	{
+		return this.month;
+	}
 }

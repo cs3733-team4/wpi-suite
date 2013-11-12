@@ -25,24 +25,26 @@ public class MiniMonth extends JPanel {
 	/**
 	 * space for holding all the days
 	 */
-	private DayButton[] days = new DayButton[35];
+	private DayButton[] days = new DayButton[42];
 
 	public MiniMonth(int monthNumber, int yearNumber)
 	{
-		this.setLayout(new GridLayout(5,7));
+		this.setLayout(new GridLayout(6,7));
 		int daysThisMonth = Months.getDaysInMonth(monthNumber, yearNumber);
 		int daysLastMonth = Months.getDaysInMonth(monthNumber==1?12:monthNumber-1, monthNumber==1?yearNumber-1:yearNumber);
 		int startingDayThisMonth = Months.getStartingDay(yearNumber, monthNumber);
 		
-		for(int i = 0; i < 35; i++)
+		System.out.println(monthNumber+":  "+daysThisMonth);
+		
+		for(int i = 0; i < 42; i++)
 		{
 			if (i+1 < startingDayThisMonth)
 			{ // display some days of the previous month
 				days[i] = new InactiveDayButton(daysLastMonth-startingDayThisMonth+i+2);
 			}
-			else if (i > daysThisMonth+startingDayThisMonth-1)
+			else if (i > daysThisMonth+startingDayThisMonth-2)
 			{
-				days[i] = new InactiveDayButton(i-daysThisMonth-startingDayThisMonth+1);
+				days[i] = new InactiveDayButton(i-daysThisMonth-startingDayThisMonth+2);
 			}
 			else
 			{
