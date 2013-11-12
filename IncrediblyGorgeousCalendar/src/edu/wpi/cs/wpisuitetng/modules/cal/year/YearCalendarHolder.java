@@ -16,10 +16,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import org.joda.time.DateTime;
-import org.joda.time.MutableDateTime;
-
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
-import edu.wpi.cs.wpisuitetng.modules.cal.MonthCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Months;
 
 public class YearCalendarHolder extends JPanel {
@@ -63,10 +60,8 @@ public class YearCalendarHolder extends JPanel {
 		next.setFocusable(false);
 		next.setBackground(UIManager.getDefaults().getColor("Panel.background"));
 		
-		prev.setBorder(new CompoundBorder(new LineBorder(Color.black),
-				new EmptyBorder(5, 5, 5, 5)));
-		next.setBorder(new CompoundBorder(new LineBorder(Color.black),
-				new EmptyBorder(5, 5, 5, 5)));
+		prev.setBorder(new EmptyBorder(5, 5, 5, 5));
+		next.setBorder(new EmptyBorder(5, 5, 5, 5));
 		
 		titleBar.add(monthName, BorderLayout.CENTER);
 		
