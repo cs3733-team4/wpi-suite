@@ -74,6 +74,9 @@ public class MainPanel extends JPanel {
 			JLabel tabInfoName = new JLabel(name);
 			JButton tabInfoClose = new JButton("X"); // we need an icon for this eventually
 			
+			tabInfoName.setOpaque(false);
+			tabInfoClose.setOpaque(false);
+			
 			tabInfoClose.setFocusable(false);
 			tabInfoClose.setBorder(null);
 			

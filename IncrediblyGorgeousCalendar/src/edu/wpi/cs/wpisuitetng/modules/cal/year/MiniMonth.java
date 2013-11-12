@@ -13,6 +13,9 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
+import org.joda.time.DateTime;
+import org.joda.time.MutableDateTime;
+
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Months;
 
 public class MiniMonth extends JPanel {
@@ -25,30 +28,31 @@ public class MiniMonth extends JPanel {
 	/**
 	 * space for holding all the days
 	 */
-	private DayButton[] days = new DayButton[42];
+	private DayButton[] days = new DayButton[42]; //6*7
 
-	public MiniMonth(int monthNumber, int yearNumber)
+	public MiniMonth(DateTime time)
 	{
 		this.setLayout(new GridLayout(6,7));
-		int daysThisMonth = Months.getDaysInMonth(monthNumber, yearNumber);
-		int daysLastMonth = Months.getDaysInMonth(monthNumber==1?12:monthNumber-1, monthNumber==1?yearNumber-1:yearNumber);
-		int startingDayThisMonth = Months.getStartingDay(yearNumber, monthNumber);
+		int daysThisMonth = time.dayOfMonth().getMaximumValue();
+		MutableDateTime prevMonth = new MutableDateTime(time);
+		prevMonth.setDayOfMonth(1);
+		int startingDayThisMonth = prevMonth.getDayOfWeek();
+		prevMonth.addMonths(-1);
+		int daysLastMonth = prevMonth.dayOfMonth().getMaximumValue();
 		
-		System.out.println(monthNumber+":  "+daysThisMonth);
-		
-		for(int i = 0; i < 42; i++)
+		for(int i = 0; i < 42; i++) //6*7
 		{
-			if (i+1 < startingDayThisMonth)
+			if (i < startingDayThisMonth)
 			{ // display some days of the previous month
 				days[i] = new InactiveDayButton(daysLastMonth-startingDayThisMonth+i+2);
 			}
-			else if (i > daysThisMonth+startingDayThisMonth-2)
+			else if (i > daysThisMonth+startingDayThisMonth-1)
 			{
 				days[i] = new InactiveDayButton(i-daysThisMonth-startingDayThisMonth+2);
 			}
 			else
 			{
-				days[i] = new ActiveDayButton(i-startingDayThisMonth+2);
+				days[i] = new ActiveDayButton(i-startingDayThisMonth+1);
 			}
 			this.add(days[i]);
 		}
