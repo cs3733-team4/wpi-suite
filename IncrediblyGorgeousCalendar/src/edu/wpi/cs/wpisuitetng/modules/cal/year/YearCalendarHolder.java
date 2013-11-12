@@ -1,7 +1,6 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.year;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,12 +9,12 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+import javax.swing.JTextField;
 import javax.swing.UIManager;
-import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
-
 import org.joda.time.DateTime;
+import com.lowagie.text.Font;
+
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Months;
 
@@ -42,14 +41,27 @@ public class YearCalendarHolder extends JPanel {
 		JButton next = new JButton(">");
 		JButton prev = new JButton("<");
 		
-		//adding in today button
+		//adding goto pane
 		JPanel gotoPane = new JPanel();
-		JButton gotoToday = new JButton("Goto Today");
+		JButton gotoToday = new JButton("Go to Today");
+		
+		JTextField gotoDate = new JTextField("mm/dd/yyyy");
+		JLabel gotoDateText = new JLabel("Go to: ");
+		gotoDateText.setFont(new java.awt.Font("DejaVu Sans",Font.NORMAL,Font.DEFAULTSIZE));
+		
+		JButton updateGoto = new JButton(">");
+		
+		//adding text field pane to goto pane
+		JPanel gotoDatePane = new JPanel();
+		gotoDatePane.setLayout(new BorderLayout());
+		gotoDatePane.add(gotoDate, BorderLayout.CENTER);
+		gotoDatePane.add(gotoDateText,BorderLayout.WEST);
+		gotoDatePane.add(updateGoto, BorderLayout.EAST);
 		
 		gotoPane.setLayout(new BorderLayout());
 		gotoPane.add(gotoToday, BorderLayout.NORTH);
-		//goto specified date will probably go in center pane
-		
+		gotoPane.add(gotoDatePane, BorderLayout.CENTER);
+	
 		titleBar.setLayout(new BorderLayout());
 		
 		titleBar.add(next, BorderLayout.EAST);
@@ -95,14 +107,25 @@ public class YearCalendarHolder extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				
 				mainPanel.getMOCA().display(DateTime.now());
 			}
 		};
 		
+		//action listener for gotoToday
+		ActionListener updateGotoListener = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				//String inputtedText = gotoDateText.getText();
+				//will display parsed goto text
+				//mainPanel.getMOCA().display(DateTime.now());
+			}
+		};
+
 		next.addActionListener(nextListener);
 		prev.addActionListener(prevListener);
 		gotoToday.addActionListener(todayListener);
+		updateGoto.addActionListener(updateGotoListener);
 		
 		this.revalidate();
 		this.repaint();

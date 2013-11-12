@@ -22,7 +22,7 @@ import com.lowagie.text.Font;
 public class MonthCalendar extends JPanel
 {
 	private JPanel inside = new JPanel(), top = new JPanel(), mainCalendarView = new JPanel(), navigationPanel = new JPanel();
-	private JLabel monthLabel =new JLabel();
+	private JLabel monthLabel = new JLabel();
 	private DateTime time;
 	private JButton nextButton = new JButton("Next"), previousButton = new JButton("Previous");
 
