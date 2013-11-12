@@ -2,68 +2,55 @@ package edu.wpi.cs.wpisuitetng.modules.cal.year;
 
 import java.awt.BorderLayout;
 
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 
 import org.joda.time.DateTime;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Months;
-
 public class YearCalendarHolder extends JPanel {
 	
 	private CalendarYearModule calendarPreloader;
 	private JComponent miniCalendar;
-	private JLabel titleBar;
+	private JLabel monthName;
 	
 	public YearCalendarHolder(DateTime date)
 	{
-		JPanel p = new JPanel();
-		p.add(new JLabel("<"), BorderLayout.EAST);
-		p.add(new JLabel(">"), BorderLayout.WEST);
+		setUpUI(date);
+	}
+	
+	private void setUpUI(DateTime date)
+	{
+		monthName = this.getMonthLabel(date);
+		this.removeAll();
+		this.setLayout(new BorderLayout());
 		
-		titleBar = new JLabel();
-		p.add(titleBar, BorderLayout.CENTER);
+		JPanel titleBar = new JPanel();
+		JButton next = new JButton(">");
+		JButton prev = new JButton("<");
 		
-		this.setLayout(null);
-		calendarPreloader = new DefaultCalendarYearModule(date.getMonthOfYear(), date.getYear(), 1);
+		titleBar.setLayout(new BorderLayout());
+		
+		titleBar.add(next, BorderLayout.EAST);
+		titleBar.add(prev, BorderLayout.WEST);
+		
+		prev.setFocusable(false);
+		prev.setBorder(null);
+		next.setFocusable(false);
+		next.setBorder(null);
+		
+		titleBar.add(monthName, BorderLayout.CENTER);
+		
+		calendarPreloader = new CalendarYearModule(date);
 		this.miniCalendar = this.calendarPreloader.renderComponent();
-		this.add(miniCalendar, BorderLayout.CENTER);
-		this.add(p, BorderLayout.NORTH);
-	}
-	
-	public void update(DateTime date)
-	{
-		int month = this.calendarPreloader.getCurrentMonth();
-		if (month != date.getMonthOfYear())
-		{
-			this.remove(miniCalendar);
-			this.upateTitle(date.getMonthOfYear());
-			
-			if (month > date.getMonthOfYear())
-			{ // this will move it backwards
-				this.calendarPreloader = this.calendarPreloader.getPrevious();
-			}
-			else if (month==1 && date.getMonthOfYear()==12)
-			{
-				this.calendarPreloader = this.calendarPreloader.getPrevious();
-			}
-			else
-			{
-				this.calendarPreloader = this.calendarPreloader.getFollowing();
-			}
-			
-			this.miniCalendar = this.calendarPreloader.renderComponent();
-			this.add(miniCalendar, BorderLayout.CENTER);
-			this.revalidate();
-			this.repaint();
-		}
 		
+		this.add(miniCalendar, BorderLayout.CENTER);
+		this.add(titleBar, BorderLayout.NORTH);
 	}
 	
-	public void upateTitle(int month)
+	private JLabel getMonthLabel(DateTime dt)
 	{
-		titleBar.setText(Months.getMonthName(month));
+		return new JLabel(dt.monthOfYear().getAsText(), JLabel.CENTER);
 	}
-	
 }
