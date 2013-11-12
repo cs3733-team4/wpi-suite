@@ -125,8 +125,12 @@ public class YearCalendarHolder extends JPanel {
 			public void actionPerformed(ActionEvent e)
 			{
 				DateTimeFormatter fmt = DateTimeFormat.forPattern("MM/dd/yyyy");
-				DateTime dt = fmt.parseDateTime(gotoDate.getText());
-				mainPanel.getMOCA().display(dt);
+				try{
+					DateTime dt = fmt.parseDateTime(gotoDate.getText());
+					mainPanel.getMOCA().display(dt);
+				}catch (java.lang.IllegalArgumentException illArg){
+					System.out.print("Caught Goto Date Exception: " + illArg.getMessage() + " so didnt go to date\n");
+				}
 			}
 		};
 
