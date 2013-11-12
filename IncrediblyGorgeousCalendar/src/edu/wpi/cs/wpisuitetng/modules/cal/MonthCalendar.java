@@ -129,7 +129,7 @@ public class MonthCalendar extends JPanel
 		return new MonthItem[]{};
 	}
 
-	private boolean isToday(ReadableDateTime fom)
+	boolean isToday(ReadableDateTime fom)
 	{
 		DateTime now = DateTime.now();
 		return fom.getYear() == now.getYear() && fom.getDayOfYear() == now.getDayOfYear();

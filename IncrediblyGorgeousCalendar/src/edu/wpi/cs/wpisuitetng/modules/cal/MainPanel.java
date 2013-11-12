@@ -30,7 +30,7 @@ public class MainPanel extends JPanel {
 		JPanel mainCalendar = new JPanel();
 		
 		miniCalendar.setBackground(Color.red);
-		miniCalendar.setPreferredSize(new Dimension(150, 1024));
+		miniCalendar.setPreferredSize(new Dimension(200, 1024));
 		miniCalendar.add(new YearCalendarHolder(DateTime.now()));
 		
 		mainCalendar.setLayout(new BorderLayout());
