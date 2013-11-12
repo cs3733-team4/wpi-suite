@@ -15,24 +15,24 @@ public class CalendarYearModuleTest {
 	
 	@Test
 	public void testGetPrevious() {
-		CalendarYearModule mCalYearModuleTimeOne = new CalendarYearModule(timeOne);
-		CalendarYearModule mCalYearModuleTimeTwo = new CalendarYearModule(timeTwo);
+		CalendarYearModule mCalYearModuleTimeOne = new CalendarYearModule(timeOne, null);
+		CalendarYearModule mCalYearModuleTimeTwo = new CalendarYearModule(timeTwo, null);
 		
 		assertEquals("Previous should return timeOne", mCalYearModuleTimeOne.getTime(), mCalYearModuleTimeTwo.getPrevious().getTime());
 	}
 	
 	@Test
 	public void testGetFollowing() {
-		CalendarYearModule mCalYearModuleTimeThree = new CalendarYearModule(timeThree);
-		CalendarYearModule mCalYearModuleTimeTwo = new CalendarYearModule(timeTwo);
+		CalendarYearModule mCalYearModuleTimeThree = new CalendarYearModule(timeThree, null);
+		CalendarYearModule mCalYearModuleTimeTwo = new CalendarYearModule(timeTwo, null);
 		
 		assertEquals("Following should return timeThree", mCalYearModuleTimeThree.getTime(), mCalYearModuleTimeTwo.getFollowing().getTime());
 	}
 	
 	@Test
 	public void testGetFollowingThenGetPreviousTwice() {
-		CalendarYearModule mCalYearModuleTimeOne = new CalendarYearModule(timeOne);
-		CalendarYearModule mCalYearModuleTimeTwo = new CalendarYearModule(timeTwo);
+		CalendarYearModule mCalYearModuleTimeOne = new CalendarYearModule(timeOne, null);
+		CalendarYearModule mCalYearModuleTimeTwo = new CalendarYearModule(timeTwo, null);
 		
 		assertEquals("Following should return timeOne", mCalYearModuleTimeOne.getTime(), 
 				mCalYearModuleTimeTwo.getFollowing().getPrevious().getPrevious().getTime());

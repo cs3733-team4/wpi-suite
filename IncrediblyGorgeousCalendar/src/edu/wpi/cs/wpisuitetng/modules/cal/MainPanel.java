@@ -30,7 +30,7 @@ public class MainPanel extends JPanel {
 		JPanel mainCalendar = new JPanel();
 		
 		miniCalendar.setPreferredSize(new Dimension(200, 1024));
-		miniCalendar.add(new YearCalendarHolder(DateTime.now()));
+		miniCalendar.add(new YearCalendarHolder(DateTime.now(), this));
 		
 		mainCalendar.setLayout(new BorderLayout());
 
@@ -93,5 +93,11 @@ public class MainPanel extends JPanel {
 			
 			tabInfoClose.addActionListener(listener);
 		}
+	}
+
+
+	public MonthCalendar getMOCA()
+	{
+		return moca;
 	}
 }
