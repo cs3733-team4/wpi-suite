@@ -38,7 +38,7 @@ public class MonthCalendar extends JPanel
 		
 		monthLabel.setHorizontalAlignment(JLabel.CENTER);
 		
-		monthLabel.setFont(new java.awt.Font("Times New Roman", Font.BOLD, 50));
+		monthLabel.setFont(new java.awt.Font("DejaVu Sans", Font.BOLD, 25));
 		
 		navigationPanel.add(monthLabel, BorderLayout.CENTER);
 		navigationPanel.add(nextButton, BorderLayout.EAST);
