@@ -5,20 +5,25 @@ import javax.swing.JComponent;
 import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.MonthCalendar;
+
 public class CalendarYearModule{
 
 	private DateTime time;
 	private MiniMonth calendar;
+	private MainPanel mc;
 	
-	public CalendarYearModule(DateTime time)
+	public CalendarYearModule(DateTime time, MainPanel mc)
 	{
+		this.mc = mc;
 		this.time = time;
 	}
 	
 	public CalendarYearModule getPrevious() {
 		MutableDateTime next = new MutableDateTime(time);
 		next.addMonths(-1);
-		return new CalendarYearModule(next.toDateTime());
+		return new CalendarYearModule(next.toDateTime(), mc);
 	}
 	
 	/**
@@ -33,14 +38,14 @@ public class CalendarYearModule{
 	public CalendarYearModule getFollowing() {
 		MutableDateTime next = new MutableDateTime(time);
 		next.addMonths(1);
-		return new CalendarYearModule(next.toDateTime());
+		return new CalendarYearModule(next.toDateTime(), mc);
 	}
 
 	public JComponent renderComponent()
 	{
 		if (calendar == null)
 		{
-			calendar = new MiniMonth(time);
+			calendar = new MiniMonth(time, mc);
 		}
 		return calendar;
 	}

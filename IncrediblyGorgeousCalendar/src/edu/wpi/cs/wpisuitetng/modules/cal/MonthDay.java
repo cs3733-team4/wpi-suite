@@ -108,7 +108,7 @@ public class MonthDay extends JPanel
 			}
 			else
 			{
-				total -= elt.getHeight();
+				total -= 24; //TODO: don't use constant. getHeight fails when slow resizing to min though...
 				if (total <= 10)
 				{
 					hidden = 1;
@@ -119,7 +119,11 @@ public class MonthDay extends JPanel
 				}
 			}
 		}
-		if (hidden > 0)
+		if (hidden == 1) // silly, add it anyway
+		{
+			this.add(this.items[this.items.length - 1]);
+		}
+		else if (hidden > 1)
 		{
 			this.add(new CollapsedMonthItem(hidden));
 		}
