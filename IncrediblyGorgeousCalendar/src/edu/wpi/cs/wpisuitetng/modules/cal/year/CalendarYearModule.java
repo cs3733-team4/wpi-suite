@@ -17,13 +17,22 @@ public class CalendarYearModule{
 	
 	public CalendarYearModule getPrevious() {
 		MutableDateTime next = new MutableDateTime(time);
-		next.addMonths(1);
+		next.addMonths(-1);
 		return new CalendarYearModule(next.toDateTime());
+	}
+	
+	/**
+	 * Added getTime for testing purposes
+	 * @return the time of the CalendarYearModule object
+	 */
+	
+	public DateTime getTime(){
+		return time;
 	}
 
 	public CalendarYearModule getFollowing() {
 		MutableDateTime next = new MutableDateTime(time);
-		next.addMonths(-1);
+		next.addMonths(1);
 		return new CalendarYearModule(next.toDateTime());
 	}
 
