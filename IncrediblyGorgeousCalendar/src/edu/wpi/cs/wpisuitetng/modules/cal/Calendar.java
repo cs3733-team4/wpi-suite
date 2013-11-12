@@ -35,8 +35,6 @@ public class Calendar implements IJanewayModule {
 		// Setup button panel
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new FlowLayout());
-		buttonPanel.add(new JButton("Add Event"));
-		buttonPanel.add(new JButton("Edit Event Event"));
 		buttonPanel.setMaximumSize(new Dimension(1920, 50));
 		
 		JPanel mainPanel = new MainPanel();
