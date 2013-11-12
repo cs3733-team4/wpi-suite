@@ -5,11 +5,14 @@
 package edu.wpi.cs.wpisuitetng.modules.cal;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Iterator;
 
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
@@ -24,6 +27,7 @@ public class MonthDay extends JPanel
 {
 	JLabel header = new JLabel();
 	private boolean borderTop;
+	private MonthItem[] items;
 
 	public MonthDay(DateTime day, MonthItem[] items, DayStyle style)
 	{
@@ -76,6 +80,7 @@ public class MonthDay extends JPanel
 				return o1.getWhen().compareTo(o2.getWhen());
 			}
 		});
+		this.items = items;
 		for (MonthItem monthItem : items)
 		{
 			add(monthItem);
@@ -85,5 +90,37 @@ public class MonthDay extends JPanel
 	public void reBorder(boolean top, boolean left, boolean bottom)
 	{
 		setBorder(javax.swing.BorderFactory.createMatteBorder((top || borderTop) ? 1 : 0, left ? 1 : 0, bottom ? 1 : 0, 1, UIManager.getDefaults().getColor("Separator.foreground")));
+	}
+	
+	@Override
+	public void doLayout()
+	{
+		int total = this.getHeight();
+		int hidden = 0;
+		removeAll();
+		for (MonthItem elt : this.items)
+		{
+			if (hidden > 0)
+			{
+				hidden++;
+			}
+			else
+			{
+				total -= elt.getHeight();
+				if (total <= 10)
+				{
+					hidden = 1;
+				}
+				else
+				{
+					this.add(elt);
+				}
+			}
+		}
+		if (hidden > 0)
+		{
+			this.add(new CollapsedMonthItem(total));
+		}
+		super.doLayout();
 	}
 }

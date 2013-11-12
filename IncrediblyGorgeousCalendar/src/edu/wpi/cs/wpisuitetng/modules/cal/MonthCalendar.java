@@ -52,13 +52,13 @@ public class MonthCalendar extends JPanel
 	private MonthItem[] randItems(ReadableDateTime dt)
 	{
 		MutableDateTime mtd = new MutableDateTime(dt);
-		mtd.addHours(9);
+		mtd.addHours(8 + (int)(Math.random() * 10));
 		DateTime a = mtd.toDateTime();
 		mtd = new MutableDateTime(dt);
-		mtd.addHours(13);
+		mtd.addHours(8 + (int)(Math.random() * 10));
 		DateTime b = mtd.toDateTime();
 		mtd = new MutableDateTime(dt);
-		mtd.addHours(16);
+		mtd.addHours(10 + (int)(Math.random() * 10));
 		mtd.addMinutes(30);
 		DateTime c = mtd.toDateTime();
 
@@ -90,6 +90,12 @@ public class MonthCalendar extends JPanel
 	{
 		DateTime now = DateTime.now();
 		return fom.getYear() == now.getYear() && fom.getDayOfYear() == now.getDayOfYear();
+	}
+	
+	public void display(DateTime newtime)
+	{
+		time = newtime;
+		generateDays(new MutableDateTime(time));
 	}
 
 	public void next()
