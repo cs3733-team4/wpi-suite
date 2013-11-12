@@ -64,7 +64,6 @@ public class MonthCalendar extends JPanel
 		// layout code
 		mainCalendarView.setBackground(UIManager.getDefaults().getColor("Table.background"));
 		mainCalendarView.setLayout(new BorderLayout());
-        inside.setLayout(new java.awt.GridLayout(6, 7));
 		top.setLayout(new GridLayout(1, 7));
 		
 		mainCalendarView.add(top, BorderLayout.NORTH);
@@ -76,7 +75,7 @@ public class MonthCalendar extends JPanel
 		MutableDateTime fom = new MutableDateTime(on);
 		fom.setDayOfMonth(1);
 		fom.setMillisOfDay(0);
-		int first = fom.getDayOfWeek();
+		int first = (fom.getDayOfWeek() % 7);
 		fom.addDays(-first);
 
 		// generate days on top
@@ -88,8 +87,6 @@ public class MonthCalendar extends JPanel
 			top.add(jl);
 		}
 		generateDays(fom);
-
-		monthLabel.setText(this.getTime().monthOfYear().getAsText() + " " + this.getTime().year().getAsText());
 	}
 
 	private MonthItem[] randItems(ReadableDateTime dt)
@@ -104,6 +101,10 @@ public class MonthCalendar extends JPanel
 		mtd.addHours(10 + (int)(Math.random() * 10));
 		mtd.addMinutes(30);
 		DateTime c = mtd.toDateTime();
+		mtd = new MutableDateTime(dt);
+		mtd.addHours(9 + (int)(Math.random() * 10));
+		mtd.addMinutes(45);
+		DateTime d = mtd.toDateTime();
 
 		if (Math.random() > .8)
 		{
@@ -119,7 +120,7 @@ public class MonthCalendar extends JPanel
 		}
 		else if (Math.random() > .5)
 		{
-			return new MonthItem[]{new MonthItem(c, "Watch videos"),new MonthItem(a, "Meeting")};
+			return new MonthItem[]{new MonthItem(c, "Pet Cats"),new MonthItem(a, "Meeting"),new MonthItem(b, "Doctors Appointment"),new MonthItem(d, "Lunch")};
 		}
 		else if (Math.random() > .4)
 		{
@@ -147,8 +148,6 @@ public class MonthCalendar extends JPanel
 		fom.addMonths(1);
 		time = fom.toDateTime();
 		generateDays(fom);
-
-		monthLabel.setText(this.getTime().monthOfYear().getAsText() + " " + this.getTime().year().getAsText());
 	}
 
 	public void previous()
@@ -157,8 +156,6 @@ public class MonthCalendar extends JPanel
 		fom.addMonths(-1);
 		time = fom.toDateTime();
 		generateDays(fom);
-
-		monthLabel.setText(this.getTime().monthOfYear().getAsText() + " " + this.getTime().year().getAsText());
 	}
 
 	/**
@@ -170,20 +167,25 @@ public class MonthCalendar extends JPanel
 		// reset to the first of the month at midnight, then find Sunday
 		referenceDay.setDayOfMonth(1);
 		referenceDay.setMillisOfDay(0);
-		int first = referenceDay.getDayOfWeek();
+		int first = (referenceDay.getDayOfWeek() % 7);
+		int daysInView = first + referenceDay.dayOfMonth().getMaximumValue();
+		int weeks = (int)Math.ceil(daysInView / 7.0);
+		inside.setLayout(new java.awt.GridLayout(weeks, 7));
 		referenceDay.addDays(-first);
 
 		// remove all old days
 		inside.removeAll();
 
-		// generate days, 6*7 covers all possible months, so we just loop through and add each day
-		for (int i = 0; i < (6*7); i++)
+		// generate days, weeks*7 covers all possible months, so we just loop through and add each day
+		for (int i = 0; i < (weeks*7); i++)
 		{
 			MonthDay md = new MonthDay(referenceDay.toDateTime(), randItems(referenceDay), getMarker(referenceDay));
 			inside.add(md);
 			md.reBorder(i < 7, (i % 7 ) == 0, i >= 5 * 7);
 			referenceDay.addDays(1); // go to next day
 		}
+		
+		monthLabel.setText(this.getTime().monthOfYear().getAsText() + " " + this.getTime().year().getAsText());
 
 		// repaint when changed
 		inside.revalidate();
