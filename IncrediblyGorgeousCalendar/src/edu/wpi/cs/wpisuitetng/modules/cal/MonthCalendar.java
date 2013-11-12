@@ -91,6 +91,7 @@ public class MonthCalendar extends JPanel
 
 	private MonthItem[] randItems(ReadableDateTime dt)
 	{
+		
 		MutableDateTime mtd = new MutableDateTime(dt);
 		mtd.addHours(8 + (int)(Math.random() * 10));
 		DateTime a = mtd.toDateTime();
