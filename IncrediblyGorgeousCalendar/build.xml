@@ -57,7 +57,7 @@
 		</jar>
 	</target>
 
-	<target name="compile" depends="core-jar"/>
+	<target name="compile" depends="janeway-jar"/>
 
 	<target name="clean">
 		<delete dir="build"/>
