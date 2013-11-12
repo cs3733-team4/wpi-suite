@@ -12,7 +12,11 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
+
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import com.lowagie.text.Font;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
@@ -23,6 +27,10 @@ public class YearCalendarHolder extends JPanel {
 	private CalendarYearModule calendarPreloader;
 	private JComponent miniCalendar;
 	private JLabel monthName;
+	
+	//dont know if there is a better way of handling this
+	//need text field to be declared outside main to access contents in button listener
+	private JTextField gotoDate;
 	
 	public YearCalendarHolder(DateTime date, MainPanel mainPanel)
 	{
@@ -45,7 +53,7 @@ public class YearCalendarHolder extends JPanel {
 		JPanel gotoPane = new JPanel();
 		JButton gotoToday = new JButton("Go to Today");
 		
-		JTextField gotoDate = new JTextField("mm/dd/yyyy");
+		gotoDate = new JTextField(DateTime.now().getMonthOfYear() + "/" + DateTime.now().getDayOfMonth() + "/" + DateTime.now().getYear());
 		JLabel gotoDateText = new JLabel("Go to: ");
 		gotoDateText.setFont(new java.awt.Font("DejaVu Sans",Font.NORMAL,Font.DEFAULTSIZE));
 		
@@ -116,9 +124,9 @@ public class YearCalendarHolder extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				//String inputtedText = gotoDateText.getText();
-				//will display parsed goto text
-				//mainPanel.getMOCA().display(DateTime.now());
+				DateTimeFormatter fmt = DateTimeFormat.forPattern("MM/dd/yyyy");
+				DateTime dt = fmt.parseDateTime(gotoDate.getText());
+				mainPanel.getMOCA().display(dt);
 			}
 		};
 
