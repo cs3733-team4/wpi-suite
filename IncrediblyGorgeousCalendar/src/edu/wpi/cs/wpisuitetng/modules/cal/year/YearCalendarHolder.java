@@ -34,7 +34,8 @@ public class YearCalendarHolder extends JPanel {
 		setUpUI(date, mainPanel);
 	}
 	
-	private void setUpUI(final DateTime date, final MainPanel moca)
+	//changed MainPanel argument name from moca to mainPanel.  MainPanel contains moca...access with getMOCA()
+	private void setUpUI(final DateTime date, final MainPanel mainPanel)
 	{
 		monthName = this.getMonthLabel(date);
 		this.removeAll();
@@ -43,6 +44,14 @@ public class YearCalendarHolder extends JPanel {
 		JPanel titleBar = new JPanel();
 		JButton next = new JButton(">");
 		JButton prev = new JButton("<");
+		
+		//adding in today button
+		JPanel gotoPane = new JPanel();
+		JButton gotoToday = new JButton("Goto Today");
+		
+		gotoPane.setLayout(new BorderLayout());
+		gotoPane.add(gotoToday, BorderLayout.NORTH);
+		//goto specified date will probably go in center pane
 		
 		titleBar.setLayout(new BorderLayout());
 		
@@ -61,17 +70,20 @@ public class YearCalendarHolder extends JPanel {
 		
 		titleBar.add(monthName, BorderLayout.CENTER);
 		
-		calendarPreloader = new CalendarYearModule(date, moca);
+		calendarPreloader = new CalendarYearModule(date, mainPanel);
 		this.miniCalendar = this.calendarPreloader.renderComponent();
 		
 		this.add(miniCalendar, BorderLayout.CENTER);
 		this.add(titleBar, BorderLayout.NORTH);
 		
+		//adding goto today to sidebar pane
+		this.add(gotoPane, BorderLayout.SOUTH);
+		
 		ActionListener prevListener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				setUpUI(Months.prevMonth(date), moca);
+				setUpUI(Months.prevMonth(date), mainPanel);
 			}
 		};
 		
@@ -79,12 +91,23 @@ public class YearCalendarHolder extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				setUpUI(Months.nextMonth(date), moca);
+				setUpUI(Months.nextMonth(date), mainPanel);
+			}
+		};
+		
+		//action listener for gotoToday
+		ActionListener todayListener = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				
+				mainPanel.getMOCA().display(DateTime.now());
 			}
 		};
 		
 		next.addActionListener(nextListener);
 		prev.addActionListener(prevListener);
+		gotoToday.addActionListener(todayListener);
 		
 		this.revalidate();
 		this.repaint();
