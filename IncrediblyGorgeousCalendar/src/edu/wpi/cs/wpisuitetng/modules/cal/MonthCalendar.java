@@ -2,7 +2,10 @@ package edu.wpi.cs.wpisuitetng.modules.cal;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -10,26 +13,64 @@ import javax.swing.UIManager;
 
 import org.joda.time.*;
 
+import com.lowagie.text.Font;
+
 /**
  *
  * @author patrick
  */
 public class MonthCalendar extends JPanel
 {
-	private JPanel inside = new JPanel(), top = new JPanel();
+	private JPanel inside = new JPanel(), top = new JPanel(), mainCalendarView = new JPanel(), navigationPanel = new JPanel();
+	private JLabel monthLabel =new JLabel();
 	private DateTime time;
+	private JButton nextButton = new JButton("Next"), previousButton = new JButton("Previous");
 
 	public MonthCalendar(DateTime on)
 	{
+		
+		this.setLayout(new BorderLayout());
+		
+		
+		navigationPanel.setLayout(new BorderLayout());
+		this.add(navigationPanel, BorderLayout.NORTH);
+		
+		
+		monthLabel.setHorizontalAlignment(JLabel.CENTER);
+		
+		monthLabel.setFont(new java.awt.Font("Times New Roman", Font.BOLD, 50));
+		
+		navigationPanel.add(monthLabel, BorderLayout.CENTER);
+		navigationPanel.add(nextButton, BorderLayout.EAST);
+		navigationPanel.add(previousButton, BorderLayout.WEST);
+		nextButton.setPreferredSize(previousButton.getPreferredSize());
+		nextButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				next();
+			}
+		});
+		previousButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				previous();
+				
+			}
+		});
 		time = on;
 
 		// layout code
-        setBackground(UIManager.getDefaults().getColor("Table.background"));
-		setLayout(new BorderLayout());
+		mainCalendarView.setBackground(UIManager.getDefaults().getColor("Table.background"));
+		mainCalendarView.setLayout(new BorderLayout());
         inside.setLayout(new java.awt.GridLayout(6, 7));
 		top.setLayout(new GridLayout(1, 7));
-		add(top, BorderLayout.NORTH);
-		add(inside, BorderLayout.CENTER);
+		
+		mainCalendarView.add(top, BorderLayout.NORTH);
+		mainCalendarView.add(inside, BorderLayout.CENTER);
+		
+		this.add(mainCalendarView, BorderLayout.CENTER);
 		// end layout code
 
 		MutableDateTime fom = new MutableDateTime(on);
@@ -47,6 +88,8 @@ public class MonthCalendar extends JPanel
 			top.add(jl);
 		}
 		generateDays(fom);
+
+		monthLabel.setText(this.getTime().monthOfYear().getAsText() + " " + this.getTime().year().getAsText());
 	}
 
 	private MonthItem[] randItems(ReadableDateTime dt)
@@ -86,7 +129,7 @@ public class MonthCalendar extends JPanel
 		return new MonthItem[]{};
 	}
 
-	private boolean isToday(ReadableDateTime fom)
+	boolean isToday(ReadableDateTime fom)
 	{
 		DateTime now = DateTime.now();
 		return fom.getYear() == now.getYear() && fom.getDayOfYear() == now.getDayOfYear();
@@ -98,6 +141,8 @@ public class MonthCalendar extends JPanel
 		fom.addMonths(1);
 		time = fom.toDateTime();
 		generateDays(fom);
+
+		monthLabel.setText(this.getTime().monthOfYear().getAsText() + " " + this.getTime().year().getAsText());
 	}
 
 	public void previous()
@@ -106,6 +151,8 @@ public class MonthCalendar extends JPanel
 		fom.addMonths(-1);
 		time = fom.toDateTime();
 		generateDays(fom);
+
+		monthLabel.setText(this.getTime().monthOfYear().getAsText() + " " + this.getTime().year().getAsText());
 	}
 
 	/**
