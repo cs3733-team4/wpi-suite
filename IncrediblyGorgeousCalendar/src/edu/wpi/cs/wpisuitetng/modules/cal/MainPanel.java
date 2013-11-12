@@ -29,12 +29,10 @@ public class MainPanel extends JPanel {
 		JPanel miniCalendar = new JPanel();
 		JPanel mainCalendar = new JPanel();
 		
-		miniCalendar.setBackground(Color.red);
 		miniCalendar.setPreferredSize(new Dimension(200, 1024));
 		miniCalendar.add(new YearCalendarHolder(DateTime.now()));
 		
 		mainCalendar.setLayout(new BorderLayout());
-		mainCalendar.setBackground(Color.green);
 
 		this.add(miniCalendar, BorderLayout.WEST);
 		this.add(mainCalendar, BorderLayout.CENTER);
@@ -48,8 +46,6 @@ public class MainPanel extends JPanel {
 		addCalendarTab(moca, "Calendar", false);
 		
 		//addCalendarTab(new JLabel("hi there!"), "test", true);
-		
-		
 	}
 	
 	
