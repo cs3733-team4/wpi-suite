@@ -2,6 +2,7 @@ package edu.wpi.cs.wpisuitetng.modules.cal.year;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -19,8 +20,6 @@ import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-
-import com.lowagie.text.Font;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Months;
@@ -48,6 +47,7 @@ public class YearCalendarHolder extends JPanel
 	public void display(DateTime date)
 	{
 		monthName = new JLabel(date.toString(monthLblFormat), JLabel.CENTER);
+		monthName.setFont(new Font("DejaVu Sans", Font.BOLD, 12));
 		this.removeAll();
 		this.setLayout(new BorderLayout());
 		
@@ -61,7 +61,6 @@ public class YearCalendarHolder extends JPanel
 		
 		final JTextField gotoDate = new JTextField(date.toString(gotoField));
 		JLabel gotoDateText = new JLabel("Go to: ");
-		gotoDateText.setFont(new java.awt.Font("DejaVu Sans",Font.NORMAL,Font.DEFAULTSIZE));
 		
 		JButton updateGoto = new JButton(">");
 		

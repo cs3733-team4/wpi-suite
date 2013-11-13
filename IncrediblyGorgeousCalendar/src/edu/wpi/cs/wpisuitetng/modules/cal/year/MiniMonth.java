@@ -1,12 +1,14 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.year;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
 
 import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
@@ -100,6 +102,9 @@ public class MiniMonth extends JPanel {
 	private class ActiveDayLabel extends DayLabel {
 		public ActiveDayLabel(int day, DateTime time) {
 			super(day, time);
+			setForeground(UIManager.getDefaults().getColor("Label.foreground"));
+			setBackground(UIManager.getDefaults().getColor("Table.background"));
+			setOpaque(true);
 			this.setBackground(Color.WHITE);
 		}
 	}
@@ -108,7 +113,9 @@ public class MiniMonth extends JPanel {
 	private class InactiveDayLabel extends DayLabel {
 		public InactiveDayLabel(int day, DateTime time) {
 			super(day, time);
-			this.setBackground(Color.LIGHT_GRAY);
+			setBackground(UIManager.getDefaults().getColor("Table.focusCellBackground"));
+			setForeground(UIManager.getDefaults().getColor("Table.focusCellForeground"));
+			this.setOpaque(true);
 		}
 	}
 	
@@ -116,7 +123,8 @@ public class MiniMonth extends JPanel {
 	private class DescriptiveDayLabel extends DayLabel {
 		public DescriptiveDayLabel(String day, DateTime time) {
 			super(day, time);
-			this.setBackground(Color.LIGHT_GRAY);
+			this.setFont(getFont().deriveFont(Font.ITALIC));
+			setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, UIManager.getDefaults().getColor("Separator.foreground")));
 		}
 	}
 
