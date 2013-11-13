@@ -8,22 +8,17 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
 import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
-import edu.wpi.cs.wpisuitetng.modules.cal.MonthCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Months;
 
-public class MiniMonth extends JPanel {
-
-	/**
-	 * random numbers ftw
-	 */
-	private static final long serialVersionUID = 153498539485L;
-
+public class MiniMonth extends JPanel
+{
 	/**
 	 * space for holding all the days
 	 */
@@ -71,6 +66,7 @@ public class MiniMonth extends JPanel {
 			} else {
 				days[i] = new ActiveDayLabel(i - startingDayThisMonth - 6, time);
 			}
+			days[i].borderize((i % 7) == 0, i >= 6*7, (i % 7) == 6);
 			this.add(days[i]);
 			days[i].addMouseListener(monthChanger);
 		}
@@ -80,15 +76,10 @@ public class MiniMonth extends JPanel {
 	private class DayLabel extends JLabel {
 		private DateTime day;
 		
-		public DayLabel(int day, DateTime time) {
-			this.setForeground(Color.BLACK);
-			this.setText(Integer.toString(day));
-			this.day = time;
-		}
-		
 		public DayLabel(String day, DateTime time) {
 			this.setForeground(Color.BLACK);
 			this.setText(day);
+			this.setHorizontalAlignment(SwingConstants.CENTER);
 			this.day = time;
 		}
 		
@@ -96,23 +87,27 @@ public class MiniMonth extends JPanel {
 		{
 			return day;
 		}
+		
+		public void borderize(boolean left, boolean bottom, boolean right)
+		{
+			setBorder(javax.swing.BorderFactory.createMatteBorder(0, left?1:0, bottom?1:0, right?1:0, UIManager.getDefaults().getColor("Separator.foreground")));
+		}
 	}
 
 	@SuppressWarnings("serial")
 	private class ActiveDayLabel extends DayLabel {
 		public ActiveDayLabel(int day, DateTime time) {
-			super(day, time);
+			super(Integer.toString(day), time);
 			setForeground(UIManager.getDefaults().getColor("Label.foreground"));
 			setBackground(UIManager.getDefaults().getColor("Table.background"));
 			setOpaque(true);
-			this.setBackground(Color.WHITE);
 		}
 	}
 
 	@SuppressWarnings("serial")
 	private class InactiveDayLabel extends DayLabel {
 		public InactiveDayLabel(int day, DateTime time) {
-			super(day, time);
+			super(Integer.toString(day), time);
 			setBackground(UIManager.getDefaults().getColor("Table.focusCellBackground"));
 			setForeground(UIManager.getDefaults().getColor("Table.focusCellForeground"));
 			this.setOpaque(true);
@@ -125,6 +120,10 @@ public class MiniMonth extends JPanel {
 			super(day, time);
 			this.setFont(getFont().deriveFont(Font.ITALIC));
 			setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, UIManager.getDefaults().getColor("Separator.foreground")));
+		}
+		@Override
+		public void borderize(boolean left, boolean bottom, boolean right) {
+			// don't screw with borders. we don't need them here
 		}
 	}
 

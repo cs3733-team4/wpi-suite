@@ -9,14 +9,13 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal;
 
-import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JToolBar;
+
 import edu.wpi.cs.wpisuitetng.janeway.modules.IJanewayModule;
 import edu.wpi.cs.wpisuitetng.janeway.modules.JanewayTabModel;
 
@@ -33,9 +32,8 @@ public class Calendar implements IJanewayModule {
 	public Calendar() {
 		
 		// Setup button panel
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.setLayout(new FlowLayout());
-		buttonPanel.setMaximumSize(new Dimension(1920, 50));
+		JToolBar buttonPanel = new JToolBar();
+		buttonPanel.setFloatable(false);
 		
 		JPanel mainPanel = new MainPanel();
 		tabs = new ArrayList<JanewayTabModel>();
