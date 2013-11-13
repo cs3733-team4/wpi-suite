@@ -1,6 +1,7 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.year;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -46,77 +47,79 @@ public class YearCalendarHolder extends JPanel
 	
 	public void display(DateTime date)
 	{
+		//Title Bar Pane
 		monthName = new JLabel(date.toString(Months.monthLblFormat), JLabel.CENTER);
 		monthName.setFont(new Font("DejaVu Sans", Font.BOLD, 12));
 		this.removeAll();
 		this.setLayout(new BorderLayout());
 		
-		JPanel titleBar = new JPanel();
-		JButton next = new JButton(">");
-		JButton prev = new JButton("<");
+		JPanel titlePane = new JPanel();
+		JButton nextButton = new JButton(">");
+		JButton prevButton = new JButton("<");
+	
+		titlePane.setLayout(new BorderLayout());
 		
-		//adding goto pane
+		titlePane.add(nextButton, BorderLayout.EAST);
+		titlePane.add(prevButton, BorderLayout.WEST);
+		
+		prevButton.setFocusable(false);
+		prevButton.setBackground(UIManager.getDefaults().getColor("Panel.background"));
+		nextButton.setFocusable(false);
+		nextButton.setBackground(UIManager.getDefaults().getColor("Panel.background"));
+		
+		prevButton.setBorder(new EmptyBorder(5, 5, 5, 5));
+		nextButton.setBorder(new EmptyBorder(5, 5, 5, 5));
+		
+		titlePane.add(monthName, BorderLayout.CENTER);
+		
+		//Goto Pane
 		JPanel gotoPane = new JPanel();
 		JButton gotoToday = new JButton("Go to Today");
 		
-		final JTextField gotoDate = new JTextField(date.toString(gotoField));
+		final JTextField gotoDateField = new JTextField(date.toString(gotoField));
 		JLabel gotoDateText = new JLabel("Go to: ");
 		gotoErrorText = new JLabel(" ");
 		gotoErrorText.setHorizontalAlignment(SwingConstants.CENTER);
+		gotoErrorText.setForeground(Color.RED);
 		
-		JButton updateGoto = new JButton(">");
+		JButton updateGotoButton = new JButton(">");
 		
-		//adding text field pane to goto pane
+		//Goto Date Pane within Goto Pane
 		JPanel gotoDatePane = new JPanel();
 		gotoDatePane.setLayout(new BorderLayout());
-		gotoDatePane.add(gotoDate, BorderLayout.CENTER);
+		gotoDatePane.add(gotoDateField, BorderLayout.CENTER);
 		gotoDatePane.add(gotoDateText,BorderLayout.WEST);
-		gotoDatePane.add(updateGoto, BorderLayout.EAST);
+		gotoDatePane.add(updateGotoButton, BorderLayout.EAST);
 		
 		gotoPane.setLayout(new BorderLayout());
 		gotoPane.add(gotoToday, BorderLayout.NORTH);
 		gotoPane.add(gotoDatePane, BorderLayout.CENTER);
 		gotoPane.add(gotoErrorText, BorderLayout.SOUTH);
-	
-		titleBar.setLayout(new BorderLayout());
-		
-		titleBar.add(next, BorderLayout.EAST);
-		titleBar.add(prev, BorderLayout.WEST);
-		
-		prev.setFocusable(false);
-		prev.setBackground(UIManager.getDefaults().getColor("Panel.background"));
-		next.setFocusable(false);
-		next.setBackground(UIManager.getDefaults().getColor("Panel.background"));
-		
-		prev.setBorder(new EmptyBorder(5, 5, 5, 5));
-		next.setBorder(new EmptyBorder(5, 5, 5, 5));
-		
-		titleBar.add(monthName, BorderLayout.CENTER);
-		
+				
 		calendarPreloader = new CalendarYearModule(date, mainPanel);
 		this.miniCalendar = this.calendarPreloader.renderComponent();
 		
 		this.add(miniCalendar, BorderLayout.CENTER);
-		this.add(titleBar, BorderLayout.NORTH);
-		
-		//adding goto today to sidebar pane
+		this.add(titlePane, BorderLayout.NORTH);
 		this.add(gotoPane, BorderLayout.SOUTH);
 
-		next.addActionListener(nextListener);
-		prev.addActionListener(prevListener);
+		//add event listeners
+		nextButton.addActionListener(nextListener);
+		prevButton.addActionListener(prevListener);
 		gotoToday.addActionListener(todayListener);
-		updateGoto.addActionListener(new ActionListener() {
+		updateGotoButton.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				parseGoto(gotoDate.getText());
+				parseGoto(gotoDateField.getText());
 			}
 		});
-		gotoDate.addActionListener(new ActionListener() {
+		
+		gotoDateField.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				parseGoto(gotoDate.getText());
+				parseGoto(gotoDateField.getText());
 			}
 		});
 		
