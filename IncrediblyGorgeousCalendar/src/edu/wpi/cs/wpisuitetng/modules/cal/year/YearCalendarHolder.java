@@ -7,13 +7,16 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
 import org.joda.time.DateTime;
+import org.joda.time.MutableDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -30,6 +33,9 @@ public class YearCalendarHolder extends JPanel
 	private JLabel monthName;
 	private DateTime currentDate;
 	private MainPanel mainPanel;
+	final private DateTimeFormatter gotoField = DateTimeFormat.forPattern("M/d/yy");
+	final private DateTimeFormatter gotoFieldShort = DateTimeFormat.forPattern("M/d");
+	final private DateTimeFormatter monthLblFormat = DateTimeFormat.forPattern("MMMM, y");
 	
 	public YearCalendarHolder(DateTime date, MainPanel mainPanel)
 	{
@@ -41,7 +47,7 @@ public class YearCalendarHolder extends JPanel
 	
 	public void display(DateTime date)
 	{
-		monthName = this.getMonthLabel(date);
+		monthName = new JLabel(date.toString(monthLblFormat), JLabel.CENTER);
 		this.removeAll();
 		this.setLayout(new BorderLayout());
 		
@@ -53,7 +59,7 @@ public class YearCalendarHolder extends JPanel
 		JPanel gotoPane = new JPanel();
 		JButton gotoToday = new JButton("Go to Today");
 		
-		final JTextField gotoDate = new JTextField(DateTime.now().getMonthOfYear() + "/" + DateTime.now().getDayOfMonth() + "/" + DateTime.now().getYear());
+		final JTextField gotoDate = new JTextField(date.toString(gotoField));
 		JLabel gotoDateText = new JLabel("Go to: ");
 		gotoDateText.setFont(new java.awt.Font("DejaVu Sans",Font.NORMAL,Font.DEFAULTSIZE));
 		
@@ -101,15 +107,34 @@ public class YearCalendarHolder extends JPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				DateTimeFormatter fmt = DateTimeFormat.forPattern("MM/dd/yyyy");
+				String text = gotoDate.getText();
+				DateTime dt;
 				try
 				{
-					DateTime dt = fmt.parseDateTime(gotoDate.getText());
-					mainPanel.display(dt);
+					dt = gotoField.parseDateTime(text);
 				}
-				catch (java.lang.IllegalArgumentException illArg)
+				catch (IllegalArgumentException illArg)
 				{
-					System.out.print("Caught Goto Date Exception: " + illArg.getMessage() + " so didnt go to date\n");
+					try
+					{
+						MutableDateTime mdt = gotoFieldShort.parseMutableDateTime(text);
+						mdt.setYear(currentDate.getYear()); // this format does not provide years. add it
+						dt = mdt.toDateTime();
+					}
+					catch (IllegalArgumentException varArg)
+					{
+						dt = null;
+					}
+				}
+				if (dt != null)
+					mainPanel.display(dt);
+				else
+				{
+					JOptionPane.showMessageDialog(YearCalendarHolder.this,
+							"The date you entered does not seem to be in the correct format. \n"
+									+ "Please enter dates as mm/dd/yy. As an example, today is "
+									+ DateTime.now().toString(gotoField),
+							"Could not parse date", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -118,15 +143,6 @@ public class YearCalendarHolder extends JPanel
 		
 		this.revalidate();
 		this.repaint();
-	}
-	
-	private JLabel getMonthLabel(DateTime dt)
-	{
-		StringBuilder sb = new StringBuilder();
-		sb.append(dt.monthOfYear().getAsText());
-		sb.append(", ");
-		sb.append(dt.year().get());
-		return new JLabel(sb.toString(), JLabel.CENTER);
 	}
 	
 
