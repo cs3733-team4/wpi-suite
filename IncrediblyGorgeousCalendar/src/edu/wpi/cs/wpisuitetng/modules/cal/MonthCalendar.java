@@ -15,6 +15,8 @@ import org.joda.time.*;
 
 import com.lowagie.text.Font;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Months;
+
 /**
  *
  * @author patrick
@@ -189,7 +191,7 @@ public class MonthCalendar extends JPanel
 			referenceDay.addDays(1); // go to next day
 		}
 		
-		monthLabel.setText(this.getTime().monthOfYear().getAsText() + " " + this.getTime().year().getAsText());
+		monthLabel.setText(this.getTime().toString(Months.monthLblFormat));
 
 		// notify mini-calendar to change
 		mainPanel.miniMove(time);

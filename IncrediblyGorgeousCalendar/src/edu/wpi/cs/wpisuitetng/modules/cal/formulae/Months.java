@@ -2,8 +2,13 @@ package edu.wpi.cs.wpisuitetng.modules.cal.formulae;
 
 import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 public class Months {
+	
+
+	final public static DateTimeFormatter monthLblFormat = DateTimeFormat.forPattern("MMMM y");
 	
 	/**
 	 * 

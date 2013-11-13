@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
@@ -31,13 +32,13 @@ public class YearCalendarHolder extends JPanel
 	private JLabel monthName;
 	private DateTime currentDate;
 	private MainPanel mainPanel;
-	final private DateTimeFormatter gotoField = DateTimeFormat.forPattern("M/d/yy");
-	final private DateTimeFormatter gotoFieldShort = DateTimeFormat.forPattern("M/d");
-	final private DateTimeFormatter monthLblFormat = DateTimeFormat.forPattern("MMMM, y");
+	private JLabel gotoErrorText;
+	final private static DateTimeFormatter gotoField = DateTimeFormat.forPattern("M/d/yy");
+	final private static DateTimeFormatter gotoFieldShort = DateTimeFormat.forPattern("M/d");
 	
 	public YearCalendarHolder(DateTime date, MainPanel mainPanel)
 	{
-		this.setPreferredSize(new Dimension(200, 200));
+		this.setPreferredSize(new Dimension(200, 250));
 		currentDate = date;
 		this.mainPanel = mainPanel;
 		display(date);
@@ -45,7 +46,7 @@ public class YearCalendarHolder extends JPanel
 	
 	public void display(DateTime date)
 	{
-		monthName = new JLabel(date.toString(monthLblFormat), JLabel.CENTER);
+		monthName = new JLabel(date.toString(Months.monthLblFormat), JLabel.CENTER);
 		monthName.setFont(new Font("DejaVu Sans", Font.BOLD, 12));
 		this.removeAll();
 		this.setLayout(new BorderLayout());
@@ -60,6 +61,8 @@ public class YearCalendarHolder extends JPanel
 		
 		final JTextField gotoDate = new JTextField(date.toString(gotoField));
 		JLabel gotoDateText = new JLabel("Go to: ");
+		gotoErrorText = new JLabel(" ");
+		gotoErrorText.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		JButton updateGoto = new JButton(">");
 		
@@ -73,6 +76,7 @@ public class YearCalendarHolder extends JPanel
 		gotoPane.setLayout(new BorderLayout());
 		gotoPane.add(gotoToday, BorderLayout.NORTH);
 		gotoPane.add(gotoDatePane, BorderLayout.CENTER);
+		gotoPane.add(gotoErrorText, BorderLayout.SOUTH);
 	
 		titleBar.setLayout(new BorderLayout());
 		
@@ -102,41 +106,21 @@ public class YearCalendarHolder extends JPanel
 		prev.addActionListener(prevListener);
 		gotoToday.addActionListener(todayListener);
 		updateGoto.addActionListener(new ActionListener() {
+			
 			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				String text = gotoDate.getText();
-				DateTime dt;
-				try
-				{
-					dt = gotoField.parseDateTime(text);
-				}
-				catch (IllegalArgumentException illArg)
-				{
-					try
-					{
-						MutableDateTime mdt = gotoFieldShort.parseMutableDateTime(text);
-						mdt.setYear(currentDate.getYear()); // this format does not provide years. add it
-						dt = mdt.toDateTime();
-					}
-					catch (IllegalArgumentException varArg)
-					{
-						dt = null;
-					}
-				}
-				if (dt != null)
-					mainPanel.display(dt);
-				else
-				{
-					JOptionPane.showMessageDialog(YearCalendarHolder.this,
-							"The date you entered does not seem to be in the correct format. \n"
-									+ "Please enter dates as mm/dd/yy. As an example, today is "
-									+ DateTime.now().toString(gotoField),
-							"Could not parse date", JOptionPane.ERROR_MESSAGE);
-				}
+			public void actionPerformed(ActionEvent e) {
+				parseGoto(gotoDate.getText());
+			}
+		});
+		gotoDate.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				parseGoto(gotoDate.getText());
 			}
 		});
 		
+				
 		currentDate = date;
 		
 		this.revalidate();
@@ -168,4 +152,41 @@ public class YearCalendarHolder extends JPanel
 			mainPanel.display(DateTime.now());
 		}
 	};
+	
+	private void parseGoto(String text)
+	{
+		DateTime dt;
+		boolean isValidYear=true;
+		try
+		{
+			dt = gotoField.parseDateTime(text);
+			if(dt.getYear() < 1900 || dt.getYear() > 2100)
+			{
+				isValidYear=false;
+				dt = null;
+			}
+		}
+		catch (IllegalArgumentException illArg)
+		{
+			try
+			{
+				MutableDateTime mdt = gotoFieldShort.parseMutableDateTime(text);
+				mdt.setYear(currentDate.getYear()); // this format does not provide years. add it
+				dt = mdt.toDateTime();						
+			}
+			catch (IllegalArgumentException varArg)
+			{
+				dt = null;
+			}
+		}
+		if (dt != null)
+			mainPanel.display(dt);
+		else
+		{
+			if(isValidYear)
+				gotoErrorText.setText("Use format: mm/dd/yy");
+			else
+				gotoErrorText.setText("Year out of range (1900-2100)");
+		}
+	}
 }
