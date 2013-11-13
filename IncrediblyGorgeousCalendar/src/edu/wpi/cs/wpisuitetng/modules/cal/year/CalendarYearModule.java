@@ -6,7 +6,6 @@ import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
-import edu.wpi.cs.wpisuitetng.modules.cal.MonthCalendar;
 
 public class CalendarYearModule{
 

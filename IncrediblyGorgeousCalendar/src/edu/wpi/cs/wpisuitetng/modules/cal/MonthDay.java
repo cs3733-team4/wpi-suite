@@ -5,14 +5,9 @@
 package edu.wpi.cs.wpisuitetng.modules.cal;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Font;
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Iterator;
-
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
