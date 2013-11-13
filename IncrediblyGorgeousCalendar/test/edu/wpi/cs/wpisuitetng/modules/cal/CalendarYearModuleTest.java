@@ -6,6 +6,11 @@ import edu.wpi.cs.wpisuitetng.modules.cal.year.CalendarYearModule;
 import org.joda.time.DateTime;
 import org.junit.Test;
 
+/**
+ * Tests for CalendarYearModule class
+ *
+ */
+
 public class CalendarYearModuleTest {
 
 	DateTime timeOne = new DateTime(2012, 10, 1, 1, 1);
