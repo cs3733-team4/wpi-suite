@@ -7,6 +7,11 @@ import org.junit.Test;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MonthCalendar;
 
+/**
+ * Tests for MonthsTest class
+ *
+ */
+
 public class MonthsTest{
 
 	private DateTime time =  new DateTime();

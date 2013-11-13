@@ -6,6 +6,12 @@ import edu.wpi.cs.wpisuitetng.modules.cal.MonthItem;
 import org.joda.time.DateTime;
 import org.junit.Test;
 
+/**
+ * Tests for MonthItem class
+ *
+ */
+
+
 public class MonthItemTest {
 
 	DateTime time = new DateTime(); 
