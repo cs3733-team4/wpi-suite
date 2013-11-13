@@ -22,24 +22,24 @@ import com.lowagie.text.Font;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Months;
 
-public class YearCalendarHolder extends JPanel {
+public class YearCalendarHolder extends JPanel
+{
 	
 	private CalendarYearModule calendarPreloader;
 	private JComponent miniCalendar;
 	private JLabel monthName;
-	
-	//dont know if there is a better way of handling this
-	//need text field to be declared outside main to access contents in button listener
-	private JTextField gotoDate;
+	private DateTime currentDate;
+	private MainPanel mainPanel;
 	
 	public YearCalendarHolder(DateTime date, MainPanel mainPanel)
 	{
 		this.setPreferredSize(new Dimension(200, 200));
-		setUpUI(date, mainPanel);
+		currentDate = date;
+		this.mainPanel = mainPanel;
+		display(date);
 	}
 	
-	//changed MainPanel argument name from moca to mainPanel.  MainPanel contains moca...access with getMOCA()
-	private void setUpUI(final DateTime date, final MainPanel mainPanel)
+	public void display(DateTime date)
 	{
 		monthName = this.getMonthLabel(date);
 		this.removeAll();
@@ -53,7 +53,7 @@ public class YearCalendarHolder extends JPanel {
 		JPanel gotoPane = new JPanel();
 		JButton gotoToday = new JButton("Go to Today");
 		
-		gotoDate = new JTextField(DateTime.now().getMonthOfYear() + "/" + DateTime.now().getDayOfMonth() + "/" + DateTime.now().getYear());
+		final JTextField gotoDate = new JTextField(DateTime.now().getMonthOfYear() + "/" + DateTime.now().getDayOfMonth() + "/" + DateTime.now().getYear());
 		JLabel gotoDateText = new JLabel("Go to: ");
 		gotoDateText.setFont(new java.awt.Font("DejaVu Sans",Font.NORMAL,Font.DEFAULTSIZE));
 		
@@ -93,51 +93,28 @@ public class YearCalendarHolder extends JPanel {
 		
 		//adding goto today to sidebar pane
 		this.add(gotoPane, BorderLayout.SOUTH);
-		
-		ActionListener prevListener = new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				setUpUI(Months.prevMonth(date), mainPanel);
-			}
-		};
-		
-		ActionListener nextListener = new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				setUpUI(Months.nextMonth(date), mainPanel);
-			}
-		};
-		
-		//action listener for gotoToday
-		ActionListener todayListener = new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				mainPanel.getMOCA().display(DateTime.now());
-			}
-		};
-		
-		//action listener for gotoToday
-		ActionListener updateGotoListener = new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				DateTimeFormatter fmt = DateTimeFormat.forPattern("MM/dd/yyyy");
-				try{
-					DateTime dt = fmt.parseDateTime(gotoDate.getText());
-					mainPanel.getMOCA().display(dt);
-				}catch (java.lang.IllegalArgumentException illArg){
-					System.out.print("Caught Goto Date Exception: " + illArg.getMessage() + " so didnt go to date\n");
-				}
-			}
-		};
 
 		next.addActionListener(nextListener);
 		prev.addActionListener(prevListener);
 		gotoToday.addActionListener(todayListener);
-		updateGoto.addActionListener(updateGotoListener);
+		updateGoto.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				DateTimeFormatter fmt = DateTimeFormat.forPattern("MM/dd/yyyy");
+				try
+				{
+					DateTime dt = fmt.parseDateTime(gotoDate.getText());
+					mainPanel.display(dt);
+				}
+				catch (java.lang.IllegalArgumentException illArg)
+				{
+					System.out.print("Caught Goto Date Exception: " + illArg.getMessage() + " so didnt go to date\n");
+				}
+			}
+		});
+		
+		currentDate = date;
 		
 		this.revalidate();
 		this.repaint();
@@ -151,4 +128,30 @@ public class YearCalendarHolder extends JPanel {
 		sb.append(dt.year().get());
 		return new JLabel(sb.toString(), JLabel.CENTER);
 	}
+	
+
+	ActionListener prevListener = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+			display(Months.prevMonth(currentDate));
+		}
+	};
+	
+	ActionListener nextListener = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+			display(Months.nextMonth(currentDate));
+		}
+	};
+	
+	//action listener for gotoToday
+	ActionListener todayListener = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+			mainPanel.display(DateTime.now());
+		}
+	};
 }

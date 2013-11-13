@@ -22,6 +22,7 @@ public class MainPanel extends JPanel {
 
 	private MonthCalendar moca;
 	JTabbedPane calendarsAndEvents;
+	private YearCalendarHolder yech;
 
 	public MainPanel() {
 		this.setLayout(new BorderLayout());
@@ -30,7 +31,8 @@ public class MainPanel extends JPanel {
 		JPanel mainCalendar = new JPanel();
 		
 		miniCalendar.setPreferredSize(new Dimension(200, 1024));
-		miniCalendar.add(new YearCalendarHolder(DateTime.now(), this));
+		yech = new YearCalendarHolder(DateTime.now(), this);
+		miniCalendar.add(yech);
 		
 		mainCalendar.setLayout(new BorderLayout());
 
@@ -40,7 +42,7 @@ public class MainPanel extends JPanel {
 		calendarsAndEvents = new JTabbedPane();
 		mainCalendar.add(calendarsAndEvents, BorderLayout.CENTER);
 		
-		moca = new MonthCalendar(DateTime.now());
+		moca = new MonthCalendar(DateTime.now(), this);
 		
 		
 		addCalendarTab(moca, "Calendar", false);
@@ -96,8 +98,13 @@ public class MainPanel extends JPanel {
 	}
 
 
-	public MonthCalendar getMOCA()
+	public void display(DateTime newtime)
 	{
-		return moca;
+		moca.display(newtime);
+	}
+
+
+	public void miniMove(DateTime time) {
+		yech.display(time);
 	}
 }

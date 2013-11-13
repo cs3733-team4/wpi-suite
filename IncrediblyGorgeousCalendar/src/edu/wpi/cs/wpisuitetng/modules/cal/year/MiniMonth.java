@@ -52,7 +52,7 @@ public class MiniMonth extends JPanel {
 				DayLabel d = (DayLabel)(me.getSource());
 				if (!(d instanceof DescriptiveDayLabel))
 				{
-					mc.getMOCA().display(d.getMonth());
+					mc.display(d.getMonth());
 				}
 			}
 		};

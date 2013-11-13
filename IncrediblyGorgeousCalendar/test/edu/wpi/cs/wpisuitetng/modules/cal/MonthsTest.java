@@ -18,53 +18,53 @@ public class MonthsTest{
 	
 	@Test
 	public void testgetTimeReturnsProvidedTime() {
-		MonthCalendar mCal = new MonthCalendar(time);
+		MonthCalendar mCal = new MonthCalendar(time, null);
 		assertEquals("Function should return current time", time, mCal.getTime());
 	}
 	
 	@Test
 	public void testNextReturnsNextMonth() {
-		MonthCalendar mCal = new MonthCalendar(time);
+		MonthCalendar mCal = new MonthCalendar(time, null);
 		mCal.next();
 		assertEquals("Function should return current time plus 1 month", timePlusOneMonth, mCal.getTime());
 	}
 	
 	@Test
 	public void testNextReturnsNextMonthDecemberToJanuary() {
-		MonthCalendar mCal = new MonthCalendar(timeDecember);
+		MonthCalendar mCal = new MonthCalendar(timeDecember, null);
 		mCal.next();
 		assertEquals("Function should return January 2013", timeJanuary, mCal.getTime());
 	}
 	
 	@Test
 	public void testPreviousReturnsNextMonthJanuaryToDecember() {
-		MonthCalendar mCal = new MonthCalendar(timeJanuary);
+		MonthCalendar mCal = new MonthCalendar(timeJanuary, null);
 		mCal.previous();
 		assertEquals("Function should return December 2012", timeDecember, mCal.getTime());
 	}
 	
 	@Test
 	public void testIsTodayFalse() {
-		MonthCalendar mCal = new MonthCalendar(timeJanuary);
+		MonthCalendar mCal = new MonthCalendar(timeJanuary, null);
 		assertFalse("January 2013 is not today", mCal.isToday(timeJanuary));
 	}
 	
 	@Test
 	public void testIsTodayTrue() {
-		MonthCalendar mCal = new MonthCalendar(time);
+		MonthCalendar mCal = new MonthCalendar(time, null);
 		assertTrue("Today should be today", mCal.isToday(time));
 	}
 	
 	@Test
 	public void testIsTodayDaylightSavingsTime() {
-		MonthCalendar mCal = new MonthCalendar(timeOneHourThirtyMinutesBeforeDST);
+		MonthCalendar mCal = new MonthCalendar(timeOneHourThirtyMinutesBeforeDST, null);
 		mCal.next();
 		assertEquals("Next month should be the same even if DST happened", timeOneHourThirtyMinutesBeforeDSTPlusOneMonth, mCal.getTime());
 	}
 	
 	@Test
 	public void testNextPrevious() {
-		MonthCalendar mCal = new MonthCalendar(timeOneHourThirtyMinutesBeforeDST);
+		MonthCalendar mCal = new MonthCalendar(timeOneHourThirtyMinutesBeforeDST, null);
 		mCal.next();
 		mCal.previous();
 		assertEquals("Time should be the same", timeOneHourThirtyMinutesBeforeDST, mCal.getTime());
@@ -72,7 +72,7 @@ public class MonthsTest{
 	
 	@Test
 	public void testNextPreviousIsToday() {
-		MonthCalendar mCal = new MonthCalendar(time);
+		MonthCalendar mCal = new MonthCalendar(time, null);
 		mCal.next();
 		mCal.previous();
 		assertTrue("Time should be the same", mCal.isToday(time));

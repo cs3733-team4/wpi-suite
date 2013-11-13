@@ -25,10 +25,11 @@ public class MonthCalendar extends JPanel
 	private JLabel monthLabel = new JLabel();
 	private DateTime time;
 	private JButton nextButton = new JButton("Next"), previousButton = new JButton("Previous");
+	private MainPanel mainPanel;
 
-	public MonthCalendar(DateTime on)
+	public MonthCalendar(DateTime on, MainPanel mainPanel)
 	{
-		
+		this.mainPanel = mainPanel;
 		this.setLayout(new BorderLayout());
 		
 		
@@ -190,6 +191,9 @@ public class MonthCalendar extends JPanel
 		
 		monthLabel.setText(this.getTime().monthOfYear().getAsText() + " " + this.getTime().year().getAsText());
 
+		// notify mini-calendar to change
+		mainPanel.miniMove(time);
+		
 		// repaint when changed
 		inside.revalidate();
 	}
