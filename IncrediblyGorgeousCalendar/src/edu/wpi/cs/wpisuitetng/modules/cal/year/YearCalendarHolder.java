@@ -74,7 +74,6 @@ public class YearCalendarHolder extends JPanel
 		
 		//Goto Pane
 		JPanel gotoPane = new JPanel();
-		JButton gotoToday = new JButton("Go to Today");
 		
 		final JTextField gotoDateField = new JTextField(date.toString(gotoField));
 		JLabel gotoDateText = new JLabel("Go to: ");
@@ -83,6 +82,9 @@ public class YearCalendarHolder extends JPanel
 		gotoErrorText.setForeground(Color.RED);
 		
 		JButton updateGotoButton = new JButton(">");
+		updateGotoButton.setFocusable(false);
+		updateGotoButton.setBackground(UIManager.getDefaults().getColor("Panel.background"));
+		updateGotoButton.setBorder(new EmptyBorder(5, 5, 5, 5));
 		
 		//Goto Date Pane within Goto Pane
 		JPanel gotoDatePane = new JPanel();
@@ -92,9 +94,8 @@ public class YearCalendarHolder extends JPanel
 		gotoDatePane.add(updateGotoButton, BorderLayout.EAST);
 		
 		gotoPane.setLayout(new BorderLayout());
-		gotoPane.add(gotoToday, BorderLayout.NORTH);
-		gotoPane.add(gotoDatePane, BorderLayout.CENTER);
-		gotoPane.add(gotoErrorText, BorderLayout.SOUTH);
+		gotoPane.add(gotoDatePane, BorderLayout.NORTH);
+		gotoPane.add(gotoErrorText, BorderLayout.CENTER);
 				
 		calendarPreloader = new CalendarYearModule(date, mainPanel);
 		this.miniCalendar = this.calendarPreloader.renderComponent();
@@ -106,7 +107,6 @@ public class YearCalendarHolder extends JPanel
 		//add event listeners
 		nextButton.addActionListener(nextListener);
 		prevButton.addActionListener(prevListener);
-		gotoToday.addActionListener(todayListener);
 		updateGotoButton.addActionListener(new ActionListener() {
 			
 			@Override
@@ -144,15 +144,6 @@ public class YearCalendarHolder extends JPanel
 		public void actionPerformed(ActionEvent e)
 		{
 			display(Months.nextMonth(currentDate));
-		}
-	};
-	
-	//action listener for gotoToday
-	ActionListener todayListener = new ActionListener() {
-		@Override
-		public void actionPerformed(ActionEvent e)
-		{
-			mainPanel.display(DateTime.now());
 		}
 	};
 	
