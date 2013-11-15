@@ -1,9 +1,10 @@
-package edu.wpi.cs.wpisuitetng.modules.cal;
+package edu.wpi.cs.wpisuitetng.modules.cal.month;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -15,7 +16,10 @@ import org.joda.time.*;
 
 import com.lowagie.text.Font;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.DayStyle;
+import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Months;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
 /**
  *
@@ -105,6 +109,15 @@ public class MonthCalendar extends JPanel
 			top.add(jl);
 		}
 		generateDays(fom);
+	}
+	
+	/**
+	 * 
+	 * @param events
+	 */
+	public void displayEvents(List<Event> events)
+	{
+		
 	}
 
 	private MonthItem[] randItems(ReadableDateTime dt)

@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.modules.cal;
+package edu.wpi.cs.wpisuitetng.modules.cal.month;
 
 import java.awt.Font;
 

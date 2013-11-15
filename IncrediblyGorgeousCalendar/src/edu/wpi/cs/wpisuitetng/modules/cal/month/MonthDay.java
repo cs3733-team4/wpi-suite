@@ -2,17 +2,20 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.wpi.cs.wpisuitetng.modules.cal;
+package edu.wpi.cs.wpisuitetng.modules.cal.month;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.util.Arrays;
 import java.util.Comparator;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 
 import org.joda.time.DateTime;
+
+import edu.wpi.cs.wpisuitetng.modules.cal.DayStyle;
 
 /**
  *
