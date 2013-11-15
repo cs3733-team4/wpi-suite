@@ -34,6 +34,7 @@ public class YearCalendarHolder extends JPanel
 	private DateTime currentDate;
 	private MainPanel mainPanel;
 	private JLabel gotoErrorText;
+	final private static DateTimeFormatter gotoExampleField = DateTimeFormat.forPattern("M/d/yyyy");
 	final private static DateTimeFormatter gotoField = DateTimeFormat.forPattern("M/d/yy");
 	final private static DateTimeFormatter gotoFieldShort = DateTimeFormat.forPattern("M/d");
 	
@@ -75,7 +76,7 @@ public class YearCalendarHolder extends JPanel
 		//Goto Pane
 		JPanel gotoPane = new JPanel();
 		
-		final JTextField gotoDateField = new JTextField(date.toString(gotoField));
+		final JTextField gotoDateField = new JTextField(date.toString(gotoExampleField));
 		JLabel gotoDateText = new JLabel("Go to: ");
 		gotoErrorText = new JLabel(" ");
 		gotoErrorText.setHorizontalAlignment(SwingConstants.CENTER);
@@ -178,7 +179,7 @@ public class YearCalendarHolder extends JPanel
 		else
 		{
 			if(isValidYear)
-				gotoErrorText.setText("Use format: mm/dd/yy");
+				gotoErrorText.setText("Use format: mm/dd/yyyy");
 			else
 				gotoErrorText.setText("Year out of range (1900-2100)");
 		}
