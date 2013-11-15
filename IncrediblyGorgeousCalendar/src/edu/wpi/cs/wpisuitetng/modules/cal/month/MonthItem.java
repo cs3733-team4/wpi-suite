@@ -4,6 +4,7 @@
  */
 package edu.wpi.cs.wpisuitetng.modules.cal.month;
 
+import java.awt.Component;
 import java.awt.Font;
 
 import javax.swing.JLabel;
@@ -11,6 +12,8 @@ import javax.swing.JPanel;
 import javax.swing.UIManager;
 
 import org.joda.time.DateTime;
+
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
 /**
  *
@@ -74,5 +77,10 @@ public class MonthItem extends JPanel
 	public void setWhen(DateTime when)
 	{
 		this.when = when;
+	}
+
+	public static Component generateFrom(Event elt) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -4,6 +4,9 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -37,6 +40,10 @@ public class MonthCalendar extends JPanel
 	private JLabel monthLabel = new JLabel();
 	private DateTime time;
 	private MainPanel mainPanel;
+	
+	
+	private HashMap<Integer, MonthDay> days = new HashMap<Integer, MonthDay>();
+	
 
 	public MonthCalendar(DateTime on, MainPanel mainPanel)
 	{
@@ -130,8 +137,30 @@ public class MonthCalendar extends JPanel
 	 * 
 	 * @param events
 	 */
-	public void displayEvents(List<Event> events)
+	public void addEvents(List<Event> events)
 	{
+		Collections.sort(events, new Comparator<Event>(){
+			@Override
+			public int compare(Event e, Event e2)
+			{
+				return e.getStartTime().isBefore(e2.getStartTime()) ? 1 : 0;
+			}
+		});
+		
+		for(Event e : events)
+		{
+			this.addEvent(e);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param e
+	 */
+	public void addEvent(Event e)
+	{
+		MonthDay md = this.days.get(e.getStartTime().getDayOfMonth());
+		
 		
 	}
 	
@@ -186,6 +215,7 @@ public class MonthCalendar extends JPanel
 		int first = (referenceDay.getDayOfWeek() % 7);
 		int daysInView = first + referenceDay.dayOfMonth().getMaximumValue();
 		int weeks = (int)Math.ceil(daysInView / 7.0);
+		
 		inside.setLayout(new java.awt.GridLayout(weeks, 7));
 		referenceDay.addDays(-first);
 
@@ -199,6 +229,7 @@ public class MonthCalendar extends JPanel
 			inside.add(md);
 			md.reBorder(i < 7, (i % 7 ) == 0, i >= 5 * 7);
 			referenceDay.addDays(1); // go to next day
+			this.days.put(i, md);
 		}
 		
 		monthLabel.setText(this.getTime().toString(Months.monthLblFormat));

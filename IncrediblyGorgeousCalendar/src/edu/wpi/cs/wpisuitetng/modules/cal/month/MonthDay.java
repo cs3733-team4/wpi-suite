@@ -6,6 +6,7 @@ package edu.wpi.cs.wpisuitetng.modules.cal.month;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.util.ArrayList;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -14,17 +15,15 @@ import javax.swing.UIManager;
 import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.DayStyle;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
-/**
- *
- * @author patrick
- */
+
 @SuppressWarnings("serial")
 public class MonthDay extends JPanel
 {
 	private boolean borderTop;
 	JLabel header = new JLabel();
-	private MonthItem[] items;
+	private ArrayList<Event> items;
 
 	public MonthDay(DateTime day, DayStyle style)
 	{
@@ -75,6 +74,11 @@ public class MonthDay extends JPanel
 		setBorder(javax.swing.BorderFactory.createMatteBorder((top || borderTop) ? 1 : 0, left ? 1 : 0, bottom ? 1 : 0, 1, UIManager.getDefaults().getColor("Separator.foreground")));
 	}
 	
+	public void addEvent(Event e)
+	{
+		
+	}
+	
 	@Override
 	public void doLayout()
 	{
@@ -84,7 +88,7 @@ public class MonthDay extends JPanel
 		add(header);
 		total -= header.getHeight();
 		if (items!=null){
-			for (MonthItem elt : this.items)
+			for (Event elt : this.items)
 			{
 				if (hidden > 0)
 				{
@@ -99,14 +103,14 @@ public class MonthDay extends JPanel
 					}
 					else
 					{
-						this.add(elt);
+						this.add(MonthItem.generateFrom(elt));
 					}
 				}
 			}
 		}
 		if (hidden == 1) // silly, add it anyway
 		{
-			this.add(this.items[this.items.length - 1]);
+			this.add(MonthItem.generateFrom(this.items.get(this.items.size() - 1)));
 		}
 		else if (hidden > 1)
 		{
