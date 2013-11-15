@@ -153,14 +153,25 @@ public class MonthCalendar extends JPanel
 		MonthDay md = this.days.get(e.getStartTime().getDayOfMonth());
 		md.addEvent(e);
 	}
-	
+	/**
+	 * 
+	 * @param e
+	 */
+	public void removeEvent(Event e)
+	{
+		MonthDay md = this.days.get(e.getStartTime().getDayOfMonth());
+		md.removeEvent(e);
+	}
 	/**
 	 * 
 	 * @param events
 	 */
 	public void removeEvents(List<Event> events)
 	{
-		
+		for(Event e : events)
+		{
+			this.removeEvent(e);
+		}
 	}
 
 	public boolean isToday(ReadableDateTime fom)

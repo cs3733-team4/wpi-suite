@@ -50,7 +50,9 @@ public class Visualiser extends JFrame{
 		this.setSize(new Dimension(1200, 900));
 		this.setVisible(true);
 		
-		((MainPanel) calendar).getMOCA().addEvents(gne());;
+		List<Event> gni = gne();
+		((MainPanel) calendar).getMOCA().addEvents(gni);;
+		//((MainPanel) calendar).getMOCA().removeEvents(gni);
 		//System.out.println(calendar.getClass());
 	}
 	
@@ -61,7 +63,6 @@ public class Visualiser extends JFrame{
 		events.add(new Event("rehab", "killing time!", new DateTime(2013, 11, 14, 20, 0), new DateTime(2013, 11, 14, 20, 50), false, 0, 0));
 		events.add(new Event("cook meth", "get $$$", new DateTime(2013, 11, 14, 21, 0), new DateTime(2013, 11, 14, 21, 50), false, 0, 0));
 		events.add(new Event("sleep", "die", new DateTime(2013, 11, 14, 22, 0), new DateTime(2013, 11, 14, 22, 50), false, 0, 0));
-		
 		//DateTime dt = new DateTime(2013, 11, 14, 18, 0);
 		return events;
 	}

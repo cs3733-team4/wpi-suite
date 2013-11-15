@@ -81,6 +81,12 @@ public class MonthDay extends JPanel
 		this.doLayout();
 	}
 	
+	public void removeEvent(Event e)
+	{
+		this.items.clear();
+		this.doLayout();
+	}
+	
 	@Override
 	public void doLayout()
 	{
