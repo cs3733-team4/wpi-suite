@@ -6,6 +6,7 @@ import java.awt.GridLayout;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.Calendar;
 
@@ -22,6 +23,13 @@ public class Visualiser extends JFrame{
 	{
 		JComponent calendar = new Calendar().getTabs().get(0).getMainComponent();
 		JPanel p = new JPanel();
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} 
+		catch (Exception e) {
+			System.out.println("Error setting UI manager to cross-platform!");
+			e.printStackTrace();
+		}
 		
 		p.setLayout(new GridLayout(1,1));
 		this.setLayout(new GridLayout(1,1));

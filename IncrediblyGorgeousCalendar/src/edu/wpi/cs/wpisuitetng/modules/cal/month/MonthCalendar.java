@@ -21,16 +21,21 @@ import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Months;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
-/**
- *
- * @author patrick
- */
+@SuppressWarnings("serial")
 public class MonthCalendar extends JPanel
 {
-	private JPanel inside = new JPanel(), top = new JPanel(), mainCalendarView = new JPanel(), navigationPanel = new JPanel(), navigationButtonPanel = new JPanel();
+	private JPanel inside                = new JPanel(), 
+			       top                   = new JPanel(), 
+			       mainCalendarView      = new JPanel(), 
+			       navigationPanel       = new JPanel(), 
+			       navigationButtonPanel = new JPanel();
+	
+	private JButton nextButton   = new JButton(">"), 
+	        previousButton       = new JButton("<"), 
+	        todayButton          = new JButton("Today");
+	
 	private JLabel monthLabel = new JLabel();
 	private DateTime time;
-	private JButton nextButton = new JButton(">"), previousButton = new JButton("<"), todayButton = new JButton("Today");
 	private MainPanel mainPanel;
 
 	public MonthCalendar(DateTime on, MainPanel mainPanel)
@@ -53,21 +58,16 @@ public class MonthCalendar extends JPanel
 		navigationButtonPanel.add(todayButton, BorderLayout.CENTER);
 		navigationButtonPanel.add(previousButton, BorderLayout.WEST);
 		
-		//unnecessary if arrows are used because both are same size
-		//nextButton.setPreferredSize(previousButton.getPreferredSize());
-		
 		navigationPanel.add(monthLabel, BorderLayout.CENTER);
 		navigationPanel.add(navigationButtonPanel, BorderLayout.WEST);
 		
 		nextButton.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				next();
 			}
 		});
 		previousButton.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				previous();
@@ -75,12 +75,12 @@ public class MonthCalendar extends JPanel
 			}
 		});
 		todayButton.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				display(DateTime.now());
 			}
 		});
+		
 		time = on;
 
 		// layout code
