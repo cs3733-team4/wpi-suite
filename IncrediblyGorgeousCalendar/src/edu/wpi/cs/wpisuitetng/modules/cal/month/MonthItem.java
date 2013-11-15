@@ -49,7 +49,7 @@ public class MonthItem extends JPanel
 	 * @param when
 	 * @return
 	 */
-	String simpleTime(DateTime when)
+	public String simpleTime(DateTime when)
 	{
 		String ret;
 		boolean pm = when.getHourOfDay() >= 12;
