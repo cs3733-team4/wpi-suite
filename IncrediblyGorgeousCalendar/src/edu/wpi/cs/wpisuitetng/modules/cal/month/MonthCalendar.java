@@ -120,48 +120,6 @@ public class MonthCalendar extends JPanel
 		
 	}
 
-	private MonthItem[] randItems(ReadableDateTime dt)
-	{
-		
-		MutableDateTime mtd = new MutableDateTime(dt);
-		mtd.addHours(8 + (int)(Math.random() * 10));
-		DateTime a = mtd.toDateTime();
-		mtd = new MutableDateTime(dt);
-		mtd.addHours(8 + (int)(Math.random() * 10));
-		DateTime b = mtd.toDateTime();
-		mtd = new MutableDateTime(dt);
-		mtd.addHours(10 + (int)(Math.random() * 10));
-		mtd.addMinutes(30);
-		DateTime c = mtd.toDateTime();
-		mtd = new MutableDateTime(dt);
-		mtd.addHours(9 + (int)(Math.random() * 10));
-		mtd.addMinutes(45);
-		DateTime d = mtd.toDateTime();
-
-		if (Math.random() > .8)
-		{
-			return new MonthItem[]{new MonthItem(a, "Meeting")};
-		}
-		else if (Math.random() > .7)
-		{
-			return new MonthItem[]{new MonthItem(b, "Eat Pizza")};
-		}
-		else if (Math.random() > .6)
-		{
-			return new MonthItem[]{new MonthItem(b, "Eat Pizza"),new MonthItem(a, "Meeting")};
-		}
-		else if (Math.random() > .5)
-		{
-			return new MonthItem[]{new MonthItem(c, "Pet Cats"),new MonthItem(a, "Meeting"),new MonthItem(b, "Doctors Appointment"),new MonthItem(d, "Lunch")};
-		}
-		else if (Math.random() > .4)
-		{
-			return new MonthItem[]{new MonthItem(c, "Watch videos"),new MonthItem(a, "Meeting"),new MonthItem(b, "Eat Pizza")};
-		}
-
-		return new MonthItem[]{};
-	}
-
 	boolean isToday(ReadableDateTime fom)
 	{
 		DateTime now = DateTime.now();
@@ -213,7 +171,7 @@ public class MonthCalendar extends JPanel
 		// generate days, weeks*7 covers all possible months, so we just loop through and add each day
 		for (int i = 0; i < (weeks*7); i++)
 		{
-			MonthDay md = new MonthDay(referenceDay.toDateTime(), randItems(referenceDay), getMarker(referenceDay));
+			MonthDay md = new MonthDay(referenceDay.toDateTime(), getMarker(referenceDay));
 			inside.add(md);
 			md.reBorder(i < 7, (i % 7 ) == 0, i >= 5 * 7);
 			referenceDay.addDays(1); // go to next day

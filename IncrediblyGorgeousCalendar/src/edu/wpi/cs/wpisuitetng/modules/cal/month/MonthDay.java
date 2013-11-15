@@ -6,8 +6,6 @@ package edu.wpi.cs.wpisuitetng.modules.cal.month;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.util.Arrays;
-import java.util.Comparator;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -21,13 +19,14 @@ import edu.wpi.cs.wpisuitetng.modules.cal.DayStyle;
  *
  * @author patrick
  */
+@SuppressWarnings("serial")
 public class MonthDay extends JPanel
 {
-	JLabel header = new JLabel();
 	private boolean borderTop;
+	JLabel header = new JLabel();
 	private MonthItem[] items;
 
-	public MonthDay(DateTime day, MonthItem[] items, DayStyle style)
+	public MonthDay(DateTime day, DayStyle style)
 	{
 		Color grayit, textit = UIManager.getDefaults().getColor("Label.foreground"),
 			bg = UIManager.getDefaults().getColor("Table.background");
@@ -69,20 +68,6 @@ public class MonthDay extends JPanel
 		header.setMaximumSize(new java.awt.Dimension(10000, 17));
 		header.setOpaque(true);
 		add(header);
-
-		Arrays.sort(items, new Comparator<MonthItem>()
-		{
-			@Override
-			public int compare(MonthItem o1, MonthItem o2)
-			{
-				return o1.getWhen().compareTo(o2.getWhen());
-			}
-		});
-		this.items = items;
-		for (MonthItem monthItem : items)
-		{
-			add(monthItem);
-		}
 	}
 
 	public void reBorder(boolean top, boolean left, boolean bottom)
@@ -98,22 +83,24 @@ public class MonthDay extends JPanel
 		removeAll();
 		add(header);
 		total -= header.getHeight();
-		for (MonthItem elt : this.items)
-		{
-			if (hidden > 0)
+		if (items!=null){
+			for (MonthItem elt : this.items)
 			{
-				hidden++;
-			}
-			else
-			{
-				total -= 24; //TODO: don't use constant. getHeight fails when slow resizing to min though...
-				if (total <= 10)
+				if (hidden > 0)
 				{
-					hidden = 1;
+					hidden++;
 				}
 				else
 				{
-					this.add(elt);
+					total -= 24; //TODO: don't use constant. getHeight fails when slow resizing to min though...
+					if (total <= 10)
+					{
+						hidden = 1;
+					}
+					else
+					{
+						this.add(elt);
+					}
 				}
 			}
 		}

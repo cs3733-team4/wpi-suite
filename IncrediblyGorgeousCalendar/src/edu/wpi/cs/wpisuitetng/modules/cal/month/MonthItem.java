@@ -5,6 +5,7 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.month;
 
 import java.awt.Font;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
@@ -15,6 +16,7 @@ import org.joda.time.DateTime;
  *
  * @author patrick
  */
+@SuppressWarnings("serial")
 public class MonthItem extends JPanel
 {
 	JLabel time = new JLabel(), desc = new JLabel();
