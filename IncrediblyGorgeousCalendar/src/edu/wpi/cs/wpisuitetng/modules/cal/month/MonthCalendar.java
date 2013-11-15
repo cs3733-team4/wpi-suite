@@ -57,19 +57,10 @@ public class MonthCalendar extends JPanel
 	 */
 	public void generateHeaders(MutableDateTime fom)
 	{
-		
-		
-		
-		
 		navigationPanel.setLayout(new BorderLayout());
-		
-		
-		
-		
-		monthLabel.setHorizontalAlignment(JLabel.CENTER);
-		
+		monthLabel.setHorizontalAlignment(JLabel.CENTER);	
 		monthLabel.setFont(new java.awt.Font("DejaVu Sans", Font.BOLD, 25));
-		
+
 		navigationButtonPanel.setLayout(new BorderLayout());
 		navigationButtonPanel.add(nextButton, BorderLayout.EAST);
 		navigationButtonPanel.add(todayButton, BorderLayout.CENTER);
@@ -144,7 +135,7 @@ public class MonthCalendar extends JPanel
 		
 	}
 
-	boolean isToday(ReadableDateTime fom)
+	public boolean isToday(ReadableDateTime fom)
 	{
 		DateTime now = DateTime.now();
 		return fom.getYear() == now.getYear() && fom.getDayOfYear() == now.getDayOfYear();
