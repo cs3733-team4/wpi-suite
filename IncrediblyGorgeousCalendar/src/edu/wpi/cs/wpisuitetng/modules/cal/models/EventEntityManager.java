@@ -67,20 +67,9 @@ public class EventEntityManager implements EntityManager<Event> {
 	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#getEntity(Session, String) */
 	@Override
 	public Event[] getEntity(Session s, String id) throws NotFoundException {
-		final int intId = Integer.parseInt(id);
-		if(intId < 1) {
-			throw new NotFoundException();
-		}
-		Event[] events = null;
-		try {
-			events = db.retrieve(Event.class, "eventID", intId, s.getProject()).toArray(new Event[0]);
-		} catch (WPISuiteException e) {
-			e.printStackTrace();
-		}
-		if(events.length < 1 || events[0] == null) {
-			throw new NotFoundException();
-		}
-		return events;
+		System.out.println(id+ " was just sent!");
+		String[] args = id.split(",");
+		return new Event[0];
 	}
 
 	/**
