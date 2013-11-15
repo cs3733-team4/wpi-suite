@@ -134,7 +134,7 @@ public class MonthCalendar extends JPanel
 			@Override
 			public int compare(Event e, Event e2)
 			{
-				return e.getStartTime().isBefore(e2.getStartTime()) ? 1 : 0;
+				return e.getStartTime().compareTo(e2.getStartTime());
 			}
 		});
 		
@@ -151,8 +151,7 @@ public class MonthCalendar extends JPanel
 	public void addEvent(Event e)
 	{
 		MonthDay md = this.days.get(e.getStartTime().getDayOfMonth());
-		
-		
+		md.addEvent(e);
 	}
 	
 	/**

@@ -15,10 +15,7 @@ import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
-/**
- *
- * @author patrick
- */
+
 @SuppressWarnings("serial")
 public class MonthItem extends JPanel
 {
@@ -80,7 +77,6 @@ public class MonthItem extends JPanel
 	}
 
 	public static Component generateFrom(Event elt) {
-		// TODO Auto-generated method stub
-		return null;
+		return new MonthItem(elt.getStartTime(), elt.getName());
 	}
 }

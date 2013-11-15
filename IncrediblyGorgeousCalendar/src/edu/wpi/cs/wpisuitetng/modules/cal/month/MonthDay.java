@@ -7,6 +7,7 @@ package edu.wpi.cs.wpisuitetng.modules.cal.month;
 import java.awt.Color;
 import java.awt.Font;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -23,7 +24,7 @@ public class MonthDay extends JPanel
 {
 	private boolean borderTop;
 	JLabel header = new JLabel();
-	private ArrayList<Event> items;
+	private List<Event> items = new ArrayList<Event>();
 
 	public MonthDay(DateTime day, DayStyle style)
 	{
@@ -76,7 +77,8 @@ public class MonthDay extends JPanel
 	
 	public void addEvent(Event e)
 	{
-		
+		this.items.add(e);
+		this.doLayout();
 	}
 	
 	@Override
