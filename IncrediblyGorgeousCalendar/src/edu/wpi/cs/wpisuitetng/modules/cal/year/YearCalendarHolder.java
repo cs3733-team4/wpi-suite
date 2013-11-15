@@ -76,7 +76,7 @@ public class YearCalendarHolder extends JPanel
 		//Goto Pane
 		JPanel gotoPane = new JPanel();
 		
-		final JTextField gotoDateField = new JTextField(DateTime.now().toString(gotoExampleField));
+		final JTextField gotoDateField = new JTextField(date.toString(gotoExampleField));
 		JLabel gotoDateText = new JLabel("Go to: ");
 		gotoErrorText = new JLabel(" ");
 		gotoErrorText.setHorizontalAlignment(SwingConstants.CENTER);
