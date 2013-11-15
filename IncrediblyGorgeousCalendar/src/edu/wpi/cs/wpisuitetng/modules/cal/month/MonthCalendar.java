@@ -41,12 +41,29 @@ public class MonthCalendar extends JPanel
 	public MonthCalendar(DateTime on, MainPanel mainPanel)
 	{
 		this.mainPanel = mainPanel;
+		this.time      = on;
+		
 		this.setLayout(new BorderLayout());
+		this.add(navigationPanel, BorderLayout.NORTH);
+		
+		generateDays(new MutableDateTime(on));
+		generateHeaders(new MutableDateTime(on));
+		
+	}
+	
+	/**
+	 * 
+	 * @param fom the mutable date time
+	 */
+	public void generateHeaders(MutableDateTime fom)
+	{
+		
+		
 		
 		
 		navigationPanel.setLayout(new BorderLayout());
 		
-		this.add(navigationPanel, BorderLayout.NORTH);
+		
 		
 		
 		monthLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -81,7 +98,7 @@ public class MonthCalendar extends JPanel
 			}
 		});
 		
-		time = on;
+		
 
 		// layout code
 		mainCalendarView.setBackground(UIManager.getDefaults().getColor("Table.background"));
@@ -94,7 +111,6 @@ public class MonthCalendar extends JPanel
 		this.add(mainCalendarView, BorderLayout.CENTER);
 		// end layout code
 
-		MutableDateTime fom = new MutableDateTime(on);
 		fom.setDayOfMonth(1);
 		fom.setMillisOfDay(0);
 		int first = (fom.getDayOfWeek() % 7);
@@ -108,7 +124,6 @@ public class MonthCalendar extends JPanel
 			fom.addDays(1);
 			top.add(jl);
 		}
-		generateDays(fom);
 	}
 	
 	/**
@@ -116,6 +131,15 @@ public class MonthCalendar extends JPanel
 	 * @param events
 	 */
 	public void displayEvents(List<Event> events)
+	{
+		
+	}
+	
+	/**
+	 * 
+	 * @param events
+	 */
+	public void removeEvents(List<Event> events)
 	{
 		
 	}
