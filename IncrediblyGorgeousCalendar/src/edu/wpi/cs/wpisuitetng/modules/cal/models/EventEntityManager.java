@@ -63,10 +63,6 @@ public class EventEntityManager implements EntityManager<Event> {
 	 * Retrieves a single event from the database
 	 * @param s the session
 	 * @param id the id number of the event to retrieve
-	
-	
-	
-	
 	 * @return the event matching the given id * @throws NotFoundException * @throws NotFoundException * @throws NotFoundException
 	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#getEntity(Session, String) */
 	@Override
@@ -90,9 +86,6 @@ public class EventEntityManager implements EntityManager<Event> {
 	/**
 	 * Retrieves all events from the database
 	 * @param s the session
-	
-	
-	
 	 * @return array of all stored events * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#getAll(Session) * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#getAll(Session) * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#getAll(Session)
 	 */
 	@Override
@@ -120,7 +113,9 @@ public class EventEntityManager implements EntityManager<Event> {
 	 */
 	@Override
 	public void save(Session s, Event model) {
-		db.save(model, s.getProject());
+		if (model.isProjectEvent())
+			model.setProject(s.getProject());
+		db.save(model);
 	}
 	
 
