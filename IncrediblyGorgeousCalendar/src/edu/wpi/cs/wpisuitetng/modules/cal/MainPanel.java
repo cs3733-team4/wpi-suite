@@ -96,7 +96,11 @@ public class MainPanel extends JPanel {
 			tabInfoClose.addActionListener(listener);
 		}
 	}
-
+	public MonthCalendar getMOCA()
+	{
+		return this.moca;
+	}
+	
 
 	public void display(DateTime newtime)
 	{

@@ -151,8 +151,7 @@ public class MonthCalendar extends JPanel
 	public void addEvent(Event e)
 	{
 		MonthDay md = this.days.get(e.getStartTime().getDayOfMonth());
-		
-		
+		md.addEvent(e);
 	}
 	
 	/**

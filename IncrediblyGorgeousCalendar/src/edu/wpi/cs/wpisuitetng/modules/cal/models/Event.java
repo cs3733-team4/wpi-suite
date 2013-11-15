@@ -26,6 +26,152 @@ public class Event extends AbstractModel {
 	private DateTime startRepeat;
 	private DateTime endRepeat;
 
+	
+	
+	/**
+	 * 
+	 * @param name the name of the event
+	 * @return this event after having it's name set
+	 */
+	public Event addName(String name)
+	{
+		this.name = name;
+		return this;
+	}
+
+	/**
+	 * 
+	 * @param description the event's description
+	 * @return this event after having it's description set
+	 */
+	public Event addDescription(String description)
+	{
+		this.description = description;
+		return this;
+	}
+	
+	/**
+	 * 
+	 * @param date the starting time
+	 * @return this event after having its start date set
+	 */
+	public Event addStartTime(DateTime date)
+	{
+		this.startTime = date;
+		return this;
+	}
+	
+	/**
+	 * 
+	 * @param date the end time of this event
+	 * @return this event after having it's end time set
+	 */
+	public Event addEndTime(DateTime date)
+	{
+		this.endTime = date;
+		return this;
+	}
+	
+	/**
+	 * 
+	 * @param rep whether this event is repeating
+	 * @return this event after having it's repeating flag set
+	 */
+	public Event setIsRepeating(boolean rep)
+	{
+		this.isRepeating = rep;
+		return this;
+	}
+	
+	/**
+	 * 
+	 * @param pe whether this is a project event
+	 * @return this event after having it's project flag set
+	 */
+	public Event setIsProjectEvent(boolean pe)
+	{
+		this.isProjectEvent = pe;
+		return this;
+	}
+	
+	/**
+	 * 
+	 * @param user a user ID
+	 * @return this event after having it's user ID set
+	 */
+	public Event userID(int user)
+	{
+		this.userID = user;
+		return this;
+	}
+	
+	/**
+	 * 
+	 * @param project the project ID for this event
+	 * @return this event after having it's project ID set
+	 */
+	public Event projectID(int project)
+	{
+		this.projectID = project;
+		return this;
+	}
+	
+	/**
+	 * 
+	 * @param repeats the RepeatType of this event
+	 * @return this event after having it's repeat type set
+	 */
+	public Event repeats(RepeatType repeats)
+	{
+		this.repeats = repeats;
+		return this;
+	}
+	
+	/**
+	 * 
+	 * @param repEvery the repeat every count (ie every other, third, or fourth day)
+	 * @return this event after having it's repeat every count set
+	 */
+	public Event repeatEvery(int repEvery)
+	{
+		this.repeatEvery = repEvery;
+		return this;
+	}
+	
+	/**
+	 * 
+	 * @param repOn
+	 * @return
+	 */
+	public Event repeatOn(int[] repOn)
+	{
+		this.repeatOn = repOn;
+		return this;
+	}
+	
+	/**
+	 * 
+	 * @param startRep
+	 * @return
+	 */
+	public Event startRepeat(DateTime startRep)
+	{
+		this.startRepeat = startRep;
+		return this;
+	}
+	
+	/**
+	 * 
+	 * @param endRep
+	 * @return
+	 */
+	public Event endRepeat(DateTime endRep)
+	{
+		this.endRepeat = endRep;
+		return this;
+	}
+	
+	
 	public Event() {
 		super();
 		name = "";
@@ -39,8 +185,8 @@ public class Event extends AbstractModel {
 		repeats = null;
 		repeatEvery = 0;
 		repeatOn = new int[7];
-		setStartRepeat(new DateTime());
-		setEndRepeat(new DateTime());
+		setStartRepeat(DateTime.now());
+		setEndRepeat(DateTime.now());
 	}
 
 	public Event(String name, String description, DateTime startTime, DateTime endTime, boolean isProjectEvent, int projectID, int userID){
