@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -16,12 +17,13 @@ import org.joda.time.*;
 import com.lowagie.text.Font;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Months;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
 /**
  *
  * @author patrick
  */
-public class MonthCalendar extends JPanel
+public class MonthCalendar extends JPanel implements CalendarInterface
 {
 	private JPanel inside = new JPanel(), top = new JPanel(), mainCalendarView = new JPanel(), navigationPanel = new JPanel(), navigationButtonPanel = new JPanel();
 	private JLabel monthLabel = new JLabel();
@@ -49,11 +51,16 @@ public class MonthCalendar extends JPanel
 		navigationButtonPanel.add(todayButton, BorderLayout.CENTER);
 		navigationButtonPanel.add(previousButton, BorderLayout.WEST);
 		
+		//placeholder panel to center title panel
+		JPanel navigationTopRightPanel = new JPanel();
+		navigationTopRightPanel.setPreferredSize(navigationButtonPanel.getPreferredSize());
+		
 		//unnecessary if arrows are used because both are same size
 		//nextButton.setPreferredSize(previousButton.getPreferredSize());
 		
 		navigationPanel.add(monthLabel, BorderLayout.CENTER);
 		navigationPanel.add(navigationButtonPanel, BorderLayout.WEST);
+		navigationPanel.add(navigationTopRightPanel, BorderLayout.EAST);
 		
 		nextButton.addActionListener(new ActionListener() {
 			
@@ -234,4 +241,9 @@ public class MonthCalendar extends JPanel
 	{
 		return time;
 	}
+	
+	public void addEvent(Event event){}
+	public void addEvents(List<Event> eventList){}
+	public void removeEvent(Event event){}
+	public void removeEvents(List<Event> event){}
 }
