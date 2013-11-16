@@ -125,7 +125,7 @@ public class MonthCalendar extends JPanel
 	}
 	
 	/**
-	 * 
+	 * Add a list of events
 	 * @param events
 	 */
 	public void addEvents(List<Event> events)
@@ -145,7 +145,7 @@ public class MonthCalendar extends JPanel
 	}
 	
 	/**
-	 * 
+	 * Add an event
 	 * @param e
 	 */
 	public void addEvent(Event e)
@@ -154,7 +154,7 @@ public class MonthCalendar extends JPanel
 		md.addEvent(e);
 	}
 	/**
-	 * 
+	 * Remove a single event
 	 * @param e
 	 */
 	public void removeEvent(Event e)
@@ -163,7 +163,7 @@ public class MonthCalendar extends JPanel
 		md.removeEvent(e);
 	}
 	/**
-	 * 
+	 * Remove a list of events
 	 * @param events
 	 */
 	public void removeEvents(List<Event> events)

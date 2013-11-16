@@ -24,13 +24,6 @@ public class Visualiser extends JFrame{
 		new Visualiser();
 	}
 	
-	
-	public static void popupateTest()
-	{
-		
-	}
-	
-	
 	public Visualiser()
 	{
 		JComponent calendar = new Calendar().getTabs().get(0).getMainComponent();
