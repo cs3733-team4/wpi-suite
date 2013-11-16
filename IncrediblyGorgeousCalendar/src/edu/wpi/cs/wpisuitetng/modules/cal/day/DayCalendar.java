@@ -9,6 +9,8 @@ import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
 public class DayCalendar implements CalendarInterface {
 
+	DateTime day;
+	
 	@Override
 	public void next() {
 		// TODO Auto-generated method stub

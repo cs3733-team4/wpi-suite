@@ -2,13 +2,17 @@ package edu.wpi.cs.wpisuitetng.modules.cal.week;
 
 import java.util.List;
 
+import javax.swing.JPanel;
+
 import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.CalendarInterface;
 import edu.wpi.cs.wpisuitetng.modules.cal.day.DayCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
-public class WeekCalendar implements CalendarInterface {
+public class WeekCalendar extends JPanel implements CalendarInterface {
+	
+	private static final long serialVersionUID = -1865495619015734948L;
 	
 	// does this make sense? if not it should be pretty easy to change, just a skeleton for now.
 	DayCalendar[] calendar = new DayCalendar[7];

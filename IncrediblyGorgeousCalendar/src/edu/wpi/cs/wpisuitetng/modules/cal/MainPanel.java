@@ -20,6 +20,8 @@ import edu.wpi.cs.wpisuitetng.modules.cal.year.YearCalendarHolder;
 
 public class MainPanel extends JPanel {
 
+	private static final long serialVersionUID = -3397939735933849515L;
+	
 	private MonthCalendar moca;
 	JTabbedPane calendarsAndEvents;
 	private YearCalendarHolder yech;

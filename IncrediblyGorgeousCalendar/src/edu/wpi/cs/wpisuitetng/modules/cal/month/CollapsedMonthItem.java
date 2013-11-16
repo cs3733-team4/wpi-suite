@@ -7,6 +7,8 @@ import javax.swing.UIManager;
 
 public class CollapsedMonthItem extends JLabel
 {
+	private static final long serialVersionUID = 7964804454006900134L;
+
 	public CollapsedMonthItem(int more)
 	{
         setBackground(UIManager.getDefaults().getColor("Table.background"));

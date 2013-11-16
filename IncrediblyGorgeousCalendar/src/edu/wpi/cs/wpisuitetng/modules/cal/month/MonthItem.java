@@ -16,9 +16,10 @@ import org.joda.time.DateTime;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
 
-@SuppressWarnings("serial")
 public class MonthItem extends JPanel
 {
+	private static final long serialVersionUID = 6475224766889058195L;
+	
 	JLabel time = new JLabel(), desc = new JLabel();
 	private DateTime when;
 	public MonthItem(DateTime when, String descr)
