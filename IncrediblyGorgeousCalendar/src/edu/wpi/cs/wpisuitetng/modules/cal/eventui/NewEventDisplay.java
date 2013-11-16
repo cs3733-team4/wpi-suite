@@ -79,7 +79,7 @@ public class NewEventDisplay extends JPanel {
         miniCalDisplay.setAlignmentX(Component.CENTER_ALIGNMENT);
         
 		// Main UI Display
-		this.add(nameEntry);
+		this.add(nameEntry, BorderLayout.NORTH);
 		this.add(miniCalDisplay);
 		this.add(descriptionEntry);
 		
