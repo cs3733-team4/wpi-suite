@@ -162,7 +162,7 @@ public class MonthCalendar extends JPanel implements CalendarInterface
 	 */
 	public void addEvent(Event e)
 	{
-		MonthDay md = this.days.get(e.getStartTime().getDayOfMonth());
+		MonthDay md = this.days.get(e.getStartTime().getDayOfYear());
 		md.addEvent(e);
 	}
 	/**
@@ -171,7 +171,7 @@ public class MonthCalendar extends JPanel implements CalendarInterface
 	 */
 	public void removeEvent(Event e)
 	{
-		MonthDay md = this.days.get(e.getStartTime().getDayOfMonth());
+		MonthDay md = this.days.get(e.getStartTime().getDayOfYear());
 		md.removeEvent(e);
 	}
 	/**
@@ -241,8 +241,8 @@ public class MonthCalendar extends JPanel implements CalendarInterface
 			MonthDay md = new MonthDay(referenceDay.toDateTime(), getMarker(referenceDay));
 			inside.add(md);
 			md.reBorder(i < 7, (i % 7 ) == 0, i >= 5 * 7);
+			this.days.put(referenceDay.getDayOfYear(), md);
 			referenceDay.addDays(1); // go to next day
-			this.days.put(i, md);
 		}
 		
 		monthLabel.setText(this.getTime().toString(Months.monthLblFormat));

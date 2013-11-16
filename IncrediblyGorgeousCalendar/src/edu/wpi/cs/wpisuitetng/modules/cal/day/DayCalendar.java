@@ -2,6 +2,8 @@ package edu.wpi.cs.wpisuitetng.modules.cal.day;
 
 import java.util.List;
 
+import javax.swing.JLabel;
+
 import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.CalendarInterface;
