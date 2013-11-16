@@ -125,7 +125,7 @@ public class MonthCalendar extends JPanel
 	}
 	
 	/**
-	 * 
+	 * Add a list of events
 	 * @param events
 	 */
 	public void addEvents(List<Event> events)
@@ -145,7 +145,7 @@ public class MonthCalendar extends JPanel
 	}
 	
 	/**
-	 * 
+	 * Add an event
 	 * @param e
 	 */
 	public void addEvent(Event e)
@@ -153,14 +153,25 @@ public class MonthCalendar extends JPanel
 		MonthDay md = this.days.get(e.getStartTime().getDayOfMonth());
 		md.addEvent(e);
 	}
-	
 	/**
-	 * 
+	 * Remove a single event
+	 * @param e
+	 */
+	public void removeEvent(Event e)
+	{
+		MonthDay md = this.days.get(e.getStartTime().getDayOfMonth());
+		md.removeEvent(e);
+	}
+	/**
+	 * Remove a list of events
 	 * @param events
 	 */
 	public void removeEvents(List<Event> events)
 	{
-		
+		for(Event e : events)
+		{
+			this.removeEvent(e);
+		}
 	}
 
 	public boolean isToday(ReadableDateTime fom)

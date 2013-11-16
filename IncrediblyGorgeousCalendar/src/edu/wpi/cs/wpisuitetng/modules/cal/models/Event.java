@@ -111,7 +111,7 @@ public class Event extends AbstractModel {
 	 * @param project the project ID for this event
 	 * @return this event after having it's project ID set
 	 */
-	public Event addProjectID(int project)
+	public Event addProjectID(Project project)
 	{
 		this.project = project;
 		return this;
@@ -182,7 +182,7 @@ public class Event extends AbstractModel {
 		isRepeating = false;
 		isProjectEvent = true;
 		userID = 0;
-		project = 0;
+		project = null;
 		repeats = null;
 		repeatEvery = 0;
 		repeatOn = new int[7];
@@ -190,7 +190,7 @@ public class Event extends AbstractModel {
 		setEndRepeat(DateTime.now());
 	}
 
-	public Event(String name, String description, DateTime startTime, DateTime endTime, boolean isProjectEvent, int projectID, int userID){
+	public Event(String name, String description, DateTime startTime, DateTime endTime, boolean isProjectEvent, Project projectID, int userID){
 		this.name = name;
 		this.description = description;
 		this.setStartTime(startTime);
@@ -201,7 +201,7 @@ public class Event extends AbstractModel {
 		this.isRepeating = false;
 	}
 	
-	public Event(String name, String description, DateTime startTime, DateTime endTime, boolean isProjectEvent, int projectID, int userID,
+	public Event(String name, String description, DateTime startTime, DateTime endTime, boolean isProjectEvent, Project projectID, int userID,
 			boolean isRepeating, RepeatType repeats, int repeatEvery, int[] repeatOn, DateTime startRepeat, DateTime endRepeat){
 		this.name = name;
 		this.description = description;
@@ -260,7 +260,7 @@ public class Event extends AbstractModel {
 	 * 
 	 * @return
 	 */
-	public int getProjectID(){
+	public Project getProjectID(){
 		return this.project;
 	}
 	

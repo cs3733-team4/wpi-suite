@@ -74,10 +74,23 @@ public class MonthDay extends JPanel
 	{
 		setBorder(javax.swing.BorderFactory.createMatteBorder((top || borderTop) ? 1 : 0, left ? 1 : 0, bottom ? 1 : 0, 1, UIManager.getDefaults().getColor("Separator.foreground")));
 	}
-	
+	/**
+	 * Add an event to a given day of the month
+	 * @param e
+	 */
 	public void addEvent(Event e)
 	{
 		this.items.add(e);
+		this.doLayout();
+	}
+	
+	/**
+	 * Remove an event from a given day of the month
+	 * @param e
+	 */
+	public void removeEvent(Event e)
+	{
+		this.items.remove(e);
 		this.doLayout();
 	}
 	

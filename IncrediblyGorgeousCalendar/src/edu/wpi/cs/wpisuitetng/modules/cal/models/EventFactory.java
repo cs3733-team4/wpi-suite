@@ -3,6 +3,7 @@ package edu.wpi.cs.wpisuitetng.modules.cal.models;
 import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event.RepeatType;
+import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 
 public class EventFactory {
 
@@ -28,7 +29,7 @@ public class EventFactory {
 	 * @param userID the ID of the user for the event
 	 * @return an Event with all these properties set
 	 */
-	public static Event getStandardEvent(String name, String description, DateTime startTime, DateTime endTime, boolean isProjectEvent, int projectID, int userID)
+	public static Event getStandardEvent(String name, String description, DateTime startTime, DateTime endTime, boolean isProjectEvent, Project projectID, int userID)
 	{
 		return new Event().addName(name)
 				          .addDescription(description)
@@ -40,7 +41,7 @@ public class EventFactory {
 	}
 	
 	
-	public static Event getRepeatingEvent(String name, String description, DateTime startTime, DateTime endTime, boolean isProjectEvent, int projectID, int userID,
+	public static Event getRepeatingEvent(String name, String description, DateTime startTime, DateTime endTime, boolean isProjectEvent, Project projectID, int userID,
 			                             boolean isRepeating, RepeatType repeats, int repeatEvery, int[] repeatOn, DateTime startRepeat, DateTime endRepeat){
 		return EventFactory.getStandardEvent(name, description, startTime, endTime, isProjectEvent, projectID, userID).addIsRepeating(isRepeating)
 				                                                                                                      .addRepeats(repeats)
@@ -48,5 +49,6 @@ public class EventFactory {
 				                                                                                                      .addRepeatOn(repeatOn)
 				                                                                                                      .addStartRepeat(startRepeat)
 				                                                                                                      .addEndRepeat(endRepeat);
+
 	}
 }
