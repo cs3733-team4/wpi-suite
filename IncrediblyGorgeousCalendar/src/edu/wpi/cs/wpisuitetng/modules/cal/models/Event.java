@@ -5,6 +5,7 @@ import org.joda.time.DateTime;
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
+import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 
 public class Event extends AbstractModel {
 	public enum RepeatType {
@@ -18,7 +19,7 @@ public class Event extends AbstractModel {
 	private boolean isRepeating;
 	private boolean isProjectEvent;
 	private int userID;
-	private int projectID;
+	private Project project;
 	// For Handling Repeating Events:
 	private RepeatType repeats;
 	private int repeatEvery;
@@ -112,7 +113,7 @@ public class Event extends AbstractModel {
 	 */
 	public Event addProjectID(int project)
 	{
-		this.projectID = project;
+		this.project = project;
 		return this;
 	}
 	
@@ -181,7 +182,7 @@ public class Event extends AbstractModel {
 		isRepeating = false;
 		isProjectEvent = true;
 		userID = 0;
-		projectID = 0;
+		project = 0;
 		repeats = null;
 		repeatEvery = 0;
 		repeatOn = new int[7];
@@ -195,7 +196,7 @@ public class Event extends AbstractModel {
 		this.setStartTime(startTime);
 		this.endTime = endTime;
 		this.isProjectEvent = isProjectEvent;
-		this.projectID = projectID;
+		this.project = projectID;
 		this.userID = userID;
 		this.isRepeating = false;
 	}
@@ -207,7 +208,7 @@ public class Event extends AbstractModel {
 		this.setStartTime(startTime);
 		this.endTime = endTime;
 		this.isProjectEvent = isProjectEvent;
-		this.projectID = projectID;
+		this.project = projectID;
 		this.userID = userID;
 		this.isRepeating = false;
 	}
@@ -260,7 +261,7 @@ public class Event extends AbstractModel {
 	 * @return
 	 */
 	public int getProjectID(){
-		return this.projectID;
+		return this.project;
 	}
 	
 	public int getUserID(){
