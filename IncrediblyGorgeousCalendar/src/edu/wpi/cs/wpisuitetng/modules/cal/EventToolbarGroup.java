@@ -24,9 +24,9 @@ public class EventToolbarGroup extends ToolbarGroupView {
 		super("");
 		
 		this.eventContentPanel.setLayout(new BoxLayout(eventContentPanel, BoxLayout.X_AXIS));
-
-		JButton addEventButton = new JButton("<html>Add an<br/>Event</html>");
 		newEvent = new NewEventDisplay();
+		
+		JButton addEventButton = new JButton("<html>Add<br/>Event</html>");
 		addEventButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e){
@@ -34,12 +34,24 @@ public class EventToolbarGroup extends ToolbarGroupView {
 			}
 		});
 		
+		JButton removeEventButton = new JButton("<html>Remove<br/>Event</html>");
+		removeEventButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				//addCalendarTab(newEvent, "New Event", true); Something like this.
+			}
+		});
+		
 		try {
-		    Image img = ImageIO.read(getClass().getResource("new_itt.png"));
-		    addEventButton.setIcon(new ImageIcon(img));		    
+		    Image img = ImageIO.read(getClass().getResource("add_event.png"));
+		    addEventButton.setIcon(new ImageIcon(img));
+		    
+		    img = ImageIO.read(getClass().getResource("del_event.png"));
+		    removeEventButton.setIcon(new ImageIcon(img));
 		} catch (IOException ex) {}
 		
 		eventContentPanel.add(addEventButton);
+		eventContentPanel.add(removeEventButton);
 		this.setOpaque(false);
 		
 		this.add(eventContentPanel);
