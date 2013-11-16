@@ -27,18 +27,28 @@ import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Months;
 
 public class YearCalendarHolder extends JPanel
 {
-	
 	private CalendarYearModule calendarPreloader;
 	private JComponent miniCalendar;
 	private JLabel monthName;
 	private DateTime currentDate;
-	private MainPanel mainPanel;
+	private MiniCalendarHostIface mainPanel;
 	private JLabel gotoErrorText;
 	final private static DateTimeFormatter gotoField = DateTimeFormat.forPattern("M/d/yy");
 	final private static DateTimeFormatter gotoFieldShort = DateTimeFormat.forPattern("M/d");
+	private boolean showGoToBox;
 	
-	public YearCalendarHolder(DateTime date, MainPanel mainPanel)
-	{
+	public YearCalendarHolder(DateTime date, MiniCalendarHostIface mainPanel) {
+		this.showGoToBox = true;
+		init(date, mainPanel);
+	}
+	
+	public YearCalendarHolder(DateTime date, MiniCalendarHostIface mainPanel, boolean showGoToBox) {
+		this.showGoToBox = showGoToBox;
+		init(date, mainPanel);
+	}
+	
+	// Initialize variables.
+	public void init(DateTime date, MiniCalendarHostIface mainPanel) {
 		this.setPreferredSize(new Dimension(200, 250));
 		currentDate = date;
 		this.mainPanel = mainPanel;
@@ -96,7 +106,8 @@ public class YearCalendarHolder extends JPanel
 		gotoPane.setLayout(new BorderLayout());
 		gotoPane.add(gotoDatePane, BorderLayout.NORTH);
 		gotoPane.add(gotoErrorText, BorderLayout.CENTER);
-				
+		gotoPane.setVisible(showGoToBox);
+		
 		calendarPreloader = new CalendarYearModule(date, mainPanel);
 		this.miniCalendar = this.calendarPreloader.renderComponent();
 		
