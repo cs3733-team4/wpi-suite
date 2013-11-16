@@ -2,15 +2,41 @@ package edu.wpi.cs.wpisuitetng.modules.cal.day;
 
 import java.util.List;
 
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
 import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.CalendarInterface;
+import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
 public class DayCalendar implements CalendarInterface {
 
-	DateTime day;
+	private static final long serialVersionUID = 234513472387324L;
+
+	private JPanel inside                = new JPanel(), 
+			       top                   = new JPanel(), 
+			       mainCalendarView      = new JPanel(), 
+			       navigationPanel       = new JPanel(), 
+			       navigationButtonPanel = new JPanel();
 	
+	private JButton nextButton   = new JButton(">"), 
+	        previousButton       = new JButton("<"), 
+	        todayButton          = new JButton("Today");
+	
+	private JLabel monthLabel = new JLabel();
+	private DateTime time;
+	private MainPanel mainPanel;
+	
+	public DayCalendar(DateTime on, MainPanel mainPanel)
+	{
+		this.mainPanel = mainPanel;
+		this.time = on;
+		
+		
+	}
 	@Override
 	public void next() {
 		// TODO Auto-generated method stub
