@@ -28,7 +28,6 @@ public class Event extends AbstractModel {
 	private DateTime endRepeat;
 
 	
-	
 	/**
 	 * 
 	 * @param name the name of the event

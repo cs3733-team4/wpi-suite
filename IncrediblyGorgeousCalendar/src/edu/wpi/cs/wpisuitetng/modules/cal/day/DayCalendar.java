@@ -2,9 +2,13 @@ package edu.wpi.cs.wpisuitetng.modules.cal.day;
 
 import java.util.List;
 
+<<<<<<< HEAD
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+=======
+import javax.swing.JLabel;
+>>>>>>> 4db583b5171ca279103f0dd7a1c07c8f05ab3b79
 
 import org.joda.time.DateTime;
 
