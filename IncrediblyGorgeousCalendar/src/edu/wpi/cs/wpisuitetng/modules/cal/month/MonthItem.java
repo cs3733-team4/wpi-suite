@@ -22,6 +22,11 @@ public class MonthItem extends JPanel
 	
 	JLabel time = new JLabel(), desc = new JLabel();
 	private DateTime when;
+	/**
+	 * MonthItem Constructor
+	 * @param when
+	 * @param descr
+	 */
 	public MonthItem(DateTime when, String descr)
 	{
         setBackground(UIManager.getDefaults().getColor("Table.background"));
