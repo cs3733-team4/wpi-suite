@@ -15,8 +15,8 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.year.MiniCalendarHostIface;
-import edu.wpi.cs.wpisuitetng.modules.cal.year.YearCalendarHolder;
+import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarHostIface;
+import edu.wpi.cs.wpisuitetng.modules.cal.navigation.CalendarNavigationPanel;
 /**
  * @author anthonyjruffa
  */
@@ -28,7 +28,7 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 	private JLabel startLabel;
 	private JLabel endLabel;
 	private JCheckBox isAllDay;
-	private YearCalendarHolder viewCal;
+	private CalendarNavigationPanel viewCal;
 	final private static DateTimeFormatter dateFormat = DateTimeFormat.forPattern("M/d/yy");
 	final private static DateTimeFormatter timeFormat = DateTimeFormat.forPattern("h:mm a");
 	// Declare text fields for start and end dates/times.
@@ -40,7 +40,7 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 	public DatePicker() {
 		this.setPreferredSize(new Dimension(200, 250));
 		calViewer = new JPanel();
-		viewCal = new YearCalendarHolder(DateTime.now(), this, false); // May need to fix later.
+		viewCal = new CalendarNavigationPanel(DateTime.now(), this, false); // May need to fix later.
 		dateLabel = new JLabel("Select Date");
 		isAllDay = new JCheckBox("All Day Event: ");
 		startLabel = new JLabel("Start Time: ");

@@ -14,6 +14,7 @@ import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 
 import edu.wpi.cs.wpisuitetng.janeway.modules.IJanewayModule;
@@ -35,7 +36,7 @@ public class Calendar implements IJanewayModule {
 		RibbonToolbar buttonPanel = new RibbonToolbar(true);
 		buttonPanel.setFloatable(false);
 		
-		JPanel mainPanel = new MainPanel();
+		JTabbedPane mainPanel = new MainPanel();
 		tabs = new ArrayList<JanewayTabModel>();
 		JanewayTabModel tab = new JanewayTabModel(getName(), new ImageIcon(), buttonPanel, mainPanel);
 		

@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.modules.cal.year;
+package edu.wpi.cs.wpisuitetng.modules.cal.navigation;
 
 import java.awt.Color;
 import java.awt.Font;

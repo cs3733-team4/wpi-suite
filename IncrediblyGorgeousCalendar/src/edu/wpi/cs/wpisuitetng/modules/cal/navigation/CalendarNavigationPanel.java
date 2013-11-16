@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.modules.cal.year;
+package edu.wpi.cs.wpisuitetng.modules.cal.navigation;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -25,7 +25,7 @@ import org.joda.time.format.DateTimeFormatter;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Months;
 
-public class YearCalendarHolder extends JPanel
+public class CalendarNavigationPanel extends JPanel
 {
 	private CalendarYearModule calendarPreloader;
 	private JComponent miniCalendar;
@@ -38,12 +38,12 @@ public class YearCalendarHolder extends JPanel
 	final private static DateTimeFormatter gotoFieldShort = DateTimeFormat.forPattern("M/d");
 	private boolean showGoToBox;
 	
-	public YearCalendarHolder(DateTime date, MiniCalendarHostIface mainPanel) {
+	public CalendarNavigationPanel(DateTime date, MiniCalendarHostIface mainPanel) {
 		this.showGoToBox = true;
 		init(date, mainPanel);
 	}
 	
-	public YearCalendarHolder(DateTime date, MiniCalendarHostIface mainPanel, boolean showGoToBox) {
+	public CalendarNavigationPanel(DateTime date, MiniCalendarHostIface mainPanel, boolean showGoToBox) {
 		this.showGoToBox = showGoToBox;
 		init(date, mainPanel);
 	}
