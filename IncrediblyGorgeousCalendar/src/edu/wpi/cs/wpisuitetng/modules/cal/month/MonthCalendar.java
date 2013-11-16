@@ -19,13 +19,15 @@ import org.joda.time.*;
 
 import com.lowagie.text.Font;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.CalendarInterface;
 import edu.wpi.cs.wpisuitetng.modules.cal.DayStyle;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Months;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
+
 @SuppressWarnings("serial")
-public class MonthCalendar extends JPanel
+public class MonthCalendar extends JPanel implements CalendarInterface
 {
 	private JPanel inside                = new JPanel(), 
 			       top                   = new JPanel(), 
@@ -73,8 +75,17 @@ public class MonthCalendar extends JPanel
 		navigationButtonPanel.add(todayButton, BorderLayout.CENTER);
 		navigationButtonPanel.add(previousButton, BorderLayout.WEST);
 		
+		
+		//placeholder panel to center title panel
+		JPanel navigationTopRightPanel = new JPanel();
+		navigationTopRightPanel.setPreferredSize(navigationButtonPanel.getPreferredSize());
+		
+		//unnecessary if arrows are used because both are same size
+		//nextButton.setPreferredSize(previousButton.getPreferredSize());
+		
 		navigationPanel.add(monthLabel, BorderLayout.CENTER);
 		navigationPanel.add(navigationButtonPanel, BorderLayout.WEST);
+		navigationPanel.add(navigationTopRightPanel, BorderLayout.EAST);
 		
 		nextButton.addActionListener(new ActionListener() {
 			@Override

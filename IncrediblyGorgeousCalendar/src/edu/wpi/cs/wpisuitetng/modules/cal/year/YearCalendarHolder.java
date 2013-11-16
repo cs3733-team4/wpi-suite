@@ -179,9 +179,9 @@ public class YearCalendarHolder extends JPanel
 		else
 		{
 			if(isValidYear)
-				gotoErrorText.setText("Use format: mm/dd/yyyy");
+				gotoErrorText.setText("* Invalid format, use: mm/dd/yyyy");
 			else
-				gotoErrorText.setText("Year out of range (1900-2100)");
+				gotoErrorText.setText("* Year out of range (1900-2100)");
 		}
 	}
 }
