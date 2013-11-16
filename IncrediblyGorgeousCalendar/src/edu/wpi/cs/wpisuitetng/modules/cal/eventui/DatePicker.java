@@ -1,15 +1,13 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.eventui;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SpringLayout;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -21,8 +19,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.year.YearCalendarHolder;
  * @author anthonyjruffa
  */
 public class DatePicker extends JPanel implements MiniCalendarHostIface {
-	private JPanel startDatePanel;
-	private JPanel endDatePanel;
+	private JPanel datePanel;
 	private JPanel calViewer;
 	private JLabel dateLabel;
 	private JLabel startLabel;
@@ -45,8 +42,7 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 		isAllDay = new JCheckBox("All Day Event: ");
 		startLabel = new JLabel("Start Time: ");
 		endLabel = new JLabel("End Time: ");
-		startDatePanel = new JPanel();
-		endDatePanel = new JPanel();
+		datePanel = new JPanel();
 	}
 
 	@Override
@@ -59,25 +55,46 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 		// Calendar Viewer
 		calViewer.setLayout(new BoxLayout(calViewer, BoxLayout.Y_AXIS));
 		calViewer.add(dateLabel);
-		calViewer.add(viewCal);
 		dateLabel.setLabelFor(viewCal);
+		calViewer.add(viewCal);
 		
 		// Start Date Entry Info
-		startDatePanel.setLayout(new BoxLayout(startDatePanel, BoxLayout.X_AXIS));
-		startDatePanel.add(startLabel);
-		startDatePanel.add(startDate);
-		startDatePanel.add(startTime);
+		SpringLayout datepanellayout = new SpringLayout();
+		datePanel.setLayout(datepanellayout);
+		datePanel.add(startLabel);
+		datePanel.add(startDate);
+		datePanel.add(startTime);
+		datePanel.add(endLabel);
+		datePanel.add(endDate);
+		datePanel.add(endTime);
 		
-		// End Date Entry Info
-		endDatePanel.setLayout(new BoxLayout(endDatePanel, BoxLayout.X_AXIS));
-		endDatePanel.add(endLabel);
-		endDatePanel.add(endDate);
-		endDatePanel.add(endTime);
+		//Adjust constraints for the start date label.
+		datepanellayout.putConstraint(SpringLayout.WEST, startLabel, 5, SpringLayout.WEST, calViewer);
+		datepanellayout.putConstraint(SpringLayout.NORTH, startLabel, 10, SpringLayout.NORTH, calViewer);
+ 
+        //Adjust constraints for the start date text field.
+		datepanellayout.putConstraint(SpringLayout.WEST, startDate, 5, SpringLayout.EAST, startLabel);
+		datepanellayout.putConstraint(SpringLayout.NORTH, startDate, 5, SpringLayout.NORTH, calViewer);
 		
+		//Adjust constraints for the start time text field.
+		datepanellayout.putConstraint(SpringLayout.WEST, startTime, 5, SpringLayout.EAST, startDate);
+		datepanellayout.putConstraint(SpringLayout.NORTH, startTime, 5, SpringLayout.NORTH, calViewer);
+		
+		//Adjust constraints for the start time text field.
+		datepanellayout.putConstraint(SpringLayout.WEST, endLabel, 20, SpringLayout.EAST, startTime);
+		datepanellayout.putConstraint(SpringLayout.NORTH, endLabel, 10, SpringLayout.NORTH, calViewer);
+		
+		//Adjust constraints for the start time text field.
+		datepanellayout.putConstraint(SpringLayout.WEST, endDate, 5, SpringLayout.EAST, endLabel);
+		datepanellayout.putConstraint(SpringLayout.NORTH, endDate, 5, SpringLayout.NORTH, calViewer);
+		
+		//Adjust constraints for the start time text field.
+		datepanellayout.putConstraint(SpringLayout.WEST, endTime, 5, SpringLayout.EAST, endDate);
+		datepanellayout.putConstraint(SpringLayout.NORTH, endTime, 5, SpringLayout.NORTH, calViewer);
+				
 		// Add everything to the main panel.
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		this.add(calViewer);
-		this.add(startDatePanel);
-		this.add(endDatePanel);
+		this.add(datePanel);
 	}
 }

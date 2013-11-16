@@ -37,7 +37,7 @@ public class NewEventDisplay extends JPanel {
 		nameLabel = new JLabel("Event Name: ");
 		nameField = new JTextField(20);
 		descriptionLabel = new JLabel("Description: ", JLabel.CENTER);
-		descriptionField = new JTextArea(15, 15);
+		descriptionField = new JTextArea(5, 15);
 		calDisplay = new DatePicker();
 		saveButton = new JButton("Save Event");
 	}
@@ -73,6 +73,7 @@ public class NewEventDisplay extends JPanel {
         saveButton.setAlignmentX(Component.LEFT_ALIGNMENT);
         descriptionLabel.setLabelFor(descriptionField);
         descriptionEntry.setAlignmentX(Component.CENTER_ALIGNMENT);
+        descriptionEntry.setAlignmentY(Component.BOTTOM_ALIGNMENT);
 		
         miniCalDisplay.add(calDisplay);
         miniCalDisplay.setAlignmentX(Component.CENTER_ALIGNMENT);
