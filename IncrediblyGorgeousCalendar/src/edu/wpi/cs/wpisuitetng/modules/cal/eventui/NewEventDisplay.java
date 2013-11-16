@@ -1,5 +1,8 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.eventui;
 
+import java.awt.BorderLayout;
+import java.awt.Component;
+
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -17,6 +20,8 @@ import org.joda.time.DateTime;
 public class NewEventDisplay extends JPanel {
 	private JPanel nameEntry;
 	private JLabel nameLabel;
+	private JPanel descriptionEntry;
+	private JPanel miniCalDisplay;
 	private JTextField nameField;
 	private JLabel descriptionLabel;
 	private JTextArea descriptionField;
@@ -27,6 +32,8 @@ public class NewEventDisplay extends JPanel {
 	public NewEventDisplay() {
 		//this.mainpanel = mainpanel;
 		nameEntry = new JPanel();
+		miniCalDisplay = new JPanel();
+		descriptionEntry = new JPanel();
 		nameLabel = new JLabel("Event Name: ");
 		nameField = new JTextField(20);
 		descriptionLabel = new JLabel("Description: ", JLabel.CENTER);
@@ -43,6 +50,8 @@ public class NewEventDisplay extends JPanel {
 		// Set layouts.
 		SpringLayout layout = new SpringLayout();
 		nameEntry.setLayout(layout);
+		descriptionEntry.setLayout(new BoxLayout(descriptionEntry, BoxLayout.Y_AXIS));
+		miniCalDisplay.setLayout(new BoxLayout(miniCalDisplay, BoxLayout.Y_AXIS));
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		
 		// Event Name Entry.
@@ -56,14 +65,22 @@ public class NewEventDisplay extends JPanel {
         //Adjust constraints for the text field.
         layout.putConstraint(SpringLayout.WEST, nameField, 5, SpringLayout.EAST, nameLabel);
         layout.putConstraint(SpringLayout.NORTH, nameField, 5, SpringLayout.NORTH, this);
- 
+        
+        // Description field display.
+        descriptionEntry.add(descriptionLabel);
+        descriptionEntry.add(descriptionField);
+        descriptionEntry.add(saveButton);
+        saveButton.setAlignmentX(Component.LEFT_ALIGNMENT);
+        descriptionLabel.setLabelFor(descriptionField);
+        descriptionEntry.setAlignmentX(Component.CENTER_ALIGNMENT);
 		
+        miniCalDisplay.add(calDisplay);
+        miniCalDisplay.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
 		// Main UI Display
 		this.add(nameEntry);
-		this.add(calDisplay);
-		this.add(descriptionLabel);
-		this.add(descriptionField);
-		this.add(saveButton);
+		this.add(miniCalDisplay);
+		this.add(descriptionEntry);
 		
 		// Display the mini calendar.
 		calDisplay.display(newtime);

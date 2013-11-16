@@ -12,11 +12,13 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar.ToolbarGroupView;
+import edu.wpi.cs.wpisuitetng.modules.cal.eventui.NewEventDisplay;
 
 public class EventToolbarGroup extends ToolbarGroupView {
 	
 	private final JPanel eventContentPanel = new JPanel();
 	JButton addEventButton;
+	private NewEventDisplay newEvent;
 	
 	public EventToolbarGroup() {
 		super("");
@@ -24,11 +26,11 @@ public class EventToolbarGroup extends ToolbarGroupView {
 		this.eventContentPanel.setLayout(new BoxLayout(eventContentPanel, BoxLayout.X_AXIS));
 
 		JButton addEventButton = new JButton("<html>Add an<br/>Event</html>");
-		
+		newEvent = new NewEventDisplay();
 		addEventButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e){
-				//button action (addEvent method of some sort)
+				//addCalendarTab(newEvent, "New Event", true); Something like this.
 			}
 		});
 		

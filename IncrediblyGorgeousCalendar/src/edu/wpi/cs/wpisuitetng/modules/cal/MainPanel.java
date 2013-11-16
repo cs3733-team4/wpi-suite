@@ -101,8 +101,9 @@ public class MainPanel extends JPanel implements MiniCalendarHostIface {
 				
 				@Override
 				public void stateChanged(ChangeEvent e) {
-					// 
-					eventCreator.display(DateTime.now());
+					if(! calendarsAndEvents.getTitleAt(calendarsAndEvents.getSelectedIndex()).equals("New Event")) {
+						eventCreator.display(DateTime.now());
+					}
 				}
 			});
 			

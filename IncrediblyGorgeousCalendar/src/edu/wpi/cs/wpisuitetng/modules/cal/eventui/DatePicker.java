@@ -1,8 +1,10 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.eventui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -21,18 +23,25 @@ import edu.wpi.cs.wpisuitetng.modules.cal.year.YearCalendarHolder;
 public class DatePicker extends JPanel implements MiniCalendarHostIface {
 	private JPanel startDatePanel;
 	private JPanel endDatePanel;
+	private JPanel calViewer;
 	private JLabel dateLabel;
 	private JLabel startLabel;
 	private JLabel endLabel;
 	private JCheckBox isAllDay;
 	private YearCalendarHolder viewCal;
 	final private static DateTimeFormatter dateFormat = DateTimeFormat.forPattern("M/d/yy");
-	final private static DateTimeFormatter timeFormat = DateTimeFormat.forPattern("h:m a");
+	final private static DateTimeFormatter timeFormat = DateTimeFormat.forPattern("h:mm a");
+	// Declare text fields for start and end dates/times.
+	final JTextField startDate = new JTextField(DateTime.now().toString(dateFormat));
+	final JTextField endDate = new JTextField(DateTime.now().toString(dateFormat));
+	final JTextField startTime = new JTextField(DateTime.now().toString(timeFormat));
+	final JTextField endTime = new JTextField(DateTime.now().toString(timeFormat));
 	
 	public DatePicker() {
 		this.setPreferredSize(new Dimension(200, 250));
+		calViewer = new JPanel();
 		viewCal = new YearCalendarHolder(DateTime.now(), this, false); // May need to fix later.
-		dateLabel = new JLabel("Select Date", JLabel.CENTER);
+		dateLabel = new JLabel("Select Date");
 		isAllDay = new JCheckBox("All Day Event: ");
 		startLabel = new JLabel("Start Time: ");
 		endLabel = new JLabel("End Time: ");
@@ -42,36 +51,32 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 
 	@Override
 	public void display(DateTime newtime) {
-		// Set default texts of input fields.
-		/*String currDate = Integer.toString(newtime.getMonthOfYear()) + "/" 
-				+ Integer.toString(newtime.getDayOfMonth()) 
-				+ "/" + Integer.toString(newtime.getYear());
-		String currTime = Integer.toString(newtime.getHourOfDay()) 
-				+ ":" + Integer.toString(newtime.getMinuteOfHour());*/
-		final JTextField startDate = new JTextField(newtime.toString(dateFormat));
-		final JTextField endDate = new JTextField(newtime.toString(dateFormat));
-		final JTextField startTime = new JTextField(newtime.toString(timeFormat));
-		final JTextField endTime = new JTextField(newtime.toString(timeFormat));
+		// Change the text to correspond to the DateTime parameter.
 		endDate.setText(newtime.toString(dateFormat));
 		startTime.setText(newtime.toString(timeFormat));
 		endTime.setText(newtime.toString(timeFormat));
 		
+		// Calendar Viewer
+		calViewer.setLayout(new BoxLayout(calViewer, BoxLayout.Y_AXIS));
+		calViewer.add(dateLabel);
+		calViewer.add(viewCal);
+		dateLabel.setLabelFor(viewCal);
+		
 		// Start Date Entry Info
-		startDatePanel.setLayout(new BorderLayout());
-		startDatePanel.add(startLabel, BorderLayout.WEST);
-		startDatePanel.add(startDate, BorderLayout.CENTER);
-		startDatePanel.add(startTime, BorderLayout.EAST);
+		startDatePanel.setLayout(new BoxLayout(startDatePanel, BoxLayout.X_AXIS));
+		startDatePanel.add(startLabel);
+		startDatePanel.add(startDate);
+		startDatePanel.add(startTime);
 		
 		// End Date Entry Info
-		endDatePanel.setLayout(new BorderLayout());
-		endDatePanel.add(endLabel, BorderLayout.WEST);
-		endDatePanel.add(endDate, BorderLayout.CENTER);
-		endDatePanel.add(endTime, BorderLayout.EAST);
+		endDatePanel.setLayout(new BoxLayout(endDatePanel, BoxLayout.X_AXIS));
+		endDatePanel.add(endLabel);
+		endDatePanel.add(endDate);
+		endDatePanel.add(endTime);
 		
 		// Add everything to the main panel.
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-		this.add(dateLabel);
-		this.add(viewCal);
+		this.add(calViewer);
 		this.add(startDatePanel);
 		this.add(endDatePanel);
 	}
