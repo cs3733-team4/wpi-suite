@@ -62,10 +62,10 @@ public class Visualiser extends JFrame{
 	public List<Event> gne()
 	{
 		List<Event> events = new ArrayList<Event>();
-		events.add(new Event("kill people", "killing time!", new DateTime(2013, 11, 14, 18, 0), new DateTime(2013, 11, 14, 18, 50), false, new Project("null", "null"), 0));
-		events.add(new Event("rehab", "killing time!", new DateTime(2013, 11, 14, 20, 0), new DateTime(2013, 11, 14, 20, 50), false, new Project("null", "null"), 0));
-		events.add(new Event("cook meth", "get $$$", new DateTime(2013, 11, 14, 21, 0), new DateTime(2013, 11, 14, 21, 50), false, new Project("null", "null"), 0));
-		events.add(new Event("sleep", "die", new DateTime(2013, 11, 14, 22, 0), new DateTime(2013, 11, 14, 22, 50), false, new Project("null", "null"), 0));
+		events.add(new Event("eat icecream", "yummy!", new DateTime(2013, 11, 14, 18, 0), new DateTime(2013, 11, 14, 18, 50), false, new Project("null", "null"), 0));
+		events.add(new Event("go to chocaholica anonymous", "more choco!", new DateTime(2013, 11, 14, 20, 0), new DateTime(2013, 11, 14, 20, 50), false, new Project("null", "null"), 0));
+		events.add(new Event("watch breaking bad", "feel disturbed", new DateTime(2013, 11, 14, 21, 0), new DateTime(2013, 11, 14, 21, 50), false, new Project("null", "null"), 0));
+		events.add(new Event("sleep", "zzz", new DateTime(2013, 11, 14, 22, 0), new DateTime(2013, 11, 14, 22, 50), false, new Project("null", "null"), 0));
 
 		//DateTime dt = new DateTime(2013, 11, 14, 18, 0);
 		return events;
