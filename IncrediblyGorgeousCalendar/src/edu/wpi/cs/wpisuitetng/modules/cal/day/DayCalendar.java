@@ -1,24 +1,21 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.day;
 
+import java.awt.BorderLayout;
 import java.util.List;
 
-<<<<<<< HEAD
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-=======
 import javax.swing.JLabel;
->>>>>>> 4db583b5171ca279103f0dd7a1c07c8f05ab3b79
 
 import org.joda.time.DateTime;
+import org.joda.time.MutableDateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.CalendarInterface;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
 public class DayCalendar implements CalendarInterface {
-
-	private static final long serialVersionUID = 234513472387324L;
 
 	private JPanel inside                = new JPanel(), 
 			       top                   = new JPanel(), 
@@ -37,26 +34,37 @@ public class DayCalendar implements CalendarInterface {
 	public DayCalendar(DateTime on, MainPanel mainPanel)
 	{
 		this.mainPanel = mainPanel;
-		this.time = on;
-		
-		
+		this.time      = on;
 	}
+	
 	@Override
-	public void next() {
-		// TODO Auto-generated method stub
+	public void next()
+	{
+		MutableDateTime current = new MutableDateTime(this.time);
+		current.addDays(1);
+		this.time = current.toDateTime();
+		generateDay(current);
+	}
 
+	private void generateDay(MutableDateTime current)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void previous() {
-		// TODO Auto-generated method stub
+		MutableDateTime current = new MutableDateTime(this.time);
+		current.addDays(-1);
+		this.time = current.toDateTime();
+		generateDay(current);
 
 	}
 
 	@Override
 	public void display(DateTime newTime) {
-		// TODO Auto-generated method stub
-
+		this.time = newTime;
+		generateDay(new MutableDateTime(newTime));
 	}
 
 	@Override

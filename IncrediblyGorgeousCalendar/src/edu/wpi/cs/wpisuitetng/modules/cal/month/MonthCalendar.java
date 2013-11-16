@@ -28,7 +28,6 @@ import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
 public class MonthCalendar extends JPanel implements CalendarInterface
 {
-	private static final long serialVersionUID = 5308743076277379799L;
 
 	private JPanel inside                = new JPanel(), 
 			       top                   = new JPanel(), 

@@ -12,8 +12,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
 public class WeekCalendar extends JPanel implements CalendarInterface {
 	
-	private static final long serialVersionUID = -1865495619015734948L;
-	
+
 	// does this make sense? if not it should be pretty easy to change, just a skeleton for now.
 	DrawnDay[] calendar = new DrawnDay[7];
 	
