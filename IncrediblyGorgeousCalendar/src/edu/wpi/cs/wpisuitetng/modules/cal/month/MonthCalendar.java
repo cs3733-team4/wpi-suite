@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.modules.cal;
+package edu.wpi.cs.wpisuitetng.modules.cal.month;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -15,6 +15,8 @@ import org.joda.time.*;
 
 import com.lowagie.text.Font;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.DayStyle;
+import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Months;
 
 /**

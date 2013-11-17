@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 import org.joda.time.DateTime;
 import org.junit.Test;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.MonthCalendar;
+import edu.wpi.cs.wpisuitetng.modules.cal.month.MonthCalendar;
 
 /**
  * Tests for MonthsTest class
