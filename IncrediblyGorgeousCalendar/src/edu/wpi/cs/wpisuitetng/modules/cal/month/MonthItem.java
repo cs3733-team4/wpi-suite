@@ -9,10 +9,9 @@ import java.awt.Font;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.UIManager;
-
 import org.joda.time.DateTime;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
 
@@ -29,7 +28,7 @@ public class MonthItem extends JPanel
 	 */
 	public MonthItem(DateTime when, String descr)
 	{
-        setBackground(UIManager.getDefaults().getColor("Table.background"));
+        setBackground(Colors.TABLE_BACKGROUND);
         setMaximumSize(new java.awt.Dimension(32767, 24));
         setMinimumSize(new java.awt.Dimension(0, 0));
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.X_AXIS));

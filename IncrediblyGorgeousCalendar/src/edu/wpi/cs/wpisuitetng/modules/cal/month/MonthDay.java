@@ -11,11 +11,10 @@ import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.UIManager;
-
 import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.DayStyle;
+import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
 
@@ -27,27 +26,20 @@ public class MonthDay extends JPanel
 
 	public MonthDay(DateTime day, DayStyle style)
 	{
-		Color grayit, textit = UIManager.getDefaults().getColor("Label.foreground"),
-			bg = UIManager.getDefaults().getColor("Table.background");
+		Color grayit, textit = Colors.TABLE_TEXT,
+			bg = Colors.TABLE_BACKGROUND;
 		switch (style)
 		{
 			case Normal:
-				grayit = UIManager.getDefaults().getColor("Table.focusCellBackground");
-				textit = UIManager.getDefaults().getColor("Table.focusCellForeground");
-				if (bg.equals(grayit))
-				{
-					if ((bg.getBlue() + bg.getGreen() + bg.getRed()) / 3.0 > 255.0 / 2) // light
-						grayit = grayit.darker();
-					else
-						grayit = grayit.brighter();
-				}
+				grayit = Colors.TABLE_GRAY_HEADER;
+				textit = Colors.TABLE_GRAY_TEXT;
 				break;
 			case OutOfMonth:
 				grayit = bg;
 				break;
 			case Today:
-				grayit = UIManager.getDefaults().getColor("textHighlight");
-				textit = UIManager.getDefaults().getColor("textHighlightText");
+				grayit = Colors.SELECTED_BACKGROUND;
+				textit = Colors.SELECTED_TEXT;
 				break;
 			default:
 				throw new IllegalStateException("DayStyle is not a valid DayStyle!");
@@ -71,7 +63,7 @@ public class MonthDay extends JPanel
 
 	public void reBorder(boolean top, boolean left, boolean bottom)
 	{
-		setBorder(javax.swing.BorderFactory.createMatteBorder((top || borderTop) ? 1 : 0, left ? 1 : 0, bottom ? 1 : 0, 1, UIManager.getDefaults().getColor("Separator.foreground")));
+		setBorder(javax.swing.BorderFactory.createMatteBorder((top || borderTop) ? 1 : 0, left ? 1 : 0, bottom ? 1 : 0, 1, Colors.BORDER));
 	}
 	/**
 	 * Add an event to a given day of the month

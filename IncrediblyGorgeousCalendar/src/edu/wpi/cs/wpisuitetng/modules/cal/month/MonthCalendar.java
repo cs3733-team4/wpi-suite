@@ -13,8 +13,6 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import javax.swing.UIManager;
-
 import org.joda.time.*;
 
 import com.lowagie.text.Font;
@@ -22,6 +20,7 @@ import com.lowagie.text.Font;
 import edu.wpi.cs.wpisuitetng.modules.cal.CalendarInterface;
 import edu.wpi.cs.wpisuitetng.modules.cal.DayStyle;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Months;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
@@ -110,7 +109,7 @@ public class MonthCalendar extends JPanel implements CalendarInterface
 		
 
 		// layout code
-		mainCalendarView.setBackground(UIManager.getDefaults().getColor("Table.background"));
+		mainCalendarView.setBackground(Colors.TABLE_BACKGROUND);
 		mainCalendarView.setLayout(new BorderLayout());
 		top.setLayout(new GridLayout(1, 7));
 		

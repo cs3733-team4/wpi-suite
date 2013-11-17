@@ -9,12 +9,10 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
 import org.joda.time.DateTime;
@@ -64,9 +62,7 @@ public class YearCalendarHolder extends JPanel
 		titlePane.add(prevButton, BorderLayout.WEST);
 		
 		prevButton.setFocusable(false);
-		prevButton.setBackground(UIManager.getDefaults().getColor("Panel.background"));
 		nextButton.setFocusable(false);
-		nextButton.setBackground(UIManager.getDefaults().getColor("Panel.background"));
 		
 		prevButton.setBorder(new EmptyBorder(5, 5, 5, 5));
 		nextButton.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -84,7 +80,6 @@ public class YearCalendarHolder extends JPanel
 		
 		JButton updateGotoButton = new JButton(">");
 		updateGotoButton.setFocusable(false);
-		updateGotoButton.setBackground(UIManager.getDefaults().getColor("Panel.background"));
 		updateGotoButton.setBorder(new EmptyBorder(5, 5, 5, 5));
 		
 		//Goto Date Pane within Goto Pane

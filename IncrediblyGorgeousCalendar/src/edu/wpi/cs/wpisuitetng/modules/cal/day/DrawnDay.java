@@ -31,7 +31,7 @@ public class DrawnDay extends JPanel{
 		{
 			hours[i] = new Hour();
 			hours[i].setBackground(Colors.TABLE_BACKGROUND);
-			hours[i].setBorder(BorderFactory.createMatteBorder(0, 1, 1, 1, Colors.TABLE_BORDER));
+			hours[i].setBorder(BorderFactory.createMatteBorder(0, 1, 1, 1, Colors.BORDER));
 			this.add(hours[i]);
 		}
 	}
