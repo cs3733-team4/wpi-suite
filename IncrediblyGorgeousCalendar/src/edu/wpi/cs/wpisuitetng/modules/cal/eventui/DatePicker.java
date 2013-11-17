@@ -32,13 +32,13 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 	final private static DateTimeFormatter dateFormat = DateTimeFormat.forPattern("M/d/yy");
 	final private static DateTimeFormatter timeFormat = DateTimeFormat.forPattern("h:mm a");
 	// Declare text fields for start and end dates/times.
-	final JTextField startDate = new JTextField(DateTime.now().toString(dateFormat));
-	final JTextField endDate = new JTextField(DateTime.now().toString(dateFormat));
-	final JTextField startTime = new JTextField(DateTime.now().toString(timeFormat));
-	final JTextField endTime = new JTextField(DateTime.now().toString(timeFormat));
+	final private JTextField startDate = new JTextField(DateTime.now().toString(dateFormat));
+	final private JTextField endDate = new JTextField(DateTime.now().toString(dateFormat));
+	final private JTextField startTime = new JTextField(DateTime.now().toString(timeFormat));
+	final private JTextField endTime = new JTextField(DateTime.now().toString(timeFormat));
 	
 	public DatePicker() {
-		Font mainfont = new Font("DejaVu Sans", Font.BOLD, 15);
+		Font mainfont = new Font("DejaVu Sans", Font.BOLD, 12);
 		this.setPreferredSize(new Dimension(200, 250));
 		calViewer = new JPanel();
 		viewCal = new YearCalendarHolder(DateTime.now(), this, false); // May need to fix later.
@@ -111,6 +111,23 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 		setLayout(groupLayout);
 	}
 
+	// Getter methods for dates and times.
+	public JTextField getStartDate() {
+		return this.startDate;
+	}
+	
+	public JTextField getStartTime() {
+		return this.startTime;
+	}
+	
+	public JTextField getEndDate() {
+		return this.endDate;
+	}
+	
+	public JTextField getEndTime() {
+		return this.endTime;
+	}
+	
 	@Override
 	public void display(DateTime newtime) {
 		// Change the text to correspond to the DateTime parameter.

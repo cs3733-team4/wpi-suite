@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.FontMetrics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
@@ -16,6 +18,10 @@ import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
 
 /**
@@ -32,9 +38,10 @@ public class NewEventDisplay extends JPanel {
 	private JTextArea descriptionField;
 	private DatePicker calDisplay;
 	private JButton saveButton;
+	final private static DateTimeFormatter datetimeFormat = DateTimeFormat.forPattern("M/d/yy h:mm a");
 	
 	public NewEventDisplay() {
-		Font mainfont = new Font("DejaVu Sans", Font.BOLD, 15);
+		Font mainfont = new Font("DejaVu Sans", Font.BOLD, 12);
 		saveEvent = new JPanel();
 		nameEntry = new JPanel();
 		miniCalDisplay = new JPanel();
@@ -74,7 +81,21 @@ public class NewEventDisplay extends JPanel {
 						.addComponent(nameField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addContainerGap(43, Short.MAX_VALUE))
 		);
+		
 		nameEntry.setLayout(gl_nameEntry);
+		
+		saveButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// Create a new Event instance when the save button is clicked.
+				DateTime sdatetime = datetimeFormat.parseDateTime(calDisplay.getStartDate().getText()
+						+ " " + calDisplay.getStartTime().getText());
+				DateTime edatetime = datetimeFormat.parseDateTime(calDisplay.getEndDate().getText() 
+						+ " " + calDisplay.getEndTime().getText()); 
+				Event event = new Event(nameField.getText(), descriptionField.getText(), sdatetime, edatetime, true, 0, 0); 
+			}
+		});
 	}
 	
 	/** Sets the displays and displays the GUI.
@@ -108,10 +129,11 @@ public class NewEventDisplay extends JPanel {
         descriptionLabel.setLabelFor(descriptionField);
         descriptionEntry.add(descriptionField, BorderLayout.LINE_START);
         //descriptionEntry.setAlignmentX(Component.CENTER_ALIGNMENT);
-		
+        
         miniCalDisplay.add(calDisplay);
         //miniCalDisplay.setAlignmentX(Component.CENTER_ALIGNMENT);
         
+        // For the Save Event Button, in order to align it properly.
         saveEvent.setLayout(new FlowLayout(FlowLayout.LEADING));
         saveEvent.add(saveButton);
         
