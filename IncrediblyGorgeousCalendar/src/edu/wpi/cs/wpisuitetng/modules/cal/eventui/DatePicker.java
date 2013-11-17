@@ -1,8 +1,9 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.eventui;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Font;
 
-import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JCheckBox;
@@ -37,19 +38,24 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 	final JTextField endTime = new JTextField(DateTime.now().toString(timeFormat));
 	
 	public DatePicker() {
+		Font mainfont = new Font("DejaVu Sans", Font.BOLD, 15);
 		this.setPreferredSize(new Dimension(200, 250));
 		calViewer = new JPanel();
 		viewCal = new YearCalendarHolder(DateTime.now(), this, false); // May need to fix later.
 		dateLabel = new JLabel("Select Date");
-		//isAllDay = new JCheckBox("All Day Event: ");
+		dateLabel.setFont(mainfont);
+		isAllDay = new JCheckBox("All Day Event: ");
 		startLabel = new JLabel("From: ");
 		endLabel = new JLabel("To: ");
+		startLabel.setFont(mainfont);
+		endLabel.setFont(mainfont);
 		
 		/*dateLabel.setHorizontalAlignment(SwingConstants.TRAILING);
 		startDate.setHorizontalAlignment(SwingConstants.TRAILING);
-		startTime.setHorizontalAlignment(SwingConstants.TRAILING);	
+		startTime.setHorizontalAlignment(SwingConstants.TRAILING);
 		endDate.setHorizontalAlignment(SwingConstants.TRAILING);*/
 
+		// Set up the group layouts for the date display.
 		GroupLayout gl_dateDisplay = new GroupLayout(calViewer);
 		gl_dateDisplay.setHorizontalGroup(
 			gl_dateDisplay.createParallelGroup(Alignment.LEADING)
@@ -153,8 +159,9 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 		datepanellayout.putConstraint(SpringLayout.NORTH, endTime, 5, SpringLayout.NORTH, calViewer);*/
 				
 		// Add everything to the main panel.
-		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-		this.add(calViewer);
+		//this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+		this.setLayout(new BorderLayout(5, 5));
+		this.add(calViewer, BorderLayout.LINE_START);
 		//this.add(datePanel);
 	}
 }
