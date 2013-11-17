@@ -6,11 +6,11 @@ import javax.swing.JPanel;
 
 import org.joda.time.DateTime;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.CalendarInterface;
+import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.day.DrawnDay;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
-public class WeekCalendar extends JPanel implements CalendarInterface {
+public class WeekCalendar extends AbstractCalendar {
 	
 
 	// does this make sense? if not it should be pretty easy to change, just a skeleton for now.

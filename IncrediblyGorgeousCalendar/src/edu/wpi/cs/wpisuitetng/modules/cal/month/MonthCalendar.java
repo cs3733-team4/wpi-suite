@@ -19,20 +19,20 @@ import org.joda.time.*;
 
 import com.lowagie.text.Font;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.CalendarInterface;
+import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.DayStyle;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Months;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
 
-public class MonthCalendar extends JPanel implements CalendarInterface
+public class MonthCalendar extends AbstractCalendar
 {
 
 	private JPanel inside                = new JPanel(), 
 			       top                   = new JPanel(), 
 			       mainCalendarView      = new JPanel(), 
-			       navigationPanel       = new JPanel(), 
+			       calendarTitlePanel    = new JPanel(), 
 			       navigationButtonPanel = new JPanel();
 	
 	private JButton nextButton   = new JButton(">"), 
@@ -53,7 +53,7 @@ public class MonthCalendar extends JPanel implements CalendarInterface
 		this.time      = on;
 		
 		this.setLayout(new BorderLayout());
-		this.add(navigationPanel, BorderLayout.NORTH);
+		this.add(calendarTitlePanel, BorderLayout.NORTH);
 		
 		generateDays(new MutableDateTime(on));
 		generateHeaders(new MutableDateTime(on));
@@ -66,47 +66,13 @@ public class MonthCalendar extends JPanel implements CalendarInterface
 	 */
 	public void generateHeaders(MutableDateTime fom)
 	{
-		navigationPanel.setLayout(new BorderLayout());
+		// Set up label for month title
 		monthLabel.setHorizontalAlignment(JLabel.CENTER);	
 		monthLabel.setFont(new java.awt.Font("DejaVu Sans", Font.BOLD, 25));
-
-		navigationButtonPanel.setLayout(new BorderLayout());
-		navigationButtonPanel.add(nextButton, BorderLayout.EAST);
-		navigationButtonPanel.add(todayButton, BorderLayout.CENTER);
-		navigationButtonPanel.add(previousButton, BorderLayout.WEST);
 		
-		
-		//placeholder panel to center title panel
-		JPanel navigationTopRightPanel = new JPanel();
-		navigationTopRightPanel.setPreferredSize(navigationButtonPanel.getPreferredSize());
-		
-		//unnecessary if arrows are used because both are same size
-		//nextButton.setPreferredSize(previousButton.getPreferredSize());
-		
-		navigationPanel.add(monthLabel, BorderLayout.CENTER);
-		
-		navigationPanel.add(navigationButtonPanel, BorderLayout.WEST);
-		navigationPanel.add(navigationTopRightPanel, BorderLayout.EAST);
-		
-		nextButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				next();
-			}
-		});
-		previousButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				previous();
-				
-			}
-		});
-		todayButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				display(DateTime.now());
-			}
-		});
+		// Set up the container title panel (only holds monthLabel for now)
+		calendarTitlePanel.setLayout(new BorderLayout());
+		calendarTitlePanel.add(monthLabel, BorderLayout.CENTER);	
 		
 		
 		// layout code
@@ -118,6 +84,7 @@ public class MonthCalendar extends JPanel implements CalendarInterface
 		mainCalendarView.add(inside, BorderLayout.CENTER);
 		
 		this.add(mainCalendarView, BorderLayout.CENTER);
+		this.add(calendarTitlePanel, BorderLayout.NORTH);
 		// end layout code
 
 		fom.setDayOfMonth(1);

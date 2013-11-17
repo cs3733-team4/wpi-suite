@@ -1,21 +1,19 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.day;
 
-import java.awt.BorderLayout;
 import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JLabel;
 
 import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.CalendarInterface;
+import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
-public class DayCalendar implements CalendarInterface {
+public class DayCalendar extends AbstractCalendar {
 
 	private JPanel inside                = new JPanel(), 
 			       top                   = new JPanel(), 

@@ -1,23 +1,32 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.navigation;
 
 import java.awt.BorderLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-
-import org.joda.time.DateTime;
 
 public class MainCalendarNavigation extends JPanel {
 
 	private JButton nextButton = new JButton(">");
 	private JButton previousButton = new JButton("<");
-	private JButton todayButton = new JButton("Today");
+	private JButton todayButton = new JButton();
 	private JPanel navigationButtonPanel = new JPanel();
 
-	public MainCalendarNavigation(JComponent parent) {
+	public MainCalendarNavigation(JComponent mainPanel) {
+		
+		try {
+			//image will probably change
+		    Image img = ImageIO.read(getClass().getResource("todayIcon.png"));
+		    todayButton.setIcon(new ImageIcon(img));
+		} catch (IOException ex) {}
+		
 		navigationButtonPanel.setLayout(new BorderLayout());
 		navigationButtonPanel.add(nextButton, BorderLayout.EAST);
 		navigationButtonPanel.add(todayButton, BorderLayout.CENTER);

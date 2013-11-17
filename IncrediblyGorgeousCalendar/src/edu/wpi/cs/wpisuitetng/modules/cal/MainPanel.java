@@ -1,6 +1,7 @@
 package edu.wpi.cs.wpisuitetng.modules.cal;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -19,9 +20,9 @@ import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.eventui.NewEventDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.month.MonthCalendar;
+import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MainCalendarNavigation;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarHostIface;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.CalendarNavigationPanel;
-import edu.wpi.cs.wpisuitetng.modules.cal.month.MonthCalendar;
 
 @SuppressWarnings("serial")
 public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
@@ -31,7 +32,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	 *  add event view, add commitment view, and so on.
 	 */
 	
-	private MonthCalendar mMonthCalendar; 
+	private AbstractCalendar mCalendar; 
 	JTabbedPane mTabbedPane;
 	private CalendarNavigationPanel mCalendarNavigationPanel;
 	private NewEventDisplay mEventCreator;
@@ -51,16 +52,18 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		mCalendarNavigationPanel = new CalendarNavigationPanel(DateTime.now(), this);
 		miniCalendar.add(mCalendarNavigationPanel);
 		
-		// Center Panel adds
 		// Set up monthly calendar
-		centerPanel.setLayout(new BorderLayout());
-		mMonthCalendar= new MonthCalendar(DateTime.now(), this);
-		centerPanel.add(mMonthCalendar,BorderLayout.CENTER);
+		mCalendar = new MonthCalendar(DateTime.now(), this);
 		
 		//Set up top bar panel
-		JPanel centerNavigationPanel = new JPanel(); // Navigation bar above calendar
-				
-		// Add mini calendar and main calendar to the main pane
+		JPanel mainCalendarNavigationPanel = new MainCalendarNavigation(this); // Navigation bar above calendar
+		
+		// Add top bar and monthly calendar to center panel
+		centerPanel.setLayout(new BorderLayout());
+		centerPanel.add((JComponent)mCalendar, BorderLayout.CENTER);
+		centerPanel.add(mainCalendarNavigationPanel, BorderLayout.NORTH);
+		
+		// Add mini calendar and center panel to the main pane
 		mainPaneContainer.add(miniCalendar, BorderLayout.WEST);
 		mainPaneContainer.add(centerPanel, BorderLayout.CENTER);
 		
@@ -129,9 +132,9 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	}
 
 	
-	public MonthCalendar getMOCA()
+	public AbstractCalendar getMOCA()
 	{
-		return mMonthCalendar;
+		return mCalendar;
 	}
 	
 	/**
@@ -140,7 +143,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	 */
 	public void display(DateTime newDate)
 	{
-		mMonthCalendar.display(newDate);
+		mCalendar.display(newDate);
 		
 	}
 
