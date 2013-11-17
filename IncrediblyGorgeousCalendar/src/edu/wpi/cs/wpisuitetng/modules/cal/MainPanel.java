@@ -32,13 +32,13 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	private MonthCalendar mMonthCalendar; 
 	JTabbedPane mTabbedPane;
 	private CalendarNavigationPanel mCalendarNavigationPanel;
-	private NewEventDisplay eventCreator;
+	private NewEventDisplay mEventCreator;
 
 	public MainPanel() {
 
 		JPanel mainPaneContainer = new JPanel(); // Container for the navigation and calendars
 		JPanel miniCalendar = new JPanel(); // Mini calendar
-		JPanel mainCalendar = new JPanel(); // Monthly calendar
+		JPanel centerPanel = new JPanel(); // Container for center navigation bar and calendar pane
 		
 		mTabbedPane = this; // Variable for creating new tabs in addCalendarTab
 		
@@ -49,18 +49,22 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		mCalendarNavigationPanel = new CalendarNavigationPanel(DateTime.now(), this);
 		miniCalendar.add(mCalendarNavigationPanel);
 		
+		// Center Panel adds
 		// Set up monthly calendar
-		mainCalendar.setLayout(new BorderLayout());
+		centerPanel.setLayout(new BorderLayout());
 		mMonthCalendar= new MonthCalendar(DateTime.now(), this);
-		mainCalendar.add(mMonthCalendar);
+		centerPanel.add(mMonthCalendar,BorderLayout.CENTER);
 		
+		//Set up top bar panel
+		JPanel centerNavigationPanel = new JPanel(); // Navigation bar above calendar
+				
 		// Add mini calendar and main calendar to the main pane
 		mainPaneContainer.add(miniCalendar, BorderLayout.WEST);
-		mainPaneContainer.add(mainCalendar, BorderLayout.CENTER);
+		mainPaneContainer.add(centerPanel, BorderLayout.CENTER);
 		
 		// Add default tabs to main panel
 		addTopLevelTab(mainPaneContainer, "Calendar", false);
-		addTopLevelTab(null, "Test", true);
+		addTopLevelTab(new JPanel(), "Test", true);
 		
 	}
 	
@@ -113,7 +117,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 				@Override
 				public void stateChanged(ChangeEvent e) {
 					if(! mTabbedPane.getTitleAt(mTabbedPane.getSelectedIndex()).equals("New Event")) {
-						eventCreator.display(DateTime.now());
+						mEventCreator.display(DateTime.now());
 					}
 				}
 			});

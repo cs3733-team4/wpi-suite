@@ -23,10 +23,9 @@ import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Months;
  */
 public class MonthCalendar extends JPanel
 {
-	private JPanel inside = new JPanel(), top = new JPanel(), mainCalendarView = new JPanel(), navigationPanel = new JPanel(), navigationButtonPanel = new JPanel();
+	private JPanel inside = new JPanel(), top = new JPanel(), mainCalendarView = new JPanel(), navigationPanel = new JPanel();
 	private JLabel monthLabel = new JLabel();
 	private DateTime time;
-	private JButton nextButton = new JButton(">"), previousButton = new JButton("<"), todayButton = new JButton("Today");
 	private MainPanel mainPanel;
 
 	public MonthCalendar(DateTime on, MainPanel mainPanel)
@@ -44,39 +43,11 @@ public class MonthCalendar extends JPanel
 		
 		monthLabel.setFont(new java.awt.Font("DejaVu Sans", Font.BOLD, 25));
 		
-		navigationButtonPanel.setLayout(new BorderLayout());
-		navigationButtonPanel.add(nextButton, BorderLayout.EAST);
-		navigationButtonPanel.add(todayButton, BorderLayout.CENTER);
-		navigationButtonPanel.add(previousButton, BorderLayout.WEST);
-		
 		//unnecessary if arrows are used because both are same size
 		//nextButton.setPreferredSize(previousButton.getPreferredSize());
 		
 		navigationPanel.add(monthLabel, BorderLayout.CENTER);
-		navigationPanel.add(navigationButtonPanel, BorderLayout.WEST);
 		
-		nextButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				next();
-			}
-		});
-		previousButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				previous();
-				
-			}
-		});
-		todayButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				display(DateTime.now());
-			}
-		});
 		time = on;
 
 		// layout code
