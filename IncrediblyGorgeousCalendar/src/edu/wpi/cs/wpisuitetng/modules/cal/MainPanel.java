@@ -21,6 +21,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.eventui.NewEventDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.month.MonthCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarHostIface;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.CalendarNavigationPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.month.MonthCalendar;
 
 @SuppressWarnings("serial")
 public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
@@ -127,6 +128,12 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		}
 	}
 
+	
+	public MonthCalendar getMOCA()
+	{
+		return mMonthCalendar;
+	}
+	
 	/**
 	 * Changes the date being displayed on the calendar
 	 * @param newTime time to set the calendar to
