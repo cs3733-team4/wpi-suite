@@ -37,6 +37,13 @@ public interface Data
 	public <T> boolean save(T aModel, Project aProject);
 	
 	/**
+	 * Query the database with a raw db4o predicate
+	 * @param pred - The raw predicate to select objects
+	 * @return a List of objects of the given type that match the predicate
+	 */
+	public <T> List<T> retrievePredicate(WSPredicate<T> pred);	
+	
+	/**
 	 * Retrieves the object of the class anObjectQueried with the value
 	 * theGivenValue in the field aFieldName
 	 * @param anObjectQueried - class of object to be retrieved

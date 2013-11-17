@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 import edu.wpi.cs.wpisuitetng.database.Data;
+import edu.wpi.cs.wpisuitetng.database.WSPredicate;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
@@ -320,6 +321,12 @@ public class MockData implements Data {
 		((Model)arg0).setProject(arg1);
 		save(arg0);
 		return true;
+	}
+
+	@Override
+	public <T> List<T> retrievePredicate(WSPredicate<T> pred) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -22,11 +22,11 @@ import edu.wpi.cs.wpisuitetng.network.models.IRequest;
 
 public class EventModel {
 
-	private DateTimeFormatter serializer = ISODateTimeFormat.basicDateTime();
+	public static final DateTimeFormatter serializer = ISODateTimeFormat.basicDateTime();
 	public static final String separator = "%2C";
 
 	public Event[] getEvents(DateTime from, DateTime to) {
-		return get("filtered-events", from.toString(serializer),
+		return get("filter-events-by-range", from.toString(serializer),
 				to.toString(serializer));
 	}
 

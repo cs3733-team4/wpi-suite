@@ -13,8 +13,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joda.time.DateTime;
+import org.joda.time.Interval;
+
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.database.Data;
+import edu.wpi.cs.wpisuitetng.database.WSPredicate;
 import edu.wpi.cs.wpisuitetng.exceptions.BadRequestException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotImplementedException;
@@ -60,16 +64,53 @@ public class EventEntityManager implements EntityManager<Event> {
 	}
 	
 	/**
-	 * Retrieves a single event from the database
+	 * Retrieves events from the database in the range of String data
 	 * @param s the session
-	 * @param id the id number of the event to retrieve
+	 * @param data the data (String from and String to) of the events to retrieve
 	 * @return the event matching the given id * @throws NotFoundException * @throws NotFoundException * @throws NotFoundException
 	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#getEntity(Session, String) */
 	@Override
-	public Event[] getEntity(Session s, String id) throws NotFoundException {
-		System.out.println(id+ " was just sent!");
-		String[] args = id.split(",");
-		return new Event[0];
+	public Event[] getEntity(Session s, String data) throws NotFoundException {
+		System.out.println(data+ " was just sent!");
+		String[] args = data.split(",");
+		
+		Event[] retrievedEvents = null;
+		
+		switch (args[0]) {
+			case "filter-events-by-range":
+				return getEventsByRange(s, args[1], args[2]);
+			default:
+				System.out.println("Error: " + args[0] + " not a valid method");
+		}
+
+	
+		return retrievedEvents;
+	}
+	
+	/**
+	 * Query database to retrieve events with overlapping range
+	 * @param sfrom date from, DateTime formatted as String
+	 * @param sto date to, DateTime formatted as String
+	 * @return retrieved events with overlapping range
+	 */
+	private Event[] getEventsByRange(Session s, String sfrom, String sto) {
+		DateTime from = EventModel.serializer.parseDateTime(sfrom);
+		DateTime to = EventModel.serializer.parseDateTime(sto);
+		
+		List<Event> retrievedEvents = null;
+
+		final Interval range = new Interval(from, to);
+		final int projectID = Integer.parseInt(s.getProject().getIdNum());
+		final int userID = s.getUser().getIdNum();
+		
+		retrievedEvents = db.retrievePredicate(new WSPredicate<Event>() {
+			public boolean match(Event anEvent) {
+				return (projectID == anEvent.getProjectID() || userID == anEvent.getUserID()) && 
+						range.overlaps(new Interval(anEvent.getStartTime(), anEvent.getEndTime()));
+			}
+		});
+		
+		return (Event[]) retrievedEvents.toArray();
 	}
 
 	/**

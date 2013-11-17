@@ -109,12 +109,18 @@ public class DataStore implements Data {
 	 * @param pred - The raw predicate to select objects
 	 * @return a List of objects of the given type that match the predicate
 	 */
-	public <T> List<T> retreivedPredicate(Predicate<T> pred){
+	public <T> List<T> retrievePredicate(final WSPredicate<T> pred){
 		// Please see Wiki for more information on the ServerConfiguration.
 		ClientConfiguration config = Db4oClientServer.newClientConfiguration();
 		config.common().reflectWith(new JdkReflector(Thread.currentThread().getContextClassLoader()));
+		List<T> result = theDB.query(new Predicate<T>(){
 
-		List<T> result = theDB.query(pred);
+			@Override
+			public boolean match(T arg0) {
+				return pred.match(arg0);
+			}
+			
+		});
 		System.out.println("retreivedPredicate: "+result);
 		theDB.commit();
 
