@@ -41,7 +41,7 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 		calViewer = new JPanel();
 		viewCal = new YearCalendarHolder(DateTime.now(), this, false); // May need to fix later.
 		dateLabel = new JLabel("Select Date");
-		isAllDay = new JCheckBox("All Day Event: ");
+		//isAllDay = new JCheckBox("All Day Event: ");
 		startLabel = new JLabel("From: ");
 		endLabel = new JLabel("To: ");
 		
