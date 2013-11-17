@@ -19,22 +19,25 @@ public class DayCalendar implements CalendarInterface {
 
 	private JPanel inside                = new JPanel(), 
 			       top                   = new JPanel(), 
-			       mainCalendarView      = new JPanel(), 
-			       navigationPanel       = new JPanel(), 
-			       navigationButtonPanel = new JPanel();
+			       navigationPanel       = new JPanel();
 	
 	private JButton nextButton   = new JButton(">"), 
 	        previousButton       = new JButton("<"), 
 	        todayButton          = new JButton("Today");
 	
-	private JLabel monthLabel = new JLabel();
 	private DateTime time;
 	private MainPanel mainPanel;
+	private DrawnDay current;
 	
 	public DayCalendar(DateTime on, MainPanel mainPanel)
 	{
 		this.mainPanel = mainPanel;
 		this.time      = on;
+	}
+	
+	private void generateDay(MutableDateTime current)
+	{
+		this.current = new DrawnDay(this.time);
 	}
 	
 	@Override
@@ -44,12 +47,6 @@ public class DayCalendar implements CalendarInterface {
 		current.addDays(1);
 		this.time = current.toDateTime();
 		generateDay(current);
-	}
-
-	private void generateDay(MutableDateTime current)
-	{
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -69,14 +66,13 @@ public class DayCalendar implements CalendarInterface {
 
 	@Override
 	public void addEvent(Event event) {
-		// TODO Auto-generated method stub
-
+		// TODO 
 	}
 
 	@Override
 	public void addEvents(List<Event> eventList) {
-		// TODO Auto-generated method stub
-
+		this.current.addEvents(eventList);
+		this.display(this.time);
 	}
 
 	@Override

@@ -20,9 +20,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
 
 public class MonthDay extends JPanel
-{
-	private static final long serialVersionUID = -3997306120580110972L;
-	
+{ 	
 	private boolean borderTop;
 	JLabel header = new JLabel();
 	private List<Event> items = new ArrayList<Event>();
