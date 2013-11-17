@@ -60,9 +60,11 @@ public class DrawnDay extends JPanel{
 		ArrayList<JPanel> firstHalfHour = new ArrayList<JPanel>();
 		ArrayList<JPanel> secondHalfHour = new ArrayList<JPanel>();
 		
-		public void addEvent(Color c, int fos)
+		public void addEventBody(Color c, int fos, String content)
 		{
-			
+			JPanel p = new JPanel();
+			p.setBackground(c);
+			boolean b = ((fos==0) ? this.firstHalfHour.add(p) : this.secondHalfHour.add(p));
 		}
 	}
 	
