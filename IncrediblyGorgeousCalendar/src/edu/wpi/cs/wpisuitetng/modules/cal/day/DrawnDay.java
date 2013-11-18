@@ -41,10 +41,7 @@ public class DrawnDay extends JPanel{
 		for(Event e : events)
 		{
 			Color randomEventColor = new Color((int)(Math.random()*256), (int)(Math.random()*256), (int)(Math.random()*256));
-			
-			int TitleBarHalfHour = e.getStartTime().getMinuteOfDay()/48;
-			
-			
+			int TitleBarHalfHour = e.getStartTime().getMinuteOfDay()/48;	
 		}
 	}
 	
@@ -54,6 +51,11 @@ public class DrawnDay extends JPanel{
 		this.draw();
 	}
 
+	public void removeEvents(List<Event> events)
+	{
+		this.events.removeAll(events);
+		this.draw();
+	}
 	
 	private class Hour extends JPanel
 	{
