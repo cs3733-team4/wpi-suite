@@ -56,15 +56,21 @@ public class MiniMonth extends JPanel
 		
 		for (int i = 0; i < 49; i++) // 6*7
 		{
+			MutableDateTime dayTime = new MutableDateTime(time);
 			if (i < 7) {
 				days[i] = new DescriptiveDayLabel(dayLabel[i], time);
 			}
 			else if (i-7 < startingDayThisMonth) { // display some days of prev. month
-				days[i] = new InactiveDayLabel(daysLastMonth - startingDayThisMonth + i - 6, Months.prevMonth(time));
+				dayTime.setMonthOfYear(Months.prevMonth(time).getMonthOfYear());
+				dayTime.setDayOfMonth(daysLastMonth - startingDayThisMonth + i - 6);
+				days[i] = new InactiveDayLabel(daysLastMonth - startingDayThisMonth + i - 6, dayTime.toDateTime());
 			} else if (i-7 > daysThisMonth + startingDayThisMonth - 1) {
-				days[i] = new InactiveDayLabel(i - daysThisMonth - startingDayThisMonth - 6, Months.nextMonth(time));
+				dayTime.setMonthOfYear(Months.nextMonth(time).getMonthOfYear());
+				dayTime.setDayOfMonth(i - daysThisMonth - startingDayThisMonth - 6);
+				days[i] = new InactiveDayLabel(i - daysThisMonth - startingDayThisMonth - 6, dayTime.toDateTime());
 			} else {
-				days[i] = new ActiveDayLabel(i - startingDayThisMonth - 6, time);
+				dayTime.setDayOfMonth(i - startingDayThisMonth - 6);
+				days[i] = new ActiveDayLabel(i - startingDayThisMonth - 6, dayTime.toDateTime());
 			}
 			days[i].borderize((i % 7) == 0, i >= 6*7, (i % 7) == 6);
 			this.add(days[i]);

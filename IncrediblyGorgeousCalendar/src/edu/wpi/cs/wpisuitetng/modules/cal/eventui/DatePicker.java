@@ -3,6 +3,8 @@ package edu.wpi.cs.wpisuitetng.modules.cal.eventui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -13,6 +15,7 @@ import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
 import org.joda.time.DateTime;
+import org.joda.time.MutableDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -128,12 +131,19 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 		return this.endTime;
 	}
 	
+	//this function will eventually be used for quick adding events that default to 1 hour length
+	public void displayTime(DateTime newTime){
+		startTime.setText(newTime.toString(timeFormat));
+		MutableDateTime newMutTime = newTime.toMutableDateTime();
+		newMutTime.addHours(1);
+		endTime.setText(newMutTime.toString(timeFormat));
+	}
+	
 	@Override
-	public void display(DateTime newtime) {
+	public void display(DateTime newTime) {
 		// Change the text to correspond to the DateTime parameter.
-		endDate.setText(newtime.toString(dateFormat));
-		startTime.setText(newtime.toString(timeFormat));
-		endTime.setText(newtime.toString(timeFormat));
+		endDate.setText(newTime.toString(dateFormat));
+		startDate.setText(newTime.toString(dateFormat));
 		
 		// Calendar Viewer
 		/*calViewer.setLayout(new BoxLayout(calViewer, BoxLayout.Y_AXIS));
