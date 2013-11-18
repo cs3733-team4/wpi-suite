@@ -271,4 +271,10 @@ public class MonthCalendar extends JPanel implements CalendarInterface
 	{
 		return time;
 	}
+
+	@Override
+	public void updateEvents(List<Event> events, boolean addOrRemove) {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -3,94 +3,97 @@ package edu.wpi.cs.wpisuitetng.modules.cal.day;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JLabel;
 
 import org.joda.time.DateTime;
-import org.joda.time.MutableDateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.CalendarInterface;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Months;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
 public class DayCalendar extends JPanel implements CalendarInterface {
 
 	private JPanel inside                = new JPanel(), 
 			       top                   = new JPanel(), 
-			       navigationPanel       = new JPanel();
+			       navigationPanel       = new JPanel(),
+				   title                 = new JPanel();
 	
-	private JButton nextButton   = new JButton(">"), 
-	        previousButton       = new JButton("<"), 
-	        todayButton          = new JButton("Today");
+	private JButton nextButton           = new JButton(">"), 
+	        		previousButton       = new JButton("<"), 
+	        		todayButton          = new JButton("Today");
 	
 	private DateTime time;
 	private MainPanel mainPanel;
 	private DrawnDay current;
 	
+	private List<Event> events;
+	
 	public DayCalendar(DateTime on, MainPanel mainPanel)
 	{
 		this.mainPanel = mainPanel;
-		this.time      = on;
-		
+		this.time = on;
 		this.setLayout(new BorderLayout());
-		this.add(navigationPanel, BorderLayout.NORTH);
-		display(on);
+		
+		this.navigationPanel.add(this.previousButton);
+		this.navigationPanel.add(this.todayButton);
+		this.navigationPanel.add(this.nextButton);
+		
+		this.title.add(new JLabel("DAY HERE"));
+		
+		this.top.add(this.navigationPanel);
+		this.top.add(this.title);
+		
+		this.add(top, BorderLayout.NORTH);
+		this.add(this.inside, BorderLayout.CENTER);
+		
+		//this.generateDay();
 	}
 	
-	private void generateDay(MutableDateTime current)
+	private void generateDay()
 	{
 		this.current = new DrawnDay(this.time);
+		this.current.addEvents(events);
+		
+		this.inside.removeAll();
+		
+
+		this.inside.add(new DayGridLabel(), BorderLayout.WEST);
+		this.inside.add(this.current, BorderLayout.CENTER);
 	}
 	
 	@Override
 	public void next()
 	{
-		MutableDateTime current = new MutableDateTime(this.time);
-		current.addDays(1);
-		this.time = current.toDateTime();
-		generateDay(current);
+		this.time = Months.nextMonth(this.time);
+		generateDay();
 	}
 
 	@Override
 	public void previous() {
-		MutableDateTime current = new MutableDateTime(this.time);
-		current.addDays(-1);
-		this.time = current.toDateTime();
-		generateDay(current);
+		this.time = Months.prevMonth(this.time);
+		generateDay();
 
 	}
 
 	@Override
 	public void display(DateTime newTime) {
 		this.time = newTime;
-		generateDay(new MutableDateTime(newTime));
+		generateDay();
 	}
 
 	@Override
-	public void addEvents(List<Event> eventList) {
-		this.current.addEvents(eventList);
-		this.display(this.time);
-	}
-
-	@Override
-	public void removeEvents(List<Event> eventList) {
-		this.current.removeEvents(eventList);
-		this.display(this.time);
-
-	}
-	@Override
-	public void addEvent(Event event)
-	{
-		// Please remove this from the calendar interface if we're not going to use this.
-	}
-	@Override
-	public void removeEvent(Event event)
-	{
-		// Same here.
+	public void updateEvents(List<Event> events, boolean addOrRemove) {
+		//this.current.addEvents(events);
+		this.events = events;
+		this.generateDay();
 	}
 }

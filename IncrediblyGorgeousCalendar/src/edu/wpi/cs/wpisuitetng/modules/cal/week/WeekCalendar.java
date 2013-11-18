@@ -36,27 +36,8 @@ public class WeekCalendar extends JPanel implements CalendarInterface {
 	}
 
 	@Override
-	public void addEvent(Event event) {
+	public void updateEvents(List<Event> events, boolean addOrRemove) {
 		// TODO Auto-generated method stub
-
+		
 	}
-
-	@Override
-	public void addEvents(List<Event> eventList) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void removeEvent(Event event) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void removeEvents(List<Event> event) {
-		// TODO Auto-generated method stub
-
-	}
-
 }
