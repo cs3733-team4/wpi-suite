@@ -1,11 +1,18 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.eventui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+<<<<<<< HEAD
+=======
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+>>>>>>> b32e343cd8d9d5ec96d82fcff4843054e288c257
 
+import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JCheckBox;
@@ -25,7 +32,6 @@ import edu.wpi.cs.wpisuitetng.modules.cal.year.YearCalendarHolder;
  * @author anthonyjruffa
  */
 public class DatePicker extends JPanel implements MiniCalendarHostIface {
-	private JPanel datePanel;
 	private JPanel calViewer;
 	private JLabel dateLabel;
 	private JLabel startLabel;
@@ -45,9 +51,9 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 		this.setPreferredSize(new Dimension(200, 250));
 		calViewer = new JPanel();
 		viewCal = new YearCalendarHolder(DateTime.now(), this, false); // May need to fix later.
-		dateLabel = new JLabel("Select Date");
+		dateLabel = new JLabel("Select Date:");
 		dateLabel.setFont(mainfont);
-		isAllDay = new JCheckBox("All Day Event: ");
+		isAllDay = new JCheckBox("All Day Event");
 		startLabel = new JLabel("From: ");
 		endLabel = new JLabel("To: ");
 		startLabel.setFont(mainfont);
@@ -63,9 +69,11 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 		gl_dateDisplay.setHorizontalGroup(
 			gl_dateDisplay.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_dateDisplay.createSequentialGroup()
+					.addContainerGap()
 					.addGroup(gl_dateDisplay.createParallelGroup(Alignment.LEADING)
 						.addComponent(dateLabel)
 						.addGroup(gl_dateDisplay.createSequentialGroup()
+							.addContainerGap()
 							.addComponent(startLabel)
 							.addGap(4)
 							.addComponent(startDate, GroupLayout.PREFERRED_SIZE, 72, GroupLayout.PREFERRED_SIZE)
@@ -76,7 +84,9 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 							.addGap(6)
 							.addComponent(endDate, GroupLayout.PREFERRED_SIZE, 72, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(endTime, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE))
+							.addComponent(endTime, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(isAllDay))
 						.addComponent(viewCal, GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE))
 					.addContainerGap())
 		);
@@ -93,7 +103,8 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 						.addComponent(startTime, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(endDate, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(endLabel)
-						.addComponent(endTime, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+						.addComponent(endTime, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(isAllDay)))
 		);
 		calViewer.setLayout(gl_dateDisplay);
 		GroupLayout groupLayout = new GroupLayout(this);
@@ -112,6 +123,29 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 					.addContainerGap())
 		);
 		setLayout(groupLayout);
+		
+		isAllDay.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if(e.getStateChange() == ItemEvent.SELECTED) {
+					// Disallow editing of the start and end times if the event is all day.
+					startTime.setEditable(false);
+					endTime.setEditable(false);
+					// Change the text color to gray to show it cannot be edited.
+					startTime.setForeground(Color.LIGHT_GRAY);
+					endTime.setForeground(Color.LIGHT_GRAY);
+				} else {
+					// Allow editing of the start and end times if the event is not all day.
+					startTime.setEditable(true);
+					endTime.setEditable(true);
+					// Change the text color back to black to show it can be edited.
+					startTime.setForeground(Color.BLACK);
+					endTime.setForeground(Color.BLACK);
+				}
+				
+			}
+		});
 	}
 
 	// Getter methods for dates and times.
@@ -145,50 +179,9 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 		endDate.setText(newTime.toString(dateFormat));
 		startDate.setText(newTime.toString(dateFormat));
 		
-		// Calendar Viewer
-		/*calViewer.setLayout(new BoxLayout(calViewer, BoxLayout.Y_AXIS));
-		calViewer.add(dateLabel);
-		dateLabel.setLabelFor(viewCal);
-		calViewer.add(viewCal);
-		
-		// Start Date Entry Info
-		SpringLayout datepanellayout = new SpringLayout();
-		datePanel.setLayout(datepanellayout);
-		datePanel.add(startLabel);
-		datePanel.add(startDate);
-		datePanel.add(startTime);
-		datePanel.add(endLabel);
-		datePanel.add(endDate);
-		datePanel.add(endTime);
-		
-		//Adjust constraints for the start date label.
-		datepanellayout.putConstraint(SpringLayout.WEST, startLabel, 5, SpringLayout.WEST, calViewer);
-		datepanellayout.putConstraint(SpringLayout.NORTH, startLabel, 10, SpringLayout.NORTH, calViewer);
- 
-        //Adjust constraints for the start date text field.
-		datepanellayout.putConstraint(SpringLayout.WEST, startDate, 5, SpringLayout.EAST, startLabel);
-		datepanellayout.putConstraint(SpringLayout.NORTH, startDate, 5, SpringLayout.NORTH, calViewer);
-		
-		//Adjust constraints for the start time text field.
-		datepanellayout.putConstraint(SpringLayout.WEST, startTime, 5, SpringLayout.EAST, startDate);
-		datepanellayout.putConstraint(SpringLayout.NORTH, startTime, 5, SpringLayout.NORTH, calViewer);
-		
-		//Adjust constraints for the end date label.
-		datepanellayout.putConstraint(SpringLayout.WEST, endLabel, 5, SpringLayout.EAST, startTime);
-		datepanellayout.putConstraint(SpringLayout.NORTH, endLabel, 10, SpringLayout.NORTH, calViewer);
-		
-		//Adjust constraints for the end date text field.
-		datepanellayout.putConstraint(SpringLayout.WEST, endDate, 5, SpringLayout.EAST, endLabel);
-		datepanellayout.putConstraint(SpringLayout.NORTH, endDate, 5, SpringLayout.NORTH, calViewer);
-		
-		//Adjust constraints for the end time text field.
-		datepanellayout.putConstraint(SpringLayout.WEST, endTime, 5, SpringLayout.EAST, endDate);
-		datepanellayout.putConstraint(SpringLayout.NORTH, endTime, 5, SpringLayout.NORTH, calViewer);*/
-				
 		// Add everything to the main panel.
-		//this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		this.setLayout(new BorderLayout(5, 5));
 		this.add(calViewer, BorderLayout.LINE_START);
-		//this.add(datePanel);
+		viewCal.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory.createLoweredBevelBorder()));
 	}
 }
