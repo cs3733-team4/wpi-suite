@@ -12,6 +12,10 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
+import org.joda.time.DateTime;
+
+import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
+
 public class MainCalendarNavigation extends JPanel {
 
 	private JButton nextButton = new JButton(">");
@@ -19,7 +23,7 @@ public class MainCalendarNavigation extends JPanel {
 	private JButton todayButton = new JButton();
 	private JPanel navigationButtonPanel = new JPanel();
 
-	public MainCalendarNavigation(JComponent mainPanel) {
+	public MainCalendarNavigation(JComponent parent, final AbstractCalendar mAbstractCalendar) {
 		
 		try {
 			//image will probably change
@@ -36,14 +40,14 @@ public class MainCalendarNavigation extends JPanel {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//next();
+				mAbstractCalendar.next();
 			}
 		});
 		previousButton.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//previous();
+				mAbstractCalendar.previous();
 				
 			}
 		});
@@ -51,7 +55,7 @@ public class MainCalendarNavigation extends JPanel {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//display(DateTime.now());
+				mAbstractCalendar.display(DateTime.now());
 			}
 		});
 		
