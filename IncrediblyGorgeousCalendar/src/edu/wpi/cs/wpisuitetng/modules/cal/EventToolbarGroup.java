@@ -17,28 +17,26 @@ import edu.wpi.cs.wpisuitetng.modules.cal.eventui.NewEventDisplay;
 public class EventToolbarGroup extends ToolbarGroupView {
 	
 	private final JPanel eventContentPanel = new JPanel();
-	JButton addEventButton;
-	private NewEventDisplay newEvent;
+	private final JButton addEventButton, removeEventButton;
 	
-	public EventToolbarGroup() {
+	public EventToolbarGroup(final MainPanel mMainPanel) {
 		super("");
 		
 		this.eventContentPanel.setLayout(new BoxLayout(eventContentPanel, BoxLayout.X_AXIS));
-		newEvent = new NewEventDisplay();
 		
-		JButton addEventButton = new JButton("<html>Add<br/>Event</html>");
+		addEventButton = new JButton("<html>Add<br/>Event</html>");
 		addEventButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e){
-				//addCalendarTab(newEvent, "New Event", true); Something like this.
+				mMainPanel.addTopLevelTab(new NewEventDisplay(), "New Event", true);
 			}
 		});
 		
-		JButton removeEventButton = new JButton("<html>Remove<br/>Event</html>");
+		removeEventButton = new JButton("<html>Remove<br/>Event</html>");
 		removeEventButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e){
-				//addCalendarTab(newEvent, "New Event", true); Something like this.
+				mMainPanel.addTopLevelTab(new JPanel(), "test", true);
 			}
 		});
 		
@@ -55,6 +53,10 @@ public class EventToolbarGroup extends ToolbarGroupView {
 		this.setOpaque(false);
 		
 		this.add(eventContentPanel);
+	}
+	
+	public void disableRemoveEventButton(){
+		removeEventButton.setEnabled(false);
 	}
 	
 	@Override

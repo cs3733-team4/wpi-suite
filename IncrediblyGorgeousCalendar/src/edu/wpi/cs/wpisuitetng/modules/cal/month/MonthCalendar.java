@@ -1,9 +1,13 @@
-package edu.wpi.cs.wpisuitetng.modules.cal;
+package edu.wpi.cs.wpisuitetng.modules.cal.month;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -15,70 +19,62 @@ import org.joda.time.*;
 
 import com.lowagie.text.Font;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
+import edu.wpi.cs.wpisuitetng.modules.cal.DayStyle;
+import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Months;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
-/**
- *
- * @author patrick
- */
-public class MonthCalendar extends JPanel
+
+public class MonthCalendar extends AbstractCalendar
 {
-	private JPanel inside = new JPanel(), top = new JPanel(), mainCalendarView = new JPanel(), navigationPanel = new JPanel(), navigationButtonPanel = new JPanel();
+
+	private JPanel inside                = new JPanel(), 
+			       top                   = new JPanel(), 
+			       mainCalendarView      = new JPanel(), 
+			       calendarTitlePanel    = new JPanel(), 
+			       navigationButtonPanel = new JPanel();
+	
+	private JButton nextButton   = new JButton(">"), 
+	        previousButton       = new JButton("<"), 
+	        todayButton          = new JButton("Today");
+	
 	private JLabel monthLabel = new JLabel();
 	private DateTime time;
-	private JButton nextButton = new JButton(">"), previousButton = new JButton("<"), todayButton = new JButton("Today");
 	private MainPanel mainPanel;
+	
+	
+	private HashMap<Integer, MonthDay> days = new HashMap<Integer, MonthDay>();
+	
 
 	public MonthCalendar(DateTime on, MainPanel mainPanel)
 	{
 		this.mainPanel = mainPanel;
+		this.time      = on;
+		
 		this.setLayout(new BorderLayout());
+		this.add(calendarTitlePanel, BorderLayout.NORTH);
 		
+		generateDays(new MutableDateTime(on));
+		generateHeaders(new MutableDateTime(on));
 		
-		navigationPanel.setLayout(new BorderLayout());
-		
-		this.add(navigationPanel, BorderLayout.NORTH);
-		
-		
-		monthLabel.setHorizontalAlignment(JLabel.CENTER);
-		
+	}
+	
+	/**
+	 * 
+	 * @param fom the mutable date time
+	 */
+	public void generateHeaders(MutableDateTime fom)
+	{
+		// Set up label for month title
+		monthLabel.setHorizontalAlignment(JLabel.CENTER);	
 		monthLabel.setFont(new java.awt.Font("DejaVu Sans", Font.BOLD, 25));
 		
-		navigationButtonPanel.setLayout(new BorderLayout());
-		navigationButtonPanel.add(nextButton, BorderLayout.EAST);
-		navigationButtonPanel.add(todayButton, BorderLayout.CENTER);
-		navigationButtonPanel.add(previousButton, BorderLayout.WEST);
+		// Set up the container title panel (only holds monthLabel for now)
+		calendarTitlePanel.setLayout(new BorderLayout());
+		calendarTitlePanel.add(monthLabel, BorderLayout.CENTER);	
 		
-		//unnecessary if arrows are used because both are same size
-		//nextButton.setPreferredSize(previousButton.getPreferredSize());
 		
-		navigationPanel.add(monthLabel, BorderLayout.CENTER);
-		navigationPanel.add(navigationButtonPanel, BorderLayout.WEST);
-		
-		nextButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				next();
-			}
-		});
-		previousButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				previous();
-				
-			}
-		});
-		todayButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				display(DateTime.now());
-			}
-		});
-		time = on;
-
 		// layout code
 		mainCalendarView.setBackground(UIManager.getDefaults().getColor("Table.background"));
 		mainCalendarView.setLayout(new BorderLayout());
@@ -88,9 +84,9 @@ public class MonthCalendar extends JPanel
 		mainCalendarView.add(inside, BorderLayout.CENTER);
 		
 		this.add(mainCalendarView, BorderLayout.CENTER);
+		this.add(calendarTitlePanel, BorderLayout.NORTH);
 		// end layout code
 
-		MutableDateTime fom = new MutableDateTime(on);
 		fom.setDayOfMonth(1);
 		fom.setMillisOfDay(0);
 		int first = (fom.getDayOfWeek() % 7);
@@ -104,52 +100,59 @@ public class MonthCalendar extends JPanel
 			fom.addDays(1);
 			top.add(jl);
 		}
-		generateDays(fom);
 	}
-
-	private MonthItem[] randItems(ReadableDateTime dt)
+	
+	/**
+	 * Add a list of events
+	 * @param events
+	 */
+	public void addEvents(List<Event> events)
 	{
+		Collections.sort(events, new Comparator<Event>(){
+			@Override
+			public int compare(Event e, Event e2)
+			{
+				return e.getStartTime().compareTo(e2.getStartTime());
+			}
+		});
 		
-		MutableDateTime mtd = new MutableDateTime(dt);
-		mtd.addHours(8 + (int)(Math.random() * 10));
-		DateTime a = mtd.toDateTime();
-		mtd = new MutableDateTime(dt);
-		mtd.addHours(8 + (int)(Math.random() * 10));
-		DateTime b = mtd.toDateTime();
-		mtd = new MutableDateTime(dt);
-		mtd.addHours(10 + (int)(Math.random() * 10));
-		mtd.addMinutes(30);
-		DateTime c = mtd.toDateTime();
-		mtd = new MutableDateTime(dt);
-		mtd.addHours(9 + (int)(Math.random() * 10));
-		mtd.addMinutes(45);
-		DateTime d = mtd.toDateTime();
-
-		if (Math.random() > .8)
+		for(Event e : events)
 		{
-			return new MonthItem[]{new MonthItem(a, "Meeting")};
+			this.addEvent(e);
 		}
-		else if (Math.random() > .7)
+	}
+	
+	/**
+	 * Add an event
+	 * @param e
+	 */
+	public void addEvent(Event e)
+	{
+		MonthDay md = this.days.get(e.getStartTime().getDayOfYear());
+		md.addEvent(e);
+	}
+	/**
+	 * Remove a single event
+	 * @param e
+	 */
+	public void removeEvent(Event e)
+	{
+		MonthDay md = this.days.get(e.getStartTime().getDayOfYear());
+		md.removeEvent(e);
+	}
+	/**
+	 * Remove a list of events
+	 * @param events
+	 */
+	public void removeEvents(List<Event> events)
+	{
+		for(Event e : events)
 		{
-			return new MonthItem[]{new MonthItem(b, "Eat Pizza")};
+			this.removeEvent(e);
 		}
-		else if (Math.random() > .6)
-		{
-			return new MonthItem[]{new MonthItem(b, "Eat Pizza"),new MonthItem(a, "Meeting")};
-		}
-		else if (Math.random() > .5)
-		{
-			return new MonthItem[]{new MonthItem(c, "Pet Cats"),new MonthItem(a, "Meeting"),new MonthItem(b, "Doctors Appointment"),new MonthItem(d, "Lunch")};
-		}
-		else if (Math.random() > .4)
-		{
-			return new MonthItem[]{new MonthItem(c, "Watch videos"),new MonthItem(a, "Meeting"),new MonthItem(b, "Eat Pizza")};
-		}
-
-		return new MonthItem[]{};
 	}
 
-	boolean isToday(ReadableDateTime fom)
+	public boolean isToday(ReadableDateTime fom)
 	{
 		DateTime now = DateTime.now();
 		return fom.getYear() == now.getYear() && fom.getDayOfYear() == now.getDayOfYear();
@@ -191,6 +194,7 @@ public class MonthCalendar extends JPanel
 		int first = (referenceDay.getDayOfWeek() % 7);
 		int daysInView = first + referenceDay.dayOfMonth().getMaximumValue();
 		int weeks = (int)Math.ceil(daysInView / 7.0);
+		
 		inside.setLayout(new java.awt.GridLayout(weeks, 7));
 		referenceDay.addDays(-first);
 
@@ -200,9 +204,10 @@ public class MonthCalendar extends JPanel
 		// generate days, weeks*7 covers all possible months, so we just loop through and add each day
 		for (int i = 0; i < (weeks*7); i++)
 		{
-			MonthDay md = new MonthDay(referenceDay.toDateTime(), randItems(referenceDay), getMarker(referenceDay));
+			MonthDay md = new MonthDay(referenceDay.toDateTime(), getMarker(referenceDay));
 			inside.add(md);
 			md.reBorder(i < 7, (i % 7 ) == 0, i >= 5 * 7);
+			this.days.put(referenceDay.getDayOfYear(), md);
 			referenceDay.addDays(1); // go to next day
 		}
 		

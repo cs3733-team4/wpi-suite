@@ -40,6 +40,7 @@ public class NewEventDisplay extends JPanel {
 		descriptionField = new JTextArea(15, 15);
 		calDisplay = new DatePicker();
 		saveButton = new JButton("Save Event");
+		display(DateTime.now());
 	}
 	
 	/** Sets the displays and displays the GUI.

@@ -2,29 +2,32 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.wpi.cs.wpisuitetng.modules.cal;
+package edu.wpi.cs.wpisuitetng.modules.cal.month;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 
 import org.joda.time.DateTime;
 
-/**
- *
- * @author patrick
- */
+import edu.wpi.cs.wpisuitetng.modules.cal.DayStyle;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
+
+
 public class MonthDay extends JPanel
 {
-	JLabel header = new JLabel();
+	private static final long serialVersionUID = -3997306120580110972L;
+	
 	private boolean borderTop;
-	private MonthItem[] items;
+	JLabel header = new JLabel();
+	private List<Event> items = new ArrayList<Event>();
 
-	public MonthDay(DateTime day, MonthItem[] items, DayStyle style)
+	public MonthDay(DateTime day, DayStyle style)
 	{
 		Color grayit, textit = UIManager.getDefaults().getColor("Label.foreground"),
 			bg = UIManager.getDefaults().getColor("Table.background");
@@ -66,25 +69,30 @@ public class MonthDay extends JPanel
 		header.setMaximumSize(new java.awt.Dimension(10000, 17));
 		header.setOpaque(true);
 		add(header);
-
-		Arrays.sort(items, new Comparator<MonthItem>()
-		{
-			@Override
-			public int compare(MonthItem o1, MonthItem o2)
-			{
-				return o1.getWhen().compareTo(o2.getWhen());
-			}
-		});
-		this.items = items;
-		for (MonthItem monthItem : items)
-		{
-			add(monthItem);
-		}
 	}
 
 	public void reBorder(boolean top, boolean left, boolean bottom)
 	{
 		setBorder(javax.swing.BorderFactory.createMatteBorder((top || borderTop) ? 1 : 0, left ? 1 : 0, bottom ? 1 : 0, 1, UIManager.getDefaults().getColor("Separator.foreground")));
+	}
+	/**
+	 * Add an event to a given day of the month
+	 * @param e
+	 */
+	public void addEvent(Event e)
+	{
+		this.items.add(e);
+		this.doLayout();
+	}
+	
+	/**
+	 * Remove an event from a given day of the month
+	 * @param e
+	 */
+	public void removeEvent(Event e)
+	{
+		this.items.remove(e);
+		this.doLayout();
 	}
 	
 	@Override
@@ -95,28 +103,30 @@ public class MonthDay extends JPanel
 		removeAll();
 		add(header);
 		total -= header.getHeight();
-		for (MonthItem elt : this.items)
-		{
-			if (hidden > 0)
+		if (items!=null){
+			for (Event elt : this.items)
 			{
-				hidden++;
-			}
-			else
-			{
-				total -= 24; //TODO: don't use constant. getHeight fails when slow resizing to min though...
-				if (total <= 10)
+				if (hidden > 0)
 				{
-					hidden = 1;
+					hidden++;
 				}
 				else
 				{
-					this.add(elt);
+					total -= 24; //TODO: don't use constant. getHeight fails when slow resizing to min though...
+					if (total <= 10)
+					{
+						hidden = 1;
+					}
+					else
+					{
+						this.add(MonthItem.generateFrom(elt));
+					}
 				}
 			}
 		}
 		if (hidden == 1) // silly, add it anyway
 		{
-			this.add(this.items[this.items.length - 1]);
+			this.add(MonthItem.generateFrom(this.items.get(this.items.size() - 1)));
 		}
 		else if (hidden > 1)
 		{
