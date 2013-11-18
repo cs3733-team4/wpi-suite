@@ -4,13 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-<<<<<<< HEAD
-=======
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
->>>>>>> b32e343cd8d9d5ec96d82fcff4843054e288c257
 
 import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
