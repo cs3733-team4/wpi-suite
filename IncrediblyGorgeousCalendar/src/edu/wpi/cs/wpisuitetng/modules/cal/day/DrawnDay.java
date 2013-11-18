@@ -21,7 +21,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
 public class DrawnDay extends JPanel{
 	
-	private DateTime date;
+	//private DateTime date;
 	private List<Event> events = new ArrayList<Event>();
 	
 	//one JPanel for each hour
@@ -31,7 +31,7 @@ public class DrawnDay extends JPanel{
 	
 	public DrawnDay(DateTime d)
 	{
-		this.date = d;
+		//this.date = d;
 		this.setLayout(new GridLayout(24, 1));
 		this.rescaleGrid(1);
 	}
@@ -56,17 +56,17 @@ public class DrawnDay extends JPanel{
 			 Color rand = new Color((int)(Math.random()*256),(int)(Math.random()*256),(int)(Math.random()*256));
 			 
 			 
-			 int pos = this.hours[hour].addEventTitle(rand, hour*2==halfHour, "TEST "+halfHour+" : "+hour);
+			 int pos = this.hours[hour].addEventTitle(rand, hour*2==halfHour, e.getName());
 			 
 			 do{
 				 halfHour++;
 				 hour = halfHour/2;
-				 this.hours[hour].addEventBody(rand, hour*2==halfHour, pos, "TEST "+halfHour+" : "+hour, false);
+				 this.hours[hour].addEventBody(rand, hour*2==halfHour, pos, ">", false);
 			 }
 			 while(halfHour < e.getEndTime().getMinuteOfDay()/30);
 			 halfHour++;
 			 hour = halfHour/2;
-			 this.hours[hour].addEventBody(rand, hour*2==halfHour, pos, "TEST "+halfHour+" : "+hour, true);
+			 this.hours[hour].addEventBody(rand, hour*2==halfHour, pos, ">", true);
 			 
 		 }
 	}
@@ -142,11 +142,12 @@ public class DrawnDay extends JPanel{
 		}
 		
 		/**
-		 * adds a non-bottom colored portion of an event
 		 * 
-		 * @param c the Color of the event
-		 * @param fos the half hour (false = first half hour, true = second half hour)
-		 * @param content the string context that is in this position
+		 * @param c this Event's color (this will be depreciated and will eentually pull the color from the event itself
+		 * @param fos the first or second half hour. (true=first, false=second)
+		 * @param pos the position in the selected half hour. should be the same for all event bodies
+		 * @param content the content from the event that should be put here
+		 * @param bottom whether this is the last event (and so should have a bottom border drawn)
 		 */
 		public void addEventBody(Color c, boolean fos, int pos, String content, boolean bottom)
 		{
@@ -162,8 +163,8 @@ public class DrawnDay extends JPanel{
 				this.bottomPosition++;
 			}
 			
-			JLabel contentHolder = new JLabel(pos+"");
-			contentHolder.setFont(new java.awt.Font("DejaVu Sans", Font.BOLD, 12));
+			JLabel contentHolder = new JLabel(content);
+			contentHolder.setFont(new java.awt.Font("DejaVu Sans", Font.BOLD, 8));
 			contentHolder.setBackground(body);
 			if (body.getBlue()+body.getRed()+body.getGreen() > 400)
 			{
@@ -180,7 +181,13 @@ public class DrawnDay extends JPanel{
 			this.subsections[topBot][pos].setBackground(body);
 		}
 		
-		
+		/**
+		 * 
+		 * @param c the color of the event. like in add body, this will be depreciated
+		 * @param fos whether this is the first or second half hour segment
+		 * @param content the title of the event
+		 * @return the horizontal position that all body sections of this event should be in
+		 */
 		public int addEventTitle(Color c, boolean fos, String content)
 		{
 			Color body = c.darker();
@@ -201,7 +208,6 @@ public class DrawnDay extends JPanel{
 			}
 			int topBot = fos?0:1;
 			int pos = (!fos?(this.bottomPosition++):(this.topPosition++));
-			contentHolder.setText(pos+"");
 			this.subsections[topBot][pos].setBorder(BorderFactory.createMatteBorder(1, 1, 0, 1, border));
 			this.subsections[topBot][pos].setLayout(new GridLayout(1,1));
 			this.subsections[topBot][pos].add(contentHolder);
@@ -215,11 +221,11 @@ public class DrawnDay extends JPanel{
 	{
 		JFrame f = new JFrame();
 		f.setLayout(new GridLayout(1,1));
-		f.setSize(new Dimension(200, 1000));
+		f.setSize(new Dimension(200, 800));
 		
 		List<Event> ev = new ArrayList<Event>();
 		ev.add(new Event().addStartTime(new DateTime(2013, 11, 18, 3, 50)).addEndTime(new DateTime(2013, 11, 18, 4, 50)));
-		ev.add(new Event().addStartTime(DateTime.now()).addEndTime(new DateTime(2013, 11, 18, 6, 20)));
+		ev.add(new Event().addStartTime(new DateTime(2013, 11, 18, 3, 50)).addEndTime(new DateTime(2013, 11, 18, 6, 20)));
 		
 		ev.add(new Event().addStartTime(new DateTime(2013, 11, 18, 13, 50)).addEndTime(new DateTime(2013, 11, 18, 17, 50)));
 		ev.add(new Event().addStartTime(new DateTime(2013, 11, 18, 13, 20)).addEndTime(new DateTime(2013, 11, 18, 19, 50)));
