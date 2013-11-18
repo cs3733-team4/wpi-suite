@@ -174,8 +174,8 @@ public class Event extends AbstractModel {
 	
 	public Event() {
 		super();
-		name = "";
-		description = "";
+		name = "Default Event Title";
+		description = "Default Event Description";
 		setStartTime(new DateTime());
 		endTime = new DateTime();
 		isRepeating = false;
