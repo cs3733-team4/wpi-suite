@@ -52,3 +52,4 @@ bin/
 
 #We have some workspace issues to fix, until then, ignore this dir.
 Servers/
+IncrediblyGorgeousCalendar/build/

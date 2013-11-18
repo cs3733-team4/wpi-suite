@@ -81,7 +81,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	 * @param name the name of the tab
 	 * @param closeable whether the tab can be closed
 	 */
-	public void addTopLevelTab(JComponent component, String name, boolean closeable)
+	public void addTopLevelTab(final JComponent component, String name, boolean closeable)
 	{
 		
 		if (!closeable)
@@ -91,7 +91,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		else
 		{
 			mTabbedPane.addTab(null, component);
-			final int tabPosition = mTabbedPane.indexOfComponent(component);
+			int tabPosition = mTabbedPane.indexOfComponent(component);
 			JPanel tabInformation = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
 			JLabel tabInfoName = new JLabel(name);
 			JButton tabInfoClose = new JButton("X"); // we need an icon for this eventually
@@ -113,7 +113,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
-					mTabbedPane.remove(tabPosition);
+					mTabbedPane.remove(indexOfComponent(component));
 				}
 			};
 			
@@ -121,9 +121,11 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 				
 				@Override
 				public void stateChanged(ChangeEvent e) {
+					/* this code generates null pointer exceptions
 					if(! mTabbedPane.getTitleAt(mTabbedPane.getSelectedIndex()).equals("New Event")) {
 						mEventCreator.display(DateTime.now());
 					}
+					*/
 				}
 			});
 			
