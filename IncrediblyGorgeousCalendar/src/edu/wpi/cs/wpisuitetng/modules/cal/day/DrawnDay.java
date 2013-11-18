@@ -106,6 +106,11 @@ public class DrawnDay extends JPanel{
 	
 	
 
+	public void removeEvents(List<Event> events)
+	{
+		this.events.removeAll(events);
+		this.draw();
+	}
 	
 	
 	
