@@ -13,6 +13,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -35,7 +36,6 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	private AbstractCalendar mCalendar; 
 	JTabbedPane mTabbedPane;
 	private CalendarNavigationPanel mCalendarNavigationPanel;
-	private NewEventDisplay mEventCreator;
 
 	public MainPanel() {
 
@@ -60,6 +60,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		
 		// Add top bar and monthly calendar to center panel
 		centerPanel.setLayout(new BorderLayout());
+		centerPanel.setBorder(new EmptyBorder(5, 5, 0, 0));
 		centerPanel.add(mCalendar, BorderLayout.CENTER);
 		centerPanel.add(mainCalendarNavigationPanel, BorderLayout.NORTH);
 		
