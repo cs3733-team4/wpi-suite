@@ -1,12 +1,13 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.eventui;
 
-import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -16,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.SwingConstants;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -68,22 +70,62 @@ public class NewEventDisplay extends JPanel {
 		gl_nameEntry.setHorizontalGroup(
 			gl_nameEntry.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_nameEntry.createSequentialGroup()
+					.addContainerGap()
 					.addComponent(nameLabel)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(nameField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(166, Short.MAX_VALUE))
+					.addContainerGap(119, Short.MAX_VALUE))
 		);
 		gl_nameEntry.setVerticalGroup(
-			gl_nameEntry.createParallelGroup(Alignment.LEADING)
+			gl_nameEntry.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_nameEntry.createSequentialGroup()
+					.addContainerGap(19, Short.MAX_VALUE)
 					.addGroup(gl_nameEntry.createParallelGroup(Alignment.BASELINE)
 						.addComponent(nameLabel)
 						.addComponent(nameField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addContainerGap(43, Short.MAX_VALUE))
+					.addContainerGap())
 		);
-		
 		nameEntry.setLayout(gl_nameEntry);
 		
+		GroupLayout groupLayout = new GroupLayout(this);
+		groupLayout.setHorizontalGroup(
+			groupLayout.createParallelGroup(Alignment.TRAILING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(descriptionEntry, GroupLayout.PREFERRED_SIZE, 372, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(849, Short.MAX_VALUE))
+		);
+		groupLayout.setVerticalGroup(
+			groupLayout.createParallelGroup(Alignment.TRAILING)
+				.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(descriptionEntry, GroupLayout.PREFERRED_SIZE, 197, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(636, Short.MAX_VALUE))
+		);
+		
+		// Set the group layout for the description entry components.
+		descriptionLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+		GroupLayout gl_descriptionEntry = new GroupLayout(descriptionEntry);
+		gl_descriptionEntry.setHorizontalGroup(
+			gl_descriptionEntry.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_descriptionEntry.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_descriptionEntry.createParallelGroup(Alignment.LEADING)
+						.addComponent(descriptionField, GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE/2)
+						.addComponent(descriptionLabel))
+					.addContainerGap())
+		);
+		gl_descriptionEntry.setVerticalGroup(
+			gl_descriptionEntry.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_descriptionEntry.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(descriptionLabel)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(descriptionField, GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE))
+		);
+		descriptionEntry.setLayout(gl_descriptionEntry);
+		
+		// Save Button Event Listener.
 		saveButton.addActionListener(new ActionListener() {
 			
 			@Override
@@ -92,7 +134,7 @@ public class NewEventDisplay extends JPanel {
 				DateTime sdatetime = datetimeFormat.parseDateTime(calDisplay.getStartDate().getText()
 						+ " " + calDisplay.getStartTime().getText());
 				DateTime edatetime = datetimeFormat.parseDateTime(calDisplay.getEndDate().getText() 
-						+ " " + calDisplay.getEndTime().getText()); 
+						+ " " + calDisplay.getEndTime().getText());
 				Event event = new Event(nameField.getText(), descriptionField.getText(), sdatetime, edatetime, true, 0, 0); 
 			}
 		});
@@ -107,7 +149,8 @@ public class NewEventDisplay extends JPanel {
 		//SpringLayout layout = new SpringLayout();
 		//nameEntry.setLayout(layout);
 		//descriptionEntry.setLayout(new BoxLayout(descriptionEntry, BoxLayout.Y_AXIS));
-		descriptionEntry.setLayout(new BorderLayout(5, 5));
+		//descriptionEntry.setLayout(new BorderLayout(15, 5));
+			
 		miniCalDisplay.setLayout(new BoxLayout(miniCalDisplay, BoxLayout.Y_AXIS));
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
@@ -125,9 +168,9 @@ public class NewEventDisplay extends JPanel {
         layout.putConstraint(SpringLayout.NORTH, nameField, 5, SpringLayout.NORTH, this);*/
         
         // Description field display and Save Event button.
-        descriptionEntry.add(descriptionLabel, BorderLayout.NORTH);
-        descriptionLabel.setLabelFor(descriptionField);
-        descriptionEntry.add(descriptionField, BorderLayout.LINE_START);
+        //descriptionEntry.add(descriptionLabel, BorderLayout.NORTH);
+        //descriptionLabel.setLabelFor(descriptionField);
+        //descriptionEntry.add(descriptionField, BorderLayout.LINE_START);
         //descriptionEntry.setAlignmentX(Component.CENTER_ALIGNMENT);
         
         miniCalDisplay.add(calDisplay);
@@ -143,6 +186,9 @@ public class NewEventDisplay extends JPanel {
 		this.add(descriptionEntry);
 		this.add(saveEvent);
 		//this.add(saveButton);
+		
+		// Set a black border around the description field.
+		descriptionField.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		
 		// Display the mini calendar.
 		calDisplay.display(newtime);
