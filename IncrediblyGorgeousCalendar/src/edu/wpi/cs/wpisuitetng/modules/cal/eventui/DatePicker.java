@@ -4,8 +4,10 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.Calendar;
 
 import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
@@ -13,8 +15,10 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.SpinnerDateModel;
 
 import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
@@ -34,7 +38,13 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 	private JCheckBox isAllDay;
 	private YearCalendarHolder viewCal;
 	final private static DateTimeFormatter dateFormat = DateTimeFormat.forPattern("M/d/yy");
-	final private static DateTimeFormatter timeFormat = DateTimeFormat.forPattern("h:mm a");
+	final private static DateTimeFormatter timeFormat = DateTimeFormat.forPattern("h:mm");
+	// AM/PM selectors formatting.
+	private SpinnerDateModel startampm = new SpinnerDateModel();
+	private JSpinner startampmSelect = new JSpinner();
+	private SpinnerDateModel endampm = new SpinnerDateModel();
+	private JSpinner endampmSelect = new JSpinner();
+	
 	// Declare text fields for start and end dates/times.
 	final private JTextField startDate = new JTextField(DateTime.now().toString(dateFormat));
 	final private JTextField endDate = new JTextField(DateTime.now().toString(dateFormat));
@@ -54,11 +64,25 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 		startLabel.setFont(mainfont);
 		endLabel.setFont(mainfont);
 		
+		// Set AM/PM Selectors.
+		startampm.setCalendarField(Calendar.AM_PM);
+		startampmSelect.setModel(startampm);
+		startampmSelect.setEditor(new JSpinner.DateEditor(startampmSelect, "a"));
+		endampm.setCalendarField(Calendar.AM_PM);
+		endampmSelect.setModel(endampm);
+		endampmSelect.setEditor(new JSpinner.DateEditor(endampmSelect, "a"));
+		
+		/*FontMetrics metrics = getFontMetrics(getFont());
+		startDate.setSize(metrics.stringWidth(startDate.getText()), metrics.getHeight());
+		endDate.setSize(metrics.stringWidth(endDate.getText()), metrics.getHeight());
+		startTime.setSize(metrics.stringWidth(startTime.getText()), metrics.getHeight());
+		endTime.setSize(metrics.stringWidth(endTime.getText()), metrics.getHeight());*/
+		
 		/*dateLabel.setHorizontalAlignment(SwingConstants.TRAILING);
 		startDate.setHorizontalAlignment(SwingConstants.TRAILING);
 		startTime.setHorizontalAlignment(SwingConstants.TRAILING);
 		endDate.setHorizontalAlignment(SwingConstants.TRAILING);*/
-
+		
 		// Set up the group layouts for the date display.
 		GroupLayout gl_dateDisplay = new GroupLayout(calViewer);
 		gl_dateDisplay.setHorizontalGroup(
@@ -71,15 +95,19 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 							.addContainerGap()
 							.addComponent(startLabel)
 							.addGap(4)
-							.addComponent(startDate, GroupLayout.PREFERRED_SIZE, 72, GroupLayout.PREFERRED_SIZE)
+							.addComponent(startDate, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(startTime, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
+							.addComponent(startTime, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(startampmSelect)
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(endLabel)
 							.addGap(6)
-							.addComponent(endDate, GroupLayout.PREFERRED_SIZE, 72, GroupLayout.PREFERRED_SIZE)
+							.addComponent(endDate, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(endTime, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE)
+							.addComponent(endTime, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(endampmSelect)
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(isAllDay))
 						.addComponent(viewCal, GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE))
@@ -96,9 +124,11 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 						.addComponent(startLabel)
 						.addComponent(startDate, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(startTime, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(startampmSelect)
 						.addComponent(endDate, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(endLabel)
 						.addComponent(endTime, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(endampmSelect)
 						.addComponent(isAllDay)))
 		);
 		calViewer.setLayout(gl_dateDisplay);
@@ -119,6 +149,7 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 		);
 		setLayout(groupLayout);
 		
+		// Listener to check if the all day checkbox is checked, to help toggle whether or not time can be edited.
 		isAllDay.addItemListener(new ItemListener() {
 			
 			@Override
@@ -127,18 +158,19 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 					// Disallow editing of the start and end times if the event is all day.
 					startTime.setEditable(false);
 					endTime.setEditable(false);
-					// Change the text color to gray to show it cannot be edited.
-					startTime.setForeground(Color.LIGHT_GRAY);
-					endTime.setForeground(Color.LIGHT_GRAY);
+					startTime.setEnabled(false);
+					endTime.setEnabled(false);
+					startampmSelect.setEnabled(false);
+					endampmSelect.setEnabled(false);
 				} else {
 					// Allow editing of the start and end times if the event is not all day.
 					startTime.setEditable(true);
 					endTime.setEditable(true);
-					// Change the text color back to black to show it can be edited.
-					startTime.setForeground(Color.BLACK);
-					endTime.setForeground(Color.BLACK);
+					startTime.setEnabled(true);
+					endTime.setEnabled(true);
+					startampmSelect.setEnabled(true);
+					endampmSelect.setEnabled(true);
 				}
-				
 			}
 		});
 	}
