@@ -17,14 +17,14 @@ import edu.wpi.cs.wpisuitetng.modules.cal.eventui.NewEventDisplay;
 public class EventToolbarGroup extends ToolbarGroupView {
 	
 	private final JPanel eventContentPanel = new JPanel();
-	JButton addEventButton;
+	private final JButton addEventButton, removeEventButton;
 	
 	public EventToolbarGroup(final MainPanel mMainPanel) {
 		super("");
 		
 		this.eventContentPanel.setLayout(new BoxLayout(eventContentPanel, BoxLayout.X_AXIS));
 		
-		JButton addEventButton = new JButton("<html>Add<br/>Event</html>");
+		addEventButton = new JButton("<html>Add<br/>Event</html>");
 		addEventButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e){
@@ -32,7 +32,7 @@ public class EventToolbarGroup extends ToolbarGroupView {
 			}
 		});
 		
-		JButton removeEventButton = new JButton("<html>Remove<br/>Event</html>");
+		removeEventButton = new JButton("<html>Remove<br/>Event</html>");
 		removeEventButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e){
@@ -53,6 +53,10 @@ public class EventToolbarGroup extends ToolbarGroupView {
 		this.setOpaque(false);
 		
 		this.add(eventContentPanel);
+	}
+	
+	public void disableRemoveEventButton(){
+		removeEventButton.setEnabled(false);
 	}
 	
 	@Override

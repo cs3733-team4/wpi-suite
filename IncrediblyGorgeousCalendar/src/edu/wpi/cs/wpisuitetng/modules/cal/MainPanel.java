@@ -1,7 +1,6 @@
 package edu.wpi.cs.wpisuitetng.modules.cal;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -19,7 +18,6 @@ import javax.swing.event.ChangeListener;
 
 import org.joda.time.DateTime;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.eventui.NewEventDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.month.MonthCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MainCalendarNavigation;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarHostIface;
