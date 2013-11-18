@@ -33,17 +33,15 @@ public class DrawnDay extends JPanel{
 	{
 		this.date = d;
 		this.setLayout(new GridLayout(24, 1));
-		this.rescaleGrid();
+		this.rescaleGrid(1);
 	}
 	
-	private void rescaleGrid()
+	private void rescaleGrid(int width)
 	{
 		this.removeAll();
 		for(int i = 0; i < 24; i++)
 		{
-			int[] collisions = {this.collisions[2*i], this.collisions[2*i+1]};
-			System.out.println(collisions[0]+", "+collisions[1]);
-			hours[i] = new Hour(collisions);
+			hours[i] = new Hour(width);
 			hours[i].setBackground(Colors.TABLE_BACKGROUND);
 			this.add(hours[i]);
 		}
@@ -68,7 +66,7 @@ public class DrawnDay extends JPanel{
 			 while(halfHour < e.getEndTime().getMinuteOfDay()/30);
 			 halfHour++;
 			 hour = halfHour/2;
-			 try{this.hours[hour].addEventBody(rand, hour*2==halfHour, pos, "TEST "+halfHour+" : "+hour, true);}catch(Exception sa){}
+			 this.hours[hour].addEventBody(rand, hour*2==halfHour, pos, "TEST "+halfHour+" : "+hour, true);
 			 
 		 }
 	}
@@ -98,7 +96,7 @@ public class DrawnDay extends JPanel{
 		}
 		if (this.largestCollision < newLargestCollision)
 		{
-			rescaleGrid();
+			rescaleGrid(newLargestCollision);
 			this.largestCollision = newLargestCollision;
 		}
 		
@@ -121,26 +119,17 @@ public class DrawnDay extends JPanel{
 		int topPosition = 0;
 		int bottomPosition = 0;
 		
-		public Hour(int[] widths)
+		public Hour(int width)
 		{
-			this.setLayout(new GridLayout(2, 1));
-			JPanel top = new JPanel();
-			JPanel bot = new JPanel();
-			this.add(top);
-			this.add(bot);
-			top.setLayout(new GridLayout(1, widths[0]));
-			bot.setLayout(new GridLayout(1, widths[1]));
-			JPanel[] all = {top, bot};
-			
-			this.subsections[0] = new JPanel[widths[0]];
-			this.subsections[1] = new JPanel[widths[1]];
-			
+			this.setLayout(new GridLayout(2, width));
+			this.subsections[0] = new JPanel[width];
+			this.subsections[1] = new JPanel[width];
 			for(int r = 0; r < 2; r++) 
 			{
-				for(int i = 0; i < widths[r]; i++)
+				for(int i = 0; i < width; i++)
 				{
 					this.subsections[r][i] = new JPanel();
-					all[r].add(this.subsections[r][i]);
+					this.add(this.subsections[r][i]);
 					this.subsections[r][i].setBorder(null);
 				}
 			}
@@ -229,6 +218,7 @@ public class DrawnDay extends JPanel{
 		
 		ev.add(new Event().addStartTime(new DateTime(2013, 11, 18, 13, 50)).addEndTime(new DateTime(2013, 11, 18, 17, 50)));
 		ev.add(new Event().addStartTime(new DateTime(2013, 11, 18, 13, 20)).addEndTime(new DateTime(2013, 11, 18, 19, 50)));
+
 		ev.add(new Event().addStartTime(new DateTime(2013, 11, 18, 14, 20)).addEndTime(new DateTime(2013, 11, 18, 16, 50)));
 		
 		
