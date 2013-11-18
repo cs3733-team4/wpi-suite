@@ -73,13 +73,13 @@ public class DayCalendar extends JPanel implements CalendarInterface {
 	@Override
 	public void next()
 	{
-		this.time = Months.nextMonth(this.time);
+		this.time = Months.nextDay(this.time);
 		generateDay();
 	}
 
 	@Override
 	public void previous() {
-		this.time = Months.prevMonth(this.time);
+		this.time = Months.prevDay(this.time);
 		generateDay();
 
 	}
