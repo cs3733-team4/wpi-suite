@@ -10,7 +10,7 @@ public class RibbonToolbar extends DefaultToolbarView {
 		
 		eventButtonGroup = new EventToolbarGroup(mMainPanel);
 		this.addGroup(eventButtonGroup);
-		eventButtonGroup.disableRemoveEventButton();
+		eventButtonGroup.getRemoveEventButton().setEnabled(false);
 		
 	}
 }
