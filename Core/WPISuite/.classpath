@@ -31,5 +31,6 @@
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/jackson-databind-2.1.0.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/Kalendar.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/servlet-api.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/Calendar.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
