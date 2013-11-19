@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.modules.cal.year;
+package edu.wpi.cs.wpisuitetng.modules.cal.navigation;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -9,12 +9,12 @@ import java.awt.event.MouseListener;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import javax.swing.UIManager;
 
 import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Months;
 
 public class MiniMonth extends JPanel
@@ -77,8 +77,7 @@ public class MiniMonth extends JPanel
 			days[i].addMouseListener(monthChanger);
 		}
 	}
-
-	@SuppressWarnings("serial")
+	
 	private class DayLabel extends JLabel {
 		private DateTime day;
 		
@@ -96,36 +95,33 @@ public class MiniMonth extends JPanel
 		
 		public void borderize(boolean left, boolean bottom, boolean right)
 		{
-			setBorder(javax.swing.BorderFactory.createMatteBorder(0, left?1:0, bottom?1:0, right?1:0, UIManager.getDefaults().getColor("Separator.foreground")));
+			setBorder(javax.swing.BorderFactory.createMatteBorder(0, left?1:0, bottom?1:0, right?1:0, Colors.BORDER));
 		}
 	}
 
-	@SuppressWarnings("serial")
 	private class ActiveDayLabel extends DayLabel {
 		public ActiveDayLabel(int day, DateTime time) {
 			super(Integer.toString(day), time);
-			setForeground(UIManager.getDefaults().getColor("Label.foreground"));
-			setBackground(UIManager.getDefaults().getColor("Table.background"));
+			setForeground(Colors.TABLE_TEXT);
+			setBackground(Colors.TABLE_BACKGROUND);
 			setOpaque(true);
 		}
 	}
 
-	@SuppressWarnings("serial")
 	private class InactiveDayLabel extends DayLabel {
 		public InactiveDayLabel(int day, DateTime time) {
 			super(Integer.toString(day), time);
-			setBackground(UIManager.getDefaults().getColor("Table.focusCellBackground"));
-			setForeground(UIManager.getDefaults().getColor("Table.focusCellForeground"));
+			setBackground(Colors.TABLE_GRAY_HEADER);
+			setForeground(Colors.TABLE_GRAY_TEXT);
 			this.setOpaque(true);
 		}
 	}
 	
-	@SuppressWarnings("serial")
 	private class DescriptiveDayLabel extends DayLabel {
 		public DescriptiveDayLabel(String day, DateTime time) {
 			super(day, time);
 			this.setFont(getFont().deriveFont(Font.ITALIC));
-			setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, UIManager.getDefaults().getColor("Separator.foreground")));
+			setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, Colors.BORDER));
 		}
 		@Override
 		public void borderize(boolean left, boolean bottom, boolean right) {

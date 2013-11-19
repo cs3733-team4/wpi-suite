@@ -1,7 +1,7 @@
 package edu.wpi.cs.wpisuitetng.modules.cal;
 
 import static org.junit.Assert.*;
-import edu.wpi.cs.wpisuitetng.modules.cal.year.CalendarYearModule;
+import edu.wpi.cs.wpisuitetng.modules.cal.navigation.CalendarNavigationModule;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
@@ -20,24 +20,24 @@ public class CalendarYearModuleTest {
 	
 	@Test
 	public void testGetPrevious() {
-		CalendarYearModule mCalYearModuleTimeOne = new CalendarYearModule(timeOne, null);
-		CalendarYearModule mCalYearModuleTimeTwo = new CalendarYearModule(timeTwo, null);
+		CalendarNavigationModule mCalYearModuleTimeOne = new CalendarNavigationModule(timeOne, null);
+		CalendarNavigationModule mCalYearModuleTimeTwo = new CalendarNavigationModule(timeTwo, null);
 		
 		assertEquals("Previous should return timeOne", mCalYearModuleTimeOne.getTime(), mCalYearModuleTimeTwo.getPrevious().getTime());
 	}
 	
 	@Test
 	public void testGetFollowing() {
-		CalendarYearModule mCalYearModuleTimeThree = new CalendarYearModule(timeThree, null);
-		CalendarYearModule mCalYearModuleTimeTwo = new CalendarYearModule(timeTwo, null);
+		CalendarNavigationModule mCalYearModuleTimeThree = new CalendarNavigationModule(timeThree, null);
+		CalendarNavigationModule mCalYearModuleTimeTwo = new CalendarNavigationModule(timeTwo, null);
 		
 		assertEquals("Following should return timeThree", mCalYearModuleTimeThree.getTime(), mCalYearModuleTimeTwo.getFollowing().getTime());
 	}
 	
 	@Test
 	public void testGetFollowingThenGetPreviousTwice() {
-		CalendarYearModule mCalYearModuleTimeOne = new CalendarYearModule(timeOne, null);
-		CalendarYearModule mCalYearModuleTimeTwo = new CalendarYearModule(timeTwo, null);
+		CalendarNavigationModule mCalYearModuleTimeOne = new CalendarNavigationModule(timeOne, null);
+		CalendarNavigationModule mCalYearModuleTimeTwo = new CalendarNavigationModule(timeTwo, null);
 		
 		assertEquals("Following should return timeOne", mCalYearModuleTimeOne.getTime(), 
 				mCalYearModuleTimeTwo.getFollowing().getPrevious().getPrevious().getTime());

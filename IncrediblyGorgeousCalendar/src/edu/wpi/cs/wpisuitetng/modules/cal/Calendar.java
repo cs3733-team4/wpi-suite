@@ -13,8 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ImageIcon;
-import javax.swing.JPanel;
-import javax.swing.JToolBar;
 
 import edu.wpi.cs.wpisuitetng.janeway.modules.IJanewayModule;
 import edu.wpi.cs.wpisuitetng.janeway.modules.JanewayTabModel;
@@ -31,13 +29,14 @@ public class Calendar implements IJanewayModule {
 	 */
 	public Calendar() {
 		
-		// Setup button panel
-		RibbonToolbar buttonPanel = new RibbonToolbar(true);
-		buttonPanel.setFloatable(false);
+		MainPanel mMainPanel = new MainPanel();
 		
-		JPanel mainPanel = new MainPanel();
+		// Setup button panel
+		RibbonToolbar buttonPanel = new RibbonToolbar(mMainPanel, true);
+		buttonPanel.setFloatable(false);
+				
 		tabs = new ArrayList<JanewayTabModel>();
-		JanewayTabModel tab = new JanewayTabModel(getName(), new ImageIcon(), buttonPanel, mainPanel);
+		JanewayTabModel tab = new JanewayTabModel(getName(), new ImageIcon(), buttonPanel, mMainPanel);
 		
 		tabs.add(tab);
 		

@@ -150,7 +150,12 @@ public class NewEventDisplay extends JPanel {
 						errorMess.setVisible(true);
 					}
 					else {
-						Event event = new Event(nameField.getText(), descriptionField.getText(), sdatetime, edatetime, true, 0, 0);
+						Event event = new Event();
+						event.setName(nameField.getText());
+						event.setDescription(descriptionField.getText());
+						event.setStart(sdatetime);
+						event.setEnd(edatetime);
+						event.setProjectEvent(true);
 					}
 				}
 				catch (IllegalArgumentException exception) {

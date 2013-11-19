@@ -11,38 +11,56 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import org.joda.time.DateTime;
+
 import edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar.ToolbarGroupView;
 import edu.wpi.cs.wpisuitetng.modules.cal.eventui.NewEventDisplay;
 
 public class EventToolbarGroup extends ToolbarGroupView {
 	
 	private final JPanel eventContentPanel = new JPanel();
-	JButton addEventButton;
-	private NewEventDisplay newEvent;
+	private final JButton addEventButton, removeEventButton;
 	
-	public EventToolbarGroup() {
+	public EventToolbarGroup(final MainPanel mMainPanel) {
 		super("");
 		
 		this.eventContentPanel.setLayout(new BoxLayout(eventContentPanel, BoxLayout.X_AXIS));
-
-		JButton addEventButton = new JButton("<html>Add an<br/>Event</html>");
-		newEvent = new NewEventDisplay();
+		
+		addEventButton = new JButton("<html>Add<br/>Event</html>");
 		addEventButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e){
-				//addCalendarTab(newEvent, "New Event", true); Something like this.
+				NewEventDisplay ned = new NewEventDisplay();
+				mMainPanel.addTopLevelTab(ned, "New Event", true);
+				ned.display(DateTime.now());
+			}
+		});
+		
+		removeEventButton = new JButton("<html>Remove<br/>Event</html>");
+		removeEventButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				mMainPanel.addTopLevelTab(new JPanel(), "test", true);
 			}
 		});
 		
 		try {
-		    Image img = ImageIO.read(getClass().getResource("new_itt.png"));
-		    addEventButton.setIcon(new ImageIcon(img));		    
+		    Image img = ImageIO.read(getClass().getResource("add_event.png"));
+		    addEventButton.setIcon(new ImageIcon(img));
+		    
+		    img = ImageIO.read(getClass().getResource("del_event.png"));
+		    removeEventButton.setIcon(new ImageIcon(img));
 		} catch (IOException ex) {}
 		
 		eventContentPanel.add(addEventButton);
+		eventContentPanel.add(removeEventButton);
 		this.setOpaque(false);
 		
 		this.add(eventContentPanel);
+	}
+	
+	public JButton getRemoveEventButton(){
+		return removeEventButton;
 	}
 	
 	@Override
