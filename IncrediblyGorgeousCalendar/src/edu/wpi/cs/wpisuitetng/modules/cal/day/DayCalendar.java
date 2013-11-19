@@ -47,7 +47,7 @@ public class DayCalendar extends JPanel implements CalendarInterface {
 		this.navigationPanel.add(this.todayButton);
 		this.navigationPanel.add(this.nextButton);
 		
-		this.title.add(new JLabel("DAY HERE"));
+		this.title.add(new JLabel(String.valueOf(time.getDayOfMonth())));
 		
 		this.top.add(this.navigationPanel);
 		this.top.add(this.title);
@@ -74,26 +74,32 @@ public class DayCalendar extends JPanel implements CalendarInterface {
 	public void next()
 	{
 		this.time = Months.nextDay(this.time);
-		generateDay();
+		this.generateDay();
 	}
 
 	@Override
 	public void previous() {
 		this.time = Months.prevDay(this.time);
-		generateDay();
+		this.generateDay();
 
 	}
 
 	@Override
 	public void display(DateTime newTime) {
 		this.time = newTime;
-		generateDay();
+		this.generateDay();
 	}
 
 	@Override
 	public void updateEvents(List<Event> events, boolean addOrRemove) {
-		//this.current.addEvents(events);
-		this.events = events;
+		if (addOrRemove)
+		{
+			this.events.addAll(events);
+		}
+		else
+		{
+			this.events.removeAll(events);
+		}
 		this.generateDay();
 	}
 }
