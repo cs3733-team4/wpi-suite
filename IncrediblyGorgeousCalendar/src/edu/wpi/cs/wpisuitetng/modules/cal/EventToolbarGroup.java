@@ -55,8 +55,8 @@ public class EventToolbarGroup extends ToolbarGroupView {
 		this.add(eventContentPanel);
 	}
 	
-	public void disableRemoveEventButton(){
-		removeEventButton.setEnabled(false);
+	public JButton getRemoveEventButton(){
+		return removeEventButton;
 	}
 	
 	@Override

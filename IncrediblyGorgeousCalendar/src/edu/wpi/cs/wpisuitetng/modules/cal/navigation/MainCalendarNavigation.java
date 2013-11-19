@@ -20,16 +20,10 @@ public class MainCalendarNavigation extends JPanel {
 
 	private JButton nextButton = new JButton(">");
 	private JButton previousButton = new JButton("<");
-	private JButton todayButton = new JButton();
+	private JButton todayButton = new JButton("Today");
 	private JPanel navigationButtonPanel = new JPanel();
 
 	public MainCalendarNavigation(JComponent parent, final AbstractCalendar mAbstractCalendar) {
-		
-		try {
-			//image will probably change
-		    Image img = ImageIO.read(getClass().getResource("todayIcon.png"));
-		    todayButton.setIcon(new ImageIcon(img));
-		} catch (IOException ex) {}
 		
 		navigationButtonPanel.setLayout(new BorderLayout());
 		navigationButtonPanel.add(nextButton, BorderLayout.EAST);
