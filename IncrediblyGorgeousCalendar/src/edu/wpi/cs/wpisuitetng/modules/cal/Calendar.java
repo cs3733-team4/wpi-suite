@@ -27,8 +27,8 @@ public class Calendar implements IJanewayModule {
 	/**
 	 * Construct a new Calendar Tab Module
 	 */
-	public Calendar() {
-		
+	public Calendar()
+	{
 		MainPanel mMainPanel = new MainPanel();
 		
 		// Setup button panel
@@ -39,7 +39,6 @@ public class Calendar implements IJanewayModule {
 		JanewayTabModel tab = new JanewayTabModel(getName(), new ImageIcon(), buttonPanel, mMainPanel);
 		
 		tabs.add(tab);
-		
 	}
 
 	/**

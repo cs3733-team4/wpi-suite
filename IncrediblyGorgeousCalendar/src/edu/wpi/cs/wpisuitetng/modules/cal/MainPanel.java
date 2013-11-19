@@ -3,6 +3,7 @@ package edu.wpi.cs.wpisuitetng.modules.cal;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
@@ -14,9 +15,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
 import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
@@ -28,7 +26,6 @@ import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.GoToPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarHostIface;
 
-@SuppressWarnings("serial")
 public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	
 	private JTabbedPane mTabbedPane;
@@ -52,12 +49,32 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	 *  the rest of the elements in the calendar module, including the calendar view,
 	 *  add event view, add commitment view, and so on.
 	 */
-	public MainPanel() {
-		
+	public MainPanel()
+	{
 		if (instance != null)
 			throw new RuntimeException("Trying to create more than one calendar panel!");
 
-		mTabbedPane = instance = this; // Variable for creating new tabs in addTopLevelTab 
+		instance = this; // Variable for creating new tabs in addTopLevelTab
+	}
+	
+	@Override
+	public void paint(Graphics g)
+	{
+		// call finish init always, it has a if to prevent multiple calls. see below comment on why
+		finishInit();
+		super.paint(g);
+	}
+	
+	/**
+	 * This is called AFTER login, because for some reason janeway inits all the panels
+	 * before the network (aka login) is setup. If we initialize before then, we crash as 
+	 * there is no network session.
+	 */
+	void finishInit()
+	{
+		if (mTabbedPane == this)
+			return;
+		mTabbedPane = this;
 		events = new EventModel(); // used for accessing events
 		
 		this.mainPaneContainer = new JPanel(); // Container for the navigation and calendars
