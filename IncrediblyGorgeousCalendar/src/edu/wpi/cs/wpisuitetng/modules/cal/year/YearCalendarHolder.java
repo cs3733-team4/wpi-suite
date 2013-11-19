@@ -143,7 +143,7 @@ public class YearCalendarHolder extends JPanel
 		}
 	};
 	
-	private void parseGoto(String text)
+	public void parseGoto(String text)
 	{
 		DateTime dt;
 		boolean isValidYear=true;
@@ -178,5 +178,14 @@ public class YearCalendarHolder extends JPanel
 			else
 				gotoErrorText.setText("* Year out of range (1900-2100)");
 		}
+	}
+	
+	
+	// For testing purposes
+	public DateTime getDate() {
+		return currentDate;
+	}
+	public String getError() {
+		return gotoErrorText.getText();
 	}
 }

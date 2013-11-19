@@ -267,6 +267,7 @@ public class MonthCalendar extends JPanel implements CalendarInterface
 			return DayStyle.OutOfMonth;
 	}
 
+	// Added for testing purposes
 	public DateTime getTime()
 	{
 		return time;
@@ -275,6 +276,5 @@ public class MonthCalendar extends JPanel implements CalendarInterface
 	@Override
 	public void updateEvents(List<Event> events, boolean addOrRemove) {
 		// TODO Auto-generated method stub
-		
 	}
 }
