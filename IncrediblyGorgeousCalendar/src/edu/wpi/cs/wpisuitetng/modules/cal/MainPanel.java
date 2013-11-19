@@ -20,41 +20,49 @@ import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.month.MonthCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MainCalendarNavigation;
+import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.navigation.GoToPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarHostIface;
-import edu.wpi.cs.wpisuitetng.modules.cal.navigation.CalendarNavigationPanel;
 
 @SuppressWarnings("serial")
 public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
+	
+	private JTabbedPane mTabbedPane;
+	private MiniCalendarPanel mMiniCalendarPanel;
+	private JPanel mainPaneContainer;
+	private JPanel centerPanel;
+	private JPanel sidePanel;
+	private JPanel mainCalendarNavigationPanel;
+	private GoToPanel mGoToPanel;
+	private AbstractCalendar mCalendar; 
 
 	/** Tabbed main panel to display in the calendar module. This pane will contain
 	 *  the rest of the elements in the calendar module, including the calendar view,
 	 *  add event view, add commitment view, and so on.
 	 */
-	
-	private AbstractCalendar mCalendar; 
-	JTabbedPane mTabbedPane;
-	private CalendarNavigationPanel mCalendarNavigationPanel;
-
 	public MainPanel() {
 
-		JPanel mainPaneContainer = new JPanel(); // Container for the navigation and calendars
-		JPanel miniCalendar = new JPanel(); // Mini calendar
-		JPanel centerPanel = new JPanel(); // Container for center navigation bar and calendar pane
+		mTabbedPane = this; // Variable for creating new tabs in addTopLevelTab 
 		
-		mTabbedPane = this; // Variable for creating new tabs in addCalendarTab
+		this.mainPaneContainer = new JPanel(); // Container for the navigation and calendars
+		this.sidePanel = new JPanel(); // Panel to hold the mini calendar and the goto date
+		this.centerPanel = new JPanel(); // Container for center navigation bar and calendar pane
 		
-		mainPaneContainer.setLayout(new BorderLayout());
+		// Components of center panel
+		this.mMiniCalendarPanel = new MiniCalendarPanel(DateTime.now(), this); // Mini calendar
+		this.mCalendar = new MonthCalendar(DateTime.now(), this); // Monthly calendar
+		this.mainCalendarNavigationPanel = new MainCalendarNavigation(this, mCalendar); // Navigation bar 
 		
-		// Set up mini calendar
-		miniCalendar.setPreferredSize(new Dimension(200, 1024));
-		mCalendarNavigationPanel = new CalendarNavigationPanel(DateTime.now(), this);
-		miniCalendar.add(mCalendarNavigationPanel);
+		// Components of side panel
 		
-		// Set up monthly calendar
-		mCalendar = new MonthCalendar(DateTime.now(), this);
+		this.mGoToPanel = new GoToPanel(DateTime.now(), mCalendar); // Go to date
 		
-		//Set up top bar panel
-		JPanel mainCalendarNavigationPanel = new MainCalendarNavigation(this, mCalendar); // Navigation bar above calendar
+ 		
+		// Set up side panel
+		sidePanel.setPreferredSize(new Dimension(200, 1024));
+		sidePanel.add(mMiniCalendarPanel, BorderLayout.NORTH);
+		sidePanel.add(mGoToPanel, BorderLayout.SOUTH);
+		
 		
 		// Add top bar and monthly calendar to center panel
 		centerPanel.setLayout(new BorderLayout());
@@ -62,8 +70,9 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		centerPanel.add(mCalendar, BorderLayout.CENTER);
 		centerPanel.add(mainCalendarNavigationPanel, BorderLayout.NORTH);
 		
-		// Add mini calendar and center panel to the main pane
-		mainPaneContainer.add(miniCalendar, BorderLayout.WEST);
+		// Set up the main panel
+		mainPaneContainer.setLayout(new BorderLayout());
+		mainPaneContainer.add(sidePanel, BorderLayout.WEST);
 		mainPaneContainer.add(centerPanel, BorderLayout.CENTER);
 		
 		// Add default tabs to main panel
@@ -80,7 +89,8 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	 * @param name the name of the tab
 	 * @param closeable whether the tab can be closed
 	 */
-	public void addTopLevelTab(final JComponent component, String name, boolean closeable)
+	
+	public void addTopLevelTab(JComponent component, String name, boolean closeable)
 	{
 		
 		if (!closeable)
@@ -90,7 +100,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		else
 		{
 			mTabbedPane.addTab(null, component);
-			int tabPosition = mTabbedPane.indexOfComponent(component);
+			final int tabPosition = mTabbedPane.indexOfComponent(component);
 			JPanel tabInformation = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
 			JLabel tabInfoName = new JLabel(name);
 			JButton tabInfoClose = new JButton("X"); // we need an icon for this eventually
@@ -112,7 +122,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
-					mTabbedPane.remove(indexOfComponent(component));
+					mTabbedPane.remove(tabPosition);
 				}
 			};
 			
@@ -153,6 +163,6 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	 * @param date the date to move the mini calendar to
 	 */
 	public void miniMove(DateTime date) {
-		mCalendarNavigationPanel.display(date);
+		mMiniCalendarPanel.display(date);
 	}
 }
