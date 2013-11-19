@@ -35,6 +35,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	private JPanel mainCalendarNavigationPanel;
 	private GoToPanel mGoToPanel;
 	private AbstractCalendar mCalendar; 
+	private int tabPosition;
 
 	/** Tabbed main panel to display in the calendar module. This pane will contain
 	 *  the rest of the elements in the calendar module, including the calendar view,
@@ -100,7 +101,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		else
 		{
 			mTabbedPane.addTab(null, component);
-			final int tabPosition = mTabbedPane.indexOfComponent(component);
+			tabPosition = mTabbedPane.indexOfComponent(component);
 			JPanel tabInformation = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
 			JLabel tabInfoName = new JLabel(name);
 			JButton tabInfoClose = new JButton("X"); // we need an icon for this eventually
@@ -125,18 +126,6 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 					mTabbedPane.remove(tabPosition);
 				}
 			};
-			
-			mTabbedPane.addChangeListener(new ChangeListener() {
-				
-				@Override
-				public void stateChanged(ChangeEvent e) {
-					/* this code generates null pointer exceptions
-					if(! mTabbedPane.getTitleAt(mTabbedPane.getSelectedIndex()).equals("New Event")) {
-						mEventCreator.display(DateTime.now());
-					}
-					*/
-				}
-			});
 			
 			tabInfoClose.addActionListener(listener);
 		}
