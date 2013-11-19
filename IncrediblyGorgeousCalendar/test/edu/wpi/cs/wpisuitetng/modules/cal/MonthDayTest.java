@@ -40,9 +40,17 @@ public class MonthDayTest {
 	@Test
 	public void testRemoveEvents() {
 		MonthDay MD = new MonthDay(now, DayStyle.Normal);
-		Event eatIcecream=new Event("Eat icecream", "Yummy!", new DateTime(2000, 10, 10, 0, 0), new DateTime(2000, 10, 10, 0, 30), false, new Project("null", "null"), 0);
+		Event eatIcecream=new Event().addName("Eat icecream")
+				 					 .addDescription("Yummy!")
+				 					 .addStartTime(new DateTime(2000, 10, 10, 0, 0))
+				 					 .addEndTime(new DateTime(2000, 10, 10, 0, 30));
+				
 		MD.addEvent(eatIcecream);
-		Event throwUpIcecream=new Event("Throw up icecream", "Ugh!", new DateTime(2000, 10, 10, 0, 30), new DateTime(2000, 10, 10, 1, 30), false, new Project("null", "null"), 0);
+		
+		Event throwUpIcecream=new Event().addName("Throw up icecream")
+										 .addDescription("Ugh!")
+										 .addStartTime(new DateTime(2000, 10, 10, 0, 30))
+										 .addEndTime(new DateTime(2000, 10, 10, 1, 30));
 		MD.addEvent(throwUpIcecream);
 		
 		MD.removeEvent(throwUpIcecream);
@@ -51,7 +59,11 @@ public class MonthDayTest {
 		assertTrue("Without removing any of the other events", MD.hasEvent(eatIcecream));
 		
 		
-		Event seekRevenge=new Event("Seek vengance", "Try to sell me bad icecream, will he?", new DateTime(2000, 10, 10, 1, 30), new DateTime(2000, 10, 10, 4, 0), false, new Project("null", "null"), 0);
+		
+		Event seekRevenge=new Event().addName("Seek vengance")
+				 					 .addDescription("Try to sell me bad icecream, will he?")
+				 					 .addStartTime(new DateTime(2000, 10, 10, 1, 30))
+				 					 .addEndTime(new DateTime(2000, 10, 10, 4, 0));
 		MD.addEvent(throwUpIcecream);
 		MD.addEvent(seekRevenge);
 		
