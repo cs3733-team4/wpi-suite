@@ -16,7 +16,8 @@ public class CalendarSelector extends JPanel {
 		
 		this.personalCalendar = new JCheckBox("Personal");
 		this.teamCalendar = new JCheckBox("Team");
-	
+		personalCalendar.setSelected(true);
+		
 		this.setLayout(new BorderLayout());
 		
 		this.add(personalCalendar, BorderLayout.WEST);
