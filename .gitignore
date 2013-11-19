@@ -48,3 +48,8 @@ RequirementManager/bin
 
 bin/
 *.project
+
+
+#We have some workspace issues to fix, until then, ignore this dir.
+Servers/
+IncrediblyGorgeousCalendar/build/

@@ -22,11 +22,12 @@ import org.joda.time.format.DateTimeFormatter;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Months;
+import edu.wpi.cs.wpisuitetng.modules.cal.navigation.CalendarNavigationModule;
 
 public class YearCalendarHolder extends JPanel
 {
 	
-	private CalendarYearModule calendarPreloader;
+	private CalendarNavigationModule calendarPreloader;
 	private JComponent miniCalendar;
 	private JLabel monthName;
 	private DateTime currentDate;
@@ -93,7 +94,7 @@ public class YearCalendarHolder extends JPanel
 		gotoPane.add(gotoDatePane, BorderLayout.NORTH);
 		gotoPane.add(gotoErrorText, BorderLayout.CENTER);
 				
-		calendarPreloader = new CalendarYearModule(date, mainPanel);
+		calendarPreloader = new CalendarNavigationModule(date, mainPanel);
 		this.miniCalendar = this.calendarPreloader.renderComponent();
 		
 		this.add(miniCalendar, BorderLayout.CENTER);

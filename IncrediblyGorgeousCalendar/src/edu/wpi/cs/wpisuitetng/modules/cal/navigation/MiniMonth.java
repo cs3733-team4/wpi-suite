@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.modules.cal.year;
+package edu.wpi.cs.wpisuitetng.modules.cal.navigation;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -24,7 +24,7 @@ public class MiniMonth extends JPanel
 	 */
 	private DayLabel[] days = new DayLabel[49]; // 6*7
 
-	public MiniMonth(DateTime time, final MainPanel mc) {
+	public MiniMonth(DateTime time, final MiniCalendarHostIface mc) {
 		this.setLayout(new GridLayout(7, 7));
 		int daysThisMonth = time.dayOfMonth().getMaximumValue();
 		MutableDateTime prevMonth = new MutableDateTime(time);
