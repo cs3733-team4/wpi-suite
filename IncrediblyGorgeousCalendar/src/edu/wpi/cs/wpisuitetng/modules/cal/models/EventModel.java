@@ -51,10 +51,8 @@ public class EventModel {
 
 			@Override
 			public void responseSuccess(IRequest iReq) {
-				System.out.println("The request to select events !!!!!:");
-				System.out.println(iReq.getBody());
 				final Gson parser = new Gson();
-				events.addAll(Arrays.asList(parser.fromJson(iReq.getBody(), Event[].class)));
+				events.addAll(Arrays.asList(parser.fromJson(iReq.getResponse().getBody(), Event[].class)));
 				sem.release();
 			}
 
@@ -83,9 +81,7 @@ public class EventModel {
 			} catch (InterruptedException e) {
 			}
 		}
-		Event[] foo = events.toArray(new Event[0]); 
-		System.out.println("Number of Events: " + foo.length);
-		return foo;
+		return events.toArray(new Event[0]);
 	}
 
 	private boolean put(String json) {
@@ -106,7 +102,6 @@ public class EventModel {
 
 			@Override
 			public void responseSuccess(IRequest iReq) {
-				final Gson parser = new Gson();
 				success[0] = Boolean.TRUE;
 				sem.release();
 			}

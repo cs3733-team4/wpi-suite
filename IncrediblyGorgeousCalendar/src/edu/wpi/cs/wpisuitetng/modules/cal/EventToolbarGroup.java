@@ -63,7 +63,7 @@ public class EventToolbarGroup extends ToolbarGroupView {
 				boolean success = model.putEvent(testEvent);
 				Event[] events = model.getEvents(start.minusHours(10), end.plusHours(10));
 				if(events.length > 0)
-					System.out.println("GOT EVENT!!!!:" +  events[0].toJSON().equals(testEvent.toJSON()));
+					System.out.println("GOT EVENT!!!!:" +  events[events.length-1].toJSON().equals(testEvent.toJSON()));
 				else
 					System.out.println("No events returned.");
 			}
