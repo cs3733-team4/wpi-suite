@@ -1,20 +1,27 @@
 package edu.wpi.cs.wpisuitetng.modules.cal;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.HashMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
+
 import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
@@ -39,6 +46,8 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	private GoToPanel mGoToPanel;
 	private AbstractCalendar mCalendar; 
 	private CalendarSelector mCalendarSelector;
+	private JPopupMenu popup = new JPopupMenu();
+	private JMenuItem closeAll = new JMenuItem("Close All Tabs");
 	private int tabPosition;
 	private final HashMap<Integer, JComponent> tabs = new HashMap<Integer, JComponent>();
 	private int tab_id = 0;
@@ -123,8 +132,30 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		
 		// Add default tabs to main panel
 		addTopLevelTab(mainPaneContainer, "Calendar", false);
-		addTopLevelTab(new JPanel(), "Test", true);
 		
+		// add context menu
+		this.addMouseListener(new MouseAdapter()
+		{
+			@Override
+			public void mousePressed(MouseEvent e)
+			{
+				// TODO: disable right click on tab body
+				if(e.isPopupTrigger()) popup.show(e.getComponent(), e.getX(), e.getY());
+			}
+		});
+		popup.add(closeAll);
+		closeAll.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				//remove all but calender
+				while (getTabCount() > 1)
+				{
+					removeTabAt(1);
+				}
+			}
+		});
 	}
 	
 	
@@ -156,11 +187,12 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 			tabPosition = mTabbedPane.indexOfComponent(component);
 			JPanel tabInformation = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
 			JLabel tabInfoName = new JLabel(name);
-			Title tabInfoClose = new Title("X", tab_id++); // we need an icon for this eventually
+			Title tabInfoClose = new Title("\u2716", tab_id++); // we need an icon for this eventually
+			tabInfoClose.setFont(tabInfoClose.getFont().deriveFont((float) 8));
+			tabInfoClose.setMargin(new Insets(0, 0, 0, 0));
+			tabInfoClose.setPreferredSize(new Dimension(20,17));
 			
-			
-			tabInfoName.setOpaque(false);
-			tabInfoClose.setOpaque(false);
+			tabInformation.setOpaque(false);
 			
 			tabInfoClose.setFocusable(false);
 			tabInfoClose.setBorder(null);
@@ -185,6 +217,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 			};
 			
 			tabInfoClose.addActionListener(listener);
+			mTabbedPane.setSelectedIndex(tabPosition);
 		}
 	}
 

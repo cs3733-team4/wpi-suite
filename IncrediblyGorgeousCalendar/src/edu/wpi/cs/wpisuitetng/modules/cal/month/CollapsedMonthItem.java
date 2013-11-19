@@ -8,8 +8,6 @@ import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
 
 public class CollapsedMonthItem extends JLabel
 {
-	private static final long serialVersionUID = 7964804454006900134L;
-
 	public CollapsedMonthItem(int more)
 	{
         setBackground(Colors.TABLE_BACKGROUND);
@@ -17,7 +15,7 @@ public class CollapsedMonthItem extends JLabel
 
         setFont(new java.awt.Font("DejaVu Sans", Font.BOLD, 12));
 
-        setText(Integer.toString(more) + " more items...");
+        setText(Integer.toString(more) + " more...");
         setMinimumSize(new java.awt.Dimension(10, 15));
 	}
 }
