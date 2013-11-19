@@ -90,7 +90,8 @@ public class EventModel {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		final boolean success = false;
+		final Boolean[] success = new Boolean[1];
+		success[0] = Boolean.FALSE;
 		// Send a request to the core to save this message
 		final Request request = Network.getInstance().makeRequest("cal/events/" + glue(args),
 				HttpMethod.PUT);
@@ -99,7 +100,7 @@ public class EventModel {
 			@Override
 			public void responseSuccess(IRequest iReq) {
 				final Gson parser = new Gson();
-				success = true;
+				success[0] = Boolean.TRUE;
 				sem.release();
 			}
 
@@ -126,11 +127,10 @@ public class EventModel {
 			} catch (InterruptedException e) {
 			}
 		}
-		return success;
+		return success[0].booleanValue();
 	}
 
 		
-	}
 	private String glue(String[] args) {
 		StringBuilder sb = new StringBuilder();
 		for (String string : args) {
