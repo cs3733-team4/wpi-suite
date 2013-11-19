@@ -85,14 +85,14 @@ public class DayCalendar extends AbstractCalendar {
 	}
 
 	@Override
-	public void updateEvents(List<Event> events, boolean addOrRemove) {
-		if (addOrRemove)
+	public void updateEvents(Event events, boolean added) {
+		if (added)
 		{
-			this.events.addAll(events);
+			this.events.add(events);
 		}
 		else
 		{
-			this.events.removeAll(events);
+			this.events.remove(events);
 		}
 		this.generateDay();
 	}

@@ -72,7 +72,7 @@ public class WeekCalendar extends AbstractCalendar {
 	}
 
 	@Override
-	public void updateEvents(List<Event> events, boolean addOrRemove) {
+	public void updateEvents(Event events, boolean addOrRemove) {
 		// TODO Auto-generated method stub
 		
 	}

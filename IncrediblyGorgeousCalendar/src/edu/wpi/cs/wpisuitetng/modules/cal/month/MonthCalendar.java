@@ -1,9 +1,11 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.month;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -13,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+
 import org.joda.time.*;
 
 import com.lowagie.text.Font;
@@ -23,65 +26,61 @@ import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Months;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
-
+import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 
 public class MonthCalendar extends AbstractCalendar
 {
 
-	private JPanel inside                = new JPanel(), 
-			       top                   = new JPanel(), 
-			       mainCalendarView      = new JPanel(), 
-			       calendarTitlePanel    = new JPanel(), 
-			       navigationButtonPanel = new JPanel();
-	
-	private JButton nextButton   = new JButton(">"), 
-	        previousButton       = new JButton("<"), 
-	        todayButton          = new JButton("Today");
+	private JPanel inside = new JPanel(),
+			top = new JPanel(),
+			mainCalendarView = new JPanel(),
+			calendarTitlePanel = new JPanel();
 	
 	private JLabel monthLabel = new JLabel();
 	private DateTime time;
 	private MainPanel mainPanel;
-	
-	
-	private HashMap<Integer, MonthDay> days = new HashMap<Integer, MonthDay>();
-	
 
-	public MonthCalendar(DateTime on, MainPanel mainPanel)
+	private HashMap<Integer, MonthDay> days = new HashMap<Integer, MonthDay>();
+
+	private EventModel eventModel;
+
+	public MonthCalendar(DateTime on, EventModel emodel)
 	{
-		this.mainPanel = mainPanel;
-		this.time      = on;
-		
+		this.eventModel = emodel;
+		this.mainPanel = MainPanel.getInstance();
+		this.time = on;
+
 		this.setLayout(new BorderLayout());
 		this.add(calendarTitlePanel, BorderLayout.NORTH);
-		
+
 		generateDays(new MutableDateTime(on));
 		generateHeaders(new MutableDateTime(on));
-		
+
 	}
-	
+
 	/**
 	 * 
-	 * @param fom the mutable date time
+	 * @param fom
+	 *            the mutable date time
 	 */
 	public void generateHeaders(MutableDateTime fom)
 	{
 		// Set up label for month title
-		monthLabel.setHorizontalAlignment(JLabel.CENTER);	
+		monthLabel.setHorizontalAlignment(JLabel.CENTER);
 		monthLabel.setFont(new java.awt.Font("DejaVu Sans", Font.BOLD, 25));
-		
+
 		// Set up the container title panel (only holds monthLabel for now)
 		calendarTitlePanel.setLayout(new BorderLayout());
-		calendarTitlePanel.add(monthLabel, BorderLayout.CENTER);	
-		
-		
+		calendarTitlePanel.add(monthLabel, BorderLayout.CENTER);
+
 		// layout code
 		mainCalendarView.setBackground(Colors.TABLE_BACKGROUND);
 		mainCalendarView.setLayout(new BorderLayout());
 		top.setLayout(new GridLayout(1, 7));
-		
+
 		mainCalendarView.add(top, BorderLayout.NORTH);
 		mainCalendarView.add(inside, BorderLayout.CENTER);
-		
+
 		this.add(mainCalendarView, BorderLayout.CENTER);
 		this.add(calendarTitlePanel, BorderLayout.NORTH);
 		// end layout code
@@ -100,54 +99,48 @@ public class MonthCalendar extends AbstractCalendar
 			top.add(jl);
 		}
 	}
-	
+
 	/**
-	 * Add a list of events
+	 * clears and sets a list of events
+	 * 
 	 * @param events
 	 */
-	public void addEvents(List<Event> events)
+	void setEvents(List<Event> events)
 	{
-		Collections.sort(events, new Comparator<Event>(){
-			@Override
-			public int compare(Event e, Event e2)
-			{
-				return e.getStart().compareTo(e2.getStart());
-			}
-		});
-		
-		for(Event e : events)
+		clearEvents();
+		for (Event e : events)
 		{
 			this.addEvent(e);
 		}
 	}
-	
+
 	/**
 	 * Add an event
+	 * 
 	 * @param e
 	 */
-	public void addEvent(Event e)
+	void addEvent(Event e)
 	{
 		MonthDay md = this.days.get(e.getStart().getDayOfYear());
 		md.addEvent(e);
 	}
+
 	/**
 	 * Remove a single event
+	 * 
 	 * @param e
 	 */
-	public void removeEvent(Event e)
+	void removeEvent(Event e)
 	{
 		MonthDay md = this.days.get(e.getStart().getDayOfYear());
 		md.removeEvent(e);
 	}
-	/**
-	 * Remove a list of events
-	 * @param events
-	 */
-	public void removeEvents(List<Event> events)
+	
+	void clearEvents()
 	{
-		for(Event e : events)
+		for (Component i : inside.getComponents())
 		{
-			this.removeEvent(e);
+			((MonthDay)i).clear();
 		}
 	}
 
@@ -156,7 +149,7 @@ public class MonthCalendar extends AbstractCalendar
 		DateTime now = DateTime.now();
 		return fom.getYear() == now.getYear() && fom.getDayOfYear() == now.getDayOfYear();
 	}
-	
+
 	public void display(DateTime newtime)
 	{
 		if (time.getMonthOfYear() == newtime.getMonthOfYear() && time.getYear() == newtime.getYear())
@@ -183,7 +176,9 @@ public class MonthCalendar extends AbstractCalendar
 
 	/**
 	 * Fill calendar with month in referenceDay
-	 * @param referenceDay what month should we display
+	 * 
+	 * @param referenceDay
+	 *            what month should we display
 	 */
 	protected void generateDays(MutableDateTime referenceDay)
 	{
@@ -192,35 +187,49 @@ public class MonthCalendar extends AbstractCalendar
 		referenceDay.setMillisOfDay(0);
 		int first = (referenceDay.getDayOfWeek() % 7);
 		int daysInView = first + referenceDay.dayOfMonth().getMaximumValue();
-		int weeks = (int)Math.ceil(daysInView / 7.0);
-		
+		int weeks = (int) Math.ceil(daysInView / 7.0);
+
 		inside.setLayout(new java.awt.GridLayout(weeks, 7));
 		referenceDay.addDays(-first);
 
 		// remove all old days
 		inside.removeAll();
+		
+		DateTime from = referenceDay.toDateTime();
 
-		// generate days, weeks*7 covers all possible months, so we just loop through and add each day
-		for (int i = 0; i < (weeks*7); i++)
+		// generate days, weeks*7 covers all possible months, so we just loop
+		// through and add each day
+		for (int i = 0; i < (weeks * 7); i++)
 		{
 			MonthDay md = new MonthDay(referenceDay.toDateTime(), getMarker(referenceDay));
 			inside.add(md);
-			md.reBorder(i < 7, (i % 7 ) == 0, i >= 5 * 7);
+			md.reBorder(i < 7, (i % 7) == 0, i >= 5 * 7);
 			this.days.put(referenceDay.getDayOfYear(), md);
 			referenceDay.addDays(1); // go to next day
 		}
 		
+		referenceDay.addDays(-1);// go back one to counteract last add one
+		
+		setEvents(getVisibleEvents(from, referenceDay.toDateTime()));
+
 		monthLabel.setText(this.getTime().toString(Months.monthLblFormat));
 
 		// notify mini-calendar to change
 		mainPanel.miniMove(time);
-		
+
 		// repaint when changed
 		inside.revalidate();
 	}
 
+	private List<Event> getVisibleEvents(DateTime from, DateTime to)
+	{
+		// TODO: this is where filtering should go
+		return Arrays.asList(eventModel.getEvents(from, to));
+	}
+
 	/**
 	 * Gets the DayStyle of given date
+	 * 
 	 * @param date
 	 * @return
 	 */
@@ -228,9 +237,8 @@ public class MonthCalendar extends AbstractCalendar
 	{
 		if (date.getMonthOfYear() == time.getMonthOfYear())
 		{
-			return (isToday(date) ? DayStyle.Today: DayStyle.Normal);
-		}
-		else
+			return (isToday(date) ? DayStyle.Today : DayStyle.Normal);
+		} else
 			return DayStyle.OutOfMonth;
 	}
 
@@ -241,7 +249,8 @@ public class MonthCalendar extends AbstractCalendar
 	}
 
 	@Override
-	public void updateEvents(List<Event> events, boolean addOrRemove) {
+	public void updateEvents(Event events, boolean addOrRemove)
+	{
 		// TODO Auto-generated method stub
 	}
 }

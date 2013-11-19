@@ -72,7 +72,7 @@ public class MonthDay extends JPanel
 	public void addEvent(Event e)
 	{
 		this.items.add(e);
-		this.doLayout();
+		revalidate();
 	}
 	
 	/**
@@ -82,9 +82,10 @@ public class MonthDay extends JPanel
 	public void removeEvent(Event e)
 	{
 		this.items.remove(e);
-		this.doLayout();
+		revalidate();
 	}
 	
+	// call revalidate, not this method directly, it is an override
 	@Override
 	public void doLayout()
 	{
@@ -126,7 +127,14 @@ public class MonthDay extends JPanel
 	}
 	
 	// Added for testing purposes
-	public boolean hasEvent(Event e) {
+	boolean hasEvent(Event e)
+	{
 		return items.contains(e);
+	}
+
+	public void clear()
+	{
+		items.clear();
+		revalidate();
 	}
 }
