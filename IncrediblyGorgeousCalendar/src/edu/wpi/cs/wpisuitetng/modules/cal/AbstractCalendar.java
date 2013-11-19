@@ -8,6 +8,7 @@ import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
+@SuppressWarnings("serial")
 public abstract class AbstractCalendar extends JComponent
 {
 	public abstract void next();

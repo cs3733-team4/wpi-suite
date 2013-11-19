@@ -19,6 +19,8 @@ import org.joda.time.MutableDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
+
 @SuppressWarnings("serial")
 public class GoToPanel extends JPanel {
 
@@ -26,26 +28,34 @@ public class GoToPanel extends JPanel {
 	final private static DateTimeFormatter gotoField = DateTimeFormat.forPattern("M/d/yy");
 	final private static DateTimeFormatter gotoFieldShort = DateTimeFormat.forPattern("M/d");
 	private JLabel gotoErrorText;
-	JTextField gotoDateField;
+	private JLabel gotoDateText;
+	private JTextField gotoDateField;
+	private JButton updateGotoButton;
 	private DateTime currentDate;
+	private AbstractCalendar mCalendar;
 	
-	public GoToPanel(DateTime date) {
+	public GoToPanel(DateTime date, AbstractCalendar mCalendar) {
 		
-		//TODO max size goto field
+		JPanel top = new JPanel();
+		JPanel bot = new JPanel();
 		
-		currentDate = date;
 		
+		this.currentDate = date;
+		this.mCalendar = mCalendar;
+		
+		// Go to field
 		this.gotoDateField = new JTextField(currentDate.toString(gotoExampleField));
-		gotoDateField.setSize(new Dimension(200,200));
 		
 		// Go to label
-		JLabel gotoDateText = new JLabel("Go to: ");
+		gotoDateText = new JLabel("Go to: ");
+		
+		// Go to error label
 		gotoErrorText = new JLabel(" ");
 		gotoErrorText.setHorizontalAlignment(SwingConstants.CENTER);
 		gotoErrorText.setForeground(Color.RED);
 		
 		// Go to button
-		JButton updateGotoButton = new JButton(">");
+		updateGotoButton = new JButton(">");
 		updateGotoButton.setFocusable(false);
 		updateGotoButton.setBackground(UIManager.getDefaults().getColor("Panel.background"));
 		updateGotoButton.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -60,11 +70,19 @@ public class GoToPanel extends JPanel {
 		});
 		
 		// Set up pane
+		top.setLayout(new BorderLayout());
+		bot.setLayout(new BorderLayout());
+		
 		this.setLayout(new BorderLayout());
-		this.add(gotoDateText, BorderLayout.WEST);
-		this.add(gotoDateField, BorderLayout.CENTER);
-		this.add(updateGotoButton, BorderLayout.EAST);
-		this.add(gotoErrorText, BorderLayout.SOUTH);
+		
+		top.add(gotoDateText, BorderLayout.WEST);
+		top.add(gotoDateField, BorderLayout.CENTER);
+		top.add(updateGotoButton, BorderLayout.EAST);
+		
+		bot.add(gotoErrorText);
+		
+		this.add(top, BorderLayout.NORTH);
+		this.add(bot, BorderLayout.SOUTH);
 		
 	}
 	
@@ -101,11 +119,9 @@ public class GoToPanel extends JPanel {
 				dt = null;
 			}
 		}
-		/*if (dt != null)
-			// mainPanel.display(dt);
-			//TODO Wait for Brian
-			
-		else*/
+		if (dt != null)
+			mCalendar.display(dt);
+		else
 		{
 			if(isValidYear)
 				gotoErrorText.setText("Use format: mm/dd/yyyy");
@@ -116,3 +132,4 @@ public class GoToPanel extends JPanel {
 	
 
 }
+
