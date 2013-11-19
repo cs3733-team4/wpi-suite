@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -36,6 +37,7 @@ public class NewEventDisplay extends JPanel {
 	private JPanel miniCalDisplay;
 	private JPanel saveEvent;
 	private JTextField nameField;
+	private JLabel errorMess;
 	private JLabel descriptionLabel;
 	private JTextArea descriptionField;
 	private DatePicker calDisplay;
@@ -46,6 +48,8 @@ public class NewEventDisplay extends JPanel {
 		Font mainfont = new Font("DejaVu Sans", Font.BOLD, 12);
 		saveEvent = new JPanel();
 		nameEntry = new JPanel();
+		errorMess = new JLabel("Invalid date input.");
+		errorMess.setForeground(Color.RED);
 		miniCalDisplay = new JPanel();
 		descriptionEntry = new JPanel();
 		nameLabel = new JLabel("Event Name: ");
@@ -87,6 +91,7 @@ public class NewEventDisplay extends JPanel {
 		);
 		nameEntry.setLayout(gl_nameEntry);
 		
+		/*
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.TRAILING)
@@ -101,7 +106,7 @@ public class NewEventDisplay extends JPanel {
 					.addContainerGap()
 					.addComponent(descriptionEntry, GroupLayout.PREFERRED_SIZE, 197, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap(636, Short.MAX_VALUE))
-		);
+		);*/
 		
 		// Set the group layout for the description entry components.
 		descriptionLabel.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -111,7 +116,7 @@ public class NewEventDisplay extends JPanel {
 				.addGroup(gl_descriptionEntry.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(gl_descriptionEntry.createParallelGroup(Alignment.LEADING)
-						.addComponent(descriptionField, GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE/2)
+						.addComponent(descriptionField, GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE)
 						.addComponent(descriptionLabel))
 					.addContainerGap())
 		);
@@ -131,11 +136,26 @@ public class NewEventDisplay extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// Create a new Event instance when the save button is clicked.
-				DateTime sdatetime = datetimeFormat.parseDateTime(calDisplay.getStartDate().getText()
-						+ " " + calDisplay.getStartTime().getText());
-				DateTime edatetime = datetimeFormat.parseDateTime(calDisplay.getEndDate().getText() 
-						+ " " + calDisplay.getEndTime().getText());
-				Event event = new Event(nameField.getText(), descriptionField.getText(), sdatetime, edatetime, true, 0, 0); 
+				try {
+					DateTime sdatetime = datetimeFormat.parseDateTime(calDisplay.getStartDate().getText()
+							+ " " + calDisplay.getStartTime().getText() + " " + 
+							(((Date) calDisplay.getStartAMPM().getValue()).getHours() == 0 ? "AM" : "PM"));
+					DateTime edatetime = datetimeFormat.parseDateTime(calDisplay.getEndDate().getText() 
+							+ " " + calDisplay.getEndTime().getText() + " " + 
+							(((Date) calDisplay.getEndAMPM().getValue()).getHours() == 0 ? "AM" : "PM"));
+					errorMess.setVisible(false);
+					
+					if (nameField.getText().length() == 0 || nameField.getText() == null) {
+						errorMess.setText("Event name cannot be empty.");
+						errorMess.setVisible(true);
+					}
+					else {
+						Event event = new Event(nameField.getText(), descriptionField.getText(), sdatetime, edatetime, true, 0, 0);
+					}
+				}
+				catch (IllegalArgumentException exception) {
+					errorMess.setVisible(true);
+				}
 			}
 		});
 	}
@@ -179,13 +199,14 @@ public class NewEventDisplay extends JPanel {
         // For the Save Event Button, in order to align it properly.
         saveEvent.setLayout(new FlowLayout(FlowLayout.LEADING));
         saveEvent.add(saveButton);
+        saveEvent.add(errorMess);
         
 		// Main UI Display
 		this.add(nameEntry);
 		this.add(miniCalDisplay);
 		this.add(descriptionEntry);
 		this.add(saveEvent);
-		//this.add(saveButton);
+		errorMess.setVisible(false);
 		
 		// Set a black border around the description field.
 		descriptionField.setBorder(BorderFactory.createLineBorder(Color.BLACK));

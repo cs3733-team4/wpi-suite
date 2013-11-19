@@ -1,10 +1,8 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.eventui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Calendar;
@@ -148,13 +146,21 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 					.addContainerGap())
 		);
 		setLayout(groupLayout);
+		ItemListener il = new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		};
 		
 		// Check if the all day checkbox is checked, and toggle whether or not time can be edited.
 		isAllDay.addItemListener(new ItemListener() {
 			
 			@Override
 			public void itemStateChanged(ItemEvent e) {
-				if(e.getStateChange() == ItemEvent.SELECTED) {
+				if(isAllDay.isSelected()) {
 					// Disallow editing of the start and end times if the event is all day.
 					startTime.setEditable(false);
 					endTime.setEditable(false);
@@ -190,6 +196,19 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 	
 	public JTextField getEndTime() {
 		return this.endTime;
+	}
+	
+	public JSpinner getStartAMPM() {
+		return this.startampmSelect;
+	}
+	
+	public JSpinner getEndAMPM() {
+		return this.endampmSelect;
+	}
+	
+	// This is for testing purposes for the checkbox.
+	public JCheckBox getIsAllDay(){
+		return this.isAllDay;
 	}
 	
 	//this function will eventually be used for quick adding events that default to 1 hour length
