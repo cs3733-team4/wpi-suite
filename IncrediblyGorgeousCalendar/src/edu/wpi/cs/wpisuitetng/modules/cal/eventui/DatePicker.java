@@ -149,7 +149,7 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 		);
 		setLayout(groupLayout);
 		
-		// Listener to check if the all day checkbox is checked, to help toggle whether or not time can be edited.
+		// Check if the all day checkbox is checked, and toggle whether or not time can be edited.
 		isAllDay.addItemListener(new ItemListener() {
 			
 			@Override
