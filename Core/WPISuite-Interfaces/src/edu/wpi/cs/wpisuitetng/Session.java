@@ -13,11 +13,11 @@
 package edu.wpi.cs.wpisuitetng;
 
 import java.util.Date;
-import java.util.Random;
 
 import javax.servlet.http.Cookie;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 
 import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
