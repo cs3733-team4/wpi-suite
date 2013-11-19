@@ -15,6 +15,8 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.database.Data;
@@ -33,6 +35,7 @@ import edu.wpi.cs.wpisuitetng.modules.Model;
  */
 public class EventEntityManager implements EntityManager<Event> {
 
+	private static final DateTimeFormatter serializer = ISODateTimeFormat.basicDateTime();
 	/** The database */
 	Data db;
 	
@@ -55,6 +58,7 @@ public class EventEntityManager implements EntityManager<Event> {
 	 */
 	@Override
 	public Event makeEntity(Session s, String content) throws WPISuiteException {
+		System.out.println(content+ " was just sent!");
 		final Event newEvent = Event.fromJson(content);
 		if(!db.save(newEvent, s.getProject())) {
 			throw new WPISuiteException();
@@ -93,10 +97,10 @@ public class EventEntityManager implements EntityManager<Event> {
 	 * @return retrieved events with overlapping range
 	 */
 	private Event[] getEventsByRange(Session s, String sfrom, String sto) {
-		DateTime from = EventModel.serializer.parseDateTime(sfrom);
-		DateTime to = EventModel.serializer.parseDateTime(sto);
+		DateTime from = serializer.parseDateTime(sfrom);
+		DateTime to = serializer.parseDateTime(sto);
 		
-		List<Event> retrievedEvents = null;
+		List<Event> retrievedEvents = new ArrayList<>();
 		
 		Event[] all = getAll(s);
 
@@ -110,7 +114,7 @@ public class EventEntityManager implements EntityManager<Event> {
 			}
 		}
 		
-		return (Event[]) retrievedEvents.toArray();
+		return retrievedEvents.toArray(new Event[0]);
 	}
 
 	/**
@@ -120,6 +124,7 @@ public class EventEntityManager implements EntityManager<Event> {
 	 */
 	@Override
 	public Event[] getAll(Session s) {
+		System.out.println("GET ALL!");
 		return db.retrieveAll(new Event(), s.getProject()).toArray(new Event[0]);
 	}
 
