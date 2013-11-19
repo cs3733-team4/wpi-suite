@@ -36,7 +36,7 @@ public class Event extends AbstractModel
 	 */
 	public Event addName(String name)
 	{
-		this.name = name;
+		setName(name);
 		return this;
 	}
 
@@ -47,7 +47,7 @@ public class Event extends AbstractModel
 	 */
 	public Event addDescription(String description)
 	{
-		this.description = description;
+		setDescription(description);
 		return this;
 	}
 	
@@ -58,7 +58,7 @@ public class Event extends AbstractModel
 	 */
 	public Event addStartTime(DateTime date)
 	{
-		this.start = date;
+		setStart(date);
 		return this;
 	}
 	
@@ -69,7 +69,7 @@ public class Event extends AbstractModel
 	 */
 	public Event addEndTime(DateTime date)
 	{
-		this.end = date;
+		setEnd(date);
 		return this;
 	}
 	
@@ -80,7 +80,7 @@ public class Event extends AbstractModel
 	 */
 	public Event addIsProjectEvent(boolean pe)
 	{
-		this.isProjectEvent = pe;
+		setProjectEvent(pe);
 		return this;
 	}
 	
