@@ -47,28 +47,53 @@ public class DrawnDay extends JPanel{
 		}
 	}
 	
+	
+	
 	public void draw()
 	{
-		 for(Event e : this.events)
-		 {
-			 int halfHour = e.getStartTime().getMinuteOfDay() / 30;
-			 int hour = halfHour/2;
-			 Color rand = new Color((int)(Math.random()*256),(int)(Math.random()*256),(int)(Math.random()*256));
-			 
-			 
-			 int pos = this.hours[hour].addEventTitle(rand, hour*2==halfHour, e.getName());
-			 
-			 do{
-				 halfHour++;
-				 hour = halfHour/2;
-				 this.hours[hour].addEventBody(rand, hour*2==halfHour, pos, ">", false);
-			 }
-			 while(halfHour < e.getEndTime().getMinuteOfDay()/30);
-			 halfHour++;
-			 hour = halfHour/2;
-			 this.hours[hour].addEventBody(rand, hour*2==halfHour, pos, ">", true);
-			 
-		 }
+		if (this.events != null){
+			for(Event e : this.events)
+			{
+				int halfHour = e.getStartTime().getMinuteOfDay() / 30;
+				int hour = halfHour/2;
+				Color rand = new Color((int)(Math.random()*256),(int)(Math.random()*256),(int)(Math.random()*256));
+				 
+				 
+				int pos = this.hours[hour].addEventTitle(rand, hour*2==halfHour, e.getName());
+				int contentToDisplay = 0;
+				boolean wordWrap = 84*this.largestCollision-1 > this.getWidth();
+				System.out.println(this.getWidth());
+				 
+				do{
+					halfHour++;
+					hour = halfHour/2;
+					String message = "DESCRIPTION";
+				if (wordWrap)
+				{
+					if (contentToDisplay == 0)
+					{
+						message = e.getStartTime().getHourOfDay()+":"+e.getStartTime().getMinuteOfHour();
+					}
+					else if (contentToDisplay == 1)
+					{
+						message = e.getEndTime().getHourOfDay()+":"+e.getEndTime().getMinuteOfHour();
+					}
+				}
+				else
+				{
+					if (contentToDisplay == 0)
+					{
+						message = e.getStartTime().getHourOfDay()+":"+e.getStartTime().getMinuteOfHour()+" - "+e.getEndTime().getHourOfDay()+":"+e.getEndTime().getMinuteOfHour();;
+					}
+				}
+				this.hours[hour].addEventBody(rand, hour*2==halfHour, pos, message, false, contentToDisplay++<(wordWrap?2:1));
+			}
+			while(halfHour < e.getEndTime().getMinuteOfDay()/30);
+			halfHour++;
+			hour = halfHour/2;
+			this.hours[hour].addEventBody(rand, hour*2==halfHour, pos, ">", true, false); 
+			}
+		}
 	}
 	
 	/**
@@ -149,7 +174,7 @@ public class DrawnDay extends JPanel{
 		 * @param content the content from the event that should be put here
 		 * @param bottom whether this is the last event (and so should have a bottom border drawn)
 		 */
-		public void addEventBody(Color c, boolean fos, int pos, String content, boolean bottom)
+		public void addEventBody(Color c, boolean fos, int pos, String content, boolean bottom, boolean time)
 		{
 			Color body = c.brighter();
 			Color border = c.darker().darker();
@@ -164,7 +189,7 @@ public class DrawnDay extends JPanel{
 			}
 			
 			JLabel contentHolder = new JLabel(content);
-			contentHolder.setFont(new java.awt.Font("DejaVu Sans", Font.BOLD, 8));
+			contentHolder.setFont(new java.awt.Font("DejaVu Sans", time?Font.ITALIC:Font.PLAIN, 12));
 			contentHolder.setBackground(body);
 			if (body.getBlue()+body.getRed()+body.getGreen() > 400)
 			{
@@ -242,11 +267,13 @@ public class DrawnDay extends JPanel{
 		});
 		
 		DrawnDay d = new DrawnDay(DateTime.now());
-		d.addEvents(ev);
+		//d.addEvents(ev);
 		
 		
 		f.add(d);
 		f.setVisible(true);
+		
+		d.addEvents(ev);
 	}
 	
 }
