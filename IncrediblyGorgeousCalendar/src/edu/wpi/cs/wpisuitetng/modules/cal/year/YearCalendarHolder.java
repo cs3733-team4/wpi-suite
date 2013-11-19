@@ -153,7 +153,7 @@ public class YearCalendarHolder extends JPanel
 			dt = gotoField.parseDateTime(text);
 			if(dt.getYear() < 1900 || dt.getYear() > 2100)
 			{
-				isValidYear=false;
+				isValidYear = false;
 				dt = null;
 			}
 		}

@@ -11,8 +11,12 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import org.joda.time.DateTime;
+
 import edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar.ToolbarGroupView;
 import edu.wpi.cs.wpisuitetng.modules.cal.eventui.NewEventDisplay;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 
 public class EventToolbarGroup extends ToolbarGroupView {
 	
@@ -28,7 +32,9 @@ public class EventToolbarGroup extends ToolbarGroupView {
 		addEventButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e){
-				mMainPanel.addTopLevelTab(new NewEventDisplay(), "New Event", true);
+				NewEventDisplay ned = new NewEventDisplay();
+				mMainPanel.addTopLevelTab(ned, "New Event", true);
+				ned.display(DateTime.now());
 			}
 		});
 		
@@ -47,7 +53,7 @@ public class EventToolbarGroup extends ToolbarGroupView {
 		    img = ImageIO.read(getClass().getResource("del_event.png"));
 		    removeEventButton.setIcon(new ImageIcon(img));
 		} catch (IOException ex) {}
-		
+
 		eventContentPanel.add(addEventButton);
 		eventContentPanel.add(removeEventButton);
 		this.setOpaque(false);

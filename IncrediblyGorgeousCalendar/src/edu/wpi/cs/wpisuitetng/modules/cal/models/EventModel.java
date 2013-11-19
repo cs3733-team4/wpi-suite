@@ -31,7 +31,7 @@ public class EventModel {
 	}
 
 	public boolean putEvent(Event toAdd){
-		return put("add-new-event", toAdd.toJSON());
+		return put(toAdd.toJSON());
 	}
 	
 	private Event[] get(String... args) {
@@ -52,20 +52,22 @@ public class EventModel {
 			@Override
 			public void responseSuccess(IRequest iReq) {
 				final Gson parser = new Gson();
-				events.addAll(Arrays.asList(parser.fromJson(iReq.getBody(), Event[].class)));
+				events.addAll(Arrays.asList(parser.fromJson(iReq.getResponse().getBody(), Event[].class)));
 				sem.release();
 			}
 
 			@Override
 			public void responseError(IRequest iReq) {
-				System.err.println("The request to select events failed.");
+				System.err.println("The request to select events errored:");
+				System.err.println(iReq.getBody());
 				sem.release();
 
 			}
 
 			@Override
 			public void fail(IRequest iReq, Exception exception) {
-				System.err.println("The request to select events failed.");
+				System.err.println("The request to select events failed:");
+				System.err.println(iReq.getBody());
 				sem.release();
 			}
 		}); // add an observer to process the response
@@ -82,7 +84,7 @@ public class EventModel {
 		return events.toArray(new Event[0]);
 	}
 
-	private boolean put(String... args) {
+	private boolean put(String json) {
 		final Semaphore sem = new Semaphore(1);
 		try {
 			sem.acquire();
@@ -93,27 +95,29 @@ public class EventModel {
 		final Boolean[] success = new Boolean[1];
 		success[0] = Boolean.FALSE;
 		// Send a request to the core to save this message
-		final Request request = Network.getInstance().makeRequest("cal/events/" + glue(args),
+		final Request request = Network.getInstance().makeRequest("cal/events",
 				HttpMethod.PUT);
+		request.setBody(json);
 		request.addObserver(new RequestObserver() {
 
 			@Override
 			public void responseSuccess(IRequest iReq) {
-				final Gson parser = new Gson();
 				success[0] = Boolean.TRUE;
 				sem.release();
 			}
 
 			@Override
 			public void responseError(IRequest iReq) {
-				System.err.println("The request to add an event failed.");
+				System.err.println("The request to add events errored:");
+				System.err.println(iReq.getBody());
 				sem.release();
 
 			}
 
 			@Override
 			public void fail(IRequest iReq, Exception exception) {
-				System.err.println("The request to add an event failed.");
+				System.err.println("The request to add events failed:");
+				System.err.println(iReq.getBody());
 				sem.release();
 			}
 		}); // add an observer to process the response
@@ -130,7 +134,11 @@ public class EventModel {
 		return success[0].booleanValue();
 	}
 
-		
+	/**
+	 * "glues" together arguments and separates them with commas.
+	 * @param args
+	 * @return
+	 */
 	private String glue(String[] args) {
 		StringBuilder sb = new StringBuilder();
 		for (String string : args) {

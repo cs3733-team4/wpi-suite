@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -40,6 +41,8 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	private AbstractCalendar mCalendar; 
 	private CalendarSelector mCalendarSelector;
 	private int tabPosition;
+	private final HashMap<Integer, JComponent> tabs = new HashMap<Integer, JComponent>();
+	private int tab_id= 0;
 
 	/** Tabbed main panel to display in the calendar module. This pane will contain
 	 *  the rest of the elements in the calendar module, including the calendar view,
@@ -117,11 +120,19 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		}
 		else
 		{
+			class Title extends JButton {
+				public final int ID;
+				public Title(String name, int ID){
+					super(name);
+					this.ID = ID;
+				}
+			}
 			mTabbedPane.addTab(null, component);
 			tabPosition = mTabbedPane.indexOfComponent(component);
 			JPanel tabInformation = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
 			JLabel tabInfoName = new JLabel(name);
-			JButton tabInfoClose = new JButton("X"); // we need an icon for this eventually
+			Title tabInfoClose = new Title("X", tab_id++); // we need an icon for this eventually
+			
 			
 			tabInfoName.setOpaque(false);
 			tabInfoClose.setOpaque(false);
@@ -135,12 +146,16 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 			tabInformation.setBorder(BorderFactory.createEmptyBorder(2,0,0,0));
 			mTabbedPane.setTabComponentAt(tabPosition, tabInformation);
 			
+			tabs.put(tabInfoClose.ID, component);
+			
 			ActionListener listener = new ActionListener()
 			{
 				@Override
 				public void actionPerformed(ActionEvent e)
 				{
-					mTabbedPane.remove(tabPosition);
+					int ID = ((Title)e.getSource()).ID;
+					System.out.println(ID);
+					mTabbedPane.remove(tabs.get(ID));
 				}
 			};
 			

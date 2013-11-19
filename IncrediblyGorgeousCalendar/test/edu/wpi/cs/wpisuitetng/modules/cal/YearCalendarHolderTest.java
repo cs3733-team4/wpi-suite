@@ -1,6 +1,7 @@
 package edu.wpi.cs.wpisuitetng.modules.cal;
 
 import static org.junit.Assert.*;
+import edu.wpi.cs.wpisuitetng.modules.cal.month.MonthCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.year.YearCalendarHolder;
 
 import org.joda.time.DateTime;
@@ -28,13 +29,13 @@ public class YearCalendarHolderTest {
 	public void testGoto() {
 		YearCalendarHolder YCH=new YearCalendarHolder(now, dummyPanel);
 		YCH.parseGoto("7/1/2000");
-		assertEquals("If the input is acceptable, the gotoDate box function will cause the calendar at mainPanel to display the designated month on the main screen", dummyPanel.getMOCA().getTime().getMonthOfYear(), then.getMonthOfYear());
+		assertEquals("If the input is acceptable, the gotoDate box function will cause the calendar at mainPanel to display the designated month on the main screen", ((MonthCalendar)dummyPanel.getMOCA()).getTime().getMonthOfYear(), then.getMonthOfYear());
 		YCH.parseGoto("7/1/1900");
-		assertEquals("If the input is acceptable, the gotoDate box function will cause the calendar at mainPanel to display the designated month on the main screen", dummyPanel.getMOCA().getTime().getMonthOfYear(), before.getMonthOfYear());
+		assertEquals("If the input is acceptable, the gotoDate box function will cause the calendar at mainPanel to display the designated month on the main screen", ((MonthCalendar)dummyPanel.getMOCA()).getTime().getMonthOfYear(), before.getMonthOfYear());
 		YCH.parseGoto("7/1/2100");
-		assertEquals("If the input is acceptable, the gotoDate box function will cause the calendar at mainPanel to display the designated month on the main screen", dummyPanel.getMOCA().getTime().getMonthOfYear(), after.getMonthOfYear());
+		assertEquals("If the input is acceptable, the gotoDate box function will cause the calendar at mainPanel to display the designated month on the main screen", ((MonthCalendar)dummyPanel.getMOCA()).getTime().getMonthOfYear(), after.getMonthOfYear());
 		YCH.parseGoto("7/1/00");
-		assertEquals("If the input is acceptable, the gotoDate box function will cause the calendar at mainPanel to display the designated month on the main screen", dummyPanel.getMOCA().getTime().getMonthOfYear(), before.getMonthOfYear());
+		assertEquals("If the input is acceptable, the gotoDate box function will cause the calendar at mainPanel to display the designated month on the main screen", ((MonthCalendar)dummyPanel.getMOCA()).getTime().getMonthOfYear(), before.getMonthOfYear());
 		
 	}
 	
