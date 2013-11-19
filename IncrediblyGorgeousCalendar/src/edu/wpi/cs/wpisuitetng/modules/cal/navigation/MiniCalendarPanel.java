@@ -25,7 +25,6 @@ import org.joda.time.format.DateTimeFormatter;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Months;
 
-@SuppressWarnings("serial")
 public class MiniCalendarPanel extends JPanel
 {
 	private CalendarNavigationModule calendarPreloader;

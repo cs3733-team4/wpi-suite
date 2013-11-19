@@ -69,6 +69,14 @@ public class GoToPanel extends JPanel {
 			}
 		});
 		
+		gotoDateField.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				parseGoto(gotoDateField.getText());
+			}
+		});
+		
 		// Set up pane
 		top.setLayout(new BorderLayout());
 		bot.setLayout(new BorderLayout());
@@ -78,12 +86,11 @@ public class GoToPanel extends JPanel {
 		top.add(gotoDateText, BorderLayout.WEST);
 		top.add(gotoDateField, BorderLayout.CENTER);
 		top.add(updateGotoButton, BorderLayout.EAST);
-		
+
 		bot.add(gotoErrorText);
+		top.add(bot, BorderLayout.SOUTH);
 		
 		this.add(top, BorderLayout.NORTH);
-		this.add(bot, BorderLayout.SOUTH);
-		
 	}
 	
 	/**
@@ -124,12 +131,16 @@ public class GoToPanel extends JPanel {
 		else
 		{
 			if(isValidYear)
-				gotoErrorText.setText("Use format: mm/dd/yyyy");
+				gotoErrorText.setText("* Use format: mm/dd/yyyy");
 			else
-				gotoErrorText.setText("Year out of range (1900-2100)");
+				gotoErrorText.setText("* Year out of range (1900-2100)");
 		}
 	}
 	
+	public void displayGoto(DateTime mDateTime)
+	{
+		gotoDateField.setText(mDateTime.toString(gotoExampleField));
+	}
 
 }
 
