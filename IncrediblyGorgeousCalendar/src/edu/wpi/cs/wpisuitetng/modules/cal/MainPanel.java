@@ -12,16 +12,21 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import org.joda.time.DateTime;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.eventui.NewEventDisplay;
+import edu.wpi.cs.wpisuitetng.modules.cal.year.MiniCalendarHostIface;
 import edu.wpi.cs.wpisuitetng.modules.cal.year.YearCalendarHolder;
 
-public class MainPanel extends JPanel {
+public class MainPanel extends JPanel implements MiniCalendarHostIface {
 
 	private MonthCalendar moca;
 	JTabbedPane calendarsAndEvents;
 	private YearCalendarHolder yech;
+	private NewEventDisplay eventCreator;
 
 	public MainPanel() {
 		this.setLayout(new BorderLayout());
@@ -42,10 +47,10 @@ public class MainPanel extends JPanel {
 		mainCalendar.add(calendarsAndEvents, BorderLayout.CENTER);
 		
 		moca = new MonthCalendar(DateTime.now(), this);
-		
+		eventCreator = new NewEventDisplay();
 		
 		addCalendarTab(moca, "Calendar", false);
-		
+		addCalendarTab(eventCreator, "New Event", true);
 		//addCalendarTab(new JLabel("hi there!"), "test", true);
 	}
 	
@@ -92,6 +97,16 @@ public class MainPanel extends JPanel {
 				}
 			};
 			
+			calendarsAndEvents.addChangeListener(new ChangeListener() {
+				
+				@Override
+				public void stateChanged(ChangeEvent e) {
+					if(! calendarsAndEvents.getTitleAt(calendarsAndEvents.getSelectedIndex()).equals("New Event")) {
+						eventCreator.display(DateTime.now());
+					}
+				}
+			});
+			
 			tabInfoClose.addActionListener(listener);
 		}
 	}
@@ -100,6 +115,7 @@ public class MainPanel extends JPanel {
 	public void display(DateTime newtime)
 	{
 		moca.display(newtime);
+		
 	}
 
 

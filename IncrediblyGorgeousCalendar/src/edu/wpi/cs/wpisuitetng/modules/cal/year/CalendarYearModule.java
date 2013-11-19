@@ -11,9 +11,9 @@ public class CalendarYearModule{
 
 	private DateTime time;
 	private MiniMonth calendar;
-	private MainPanel mc;
+	private MiniCalendarHostIface mc;
 	
-	public CalendarYearModule(DateTime time, MainPanel mc)
+	public CalendarYearModule(DateTime time, MiniCalendarHostIface mc)
 	{
 		this.mc = mc;
 		this.time = time;

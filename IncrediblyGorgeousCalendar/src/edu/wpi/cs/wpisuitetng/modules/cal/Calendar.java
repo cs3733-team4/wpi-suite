@@ -32,12 +32,12 @@ public class Calendar implements IJanewayModule {
 	public Calendar() {
 		
 		// Setup button panel
-		JToolBar buttonPanel = new JToolBar();
+		RibbonToolbar buttonPanel = new RibbonToolbar(true);
 		buttonPanel.setFloatable(false);
 		
 		JPanel mainPanel = new MainPanel();
 		tabs = new ArrayList<JanewayTabModel>();
-		JanewayTabModel tab = new JanewayTabModel("Calendar", new ImageIcon(), buttonPanel, mainPanel);
+		JanewayTabModel tab = new JanewayTabModel(getName(), new ImageIcon(), buttonPanel, mainPanel);
 		
 		tabs.add(tab);
 		
