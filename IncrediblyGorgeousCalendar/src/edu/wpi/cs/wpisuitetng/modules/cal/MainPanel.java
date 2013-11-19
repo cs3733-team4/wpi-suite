@@ -19,6 +19,7 @@ import javax.swing.event.ChangeListener;
 import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.month.MonthCalendar;
+import edu.wpi.cs.wpisuitetng.modules.cal.navigation.CalendarSelector;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MainCalendarNavigation;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.GoToPanel;
@@ -31,10 +32,13 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	private MiniCalendarPanel mMiniCalendarPanel;
 	private JPanel mainPaneContainer;
 	private JPanel centerPanel;
+	private JPanel centerPanelTop;
+	private JPanel centerPanelBottom;
 	private JPanel sidePanel;
 	private JPanel mainCalendarNavigationPanel;
 	private GoToPanel mGoToPanel;
 	private AbstractCalendar mCalendar; 
+	private CalendarSelector mCalendarSelector;
 	private int tabPosition;
 
 	/** Tabbed main panel to display in the calendar module. This pane will contain
@@ -47,7 +51,9 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		
 		this.mainPaneContainer = new JPanel(); // Container for the navigation and calendars
 		this.sidePanel = new JPanel(); // Panel to hold the mini calendar and the goto date
-		this.centerPanel = new JPanel(); // Container for center navigation bar and calendar pane
+		this.centerPanel = new JPanel(); // Container for top and bottom sub-panels
+		this.centerPanelTop = new JPanel(); // Container for navigation and calendar selector
+		this.centerPanelBottom = new JPanel(); // Container for calendar itself
 		
 		// Components of center panel
 		this.mMiniCalendarPanel = new MiniCalendarPanel(DateTime.now(), this); // Mini calendar
@@ -57,6 +63,9 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		// Components of side panel
 		this.mGoToPanel = new GoToPanel(DateTime.now(), mCalendar); // Go to date
 		
+		// Calendar selector
+		this.mCalendarSelector = new CalendarSelector();
+		
  		
 		// Set up side panel
 		sidePanel.setPreferredSize(new Dimension(200, 1024));
@@ -64,12 +73,20 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		sidePanel.add(mMiniCalendarPanel, BorderLayout.NORTH);
 		sidePanel.add(mGoToPanel, BorderLayout.CENTER);
 		
+		// Set up center panel elements
+		centerPanelTop.setLayout(new BorderLayout());
+		centerPanelTop.add(mainCalendarNavigationPanel, BorderLayout.WEST);
+		centerPanelTop.add(mCalendarSelector, BorderLayout.EAST);
+		
+		centerPanelBottom.setLayout(new BorderLayout());
+		centerPanelBottom.add(mCalendar, BorderLayout.CENTER);
+		
 		
 		// Add top bar and monthly calendar to center panel
 		centerPanel.setLayout(new BorderLayout());
 		centerPanel.setBorder(new EmptyBorder(5, 5, 0, 0));
-		centerPanel.add(mCalendar, BorderLayout.CENTER);
-		centerPanel.add(mainCalendarNavigationPanel, BorderLayout.NORTH);
+		centerPanel.add(centerPanelTop, BorderLayout.NORTH);
+		centerPanel.add(centerPanelBottom, BorderLayout.CENTER);
 		
 		// Set up the main panel
 		mainPaneContainer.setLayout(new BorderLayout());
