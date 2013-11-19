@@ -55,9 +55,6 @@ public class Visualiser extends JFrame{
 
 		List<Event> gni = gne();
 		((MainPanel) calendar).getMOCA().addEvents(gni);
-		//((MainPanel) calendar).getMOCA().removeEvents(gni);
-
-		//System.out.println(calendar.getClass());
 	}
 	
 	public List<Event> gne()

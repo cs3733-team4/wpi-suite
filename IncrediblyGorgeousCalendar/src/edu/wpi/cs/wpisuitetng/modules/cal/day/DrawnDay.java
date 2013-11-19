@@ -216,7 +216,7 @@ public class DrawnDay extends JPanel{
 		}
 	}
 	
-	/*
+	
 	public static void main(String[] args)
 	{
 		JFrame f = new JFrame();
@@ -248,5 +248,5 @@ public class DrawnDay extends JPanel{
 		f.add(d);
 		f.setVisible(true);
 	}
-	*/
+	
 }
