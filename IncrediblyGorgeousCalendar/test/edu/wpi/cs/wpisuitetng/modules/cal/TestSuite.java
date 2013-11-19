@@ -12,7 +12,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 
 @RunWith(Suite.class)
-@SuiteClasses({CalendarYearModuleTest.class, MonthItemTest.class, MonthsTest.class})
+@SuiteClasses({CalendarYearModuleTest.class, MonthItemTest.class, MonthCalendarTest.class, YearCalendarHolderTest.class, MonthDayTest.class})
 
 public class TestSuite {
 

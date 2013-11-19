@@ -92,4 +92,21 @@ public class Months {
 		mdt.addMonths(-1);
 		return mdt.toDateTime();
 	}
+	
+	
+	public static DateTime nextDay(DateTime time)
+	{
+		MutableDateTime mdt = new MutableDateTime(time);
+		mdt.addDays(1);
+		return mdt.toDateTime();
+	}
+	
+	public static DateTime prevDay(DateTime time)
+	{
+		MutableDateTime mdt = new MutableDateTime(time);
+		mdt.addDays(-1);
+		return mdt.toDateTime();
+	}
+	
+	
 }

@@ -8,6 +8,7 @@ import org.joda.time.DateTime;
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
+
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
@@ -28,6 +29,62 @@ public class Event extends AbstractModel
 	private String participants;
 	private User owner;
 
+	/**
+	 * 
+	 * @param name the name of the event
+	 * @return this event after having it's name set
+	 */
+	public Event addName(String name)
+	{
+		this.name = name;
+		return this;
+	}
+
+	/**
+	 * 
+	 * @param description the event's description
+	 * @return this event after having it's description set
+	 */
+	public Event addDescription(String description)
+	{
+		this.description = description;
+		return this;
+	}
+	
+	/**
+	 * 
+	 * @param date the starting time
+	 * @return this event after having its start date set
+	 */
+	public Event addStartTime(DateTime date)
+	{
+		this.start = date;
+		return this;
+	}
+	
+	/**
+	 * 
+	 * @param date the end time of this event
+	 * @return this event after having it's end time set
+	 */
+	public Event addEndTime(DateTime date)
+	{
+		this.end = date;
+		return this;
+	}
+	
+	/**
+	 * 
+	 * @param pe whether this is a project event
+	 * @return this event after having it's project flag set
+	 */
+	public Event addIsProjectEvent(boolean pe)
+	{
+		this.isProjectEvent = pe;
+		return this;
+	}
+	
+	
 	/**
 	 * Create an event with the default characteristics.
 	 */

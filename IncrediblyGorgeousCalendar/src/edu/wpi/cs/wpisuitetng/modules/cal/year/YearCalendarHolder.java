@@ -9,12 +9,10 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
 import org.joda.time.DateTime;
@@ -24,32 +22,23 @@ import org.joda.time.format.DateTimeFormatter;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Months;
+import edu.wpi.cs.wpisuitetng.modules.cal.navigation.CalendarNavigationModule;
 
 public class YearCalendarHolder extends JPanel
 {
-	private CalendarYearModule calendarPreloader;
+	
+	private CalendarNavigationModule calendarPreloader;
 	private JComponent miniCalendar;
 	private JLabel monthName;
 	private DateTime currentDate;
-	private MiniCalendarHostIface mainPanel;
+	private MainPanel mainPanel;
 	private JLabel gotoErrorText;
 	final private static DateTimeFormatter gotoExampleField = DateTimeFormat.forPattern("M/d/yyyy");
 	final private static DateTimeFormatter gotoField = DateTimeFormat.forPattern("M/d/yy");
 	final private static DateTimeFormatter gotoFieldShort = DateTimeFormat.forPattern("M/d");
-	private boolean showGoToBox;
 	
-	public YearCalendarHolder(DateTime date, MiniCalendarHostIface mainPanel) {
-		this.showGoToBox = true;
-		init(date, mainPanel);
-	}
-	
-	public YearCalendarHolder(DateTime date, MiniCalendarHostIface mainPanel, boolean showGoToBox) {
-		this.showGoToBox = showGoToBox;
-		init(date, mainPanel);
-	}
-	
-	// Initialize variables.
-	public void init(DateTime date, MiniCalendarHostIface mainPanel) {
+	public YearCalendarHolder(DateTime date, MainPanel mainPanel)
+	{
 		this.setPreferredSize(new Dimension(200, 250));
 		currentDate = date;
 		this.mainPanel = mainPanel;
@@ -74,9 +63,7 @@ public class YearCalendarHolder extends JPanel
 		titlePane.add(prevButton, BorderLayout.WEST);
 		
 		prevButton.setFocusable(false);
-		prevButton.setBackground(UIManager.getDefaults().getColor("Panel.background"));
 		nextButton.setFocusable(false);
-		nextButton.setBackground(UIManager.getDefaults().getColor("Panel.background"));
 		
 		prevButton.setBorder(new EmptyBorder(5, 5, 5, 5));
 		nextButton.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -94,7 +81,6 @@ public class YearCalendarHolder extends JPanel
 		
 		JButton updateGotoButton = new JButton(">");
 		updateGotoButton.setFocusable(false);
-		updateGotoButton.setBackground(UIManager.getDefaults().getColor("Panel.background"));
 		updateGotoButton.setBorder(new EmptyBorder(5, 5, 5, 5));
 		
 		//Goto Date Pane within Goto Pane
@@ -107,9 +93,8 @@ public class YearCalendarHolder extends JPanel
 		gotoPane.setLayout(new BorderLayout());
 		gotoPane.add(gotoDatePane, BorderLayout.NORTH);
 		gotoPane.add(gotoErrorText, BorderLayout.CENTER);
-		gotoPane.setVisible(showGoToBox);
-		
-		calendarPreloader = new CalendarYearModule(date, mainPanel);
+				
+		calendarPreloader = new CalendarNavigationModule(date, mainPanel);
 		this.miniCalendar = this.calendarPreloader.renderComponent();
 		
 		this.add(miniCalendar, BorderLayout.CENTER);
@@ -159,7 +144,7 @@ public class YearCalendarHolder extends JPanel
 		}
 	};
 	
-	private void parseGoto(String text)
+	public void parseGoto(String text)
 	{
 		DateTime dt;
 		boolean isValidYear=true;
@@ -168,7 +153,7 @@ public class YearCalendarHolder extends JPanel
 			dt = gotoField.parseDateTime(text);
 			if(dt.getYear() < 1900 || dt.getYear() > 2100)
 			{
-				isValidYear=false;
+				isValidYear = false;
 				dt = null;
 			}
 		}
@@ -190,9 +175,18 @@ public class YearCalendarHolder extends JPanel
 		else
 		{
 			if(isValidYear)
-				gotoErrorText.setText("Use format: mm/dd/yyyy");
+				gotoErrorText.setText("* Invalid format, use: mm/dd/yyyy");
 			else
-				gotoErrorText.setText("Year out of range (1900-2100)");
+				gotoErrorText.setText("* Year out of range (1900-2100)");
 		}
+	}
+	
+	
+	// For testing purposes
+	public DateTime getDate() {
+		return currentDate;
+	}
+	public String getError() {
+		return gotoErrorText.getText();
 	}
 }

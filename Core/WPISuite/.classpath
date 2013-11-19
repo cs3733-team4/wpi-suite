@@ -14,7 +14,6 @@
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/PostBoard.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/DefectTracker.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/RequirementManager.jar"/>
-	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/Calendar.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7">
 		<attributes>
 			<attribute name="owner.project.facets" value="java"/>
@@ -32,5 +31,6 @@
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/jackson-databind-2.1.0.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/Kalendar.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/servlet-api.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/Calendar.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

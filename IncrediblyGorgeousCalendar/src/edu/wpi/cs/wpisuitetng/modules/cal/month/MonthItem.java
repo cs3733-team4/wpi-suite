@@ -2,26 +2,33 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.wpi.cs.wpisuitetng.modules.cal;
+package edu.wpi.cs.wpisuitetng.modules.cal.month;
 
+import java.awt.Component;
 import java.awt.Font;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.UIManager;
-
 import org.joda.time.DateTime;
 
-/**
- *
- * @author patrick
- */
+import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
+
+
 public class MonthItem extends JPanel
 {
+	private static final long serialVersionUID = 6475224766889058195L;
+	
 	JLabel time = new JLabel(), desc = new JLabel();
 	private DateTime when;
+	/**
+	 * MonthItem Constructor
+	 * @param when
+	 * @param descr
+	 */
 	public MonthItem(DateTime when, String descr)
 	{
-        setBackground(UIManager.getDefaults().getColor("Table.background"));
+        setBackground(Colors.TABLE_BACKGROUND);
         setMaximumSize(new java.awt.Dimension(32767, 24));
         setMinimumSize(new java.awt.Dimension(0, 0));
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.X_AXIS));
@@ -44,7 +51,7 @@ public class MonthItem extends JPanel
 	 * @param when
 	 * @return
 	 */
-	String simpleTime(DateTime when)
+	public String simpleTime(DateTime when)
 	{
 		String ret;
 		boolean pm = when.getHourOfDay() >= 12;
@@ -72,5 +79,9 @@ public class MonthItem extends JPanel
 	public void setWhen(DateTime when)
 	{
 		this.when = when;
+	}
+
+	public static Component generateFrom(Event elt) {
+		return new MonthItem(elt.getStart(), elt.getName());
 	}
 }
