@@ -30,6 +30,10 @@ public class EventModel {
 				to.toString(serializer));
 	}
 
+	public boolean putEvent(Event toAdd){
+		return put("add-new-event", toAdd.toJSON());
+	}
+	
 	private Event[] get(String... args) {
 		final Semaphore sem = new Semaphore(1);
 		try {
@@ -49,6 +53,53 @@ public class EventModel {
 			public void responseSuccess(IRequest iReq) {
 				final Gson parser = new Gson();
 				events.addAll(Arrays.asList(parser.fromJson(iReq.getBody(), Event[].class)));
+				sem.release();
+			}
+
+			@Override
+			public void responseError(IRequest iReq) {
+				System.err.println("The request to select events failed.");
+				sem.release();
+
+			}
+
+			@Override
+			public void fail(IRequest iReq, Exception exception) {
+				System.err.println("The request to select events failed.");
+				sem.release();
+			}
+		}); // add an observer to process the response
+		request.send(); // send the request
+
+		boolean acquired = false;
+		while (!acquired) {
+			try {
+				sem.acquire();
+				acquired = true;
+			} catch (InterruptedException e) {
+			}
+		}
+		return events.toArray(new Event[0]);
+	}
+
+	private boolean put(String... args) {
+		final Semaphore sem = new Semaphore(1);
+		try {
+			sem.acquire();
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		final boolean success = false;
+		// Send a request to the core to save this message
+		final Request request = Network.getInstance().makeRequest("cal/events/" + glue(args),
+				HttpMethod.PUT);
+		request.addObserver(new RequestObserver() {
+
+			@Override
+			public void responseSuccess(IRequest iReq) {
+				final Gson parser = new Gson();
+				success = true;
 				sem.release();
 			}
 
@@ -75,9 +126,11 @@ public class EventModel {
 			} catch (InterruptedException e) {
 			}
 		}
-		return events.toArray(new Event[0]);
+		return success;
 	}
 
+		
+	}
 	private String glue(String[] args) {
 		StringBuilder sb = new StringBuilder();
 		for (String string : args) {
