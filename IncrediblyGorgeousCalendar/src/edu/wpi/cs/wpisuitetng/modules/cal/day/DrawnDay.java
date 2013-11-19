@@ -54,7 +54,7 @@ public class DrawnDay extends JPanel{
 		if (this.events != null){
 			for(Event e : this.events)
 			{
-				int halfHour = e.getStartTime().getMinuteOfDay() / 30;
+				int halfHour = e.getStart().getMinuteOfDay() / 30;
 				int hour = halfHour/2;
 				Color rand = new Color((int)(Math.random()*256),(int)(Math.random()*256),(int)(Math.random()*256));
 				 
@@ -72,23 +72,23 @@ public class DrawnDay extends JPanel{
 				{
 					if (contentToDisplay == 0)
 					{
-						message = e.getStartTime().getHourOfDay()+":"+e.getStartTime().getMinuteOfHour();
+						message = e.getStart().getHourOfDay()+":"+e.getStart().getMinuteOfHour();
 					}
 					else if (contentToDisplay == 1)
 					{
-						message = e.getEndTime().getHourOfDay()+":"+e.getEndTime().getMinuteOfHour();
+						message = e.getEnd().getHourOfDay()+":"+e.getEnd().getMinuteOfHour();
 					}
 				}
 				else
 				{
 					if (contentToDisplay == 0)
 					{
-						message = e.getStartTime().getHourOfDay()+":"+e.getStartTime().getMinuteOfHour()+" - "+e.getEndTime().getHourOfDay()+":"+e.getEndTime().getMinuteOfHour();;
+						message = e.getStart().getHourOfDay()+":"+e.getStart().getMinuteOfHour()+" - "+e.getEnd().getHourOfDay()+":"+e.getEnd().getMinuteOfHour();;
 					}
 				}
 				this.hours[hour].addEventBody(rand, hour*2==halfHour, pos, message, false, contentToDisplay++<(wordWrap?2:1));
 			}
-			while(halfHour < e.getEndTime().getMinuteOfDay()/30);
+			while(halfHour < e.getEnd().getMinuteOfDay()/30);
 			halfHour++;
 			hour = halfHour/2;
 			this.hours[hour].addEventBody(rand, hour*2==halfHour, pos, ">", true, false); 
@@ -105,8 +105,8 @@ public class DrawnDay extends JPanel{
 		this.events.addAll(events);
 		for(Event e : events)
 		{
-			int startingHalfHour = e.getStartTime().getMinuteOfDay() / 30;
-			for(int i = startingHalfHour; i <= e.getEndTime().getMinuteOfDay()/30; i++)
+			int startingHalfHour = e.getStart().getMinuteOfDay() / 30;
+			for(int i = startingHalfHour; i <= e.getEnd().getMinuteOfDay()/30; i++)
 			{
 				this.collisions[i]++;
 			}
@@ -262,7 +262,7 @@ public class DrawnDay extends JPanel{
 			@Override
 			public int compare(Event e, Event e2)
 			{
-				return e.getStartTime().compareTo(e2.getStartTime());
+				return e.getStart().compareTo(e2.getStart());
 			}
 		});
 		

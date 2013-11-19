@@ -82,6 +82,6 @@ public class MonthItem extends JPanel
 	}
 
 	public static Component generateFrom(Event elt) {
-		return new MonthItem(elt.getStartTime(), elt.getName());
+		return new MonthItem(elt.getStart(), elt.getName());
 	}
 }

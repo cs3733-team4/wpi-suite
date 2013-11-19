@@ -1,33 +1,33 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.models;
 
+import java.util.UUID;
+
 import org.joda.time.DateTime;
 
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
-import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 
-public class Event extends AbstractModel {
-	public enum RepeatType {
-		Yearly, Monthly, Weekly, Daily, Weekdays, MWF, TR
-	}
+import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
+/**
+ * Basic event class that contains the information required to represent an
+ * event on a calendar.
+ * 
+ */
+public class Event extends AbstractModel
+{
+	private UUID eventID = UUID.randomUUID();
 	private String name;
 	private String description;
-	private DateTime startTime;
-	private DateTime endTime;
-	private boolean isRepeating;
+	private DateTime start;
+	private DateTime end;
 	private boolean isProjectEvent;
-	private int userID;
-	private Project project;
-	// For Handling Repeating Events:
-	private RepeatType repeats;
-	private int repeatEvery;
-	private int[] repeatOn;
-	private DateTime startRepeat;
-	private DateTime endRepeat;
+	private boolean isAllDay;
+	private String[] categories;
+	private String participants;
+	private User owner;
 
-	
 	/**
 	 * 
 	 * @param name the name of the event
@@ -57,7 +57,7 @@ public class Event extends AbstractModel {
 	 */
 	public Event addStartTime(DateTime date)
 	{
-		this.startTime = date;
+		this.start = date;
 		return this;
 	}
 	
@@ -68,18 +68,7 @@ public class Event extends AbstractModel {
 	 */
 	public Event addEndTime(DateTime date)
 	{
-		this.endTime = date;
-		return this;
-	}
-	
-	/**
-	 * 
-	 * @param rep whether this event is repeating
-	 * @return this event after having it's repeating flag set
-	 */
-	public Event addIsRepeating(boolean rep)
-	{
-		this.isRepeating = rep;
+		this.end = date;
 		return this;
 	}
 	
@@ -94,275 +83,206 @@ public class Event extends AbstractModel {
 		return this;
 	}
 	
-	/**
-	 * 
-	 * @param user a user ID
-	 * @return this event after having it's user ID set
-	 */
-	public Event addUserID(int user)
-	{
-		this.userID = user;
-		return this;
-	}
 	
 	/**
-	 * 
-	 * @param project the project ID for this event
-	 * @return this event after having it's project ID set
+	 * Create an event with the default characteristics.
 	 */
-	public Event addProjectID(Project project)
+	public Event()
 	{
-		this.project = project;
-		return this;
-	}
-	
-	/**
-	 * 
-	 * @param repeats the RepeatType of this event
-	 * @return this event after having it's repeat type set
-	 */
-	public Event addRepeats(RepeatType repeats)
-	{
-		this.repeats = repeats;
-		return this;
-	}
-	
-	/**
-	 * 
-	 * @param repEvery the repeat every count (ie every other, third, or fourth day)
-	 * @return this event after having it's repeat every count set
-	 */
-	public Event addRepeatEvery(int repEvery)
-	{
-		this.repeatEvery = repEvery;
-		return this;
-	}
-	
-	/**
-	 * 
-	 * @param repOn the array of days that this event repeats on
-	 * @return this event after having it's repeatOn field set
-	 */
-	public Event addRepeatOn(int[] repOn)
-	{
-		this.repeatOn = repOn;
-		return this;
-	}
-	
-	/**
-	 * 
-	 * @param startRep the Date to start repeating
-	 * @return this event after having its repeat start date set
-	 */
-	public Event addStartRepeat(DateTime startRep)
-	{
-		this.startRepeat = startRep;
-		return this;
-	}
-	
-	/**
-	 * 
-	 * @param endRep the day to end this event's repeating cycle
-	 * @return this event after having it's end repeat date set
-	 */
-	public Event addEndRepeat(DateTime endRep)
-	{
-		this.endRepeat = endRep;
-		return this;
-	}
-	
-	
-	public Event() {
 		super();
-		name = "Default Event Title";
-		description = "Default Event Description";
-		setStartTime(new DateTime());
-		endTime = new DateTime();
-		isRepeating = false;
-		isProjectEvent = true;
-		userID = 0;
-		project = null;
-		repeats = null;
-		repeatEvery = 0;
-		repeatOn = new int[7];
-		setStartRepeat(DateTime.now());
-		setEndRepeat(DateTime.now());
 	}
 
-	public Event(String name, String description, DateTime startTime, DateTime endTime, boolean isProjectEvent, Project projectID, int userID){
-		this.name = name;
-		this.description = description;
-		this.setStartTime(startTime);
-		this.endTime = endTime;
-		this.isProjectEvent = isProjectEvent;
-		this.project = projectID;
-		this.userID = userID;
-		this.isRepeating = false;
-	}
-	
-	public Event(String name, String description, DateTime startTime, DateTime endTime, boolean isProjectEvent, Project projectID, int userID,
-			boolean isRepeating, RepeatType repeats, int repeatEvery, int[] repeatOn, DateTime startRepeat, DateTime endRepeat){
-		this.name = name;
-		this.description = description;
-		this.setStartTime(startTime);
-		this.endTime = endTime;
-		this.isProjectEvent = isProjectEvent;
-		this.project = projectID;
-		this.userID = userID;
-		this.isRepeating = false;
-	}
-	
-	public static Event fromJson(String json) {
+	public static Event fromJson(String json)
+	{
 		final Gson parser = new Gson();
 		return parser.fromJson(json, Event.class);
 	}
 
 	@Override
-	public void save() {
-		// TODO Auto-generated method stub
-		
+	public void save()
+	{
+		// This is never called by the core ?
 	}
 
 	@Override
-	public void delete() {
-		// TODO Auto-generated method stub
-		
+	public void delete()
+	{
+		// This is never called by the core ?
 	}
 
-	@Override
-	public String toJSON() {
+	public String toJSON()
+	{
 		return new Gson().toJson(this, Event.class);
 	}
 
 	@Override
-	public Boolean identify(Object o) {
+	public Boolean identify(Object o)
+	{
 		return null;
 	}
-	
+
 	/**
-	 * 
-	 * @return
+	 * @return the eventID
 	 */
-	public String getName(){
-		return this.name;
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public String getDescription(){
-		return this.description;
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public Project getProjectID(){
-		return this.project;
-	}
-	
-	public int getUserID(){
-		return this.userID;
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public RepeatType getRepeats(){
-		return this.repeats;
-	}
-	
-	public boolean isRepeating(){
-		return this.isRepeating;
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public boolean isProjectEvent(){
-		return this.isProjectEvent;
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public int getRepeatInterval(){
-		return this.repeatEvery;
-	}
-	
-	public int[] getWeeklySchedule(){
-		return this.repeatOn;
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public DateTime getEndTime() {
-		return endTime;
+	public UUID getEventID()
+	{
+		return eventID;
 	}
 
 	/**
-	 * 
-	 * @param endTime
+	 * @param eventID
+	 *            the eventID to set
 	 */
-	public void setEndTime(DateTime endTime) {
-		this.endTime = endTime;
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public DateTime getStartTime() {
-		return startTime;
-	}
-	
-	/**
-	 * 
-	 * @param startTime
-	 */
-	public void setStartTime(DateTime startTime) {
-		this.startTime = startTime;
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public DateTime getStartRepeat() {
-		return startRepeat;
-	}
-	
-	/**
-	 * 
-	 * @param startRepeat
-	 */
-	public void setStartRepeat(DateTime startRepeat) {
-		this.startRepeat = startRepeat;
+	public void setEventID(UUID eventID)
+	{
+		this.eventID = eventID;
 	}
 
 	/**
-	 * 
-	 * @return
+	 * @return the name
 	 */
-	public DateTime getEndRepeat() {
-		return endRepeat;
-	}
-	
-	/**
-	 * 
-	 * @param endRepeat
-	 */
-	public void setEndRepeat(DateTime endRepeat) {
-		this.endRepeat = endRepeat;
+	public String getName()
+	{
+		return name;
 	}
 
-	public DateTime start;
-	
+	/**
+	 * @param name
+	 *            the name to set
+	 */
+	public void setName(String name)
+	{
+		this.name = name;
+	}
+
+	/**
+	 * @return the description
+	 */
+	public String getDescription()
+	{
+		return description;
+	}
+
+	/**
+	 * @param description
+	 *            the description to set
+	 */
+	public void setDescription(String description)
+	{
+		this.description = description;
+	}
+
+	/**
+	 * @return the start
+	 */
+	public DateTime getStart()
+	{
+		return start;
+	}
+
+	/**
+	 * @param start
+	 *            the start to set
+	 */
+	public void setStart(DateTime start)
+	{
+		this.start = start;
+	}
+
+	/**
+	 * @return the end
+	 */
+	public DateTime getEnd()
+	{
+		return end;
+	}
+
+	/**
+	 * @param end
+	 *            the end to set
+	 */
+	public void setEnd(DateTime end)
+	{
+		this.end = end;
+	}
+
+	/**
+	 * @return the isProjectEvent
+	 */
+	public boolean isProjectEvent()
+	{
+		return isProjectEvent;
+	}
+
+	/**
+	 * @param isProjectEvent
+	 *            the isProjectEvent to set
+	 */
+	public void setProjectEvent(boolean isProjectEvent)
+	{
+		this.isProjectEvent = isProjectEvent;
+	}
+
+	/**
+	 * @return the categories
+	 */
+	public String[] getCategories()
+	{
+		return categories;
+	}
+
+	/**
+	 * @param categories
+	 *            the categories to set
+	 */
+	public void setCategories(String[] categories)
+	{
+		this.categories = categories;
+	}
+
+	/**
+	 * @return the participants
+	 */
+	public String getParticipants()
+	{
+		return participants;
+	}
+
+	/**
+	 * @param participants
+	 *            the participants to set
+	 */
+	public void setParticipants(String participants)
+	{
+		this.participants = participants;
+	}
+
+	boolean isAllDay()
+	{
+		return isAllDay;
+	}
+
+	void setAllDay(boolean isAllDay)
+	{
+		this.isAllDay = isAllDay;
+	}
+	 
+	/**
+	 * @return the owner
+	 */
+	public User getOwner()
+	{
+		return owner;
+	}
+
+	/**
+	 * @param owner the owner to set
+	 */
+	public void setOwner(User owner)
+	{
+		this.owner = owner;
+	}
+
+	// Accessor and Mutator Methods:
+
 }

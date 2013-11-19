@@ -111,7 +111,7 @@ public class MonthCalendar extends AbstractCalendar
 			@Override
 			public int compare(Event e, Event e2)
 			{
-				return e.getStartTime().compareTo(e2.getStartTime());
+				return e.getStart().compareTo(e2.getStart());
 			}
 		});
 		
@@ -127,7 +127,7 @@ public class MonthCalendar extends AbstractCalendar
 	 */
 	public void addEvent(Event e)
 	{
-		MonthDay md = this.days.get(e.getStartTime().getDayOfYear());
+		MonthDay md = this.days.get(e.getStart().getDayOfYear());
 		md.addEvent(e);
 	}
 	/**
@@ -136,7 +136,7 @@ public class MonthCalendar extends AbstractCalendar
 	 */
 	public void removeEvent(Event e)
 	{
-		MonthDay md = this.days.get(e.getStartTime().getDayOfYear());
+		MonthDay md = this.days.get(e.getStart().getDayOfYear());
 		md.removeEvent(e);
 	}
 	/**

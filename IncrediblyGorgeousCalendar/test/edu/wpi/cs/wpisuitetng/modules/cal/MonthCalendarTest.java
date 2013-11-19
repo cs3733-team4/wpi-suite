@@ -88,9 +88,20 @@ public class MonthCalendarTest{
 	
 	
 	DateTime now=new DateTime(2000,10,10,0,0);
-	Event eatIcecream=new Event("Eat icecream", "Yummy!",                                 new DateTime(2000, 1, 1, 1, 0), new DateTime(2000, 1, 1, 2, 0), false, new Project("null", "null"), 0);
-	Event throwUpIcecream=new Event("Throw up icecream", "Ugh!",                          new DateTime(2000, 1, 1, 2, 0), new DateTime(2000, 1, 1, 3, 0), false, new Project("null", "null"), 0);
-	Event seekRevenge=new Event("Seek vengance", "Try to sell me bad icecream, will he?", new DateTime(2000, 1, 1, 3, 0), new DateTime(2000, 1, 3, 3, 0), false, new Project("null", "null"), 0);
+	Event eatIcecream=new Event().addName("Eat icecream")
+								 .addDescription("Yummy!")
+								 .addStartTime(new DateTime(2000, 1, 1, 1, 0))
+								 .addEndTime(new DateTime(2000, 1, 1, 2, 0));
+	
+	Event throwUpIcecream=new Event().addName("Throw up icecream")
+			                         .addDescription("Ugh!")
+			                         .addStartTime(new DateTime(2000, 1, 1, 2, 0))
+			                         .addEndTime(new DateTime(2000, 1, 1, 3, 0));
+	
+	Event seekRevenge=new Event().addName("Seek vengance")
+			                     .addDescription("Try to sell me bad icecream, will he?")
+			                     .addStartTime(new DateTime(2000, 1, 1, 3, 0))
+			                     .addEndTime(new DateTime(2000, 1, 3, 3, 0));
 	
 	//@Test
 	//public void testAddingAnEvent() {
