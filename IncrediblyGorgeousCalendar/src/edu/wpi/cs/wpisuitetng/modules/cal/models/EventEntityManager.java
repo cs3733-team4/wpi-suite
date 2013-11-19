@@ -99,7 +99,8 @@ public class EventEntityManager implements EntityManager<Event> {
 	private Event[] getEventsByRange(Session s, String sfrom, String sto) {
 		DateTime from = serializer.parseDateTime(sfrom);
 		DateTime to = serializer.parseDateTime(sto);
-		
+		System.out.println("From: " + from.toString());
+		System.out.println("To: " + to.toString());
 		List<Event> retrievedEvents = new ArrayList<>();
 		
 		Event[] all = getAll(s);
@@ -107,14 +108,21 @@ public class EventEntityManager implements EntityManager<Event> {
 		final Interval range = new Interval(from, to);
 		
 		for (Event event : all)
-		{
+		{		
+			System.out.println("Retreived: " + event.toJSON());
 			if (range.overlaps(new Interval(event.getStart(), event.getEnd())))
 			{
 				retrievedEvents.add(event);
+				System.out.println("^ Added ^");
 			}
 		}
-		
-		return retrievedEvents.toArray(new Event[0]);
+		System.out.println(retrievedEvents.toArray(new Event[0]).length);
+		Event[] foo = retrievedEvents.toArray(new Event[0]);
+		System.out.println("About to return");
+		for (Event event : foo) {
+			System.out.println("Event1"+event.toString());
+		}
+		return foo;
 	}
 
 	/**

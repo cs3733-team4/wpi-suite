@@ -1,5 +1,6 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.models;
 
+import java.util.Date;
 import java.util.UUID;
 
 import org.joda.time.DateTime;
@@ -19,8 +20,8 @@ public class Event extends AbstractModel
 	private UUID eventID = UUID.randomUUID();
 	private String name;
 	private String description;
-	private DateTime start;
-	private DateTime end;
+	private Date start;
+	private Date end;
 	private boolean isProjectEvent;
 	private boolean isAllDay;
 	private String[] categories;
@@ -120,7 +121,7 @@ public class Event extends AbstractModel
 	 */
 	public DateTime getStart()
 	{
-		return start;
+		return new DateTime(start);
 	}
 
 	/**
@@ -129,7 +130,7 @@ public class Event extends AbstractModel
 	 */
 	public void setStart(DateTime start)
 	{
-		this.start = start;
+		this.start = start.toDate();
 	}
 
 	/**
@@ -137,7 +138,7 @@ public class Event extends AbstractModel
 	 */
 	public DateTime getEnd()
 	{
-		return end;
+		return new DateTime(end);
 	}
 
 	/**
@@ -146,7 +147,7 @@ public class Event extends AbstractModel
 	 */
 	public void setEnd(DateTime end)
 	{
-		this.end = end;
+		this.end = end.toDate();
 	}
 
 	/**

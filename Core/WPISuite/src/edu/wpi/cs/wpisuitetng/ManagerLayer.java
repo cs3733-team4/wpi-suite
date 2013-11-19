@@ -193,10 +193,14 @@ public class ManagerLayer {
 		{
 			m = map.get(args[0]+args[1]).getEntity(s,args[2]);
 		}
+		System.out.println("Doing stuff1q on " + m == null ? "null!" : "good");
+		for (Model model : m) {
+			System.out.println(model);
+		}
 		
         //return (m == null) ? "null" : gson.toJson(m, m.getClass());
 		
-		String response = "null";
+		String response = "nullx";
 		
 		if(m != null)
 		{
@@ -204,12 +208,15 @@ public class ManagerLayer {
 			for(Model n : m)
 			{
 				response = response.concat(n.toJSON()+",");
+				System.out.println("concating" + n.toJSON()+",");
 			}
+			System.out.println("silly " + response);
 			if(m.length > 0)
 			{
 				response = response.substring(0, response.length() - 1); // remove trailing comma
 			}
 			response = response.concat("]");
+			System.out.println("wesfsfdsfdsf " + response);
 		}
 		
 		return response;
