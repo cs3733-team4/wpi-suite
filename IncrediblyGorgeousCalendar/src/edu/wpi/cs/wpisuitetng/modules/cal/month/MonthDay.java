@@ -124,4 +124,9 @@ public class MonthDay extends JPanel
 		}
 		super.doLayout();
 	}
+	
+	// Added for testing purposes
+	public boolean hasEvent(Event e) {
+		return items.contains(e);
+	}
 }

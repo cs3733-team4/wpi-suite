@@ -113,4 +113,5 @@ public class MainPanel extends JPanel {
 	public void miniMove(DateTime time) {
 		yech.display(time);
 	}
+	
 }

@@ -267,8 +267,12 @@ public class MonthCalendar extends JPanel implements CalendarInterface
 			return DayStyle.OutOfMonth;
 	}
 
+	// Added for testing purposes
 	public DateTime getTime()
 	{
 		return time;
+	}
+	public MonthDay getMonthDayForDay(int getDayOfYear) {
+		return days.get(getDayOfYear);
 	}
 }
