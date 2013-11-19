@@ -109,7 +109,7 @@ public class EventModel {
 			@Override
 			public void responseError(IRequest iReq) {
 				System.err.println("The request to add events errored:");
-				System.err.println(iReq.getBody());
+				System.err.println(iReq.getResponse().getBody());
 				sem.release();
 
 			}

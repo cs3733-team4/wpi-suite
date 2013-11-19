@@ -24,7 +24,7 @@ public class EventToolbarGroup extends ToolbarGroupView {
 	private final JButton addEventButton, removeEventButton;
 	
 	public EventToolbarGroup(final MainPanel mMainPanel) {
-		super("");
+		super("Events");
 		
 		this.eventContentPanel.setLayout(new BoxLayout(eventContentPanel, BoxLayout.X_AXIS));
 		
@@ -56,7 +56,6 @@ public class EventToolbarGroup extends ToolbarGroupView {
 
 		eventContentPanel.add(addEventButton);
 		eventContentPanel.add(removeEventButton);
-		this.setOpaque(false);
 		
 		this.add(eventContentPanel);
 	}
@@ -64,10 +63,4 @@ public class EventToolbarGroup extends ToolbarGroupView {
 	public JButton getRemoveEventButton(){
 		return removeEventButton;
 	}
-	
-	@Override
-	public void mouseEntered() {}
-	
-	@Override
-	public void mouseExited() {}
 }
