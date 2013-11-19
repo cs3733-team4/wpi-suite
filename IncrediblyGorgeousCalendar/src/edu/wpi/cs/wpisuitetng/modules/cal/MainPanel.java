@@ -139,8 +139,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 			@Override
 			public void mousePressed(MouseEvent e)
 			{
-				// TODO: disable right click on tab body
-				if(e.isPopupTrigger()) popup.show(e.getComponent(), e.getX(), e.getY());
+				if(e.isPopupTrigger() && indexAtLocation(e.getX(), e.getY()) != -1) popup.show(e.getComponent(), e.getX(), e.getY());
 			}
 		});
 		popup.add(closeAll);
