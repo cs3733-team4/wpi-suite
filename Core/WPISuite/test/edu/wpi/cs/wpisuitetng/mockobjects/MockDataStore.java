@@ -19,7 +19,6 @@ import java.util.List;
 import com.google.gson.*;
 
 import edu.wpi.cs.wpisuitetng.database.Data;
-import edu.wpi.cs.wpisuitetng.database.WSPredicate;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
@@ -235,12 +234,6 @@ public class MockDataStore implements Data {
 			List<Object> orGivenValueList) throws WPISuiteException,
 			IllegalArgumentException, IllegalAccessException,
 			InvocationTargetException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public <T> List<T> retrievePredicate(WSPredicate<T> pred) {
 		// TODO Auto-generated method stub
 		return null;
 	}

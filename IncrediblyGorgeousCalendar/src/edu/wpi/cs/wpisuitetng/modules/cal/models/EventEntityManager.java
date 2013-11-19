@@ -18,7 +18,6 @@ import org.joda.time.Interval;
 
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.database.Data;
-import edu.wpi.cs.wpisuitetng.database.WSPredicate;
 import edu.wpi.cs.wpisuitetng.exceptions.BadRequestException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotImplementedException;
@@ -98,17 +97,18 @@ public class EventEntityManager implements EntityManager<Event> {
 		DateTime to = EventModel.serializer.parseDateTime(sto);
 		
 		List<Event> retrievedEvents = null;
+		
+		Event[] all = getAll(s);
 
 		final Interval range = new Interval(from, to);
-		final int projectID = Integer.parseInt(s.getProject().getIdNum());
-		final int userID = s.getUser().getIdNum();
 		
-		retrievedEvents = db.retrievePredicate(new WSPredicate<Event>() {
-			public boolean match(Event anEvent) {
-				return (projectID == anEvent.getProjectID() || userID == anEvent.getUserID()) && 
-						range.overlaps(new Interval(anEvent.getStartTime(), anEvent.getEndTime()));
+		for (Event event : all)
+		{
+			if (range.overlaps(new Interval(event.getStart(), event.getEnd())))
+			{
+				retrievedEvents.add(event);
 			}
-		});
+		}
 		
 		return (Event[]) retrievedEvents.toArray();
 	}
@@ -120,20 +120,7 @@ public class EventEntityManager implements EntityManager<Event> {
 	 */
 	@Override
 	public Event[] getAll(Session s) {
-		List<Object> values = new ArrayList<Object>();
-		values.add(Integer.parseInt(s.getProject().getIdNum()));
-		values.add(s.getUser().getIdNum());
-		String[] query = {"projectID","userID"};
-		try {
-			return db.orRetrieve(Event.class, query, values).toArray(new Event[0]);
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		} catch (WPISuiteException e) {
-			e.printStackTrace();
-		}
-		return new Event[0];
+		return db.retrieveAll(new Event(), s.getProject()).toArray(new Event[0]);
 	}
 
 	/**
@@ -216,7 +203,7 @@ public class EventEntityManager implements EntityManager<Event> {
 		Event existingEvent = (Event)oldEvents.get(0);		
 
 		// copy values to old event and fill in our changeset appropriately
-		existingEvent.copyFrom(updatedEvent);
+		// TODO: existingEvent.copyFrom(updatedEvent);
 		
 		if(!db.save(existingEvent, session.getProject())) {
 			throw new WPISuiteException();

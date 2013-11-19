@@ -10,14 +10,12 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.db4o.query.Predicate;
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.Permission;
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.database.Data;
 import edu.wpi.cs.wpisuitetng.database.DataStore;
-import edu.wpi.cs.wpisuitetng.database.WSPredicate;
 import edu.wpi.cs.wpisuitetng.exceptions.BadRequestException;
 import edu.wpi.cs.wpisuitetng.exceptions.ConflictException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
@@ -199,11 +197,6 @@ public class ProjectManagerTest {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			@Override
-			public <T> List<T> retrievePredicate(WSPredicate<T> pred) {
-				// TODO Auto-generated method stub
-				return null;
-			}
 			}
 		).save(null, null);
 	}
@@ -280,11 +273,6 @@ public class ProjectManagerTest {
 					List<Object> orGivenValueList) throws WPISuiteException,
 					IllegalArgumentException, IllegalAccessException,
 					InvocationTargetException {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			@Override
-			public <T> List<T> retrievePredicate(WSPredicate<T> pred) {
 				// TODO Auto-generated method stub
 				return null;
 			}
@@ -389,12 +377,6 @@ public class ProjectManagerTest {
 					List<Object> orGivenValueList) throws WPISuiteException,
 					IllegalArgumentException, IllegalAccessException,
 					InvocationTargetException {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			@Override
-			public <T> List<T> retrievePredicate(WSPredicate<T> pred) {
 				// TODO Auto-generated method stub
 				return null;
 			}
