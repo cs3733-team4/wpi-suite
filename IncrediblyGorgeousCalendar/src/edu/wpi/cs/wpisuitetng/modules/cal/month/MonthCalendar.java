@@ -203,7 +203,7 @@ public class MonthCalendar extends AbstractCalendar
 		{
 			MonthDay md = new MonthDay(referenceDay.toDateTime(), getMarker(referenceDay));
 			inside.add(md);
-			md.reBorder(i < 7, (i % 7) == 0, i >= 5 * 7);
+			md.reBorder(i < 7, (i % 7) == 0, i >= (weeks-1) * 7);
 			this.days.put(referenceDay.getDayOfYear(), md);
 			referenceDay.addDays(1); // go to next day
 		}
