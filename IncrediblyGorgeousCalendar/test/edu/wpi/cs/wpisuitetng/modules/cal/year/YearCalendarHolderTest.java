@@ -58,7 +58,6 @@ public class YearCalendarHolderTest {
 		assertEquals("If the input year is below 1900, the gotoDate box function will cause an error to display on the gotoErrorText box", YCH.getError(), "* Year out of range (1900-2100)");
 		YCH.parseGoto("12/12/-1000");
 		assertEquals("If the input year is below 1900, the gotoDate box function will cause an error to display on the gotoErrorText box", YCH.getError(), "* Year out of range (1900-2100)");
-	
 	}
 	
 	@Test
