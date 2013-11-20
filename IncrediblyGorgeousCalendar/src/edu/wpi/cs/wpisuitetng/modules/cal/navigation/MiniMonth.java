@@ -16,22 +16,19 @@ import org.joda.time.MutableDateTime;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Months;
+import edu.wpi.cs.wpisuitetng.modules.cal.month.MonthDay;
 
 public class MiniMonth extends JPanel
 {
 	/**
 	 * space for holding all the days
 	 */
-	private DayLabel[] days = new DayLabel[49]; // 6*7
 
 	public MiniMonth(DateTime time, final MiniCalendarHostIface mc) {
 		this.setLayout(new GridLayout(7, 7));
-		int daysThisMonth = time.dayOfMonth().getMaximumValue();
 		MutableDateTime prevMonth = new MutableDateTime(time);
 		prevMonth.setDayOfMonth(1);
-		int startingDayThisMonth = prevMonth.getDayOfWeek();
 		prevMonth.addMonths(-1);
-		int daysLastMonth = prevMonth.dayOfMonth().getMaximumValue();
 		String[] dayLabel = {"S", "M", "T", "W", "R", "F", "S"};
 
 		MouseListener monthChanger = new MouseListener()
@@ -53,38 +50,61 @@ public class MiniMonth extends JPanel
 				}
 			}
 		};
+
+		MutableDateTime referenceDay = new MutableDateTime(time);
+		// reset to the first of the month at midnight, then find Sunday
+		referenceDay.setDayOfMonth(1);
+		referenceDay.setMillisOfDay(0);
+		int first = referenceDay.getDayOfWeek();
+		referenceDay.addDays(-first);
+		boolean flipFlop = false;
 		
-		for (int i = 0; i < 49; i++) // 6*7
+		// add day labels
+		for (int i = 0; i < 7; i++)
 		{
-			MutableDateTime dayTime = new MutableDateTime(time);
-			if (i < 7) {
-				days[i] = new DescriptiveDayLabel(dayLabel[i], time);
+			DayLabel day = new DescriptiveDayLabel(dayLabel[i], time);
+			day.borderize((i % 7) == 0, i >= 5*7, (i % 7) == 6);
+			add(day);
+			day.addMouseListener(monthChanger);
+		}
+
+		// generate days, 6*7 covers all possible months, so we just loop
+		// through and add each day
+		for (int i = 0; i < (6 * 7); i++)
+		{
+			DayLabel day;
+			if (MainPanel.getInstance().getView() == ViewSize.Month)
+			{
+				if (referenceDay.getDayOfMonth() == 1)
+					flipFlop
+					    ^= true; // flops the flip flop
 			}
-			else if (i-7 < startingDayThisMonth) { // display some days of prev. month
-				dayTime.setMonthOfYear(Months.prevMonth(time).getMonthOfYear());
-				dayTime.setDayOfMonth(daysLastMonth - startingDayThisMonth + i - 6);
-				days[i] = new InactiveDayLabel(daysLastMonth - startingDayThisMonth + i - 6, dayTime.toDateTime());
-			} else if (i-7 > daysThisMonth + startingDayThisMonth - 1) {
-				dayTime.setMonthOfYear(Months.nextMonth(time).getMonthOfYear());
-				dayTime.setDayOfMonth(i - daysThisMonth - startingDayThisMonth - 6);
-				days[i] = new InactiveDayLabel(i - daysThisMonth - startingDayThisMonth - 6, dayTime.toDateTime());
-			} else {
-				dayTime.setDayOfMonth(i - startingDayThisMonth - 6);
-				days[i] = new ActiveDayLabel(i - startingDayThisMonth - 6, dayTime.toDateTime());
-			}
-			days[i].borderize((i % 7) == 0, i >= 6*7, (i % 7) == 6);
-			this.add(days[i]);
-			days[i].addMouseListener(monthChanger);
+			else if (MainPanel.getInstance().getView() == ViewSize.Day)
+				flipFlop = referenceDay.getDayOfYear() == time.getDayOfYear() && referenceDay.getYear() == time.getYear();
+			
+			if (flipFlop)
+				day = new ActiveDayLabel(referenceDay.toDateTime());
+			else
+				day = new InactiveDayLabel(referenceDay.toDateTime());
+
+			day.borderize((i % 7) == 0, i >= 5*7, (i % 7) == 6);
+			add(day);
+			day.addMouseListener(monthChanger);
+			referenceDay.addDays(1); // go to next day
 		}
 	}
 	
 	private class DayLabel extends JLabel {
 		private DateTime day;
 		
-		public DayLabel(String day, DateTime time) {
+		public DayLabel(DateTime time) {
 			this.setForeground(Color.BLACK);
-			this.setText(day);
+			this.setText(Integer.toString(time.getDayOfMonth()));
 			this.setHorizontalAlignment(SwingConstants.CENTER);
+			
+			DateTime now = DateTime.now();
+			if (now.getDayOfYear() == time.getDayOfYear() && now.getYear() == time.getYear())
+					this.setFont(getFont().deriveFont(Font.BOLD));
 			this.day = time;
 		}
 		
@@ -100,8 +120,8 @@ public class MiniMonth extends JPanel
 	}
 
 	private class ActiveDayLabel extends DayLabel {
-		public ActiveDayLabel(int day, DateTime time) {
-			super(Integer.toString(day), time);
+		public ActiveDayLabel(DateTime time) {
+			super(time);
 			setForeground(Colors.TABLE_TEXT);
 			setBackground(Colors.TABLE_BACKGROUND);
 			setOpaque(true);
@@ -109,8 +129,8 @@ public class MiniMonth extends JPanel
 	}
 
 	private class InactiveDayLabel extends DayLabel {
-		public InactiveDayLabel(int day, DateTime time) {
-			super(Integer.toString(day), time);
+		public InactiveDayLabel(DateTime time) {
+			super(time);
 			setBackground(Colors.TABLE_GRAY_HEADER);
 			setForeground(Colors.TABLE_GRAY_TEXT);
 			this.setOpaque(true);
@@ -118,8 +138,9 @@ public class MiniMonth extends JPanel
 	}
 	
 	private class DescriptiveDayLabel extends DayLabel {
-		public DescriptiveDayLabel(String day, DateTime time) {
-			super(day, time);
+		public DescriptiveDayLabel(String text, DateTime time) {
+			super(time);
+			setText(text);
 			this.setFont(getFont().deriveFont(Font.ITALIC));
 			setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, Colors.BORDER));
 		}
