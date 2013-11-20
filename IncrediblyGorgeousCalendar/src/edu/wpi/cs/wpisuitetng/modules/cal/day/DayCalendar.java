@@ -1,13 +1,8 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.day;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.GridLayout;
-import java.util.Arrays;
 import java.util.List;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -33,6 +28,8 @@ public class DayCalendar extends AbstractCalendar
 	private JScrollPane scroll = new JScrollPane(holder);
 
 	private EventModel eventModel;
+	
+	private int sizeW = 0;
 
 	public DayCalendar(DateTime on, EventModel emodel)
 	{
@@ -42,7 +39,6 @@ public class DayCalendar extends AbstractCalendar
 		this.setBackground(Colors.TABLE_BACKGROUND);
 		
 		this.setLayout(new BorderLayout());
-		this.add(scroll, BorderLayout.CENTER);
 		this.holder.setLayout(new BorderLayout());
 		
 		generateDay();
@@ -50,10 +46,17 @@ public class DayCalendar extends AbstractCalendar
 
 	private void generateDay()
 	{
+		if (this.getWidth() > 0)this.sizeW = this.getWidth();
 		this.holder.removeAll();
-		this.add(new JLabel(time.monthOfYear().getAsText()+"  "+String.valueOf(time.getDayOfMonth())), BorderLayout.NORTH);
+		this.removeAll();
+		this.add(scroll, BorderLayout.CENTER);
+		this.add(new JLabel(new StringBuilder().append(time.monthOfYear().getAsText())
+											   .append("  ")
+											   .append(String.valueOf(time.getDayOfMonth()))
+											   .toString()),
+							BorderLayout.NORTH);
 
-		this.current = new DrawnDay(this.time);
+		this.current = new DrawnDay(this.time, this.sizeW);
 		this.current.addEvents(getVisibleEvents());
 
 		this.holder.add(new DayGridLabel(), BorderLayout.WEST);
