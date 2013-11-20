@@ -21,10 +21,14 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class AddEventDisplay extends JPanel{
+public class AddEventDisplay extends JPanel
+{
 	private JTextField Name;
 	private JTextField Participants;
-	public AddEventDisplay() {
+	private int tabid;
+	
+	public AddEventDisplay()
+	{
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		final JPanel me = this;
 		JPanel NameLabelPanel = new JPanel();
@@ -64,8 +68,8 @@ public class AddEventDisplay extends JPanel{
 		final DatePicker endTime = new DatePicker(true);
 		DatePickerPanel.add(startTime);
 		DatePickerPanel.add(endTime);
-		JCheckBox chckbxAllDayEvent = new JCheckBox("All Day Event");
-		DatePickerPanel.add(chckbxAllDayEvent);
+//		JCheckBox chckbxAllDayEvent = new JCheckBox("All Day Event");
+//		DatePickerPanel.add(chckbxAllDayEvent);
 		
 		JPanel ParticipantsLabelPane = new JPanel();
 		FlowLayout flowLayout_1 = (FlowLayout) ParticipantsLabelPane.getLayout();
@@ -124,8 +128,8 @@ public class AddEventDisplay extends JPanel{
 				e.setEnd(endTime.getDate());
 				e.setProjectEvent(chckbxProjectEvent.isSelected());
 				MainPanel.getInstance().addEvent(e);
-				btnSave.disable();
-				// TODO: Close tab
+				btnSave.setText("Saved!");
+				MainPanel.getInstance().closeTab(tabid);
 			}
 		});
 		btnSave.setHorizontalAlignment(SwingConstants.LEFT);
@@ -136,13 +140,15 @@ public class AddEventDisplay extends JPanel{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//MainPanel.getInstance().closeTab();
-				//TODO: Make this close the tab
+				MainPanel.getInstance().closeTab(tabid);
 			}
 		});
 		SubmitPanel.add(btnCancel);
 		SubmitPanel.add(chckbxProjectEvent);
 	}
 	
-
+	public void setTabId(int id)
+	{
+		tabid = id;
+	}
 }
