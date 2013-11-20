@@ -7,6 +7,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
@@ -52,6 +53,7 @@ public class MiniCalendarPanel extends JPanel
 		//Title Bar Pane
 		monthName = new JLabel(date.toString(Months.monthLblFormat), JLabel.CENTER);
 		monthName.setFont(new Font("DejaVu Sans", Font.BOLD, 12));
+		monthName.setMaximumSize(new Dimension(4400, 30));
 		this.removeAll();
 		this.setLayout(new BorderLayout());
 		
@@ -59,10 +61,10 @@ public class MiniCalendarPanel extends JPanel
 		JButton nextButton = new JButton(">");
 		JButton prevButton = new JButton("<");
 	
-		titlePane.setLayout(new BorderLayout());
+		titlePane.setLayout(new BoxLayout(titlePane, BoxLayout.X_AXIS));
 		
-		titlePane.add(nextButton, BorderLayout.EAST);
-		titlePane.add(prevButton, BorderLayout.WEST);
+		titlePane.add(prevButton);
+		titlePane.add(nextButton);
 		
 		prevButton.setFocusable(false);
 		prevButton.setBackground(UIManager.getDefaults().getColor("Panel.background"));
@@ -72,7 +74,7 @@ public class MiniCalendarPanel extends JPanel
 		prevButton.setBorder(new EmptyBorder(5, 5, 5, 5));
 		nextButton.setBorder(new EmptyBorder(5, 5, 5, 5));
 		
-		titlePane.add(monthName, BorderLayout.CENTER);
+		titlePane.add(monthName);
 		
 		calendarPreloader = new CalendarNavigationModule(date, mainPanel);
 		this.miniCalendar = this.calendarPreloader.renderComponent();
