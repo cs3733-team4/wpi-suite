@@ -224,7 +224,7 @@ public class MonthCalendar extends AbstractCalendar
 	private List<Event> getVisibleEvents(DateTime from, DateTime to)
 	{
 		// TODO: this is where filtering should go
-		return Arrays.asList(eventModel.getEvents(from, to));
+		return eventModel.getEvents(from, to);
 	}
 
 	/**

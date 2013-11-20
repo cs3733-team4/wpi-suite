@@ -74,7 +74,7 @@ public class DayCalendar extends AbstractCalendar
 		f.addDays(1);
 		DateTime to = f.toDateTime();
 		// TODO: this is where filtering should go
-		return Arrays.asList(eventModel.getEvents(from, to));
+		return eventModel.getEvents(from, to);
 	}
 
 	@Override

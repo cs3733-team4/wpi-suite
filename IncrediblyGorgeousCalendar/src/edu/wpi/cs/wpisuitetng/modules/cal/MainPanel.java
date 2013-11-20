@@ -55,6 +55,10 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	private int tab_id = 0;
 	private EventModel events;
 	private static MainPanel instance;
+	
+	//TODO: "make this better" -Patrick
+	public boolean showPersonal = true;
+	public boolean showTeam = false;
 
 	/** Tabbed main panel to display in the calendar module. This pane will contain
 	 *  the rest of the elements in the calendar module, including the calendar view,
