@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.text.MaskFormatter;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeFormatterBuilder;
 
@@ -27,26 +28,9 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 	
 	public DatePicker(boolean showTime) {
 		super();
-		dateFmt = new DateTimeFormatterBuilder()
-        .appendMonthOfYear(2)
-        .appendLiteral('/')
-        .appendDayOfMonth(2)
-        .appendLiteral('/')
-        .appendYearOfCentury(2,2)
-        .toFormatter();
+		dateFmt = DateTimeFormat.forPattern("MM/dd/yy");
 		
-		dateTimeFmt = new DateTimeFormatterBuilder()
-		.appendMonthOfYear(2)
-        .appendLiteral('/')
-        .appendDayOfMonth(2)
-        .appendLiteral('/')
-        .appendYearOfCentury(2,2)
-        .appendLiteral(' ')
-        .appendHourOfDay(2)
-        .appendLiteral(':')
-        .appendMinuteOfHour(2)
-        .appendHalfdayOfDayText()
-        .toFormatter();
+		dateTimeFmt = DateTimeFormat.forPattern("MM/dd/yy HH:mma");
 		final MiniCalendarHostIface me = this;
 		try {
 			date = new JFormattedTextField(new MaskFormatter("##/##/##"));
@@ -98,7 +82,7 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 	}
 
 	public void display(DateTime value) {		
-		date.setText(value.toString(fmt));
+		date.setText(value.toString(dateFmt));
 	}
 	
 	public DateTime getDate(){

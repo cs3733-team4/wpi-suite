@@ -34,7 +34,7 @@ public class EventToolbarGroup extends ToolbarGroupView {
 			public void actionPerformed(ActionEvent e){
 				AddEventDisplay ned = new AddEventDisplay();
 				mMainPanel.addTopLevelTab(ned, "New Event", true);
-				ned.display(DateTime.now());
+				//TODO: use selected times. ned.display(DateTime.now());
 			}
 		});
 		

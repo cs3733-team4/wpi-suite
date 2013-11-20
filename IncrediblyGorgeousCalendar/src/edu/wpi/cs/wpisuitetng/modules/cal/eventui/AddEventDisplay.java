@@ -117,14 +117,13 @@ public class AddEventDisplay extends JPanel{
 		btnSave.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				EventModel model = new EventModel();
 				Event e = new Event();
 				e.setName(Name.getText());
 				e.setDescription(Description.getText());
 				e.setStart(startTime.getDate());
 				e.setEnd(endTime.getDate());
 				e.setProjectEvent(chckbxProjectEvent.isSelected());
-				model.putEvent(e);
+				MainPanel.getInstance().addEvent(e);
 				btnSave.disable();
 				// TODO: Close tab
 			}

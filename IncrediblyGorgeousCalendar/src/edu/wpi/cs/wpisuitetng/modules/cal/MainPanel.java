@@ -302,6 +302,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	
 	public void refreshView()
 	{
+		mCalendar.display(lastTime);
 		revalidate();
 		repaint();
 	}
