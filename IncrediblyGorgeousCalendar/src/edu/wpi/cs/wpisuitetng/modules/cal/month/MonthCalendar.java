@@ -152,8 +152,6 @@ public class MonthCalendar extends AbstractCalendar
 
 	public void display(DateTime newtime)
 	{
-		if (time.getMonthOfYear() == newtime.getMonthOfYear() && time.getYear() == newtime.getYear())
-			return; // nothing changed. don't update
 		time = newtime;
 		generateDays(new MutableDateTime(time));
 	}

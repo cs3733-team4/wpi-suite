@@ -14,7 +14,7 @@ import javax.swing.JPanel;
 import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar.ToolbarGroupView;
-import edu.wpi.cs.wpisuitetng.modules.cal.eventui.NewEventDisplay;
+import edu.wpi.cs.wpisuitetng.modules.cal.eventui.AddEventDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 
@@ -32,9 +32,9 @@ public class EventToolbarGroup extends ToolbarGroupView {
 		addEventButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e){
-				NewEventDisplay ned = new NewEventDisplay();
+				AddEventDisplay ned = new AddEventDisplay();
 				mMainPanel.addTopLevelTab(ned, "New Event", true);
-				ned.display(DateTime.now());
+				//TODO: use selected times. ned.display(DateTime.now());
 			}
 		});
 		
