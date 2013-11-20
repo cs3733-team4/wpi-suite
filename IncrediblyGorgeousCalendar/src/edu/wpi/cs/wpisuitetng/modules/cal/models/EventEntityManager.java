@@ -98,18 +98,19 @@ public class EventEntityManager implements EntityManager<Event> {
 	 * @param sto date to, DateTime formatted as String
 	 * @return retrieved events with overlapping range
 	 */
-	private Event[] getEventsByRange(Session s, String sfrom, String sto) {
+	private Event[] getEventsByRange(Session ses, String sfrom, String sto) {
 		DateTime from = serializer.parseDateTime(sfrom);
 		DateTime to = serializer.parseDateTime(sto);
 		List<Event> retrievedEvents = new ArrayList<>();
 		
-		Event[] all = getAll(s);
+		Event[] all = getAll(ses);
 
 		final Interval range = new Interval(from, to);
 		
 		for (Event event : all)
 		{
-			if (range.overlaps(new Interval(event.getStart(), event.getEnd())))
+			DateTime s = event.getStart(), e = event.getEnd();
+			if (s.isBefore(e) && range.overlaps(new Interval(s, e)))
 			{
 				retrievedEvents.add(event);
 			}
