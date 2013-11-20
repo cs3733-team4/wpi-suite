@@ -3,6 +3,8 @@ package edu.wpi.cs.wpisuitetng.modules.cal.day;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,12 +30,14 @@ public class DrawnDay extends JPanel{
 	private Hour[] hours = new Hour[24];
 	private int[] collisions = new int[48];
 	private int largestCollision = 0;
+	private int widthDim = 0;
 	
-	public DrawnDay(DateTime d)
+	public DrawnDay(DateTime d, int width)
 	{
 		//this.date = d;
 		this.setLayout(new GridLayout(24, 1));
 		this.rescaleGrid(1);
+		this.widthDim = width;
 	}
 	
 	private void rescaleGrid(int width)
@@ -56,54 +60,100 @@ public class DrawnDay extends JPanel{
 			{
 				int halfHour = e.getStart().getMinuteOfDay() / 30;
 				int hour = halfHour/2;
-				//Color rand = new Color((int)(Math.random()*256),(int)(Math.random()*256),(int)(Math.random()*256));
-				 Color col = e.isProjectEvent()?new Color(125,157,227) : new Color(227,125,147);
+				Color col = e.isProjectEvent()?new Color(125,157,227) : new Color(227,125,147);
 				 
 				int pos = this.hours[hour].addEventTitle(col, hour*2==halfHour, e.getName());
 				int contentToDisplay = 0;
 				boolean wordWrap = 84*this.largestCollision-1 > this.getWidth();
-				System.out.println(this.getWidth());
-				 
-				do{
+				
+				String[] description = e.getDescription().split(" ");
+				int descriptionCounter = 0;
+				
+				if (halfHour < 47)
+				{
+					do{
+						halfHour++;
+						hour = halfHour/2;
+						
+						String message = "";
+						
+						if (wordWrap) // stick time on two lines
+						{
+							if (contentToDisplay == 0)
+							{
+								message = e.getStart().getHourOfDay()+":"+e.getStart().getMinuteOfHour();
+							}
+							else if (contentToDisplay == 1)
+							{
+								message = e.getEnd().getHourOfDay()+":"+e.getEnd().getMinuteOfHour();
+							}
+							else if (contentToDisplay > 1)
+							{
+								if (descriptionCounter < description.length){
+									StringBuilder sb = new StringBuilder().append(description[descriptionCounter]);
+									int totalWidth = description[descriptionCounter].length() * 12;
+									
+									descriptionCounter++;
+									
+									while(descriptionCounter < description.length && totalWidth + description[descriptionCounter].length() * 12 < this.widthDim / this.largestCollision)
+									{
+										totalWidth += description[descriptionCounter].length() * 12;
+										sb.append(" ").append(description[descriptionCounter]);
+										descriptionCounter++;
+									}
+									message = sb.toString();
+								}
+							}
+						}
+						else // stick time on one line
+						{
+							if (contentToDisplay == 0)
+							{
+								message = new StringBuilder().append(e.getStart().getHourOfDay())
+										                     .append(":")
+										                     .append(e.getStart().getMinuteOfHour())
+										                     .append(" - ")
+										                     .append(e.getEnd().getHourOfDay())
+										                     .append(":")
+										                     .append(e.getEnd().getMinuteOfHour())
+										                     .toString();
+							}
+							if (contentToDisplay > 0)
+							{
+								if (descriptionCounter < description.length){
+									StringBuilder sb = new StringBuilder().append(description[descriptionCounter]);
+									int totalWidth = description[descriptionCounter].length() * 12;
+									
+									descriptionCounter++;
+									
+									while(descriptionCounter < description.length && totalWidth + description[descriptionCounter].length() * 12 < this.widthDim / this.largestCollision)
+									{
+										totalWidth += description[descriptionCounter].length() * 12;
+										sb.append(" ").append(description[descriptionCounter]);
+										descriptionCounter++;
+									}
+									message = sb.toString();
+								}
+							}
+						}
+						try{
+							this.hours[hour].addEventBody(col, hour*2==halfHour, pos, message, false, contentToDisplay++<(wordWrap?2:1));
+						}catch(Exception exc){
+							exc.printStackTrace();
+						}
+					}
+					while(halfHour < e.getEnd().getMinuteOfDay()/30);
+					
+					
 					halfHour++;
 					hour = halfHour/2;
-					String message = "DESCRIPTION";
-				if (wordWrap)
-				{
-					if (contentToDisplay == 0)
+					if (hour==24)
 					{
-						message = e.getStart().getHourOfDay()+":"+e.getStart().getMinuteOfHour();
+						hour = 23;
+						halfHour--; 
 					}
-					else if (contentToDisplay == 1)
-					{
-						message = e.getEnd().getHourOfDay()+":"+e.getEnd().getMinuteOfHour();
-					}
+					this.hours[hour].addEventBody(col, hour*2==halfHour, pos, "", true, false); 
 				}
-				else
-				{
-					if (contentToDisplay == 0)
-					{
-						message = new StringBuilder().append(e.getStart().getHourOfDay())
-								                     .append(":")
-								                     .append(e.getStart().getMinuteOfHour())
-								                     .append(" - ")
-								                     .append(e.getEnd().getHourOfDay())
-								                     .append(":")
-								                     .append(e.getEnd().getMinuteOfHour())
-								                     .toString();
-					}
-				}
-				this.hours[hour].addEventBody(col, hour*2==halfHour, pos, message, false, contentToDisplay++<(wordWrap?2:1));
-			}
-			while(halfHour < e.getEnd().getMinuteOfDay()/30);
-			halfHour++;
-			hour = halfHour/2;
-			if (hour==24)
-			{
-				hour = 23;
-				halfHour--; 
-			}
-			this.hours[hour].addEventBody(col, hour*2==halfHour, pos, ">", true, false); 
 			}
 		}
 	}
@@ -261,13 +311,13 @@ public class DrawnDay extends JPanel{
 		f.setSize(new Dimension(200, 800));
 		
 		List<Event> ev = new ArrayList<Event>();
-		ev.add(new Event().addStartTime(new DateTime(2013, 11, 18, 3, 50)).addEndTime(new DateTime(2013, 11, 18, 4, 50)));
-		ev.add(new Event().addStartTime(new DateTime(2013, 11, 18, 3, 50)).addEndTime(new DateTime(2013, 11, 18, 6, 20)));
+		ev.add(new Event().addDescription("this is a descriptionas askdjashdlkjashdlkasjhdlkasjdh").addStartTime(new DateTime(2013, 11, 18, 3, 50)).addEndTime(new DateTime(2013, 11, 18, 4, 50)));
+		ev.add(new Event().addDescription("this is a descriptionas askdjashdlkjashdlkasjhdlkasjdh").addStartTime(new DateTime(2013, 11, 18, 3, 50)).addEndTime(new DateTime(2013, 11, 18, 6, 20)));
 		
-		ev.add(new Event().addStartTime(new DateTime(2013, 11, 18, 13, 50)).addEndTime(new DateTime(2013, 11, 18, 17, 50)));
-		ev.add(new Event().addStartTime(new DateTime(2013, 11, 18, 13, 20)).addEndTime(new DateTime(2013, 11, 18, 19, 50)));
+		ev.add(new Event().addDescription("this is a descriptionas askdjashdlkjashdlkasjhdlkasjdh").addStartTime(new DateTime(2013, 11, 18, 13, 50)).addEndTime(new DateTime(2013, 11, 18, 17, 50)));
+		ev.add(new Event().addDescription("this is a descriptionas askdjashdlkjashdlkasjhdlkasjdh").addStartTime(new DateTime(2013, 11, 18, 13, 20)).addEndTime(new DateTime(2013, 11, 18, 19, 50)));
 
-		ev.add(new Event().addStartTime(new DateTime(2013, 11, 18, 14, 20)).addEndTime(new DateTime(2013, 11, 18, 16, 50)));
+		ev.add(new Event().addDescription("this is a descriptionas askdjashdlkjashdlkasjhdlkasjdh").addStartTime(new DateTime(2013, 11, 18, 14, 20)).addEndTime(new DateTime(2013, 11, 18, 16, 50)));
 		
 		
 		Collections.sort(ev, new Comparator<Event>(){
@@ -278,7 +328,7 @@ public class DrawnDay extends JPanel{
 			}
 		});
 		
-		DrawnDay d = new DrawnDay(DateTime.now());
+		DrawnDay d = new DrawnDay(DateTime.now(), 2134);
 		//d.addEvents(ev);
 		
 		
