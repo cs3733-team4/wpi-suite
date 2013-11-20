@@ -17,6 +17,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
@@ -31,6 +33,9 @@ public class DrawnDay extends JPanel{
 	private int[] collisions = new int[48];
 	private int largestCollision = 0;
 	private int widthDim = 0;
+	
+	private DateTimeFormatter dateFmt = DateTimeFormat.forPattern("h:mm a");;
+
 	
 	public DrawnDay(DateTime d, int width)
 	{
@@ -81,11 +86,11 @@ public class DrawnDay extends JPanel{
 						{
 							if (contentToDisplay == 0)
 							{
-								message = e.getStart().getHourOfDay()+":"+e.getStart().getMinuteOfHour();
+								message = e.getStart().toString(dateFmt);
 							}
 							else if (contentToDisplay == 1)
 							{
-								message = e.getEnd().getHourOfDay()+":"+e.getEnd().getMinuteOfHour();
+								message = e.getEnd().toString(dateFmt);
 							}
 							else if (contentToDisplay > 1)
 							{
