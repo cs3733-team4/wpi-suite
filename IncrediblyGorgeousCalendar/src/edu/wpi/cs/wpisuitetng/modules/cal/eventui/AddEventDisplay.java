@@ -1,24 +1,20 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.eventui;
 
-import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextArea;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.SwingConstants;
 
-import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
-import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Component;
 import java.awt.Font;
@@ -40,7 +36,7 @@ public class AddEventDisplay extends JPanel
 		flowLayout_2.setAlignment(FlowLayout.LEFT);
 		add(NameLabelPanel);
 		
-		JLabel lblName = new JLabel("Name");
+		JLabel lblName = new JLabel("Name:");
 		lblName.setVerticalAlignment(SwingConstants.BOTTOM);
 		lblName.setHorizontalAlignment(SwingConstants.LEFT);
 		NameLabelPanel.add(lblName);
@@ -59,7 +55,7 @@ public class AddEventDisplay extends JPanel
 		add(DateandTimeLabelPane);
 		DateandTimeLabelPane.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		
-		JLabel lblDateTime = new JLabel("Date and Time");
+		JLabel lblDateTime = new JLabel("Date and Time:");
 		lblDateTime.setVerticalAlignment(SwingConstants.BOTTOM);
 		lblDateTime.setHorizontalAlignment(SwingConstants.LEFT);
 		DateandTimeLabelPane.add(lblDateTime);
@@ -82,7 +78,7 @@ public class AddEventDisplay extends JPanel
 		flowLayout_1.setAlignment(FlowLayout.LEFT);
 		add(ParticipantsLabelPane);
 		
-		JLabel lblParticipants = new JLabel("Participants");
+		JLabel lblParticipants = new JLabel("Participants:");
 		lblParticipants.setVerticalAlignment(SwingConstants.BOTTOM);
 		ParticipantsLabelPane.add(lblParticipants);
 		
@@ -101,7 +97,7 @@ public class AddEventDisplay extends JPanel
 		add(DescriptionLabelPane);
 		final JCheckBox chckbxProjectEvent = new JCheckBox("Project Event");
 		chckbxProjectEvent.setSelected(true);
-		JLabel lblDescription = new JLabel("Description");
+		JLabel lblDescription = new JLabel("Description:");
 		lblDescription.setVerticalAlignment(SwingConstants.BOTTOM);
 		DescriptionLabelPane.add(lblDescription);
 		lblDescription.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -112,13 +108,13 @@ public class AddEventDisplay extends JPanel
 		flowLayout_6.setAlignment(FlowLayout.LEFT);
 		add(DescriptionPanel);
 		
-		final JTextArea Description = new JTextArea(3,35);
+		final JTextArea Description = new JTextArea(5,35);
 		Description.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		Description.setBorder(BorderFactory.createLineBorder(Colors.BORDER));
 		Description.setLineWrap(true);
 		Description.setWrapStyleWord(true);
 		
-		DescriptionPanel.add(Description);
+		JScrollPane descriptionScrollPane = new JScrollPane(Description);
+		DescriptionPanel.add(descriptionScrollPane);
 		
 		JPanel SubmitPanel = new JPanel();
 		FlowLayout flowLayout = (FlowLayout) SubmitPanel.getLayout();
