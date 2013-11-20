@@ -218,7 +218,7 @@ public class MonthCalendar extends AbstractCalendar
 		mainPanel.miniMove(time);
 
 		// repaint when changed
-		inside.revalidate();
+		mainPanel.revalidate();
 	}
 
 	private List<Event> getVisibleEvents(DateTime from, DateTime to)

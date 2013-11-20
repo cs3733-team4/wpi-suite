@@ -242,6 +242,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	public void display(DateTime newDate)
 	{
 		mCalendar.display(newDate);
+		refreshView();
 		lastTime = newDate;
 	}
 
@@ -294,7 +295,14 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		mCalendar = monthCal2;
 		centerPanelBottom.add(mCalendar, BorderLayout.CENTER);
 		mCalendar.display(lastTime);
-		centerPanelBottom.revalidate();
+		revalidate();
+		repaint();
+	}
+	
+	public void refreshView()
+	{
+		revalidate();
+		repaint();
 	}
 
 	public ViewSize getView()
