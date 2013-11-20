@@ -13,6 +13,7 @@ public class DayGridLabel extends JPanel{
 	public DayGridLabel()
 	{
 		this.setLayout(new GridLayout(48, 1));
+		this.setBackground(Colors.TABLE_BACKGROUND);
 		
 		for(int i = 0; i < 48; i++)
 		{
