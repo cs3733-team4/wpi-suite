@@ -51,7 +51,11 @@ public class DayCalendar extends AbstractCalendar
 	private void generateDay()
 	{
 		this.holder.removeAll();
-		this.add(new JLabel(time.monthOfYear().getAsText()+"  "+String.valueOf(time.getDayOfMonth())), BorderLayout.NORTH);
+		this.add(new JLabel(new StringBuilder().append(time.monthOfYear().getAsText())
+											   .append("  ")
+											   .append(String.valueOf(time.getDayOfMonth()))
+											   .toString()),
+							BorderLayout.NORTH);
 
 		this.current = new DrawnDay(this.time);
 		this.current.addEvents(getVisibleEvents());
