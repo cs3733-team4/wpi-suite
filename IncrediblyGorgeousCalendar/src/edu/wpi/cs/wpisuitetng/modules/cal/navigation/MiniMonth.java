@@ -5,6 +5,9 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.font.TextAttribute;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -96,6 +99,8 @@ public class MiniMonth extends JPanel
 	
 	private class DayLabel extends JLabel {
 		private DateTime day;
+		private Font font;
+		private Map<TextAttribute, Object> fontAttributes;
 		
 		public DayLabel(DateTime time) {
 			this.setForeground(Color.BLACK);
@@ -103,8 +108,16 @@ public class MiniMonth extends JPanel
 			this.setHorizontalAlignment(SwingConstants.CENTER);
 			
 			DateTime now = DateTime.now();
-			if (now.getDayOfYear() == time.getDayOfYear() && now.getYear() == time.getYear())
-					this.setFont(getFont().deriveFont(Font.BOLD));
+			if (now.getDayOfYear() == time.getDayOfYear() && now.getYear() == time.getYear()){
+				font = this.getFont();
+				fontAttributes = new HashMap<TextAttribute, Object>(); // Modify the font attributes
+				
+				fontAttributes.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD);
+				fontAttributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_LOW_ONE_PIXEL);
+				
+				this.setFont(font.deriveFont(fontAttributes));
+			}
+					
 			this.day = time;
 		}
 		
