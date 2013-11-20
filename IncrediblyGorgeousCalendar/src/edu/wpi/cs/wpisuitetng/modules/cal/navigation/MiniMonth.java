@@ -102,20 +102,23 @@ public class MiniMonth extends JPanel
 		private Font font;
 		private Map<TextAttribute, Object> fontAttributes;
 		
-		public DayLabel(DateTime time) {
+		public DayLabel(DateTime time, boolean todayable) {
 			this.setForeground(Color.BLACK);
 			this.setText(Integer.toString(time.getDayOfMonth()));
 			this.setHorizontalAlignment(SwingConstants.CENTER);
 			
-			DateTime now = DateTime.now();
-			if (now.getDayOfYear() == time.getDayOfYear() && now.getYear() == time.getYear()){
-				font = this.getFont();
-				fontAttributes = new HashMap<TextAttribute, Object>(); // Modify the font attributes
-				
-				fontAttributes.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD);
-				fontAttributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_LOW_ONE_PIXEL);
-				
-				this.setFont(font.deriveFont(fontAttributes));
+			if (todayable)
+			{
+				DateTime now = DateTime.now();
+				if (now.getDayOfYear() == time.getDayOfYear() && now.getYear() == time.getYear()){
+					font = this.getFont();
+					fontAttributes = new HashMap<TextAttribute, Object>(); // Modify the font attributes
+					
+					fontAttributes.put(TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD);
+					fontAttributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_LOW_ONE_PIXEL);
+					
+					this.setFont(font.deriveFont(fontAttributes));
+				}
 			}
 					
 			this.day = time;
@@ -134,7 +137,7 @@ public class MiniMonth extends JPanel
 
 	private class ActiveDayLabel extends DayLabel {
 		public ActiveDayLabel(DateTime time) {
-			super(time);
+			super(time, true);
 			setForeground(Colors.TABLE_TEXT);
 			setBackground(Colors.TABLE_BACKGROUND);
 			setOpaque(true);
@@ -143,7 +146,7 @@ public class MiniMonth extends JPanel
 
 	private class InactiveDayLabel extends DayLabel {
 		public InactiveDayLabel(DateTime time) {
-			super(time);
+			super(time, true);
 			setBackground(Colors.TABLE_GRAY_HEADER);
 			setForeground(Colors.TABLE_GRAY_TEXT);
 			this.setOpaque(true);
@@ -152,7 +155,7 @@ public class MiniMonth extends JPanel
 	
 	private class DescriptiveDayLabel extends DayLabel {
 		public DescriptiveDayLabel(String text, DateTime time) {
-			super(time);
+			super(time, false);
 			setText(text);
 			this.setFont(getFont().deriveFont(Font.ITALIC));
 			setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, Colors.BORDER));
