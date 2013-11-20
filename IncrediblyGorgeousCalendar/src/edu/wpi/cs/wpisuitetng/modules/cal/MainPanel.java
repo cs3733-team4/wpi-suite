@@ -1,7 +1,6 @@
 package edu.wpi.cs.wpisuitetng.modules.cal;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
@@ -33,6 +32,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MainCalendarNavigation;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.GoToPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarHostIface;
+import edu.wpi.cs.wpisuitetng.modules.cal.navigation.ViewSize;
 
 public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	
@@ -43,7 +43,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	private JPanel centerPanelTop;
 	private JPanel centerPanelBottom;
 	private JPanel sidePanel;
-	private JPanel mainCalendarNavigationPanel;
+	private MainCalendarNavigation mainCalendarNavigationPanel;
 	private GoToPanel mGoToPanel;
 	private AbstractCalendar mCalendar, monthCal, dayCal;
 	private DateTime lastTime = DateTime.now();
@@ -54,6 +54,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	private final HashMap<Integer, JComponent> tabs = new HashMap<Integer, JComponent>();
 	private int tab_id = 0;
 	private EventModel events;
+	private ViewSize view = ViewSize.Month;
 	private static MainPanel instance;
 	
 	//TODO: "make this better" -Patrick
@@ -114,6 +115,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		// Set up side panel
 		sidePanel.setPreferredSize(new Dimension(200, 1024));
 		sidePanel.setLayout(new BorderLayout());
+		sidePanel.setBorder(new EmptyBorder(5, 5, 0, 0));
 		sidePanel.add(mMiniCalendarPanel, BorderLayout.NORTH);
 		sidePanel.add(mGoToPanel, BorderLayout.CENTER);
 		
@@ -128,7 +130,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		
 		// Add top bar and monthly calendar to center panel
 		centerPanel.setLayout(new BorderLayout());
-		centerPanel.setBorder(new EmptyBorder(5, 5, 0, 0));
+		centerPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		centerPanel.add(centerPanelTop, BorderLayout.NORTH);
 		centerPanel.add(centerPanelBottom, BorderLayout.CENTER);
 		
@@ -240,6 +242,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	public void display(DateTime newDate)
 	{
 		mCalendar.display(newDate);
+		refreshView();
 		lastTime = newDate;
 	}
 
@@ -276,11 +279,13 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 
 	public void viewMonth()
 	{
+		view = ViewSize.Month;
 		refreshView(monthCal);
 	}
 	
 	public void viewDay()
 	{
+		view = ViewSize.Day;
 		refreshView(dayCal);
 	}
 	
@@ -288,9 +293,22 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	{
 		centerPanelBottom.remove(mCalendar);
 		mCalendar = monthCal2;
+		mainCalendarNavigationPanel.updateCalendar(mCalendar);
 		centerPanelBottom.add(mCalendar, BorderLayout.CENTER);
 		mCalendar.display(lastTime);
-		centerPanelBottom.revalidate();
+		revalidate();
+		repaint();
+	}
+	
+	public void refreshView()
+	{
+		revalidate();
+		repaint();
+	}
+
+	public ViewSize getView()
+	{
+		return view;
 	}
 	
 	public void closeTab(int id){

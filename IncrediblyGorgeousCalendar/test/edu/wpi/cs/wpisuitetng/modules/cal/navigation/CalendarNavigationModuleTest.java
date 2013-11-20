@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.modules.cal;
+package edu.wpi.cs.wpisuitetng.modules.cal.navigation;
 
 import static org.junit.Assert.*;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.CalendarNavigationModule;
@@ -11,7 +11,7 @@ import org.junit.Test;
  *
  */
 
-public class CalendarYearModuleTest {
+public class CalendarNavigationModuleTest {
 
 	DateTime timeOne = new DateTime(2012, 10, 1, 1, 1);
 	DateTime timeTwo = new DateTime(2012, 11, 1, 1, 1);

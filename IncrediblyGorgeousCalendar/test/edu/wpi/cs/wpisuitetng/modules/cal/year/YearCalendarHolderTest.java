@@ -1,6 +1,10 @@
-package edu.wpi.cs.wpisuitetng.modules.cal;
+package edu.wpi.cs.wpisuitetng.modules.cal.year;
 
 import static org.junit.Assert.*;
+
+import javax.swing.JButton;
+
+import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.month.MonthCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.year.YearCalendarHolder;
 
@@ -10,10 +14,14 @@ import org.junit.Test;
 public class YearCalendarHolderTest {
 
 	MainPanel dummyPanel=new MainPanel();
-	DateTime now=new DateTime(2000, 6, 1, 0, 0);
-	DateTime then=new DateTime(2000, 7, 1, 0, 0);
-	DateTime before=new DateTime(1900, 7, 1, 0, 0);
-	DateTime after=new DateTime(2100, 7, 1, 0, 0);
+	DateTime now =new DateTime(2000, 6, 1, 0, 0);
+	DateTime then =new DateTime(2000, 7, 1, 0, 0);
+	DateTime before =new DateTime(1900, 7, 1, 0, 0);
+	DateTime after =new DateTime(2100, 7, 1, 0, 0);
+	
+	// Testing is currently broken: errors initializing MainPanel?
+	// testGotoErrorLate seems to work fine for some reason
+	// teatGotoErrorEarly is broken, but almost functionally the same as testGotoErrorLate
 	
 	
 	
@@ -50,7 +58,6 @@ public class YearCalendarHolderTest {
 		assertEquals("If the input year is below 1900, the gotoDate box function will cause an error to display on the gotoErrorText box", YCH.getError(), "* Year out of range (1900-2100)");
 		YCH.parseGoto("12/12/-1000");
 		assertEquals("If the input year is below 1900, the gotoDate box function will cause an error to display on the gotoErrorText box", YCH.getError(), "* Year out of range (1900-2100)");
-	
 	}
 	
 	@Test

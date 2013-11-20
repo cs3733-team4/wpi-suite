@@ -42,7 +42,8 @@ public class GoToPanel extends JPanel {
 		
 		this.currentDate = date;
 		this.mCalendar = mCalendar;
-		
+		this.setBorder(new EmptyBorder(5, 0, 0, 0));
+
 		// Go to field
 		this.gotoDateField = new JTextField(currentDate.toString(gotoExampleField));
 		

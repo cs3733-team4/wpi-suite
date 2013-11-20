@@ -56,10 +56,11 @@ public class DrawnDay extends JPanel{
 			{
 				int halfHour = e.getStart().getMinuteOfDay() / 30;
 				int hour = halfHour/2;
-				Color rand = new Color((int)(Math.random()*256),(int)(Math.random()*256),(int)(Math.random()*256));
+				//Color rand = new Color((int)(Math.random()*256),(int)(Math.random()*256),(int)(Math.random()*256));
+				 Color col = e.isProjectEvent()?Color.BLUE : Color.RED;
+				 col = col.brighter().brighter().brighter().brighter();
 				 
-				 
-				int pos = this.hours[hour].addEventTitle(rand, hour*2==halfHour, e.getName());
+				int pos = this.hours[hour].addEventTitle(col, hour*2==halfHour, e.getName());
 				int contentToDisplay = 0;
 				boolean wordWrap = 84*this.largestCollision-1 > this.getWidth();
 				System.out.println(this.getWidth());
@@ -86,12 +87,17 @@ public class DrawnDay extends JPanel{
 						message = e.getStart().getHourOfDay()+":"+e.getStart().getMinuteOfHour()+" - "+e.getEnd().getHourOfDay()+":"+e.getEnd().getMinuteOfHour();;
 					}
 				}
-				this.hours[hour].addEventBody(rand, hour*2==halfHour, pos, message, false, contentToDisplay++<(wordWrap?2:1));
+				this.hours[hour].addEventBody(col, hour*2==halfHour, pos, message, false, contentToDisplay++<(wordWrap?2:1));
 			}
 			while(halfHour < e.getEnd().getMinuteOfDay()/30);
 			halfHour++;
 			hour = halfHour/2;
-			this.hours[hour].addEventBody(rand, hour*2==halfHour, pos, ">", true, false); 
+			if (hour==24)
+			{
+				hour = 23;
+				halfHour--; 
+			}
+			this.hours[hour].addEventBody(col, hour*2==halfHour, pos, ">", true, false); 
 			}
 		}
 	}

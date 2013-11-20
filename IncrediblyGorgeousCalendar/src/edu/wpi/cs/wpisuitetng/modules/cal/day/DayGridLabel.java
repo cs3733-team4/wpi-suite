@@ -11,12 +11,14 @@ public class DayGridLabel extends JPanel{
 	{
 		this.setLayout(new GridLayout(48, 1));
 		
-		for(int i = 0; i<48; i++)
+		for(int i = 0; i < 48; i++)
 		{
-			int rawHour = i/2;
-			int displayedHour = rawHour/2==0 ? 12 : rawHour/2;
-			String halfHour = rawHour*2 == i ? ":00" : ":30";
-			this.add(new JLabel(new StringBuilder().append(displayedHour).append(halfHour).toString()));
+			int rawHour = i / 2;
+			int displayedHour = Math.round((float) rawHour) == 0 ? 12 : rawHour;
+			displayedHour = displayedHour > 12 ? displayedHour - 12 : displayedHour;
+			String halfHour = rawHour * 2 == i ? ":00" : ":30";
+			String padding = (displayedHour < 10) ? "   " : "  ";
+			this.add(new JLabel(new StringBuilder().append(displayedHour).append(halfHour).append(padding).toString()));
 		}
 	}
 	
