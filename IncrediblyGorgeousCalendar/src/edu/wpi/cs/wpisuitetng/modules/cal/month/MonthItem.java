@@ -69,7 +69,7 @@ public class MonthItem extends JPanel
 				ret += "0";
 			ret += Integer.toString(when.getMinuteOfHour());
 		}
-
+		
 		if (pm)
 			ret += "p";
 

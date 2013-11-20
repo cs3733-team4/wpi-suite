@@ -127,7 +127,10 @@ public class GoToPanel extends JPanel {
 			}
 		}
 		if (dt != null)
+		{
 			MainPanel.getInstance().display(dt);
+			MainPanel.getInstance().refreshView();
+		}
 		else
 		{
 			if(isValidYear)

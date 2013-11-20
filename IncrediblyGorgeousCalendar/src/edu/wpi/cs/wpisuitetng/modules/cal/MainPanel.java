@@ -91,6 +91,8 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		if (mTabbedPane == this)
 			return;
 		mTabbedPane = this;
+		this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+		
 		events = new EventModel(); // used for accessing events
 		
 		this.mainPaneContainer = new JPanel(); // Container for the navigation and calendars
