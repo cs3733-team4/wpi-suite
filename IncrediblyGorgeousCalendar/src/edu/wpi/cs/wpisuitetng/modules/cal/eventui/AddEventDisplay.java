@@ -1,5 +1,6 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.eventui;
 
+import javax.swing.Box.Filler;
 import javax.swing.JPanel;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
@@ -108,7 +109,11 @@ public class AddEventDisplay extends JPanel
 		JPanel DescriptionPanel = new JPanel();
 		FlowLayout flowLayout_6 = (FlowLayout) DescriptionPanel.getLayout();
 		flowLayout_6.setAlignment(FlowLayout.LEFT);
+		DescriptionPanel.setMinimumSize(new Dimension(100, 100));
 		add(DescriptionPanel);
+        Filler filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767), new java.awt.Dimension(0, 32767));
+        
+        add(filler1);
 		
 		final JTextArea Description = new JTextArea();
 		Description.setFont(new Font("Tahoma", Font.PLAIN, 13));
@@ -135,7 +140,7 @@ public class AddEventDisplay extends JPanel
 					endTime.getDate();
 					errorText.setVisible(true);
 					
-					if (Name.getText() == null || Name.getText().length() == 0)
+					if (Name.getText() == null || Name.getText().trim().length() == 0)
 					{
 						errorText.setText("* Please enter an event title");
 					}
@@ -151,7 +156,7 @@ public class AddEventDisplay extends JPanel
 					{
 						errorText.setVisible(false);
 						Event e = new Event();
-						e.setName(Name.getText());
+						e.setName(Name.getText().trim());
 						e.setDescription(Description.getText());
 						e.setStart(startTime.getDate());
 						e.setEnd(endTime.getDate());
