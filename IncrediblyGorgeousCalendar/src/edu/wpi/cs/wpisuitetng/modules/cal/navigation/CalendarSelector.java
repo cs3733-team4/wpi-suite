@@ -57,23 +57,29 @@ public class CalendarSelector extends JPanel
 		personalCalendar.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0){
-				MainPanel.getInstance().showPersonal=true;
-				MainPanel.getInstance().showTeam=false;
+				MainPanel mp = MainPanel.getInstance();
+				mp.showPersonal = true;
+				mp.showTeam = false;
+				mp.refreshView();
 			}
 		});
 		teamCalendar.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0){
-				MainPanel.getInstance().showTeam=true;
-				MainPanel.getInstance().showPersonal=false;
+				MainPanel mp = MainPanel.getInstance();
+				mp.showPersonal = false;
+				mp.showTeam = true;
+				mp.refreshView();
 			}
 		});
 		bothCalendar.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
-				MainPanel.getInstance().showPersonal=true;
-				MainPanel.getInstance().showTeam=true;
+				MainPanel mp = MainPanel.getInstance();
+				mp.showPersonal = true;
+				mp.showTeam = true;
+				mp.refreshView();
 			}
 		});
 	}

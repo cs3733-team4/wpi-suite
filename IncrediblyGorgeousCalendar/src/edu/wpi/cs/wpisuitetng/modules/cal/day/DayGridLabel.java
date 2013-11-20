@@ -17,7 +17,8 @@ public class DayGridLabel extends JPanel{
 			int displayedHour = Math.round((float) rawHour) == 0 ? 12 : rawHour;
 			displayedHour = displayedHour > 12 ? displayedHour - 12 : displayedHour;
 			String halfHour = rawHour * 2 == i ? ":00" : ":30";
-			this.add(new JLabel(new StringBuilder().append(displayedHour).append(halfHour).toString()));
+			String padding = (displayedHour < 10) ? "   " : "  ";
+			this.add(new JLabel(new StringBuilder().append(displayedHour).append(halfHour).append(padding).toString()));
 		}
 	}
 	
