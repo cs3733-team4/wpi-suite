@@ -160,6 +160,7 @@ public class AddEventDisplay extends JPanel
 						btnSave.setEnabled(false);
 						btnSave.setText("Saved!");
 						MainPanel.getInstance().closeTab(tabid);
+						MainPanel.getInstance().refreshView();
 					}
 				}
 				catch (IllegalArgumentException exception)
