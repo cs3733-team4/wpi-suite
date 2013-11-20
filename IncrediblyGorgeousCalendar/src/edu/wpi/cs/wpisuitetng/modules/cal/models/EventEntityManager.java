@@ -60,6 +60,8 @@ public class EventEntityManager implements EntityManager<Event> {
 	public Event makeEntity(Session s, String content) throws WPISuiteException {
 		System.out.println(content+ " was just sent!");
 		final Event newEvent = Event.fromJson(content);
+		newEvent.setOwner(s.getUser());
+		newEvent.setProject(s.getProject());
 		if(!db.save(newEvent, s.getProject())) {
 			throw new WPISuiteException();
 		}
