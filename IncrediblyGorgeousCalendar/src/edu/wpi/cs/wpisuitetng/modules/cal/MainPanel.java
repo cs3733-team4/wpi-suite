@@ -43,7 +43,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	private JPanel centerPanelTop;
 	private JPanel centerPanelBottom;
 	private JPanel sidePanel;
-	private JPanel mainCalendarNavigationPanel;
+	private MainCalendarNavigation mainCalendarNavigationPanel;
 	private GoToPanel mGoToPanel;
 	private AbstractCalendar mCalendar, monthCal, dayCal;
 	private DateTime lastTime = DateTime.now();
@@ -293,6 +293,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	{
 		centerPanelBottom.remove(mCalendar);
 		mCalendar = monthCal2;
+		mainCalendarNavigationPanel.updateCalendar(mCalendar);
 		centerPanelBottom.add(mCalendar, BorderLayout.CENTER);
 		mCalendar.display(lastTime);
 		revalidate();
