@@ -66,7 +66,9 @@ public class AddEventDisplay extends JPanel
 		add(DatePickerPanel);
 		final DatePicker startTime = new DatePicker(true);
 		final DatePicker endTime = new DatePicker(true);
+		DatePickerPanel.add(new JLabel("From "));
 		DatePickerPanel.add(startTime);
+		DatePickerPanel.add(new JLabel(" to "));
 		DatePickerPanel.add(endTime);
 //		JCheckBox chckbxAllDayEvent = new JCheckBox("All Day Event");
 //		DatePickerPanel.add(chckbxAllDayEvent);

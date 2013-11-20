@@ -14,8 +14,6 @@ import javax.swing.text.MaskFormatter;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.DateTimeFormatterBuilder;
-
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarHostIface;
 
 @SuppressWarnings("serial")
@@ -30,7 +28,7 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 		super();
 		dateFmt = DateTimeFormat.forPattern("MM/dd/yy");
 		
-		dateTimeFmt = DateTimeFormat.forPattern("MM/dd/yy HH:mma");
+		dateTimeFmt = DateTimeFormat.forPattern("MM/dd/yy h:mmaa");
 		final MiniCalendarHostIface me = this;
 		try {
 			date = new JFormattedTextField(new MaskFormatter("##/##/##"));
