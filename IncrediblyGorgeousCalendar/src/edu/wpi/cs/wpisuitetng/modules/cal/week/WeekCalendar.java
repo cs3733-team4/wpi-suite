@@ -44,7 +44,7 @@ public class WeekCalendar extends AbstractCalendar {
 		{
 			JPanel p = new JPanel();
 			p.add(new JLabel(startOfWeek.dayOfWeek().toString()), BorderLayout.NORTH);
-			p.add(new DrawnDay(startOfWeek));
+			p.add(new DrawnDay(startOfWeek,0));
 			this.add(p);
 			
 			startOfWeek = Months.nextDay(startOfWeek);
