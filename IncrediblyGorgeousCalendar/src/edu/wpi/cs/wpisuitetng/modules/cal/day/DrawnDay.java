@@ -73,8 +73,8 @@ public class DrawnDay extends JPanel{
 				
 				String[] description = e.getDescription().split("@");
 				int descriptionCounter = 0;
-				
-				if (halfHour < 47)
+
+				if (halfHour < 47)//need a check for short events like: && e.getEnd().getMinuteOfDay()/30-halfHour>1)
 				{
 					do{
 						halfHour++;
@@ -82,15 +82,17 @@ public class DrawnDay extends JPanel{
 						
 						String message = "";
 						
-						if (wordWrap) // stick time on two lines
+						//doesn't ever wrap anyways, time looked better formatted on one line and can not be squished anyways
+						//if (!wordWrap) // stick time on two lines
+						if(1==0)
 						{
 							if (contentToDisplay == 0)
 							{
-								message = e.getStart().toString(dateFmt);
+								message = "From: " + e.getStart().toString(dateFmt) + " ";
 							}
 							else if (contentToDisplay == 1)
 							{
-								message = e.getEnd().toString(dateFmt);
+								message = "To: " + e.getEnd().toString(dateFmt) + " ";
 							}
 							else if (contentToDisplay > 1)
 							{
@@ -114,14 +116,7 @@ public class DrawnDay extends JPanel{
 						{
 							if (contentToDisplay == 0)
 							{
-								message = new StringBuilder().append(e.getStart().getHourOfDay())
-										                     .append(":")
-										                     .append(e.getStart().getMinuteOfHour())
-										                     .append(" - ")
-										                     .append(e.getEnd().getHourOfDay())
-										                     .append(":")
-										                     .append(e.getEnd().getMinuteOfHour())
-										                     .toString();
+								message = e.getStart().toString(dateFmt) + " - " + e.getEnd().toString(dateFmt) + " ";
 							}
 							if (contentToDisplay > 0)
 							{
@@ -147,7 +142,7 @@ public class DrawnDay extends JPanel{
 							exc.printStackTrace();
 						}
 					}
-					while(halfHour < e.getEnd().getMinuteOfDay()/30);
+					while(halfHour + 1 < e.getEnd().getMinuteOfDay()/30);
 					
 					
 					halfHour++;

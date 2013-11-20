@@ -1,5 +1,6 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.eventui;
 
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
@@ -12,6 +13,7 @@ import javax.swing.SwingConstants;
 import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 
@@ -66,8 +68,8 @@ public class AddEventDisplay extends JPanel
 		FlowLayout flowLayout_5 = (FlowLayout) DatePickerPanel.getLayout();
 		flowLayout_5.setAlignment(FlowLayout.LEFT);
 		add(DatePickerPanel);
-		final DatePicker startTime = new DatePicker(true);
-		final DatePicker endTime = new DatePicker(true);
+		final DatePicker endTime = new DatePicker(true, null);
+		final DatePicker startTime = new DatePicker(true, endTime);
 		DatePickerPanel.add(new JLabel("From "));
 		DatePickerPanel.add(startTime);
 		DatePickerPanel.add(new JLabel(" to "));
@@ -110,10 +112,12 @@ public class AddEventDisplay extends JPanel
 		flowLayout_6.setAlignment(FlowLayout.LEFT);
 		add(DescriptionPanel);
 		
-		final JTextArea Description = new JTextArea();
+		final JTextArea Description = new JTextArea(3,35);
 		Description.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		Description.setColumns(35);
-		Description.setRows(3);
+		Description.setBorder(BorderFactory.createLineBorder(Colors.BORDER));
+		Description.setLineWrap(true);
+		Description.setWrapStyleWord(true);
+		
 		DescriptionPanel.add(Description);
 		
 		JPanel SubmitPanel = new JPanel();

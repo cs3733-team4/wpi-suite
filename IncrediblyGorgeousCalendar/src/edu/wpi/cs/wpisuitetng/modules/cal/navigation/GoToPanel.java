@@ -20,6 +20,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
+import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 
 @SuppressWarnings("serial")
 public class GoToPanel extends JPanel {
@@ -128,8 +129,10 @@ public class GoToPanel extends JPanel {
 			}
 		}
 		if (dt != null)
+		{
 			mCalendar.display(dt);
-		else
+			MainPanel.getInstance().refreshView();
+		}else
 		{
 			if(isValidYear)
 				gotoErrorText.setText("* Use format: mm/dd/yyyy");
