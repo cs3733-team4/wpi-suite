@@ -15,6 +15,8 @@ import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Component;
 import java.awt.Font;
@@ -113,19 +115,46 @@ public class AddEventDisplay extends JPanel{
 		flowLayout.setAlignment(FlowLayout.LEFT);
 		add(SubmitPanel);
 		
+		final JLabel errorText = new JLabel();
+		errorText.setForeground(Color.RED);
+		errorText.setFont(new java.awt.Font("Tahoma", Font.PLAIN, 13));
+		
 		final JButton btnSave = new JButton("Save");
 		btnSave.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				Event e = new Event();
-				e.setName(Name.getText());
-				e.setDescription(Description.getText());
-				e.setStart(startTime.getDate());
-				e.setEnd(endTime.getDate());
-				e.setProjectEvent(chckbxProjectEvent.isSelected());
-				MainPanel.getInstance().addEvent(e);
-				btnSave.disable();
-				// TODO: Close tab
+				try
+				{
+					startTime.getDate();
+					endTime.getDate();
+					errorText.setVisible(true);
+					
+					if(Name.getText().length()==0||Name.getText()==null){
+						errorText.setText("* Please enter an event title");
+					}else if(!(startTime.getDate().dayOfYear().equals(endTime.getDate().dayOfYear())&&
+						startTime.getDate().year().equals(endTime.getDate().year())))
+					{
+						errorText.setText("* Event must start and end on the same date");
+					}else if(startTime.getDate().isAfter(endTime.getDate())){
+						errorText.setText("* Event start date must be before end date");
+					}else
+					{
+						errorText.setVisible(false);
+						Event e = new Event();
+						e.setName(Name.getText());
+						e.setDescription(Description.getText());
+						e.setStart(startTime.getDate());
+						e.setEnd(endTime.getDate());
+						e.setProjectEvent(chckbxProjectEvent.isSelected());
+						MainPanel.getInstance().addEvent(e);
+						btnSave.setEnabled(false);
+						// TODO: Close tab*/
+					}
+				}catch (IllegalArgumentException exception)
+				{
+					errorText.setText("* Invalid Date/Time");
+					errorText.setVisible(true);
+				}
 			}
 		});
 		btnSave.setHorizontalAlignment(SwingConstants.LEFT);
@@ -142,7 +171,6 @@ public class AddEventDisplay extends JPanel{
 		});
 		SubmitPanel.add(btnCancel);
 		SubmitPanel.add(chckbxProjectEvent);
+		SubmitPanel.add(errorText);
 	}
-	
-
 }
