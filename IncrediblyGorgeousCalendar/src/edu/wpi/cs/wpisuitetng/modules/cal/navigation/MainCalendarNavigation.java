@@ -22,6 +22,7 @@ public class MainCalendarNavigation extends JPanel {
 	private JButton previousButton = new JButton("<");
 	private JButton todayButton = new JButton("Today");
 	private JPanel navigationButtonPanel = new JPanel();
+	private AbstractCalendar currentCalendar;
 
 	public MainCalendarNavigation(JComponent parent, final AbstractCalendar mAbstractCalendar) {
 		
@@ -30,18 +31,21 @@ public class MainCalendarNavigation extends JPanel {
 		navigationButtonPanel.add(todayButton, BorderLayout.CENTER);
 		navigationButtonPanel.add(previousButton, BorderLayout.WEST);
 		
+		// Set current calendar
+		this.currentCalendar = mAbstractCalendar;
+		
 		nextButton.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				mAbstractCalendar.next();
+				currentCalendar.next();
 			}
 		});
 		previousButton.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				mAbstractCalendar.previous();
+				currentCalendar.previous();
 				
 			}
 		});
@@ -49,11 +53,15 @@ public class MainCalendarNavigation extends JPanel {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				mAbstractCalendar.display(DateTime.now());
+				currentCalendar.display(DateTime.now());
 			}
 		});
 		
 		this.setLayout(new BorderLayout());
 		this.add(navigationButtonPanel, BorderLayout.WEST);
+	}
+	
+	public void updateCalendar (AbstractCalendar newCalendar){
+		this.currentCalendar = newCalendar;
 	}
 }
