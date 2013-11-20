@@ -3,10 +3,13 @@ package edu.wpi.cs.wpisuitetng.modules.cal.eventui;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
+import javax.swing.BorderFactory;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 
 import org.joda.time.DateTime;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarHostIface;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarPanel;
 
@@ -16,6 +19,8 @@ public class PopupCalendar extends JFrame {
 		MiniCalendarPanel cal = new MiniCalendarPanel(date, mc);
 		this.add(cal);
 		final JFrame me = this;
+		
+		((JComponent) getContentPane()).setBorder(BorderFactory.createLineBorder(Colors.BORDER));
 		this.addWindowListener(new WindowListener(){
 
 			@Override
