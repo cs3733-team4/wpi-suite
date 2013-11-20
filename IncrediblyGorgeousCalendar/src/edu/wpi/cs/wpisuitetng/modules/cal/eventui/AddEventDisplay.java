@@ -135,15 +135,19 @@ public class AddEventDisplay extends JPanel
 					endTime.getDate();
 					errorText.setVisible(true);
 					
-					if(Name.getText().length()==0||Name.getText()==null){
+					if (Name.getText() == null || Name.getText().length() == 0)
+					{
 						errorText.setText("* Please enter an event title");
-					}else if(!(startTime.getDate().dayOfYear().equals(endTime.getDate().dayOfYear())&&
-						startTime.getDate().year().equals(endTime.getDate().year())))
+					}
+					else if (!(startTime.getDate().getDayOfYear() == endTime.getDate().getDayOfYear() &&
+						startTime.getDate().getYear() == endTime.getDate().getYear()))
 					{
 						errorText.setText("* Event must start and end on the same date");
-					}else if(startTime.getDate().isAfter(endTime.getDate())){
+					}
+					else if (startTime.getDate().isAfter(endTime.getDate())) {
 						errorText.setText("* Event start date must be before end date");
-					}else
+					}
+					else
 					{
 						errorText.setVisible(false);
 						Event e = new Event();
@@ -157,7 +161,8 @@ public class AddEventDisplay extends JPanel
 						btnSave.setText("Saved!");
 						MainPanel.getInstance().closeTab(tabid);
 					}
-				}catch (IllegalArgumentException exception)
+				}
+				catch (IllegalArgumentException exception)
 				{
 					errorText.setText("* Invalid Date/Time");
 					errorText.setVisible(true);

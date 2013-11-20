@@ -36,7 +36,8 @@ public class DayCalendar extends AbstractCalendar
 		this.mainPanel = MainPanel.getInstance();
 		this.time = on;
 		eventModel = emodel;
-		this.setBackground(Colors.TABLE_BACKGROUND);
+		scroll.setBackground(Colors.TABLE_BACKGROUND);
+		holder.setBackground(Colors.TABLE_BACKGROUND);
 		
 		this.setLayout(new BorderLayout());
 		this.holder.setLayout(new BorderLayout());

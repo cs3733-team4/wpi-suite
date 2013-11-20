@@ -26,7 +26,7 @@ public class EventToolbarGroup extends ToolbarGroupView {
 	public EventToolbarGroup(final MainPanel mMainPanel) {
 		super("Events");
 		
-		this.eventContentPanel.setLayout(new BoxLayout(eventContentPanel, BoxLayout.X_AXIS));
+		//this.eventContentPanel.setLayout(new BoxLayout(eventContentPanel, BoxLayout.X_AXIS));
 		
 		addEventButton = new JButton("<html>Add<br/>Event</html>");
 		addEventButton.addActionListener(new ActionListener(){
@@ -55,10 +55,10 @@ public class EventToolbarGroup extends ToolbarGroupView {
 		    removeEventButton.setIcon(new ImageIcon(img));
 		} catch (IOException ex) {}
 
-		eventContentPanel.add(addEventButton);
-		eventContentPanel.add(removeEventButton);
+		///eventContentPanel.add(addEventButton);
+		//eventContentPanel.add(removeEventButton);
 		
-		this.add(eventContentPanel);
+		this.add(addEventButton);
 	}
 	
 	public JButton getRemoveEventButton(){
