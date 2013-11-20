@@ -15,16 +15,22 @@ import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class AddEventDisplay extends JPanel{
+public class AddEventDisplay extends JPanel
+{
 	private JTextField Name;
 	private JTextField Participants;
-	public AddEventDisplay() {
+	private int tabid;
+	
+	public AddEventDisplay()
+	{
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		final JPanel me = this;
 		JPanel NameLabelPanel = new JPanel();
@@ -62,10 +68,12 @@ public class AddEventDisplay extends JPanel{
 		add(DatePickerPanel);
 		final DatePicker startTime = new DatePicker(true);
 		final DatePicker endTime = new DatePicker(true);
+		DatePickerPanel.add(new JLabel("From "));
 		DatePickerPanel.add(startTime);
+		DatePickerPanel.add(new JLabel(" to "));
 		DatePickerPanel.add(endTime);
-		JCheckBox chckbxAllDayEvent = new JCheckBox("All Day Event");
-		DatePickerPanel.add(chckbxAllDayEvent);
+//		JCheckBox chckbxAllDayEvent = new JCheckBox("All Day Event");
+//		DatePickerPanel.add(chckbxAllDayEvent);
 		
 		JPanel ParticipantsLabelPane = new JPanel();
 		FlowLayout flowLayout_1 = (FlowLayout) ParticipantsLabelPane.getLayout();
@@ -113,19 +121,47 @@ public class AddEventDisplay extends JPanel{
 		flowLayout.setAlignment(FlowLayout.LEFT);
 		add(SubmitPanel);
 		
+		final JLabel errorText = new JLabel();
+		errorText.setForeground(Color.RED);
+		errorText.setFont(new java.awt.Font("Tahoma", Font.PLAIN, 13));
+		
 		final JButton btnSave = new JButton("Save");
 		btnSave.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				Event e = new Event();
-				e.setName(Name.getText());
-				e.setDescription(Description.getText());
-				e.setStart(startTime.getDate());
-				e.setEnd(endTime.getDate());
-				e.setProjectEvent(chckbxProjectEvent.isSelected());
-				MainPanel.getInstance().addEvent(e);
-				btnSave.disable();
-				// TODO: Close tab
+				try
+				{
+					startTime.getDate();
+					endTime.getDate();
+					errorText.setVisible(true);
+					
+					if(Name.getText().length()==0||Name.getText()==null){
+						errorText.setText("* Please enter an event title");
+					}else if(!(startTime.getDate().dayOfYear().equals(endTime.getDate().dayOfYear())&&
+						startTime.getDate().year().equals(endTime.getDate().year())))
+					{
+						errorText.setText("* Event must start and end on the same date");
+					}else if(startTime.getDate().isAfter(endTime.getDate())){
+						errorText.setText("* Event start date must be before end date");
+					}else
+					{
+						errorText.setVisible(false);
+						Event e = new Event();
+						e.setName(Name.getText());
+						e.setDescription(Description.getText());
+						e.setStart(startTime.getDate());
+						e.setEnd(endTime.getDate());
+						e.setProjectEvent(chckbxProjectEvent.isSelected());
+						MainPanel.getInstance().addEvent(e);
+						btnSave.setEnabled(false);
+						btnSave.setText("Saved!");
+						MainPanel.getInstance().closeTab(tabid);
+					}
+				}catch (IllegalArgumentException exception)
+				{
+					errorText.setText("* Invalid Date/Time");
+					errorText.setVisible(true);
+				}
 			}
 		});
 		btnSave.setHorizontalAlignment(SwingConstants.LEFT);
@@ -136,13 +172,16 @@ public class AddEventDisplay extends JPanel{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//MainPanel.getInstance().closeTab();
-				//TODO: Make this close the tab
+				MainPanel.getInstance().closeTab(tabid);
 			}
 		});
 		SubmitPanel.add(btnCancel);
 		SubmitPanel.add(chckbxProjectEvent);
+		SubmitPanel.add(errorText);
 	}
 	
-
+	public void setTabId(int id)
+	{
+		tabid = id;
+	}
 }

@@ -230,6 +230,7 @@ public class DrawnDay extends JPanel{
 					this.subsections[r][i].setBorder(null);
 				}
 			}
+			this.setBackground(Colors.TABLE_BACKGROUND);
 			
 		}
 		

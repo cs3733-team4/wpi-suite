@@ -175,12 +175,13 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	 * @param closeable whether the tab can be closed
 	 */
 	
-	public void addTopLevelTab(JComponent component, String name, boolean closeable)
+	public int addTopLevelTab(JComponent component, String name, boolean closeable)
 	{
 		
 		if (!closeable)
 		{
 			mTabbedPane.addTab(name, component);
+			return -1;
 		}
 		else
 		{
@@ -226,6 +227,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 			
 			tabInfoClose.addActionListener(listener);
 			mTabbedPane.setSelectedIndex(tabPosition);
+			return tabInfoClose.ID;
 		}
 	}
 
