@@ -296,10 +296,12 @@ public class DrawnDay extends JPanel{
 			}
 			int topBot = fos?0:1;
 			int pos = (!fos?(this.bottomPosition++):(this.topPosition++));
+			try{
 			this.subsections[topBot][pos].setBorder(BorderFactory.createMatteBorder(1, 1, 0, 1, border));
 			this.subsections[topBot][pos].setLayout(new GridLayout(1,1));
 			this.subsections[topBot][pos].add(contentHolder);
 			this.subsections[topBot][pos].setBackground(body);
+			}catch(Exception e){}// TODO: fix
 			return pos;
 		}
 	}
