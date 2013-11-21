@@ -1,9 +1,6 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.day;
 
 import java.awt.BorderLayout;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import javax.swing.JLabel;
@@ -77,23 +74,8 @@ public class DayCalendar extends AbstractCalendar
 		DateTime from = f.toDateTime();
 		f.addDays(1);
 		DateTime to = f.toDateTime();
-		List<Event> temp = eventModel.getEvents(from, to);
-		Collections.sort(temp, new Comparator<Event>() {
-
-		        public int compare(Event e1, Event e2) {
-		        	if(e1.isProjectEvent()&&!e2.isProjectEvent())
-		        		return 1;
-		        	else if(e2.isProjectEvent()&&!e1.isProjectEvent())
-		        		return -1;
-		        	else
-		        		return e2.getStart().isBefore(e1.getStart())?1:-1;
-		        }
-		    });
-		for(Event e : temp)
-		{
-			System.out.print(e.getStart().toString() + "\n");
-		}
-		return temp;
+		// TODO: this is where filtering should go
+		return eventModel.getEvents(from, to);
 	}
 
 	@Override
