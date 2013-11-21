@@ -4,12 +4,16 @@ import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerDateModel;
 import javax.swing.text.MaskFormatter;
 
 import org.joda.time.DateTime;
@@ -23,9 +27,17 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 	JFormattedTextField date;
 	DateTimeFormatter dateFmt;
 	DateTimeFormatter dateTimeFmt;
+	DateTimeFormatter hourFmt;
+	DateTimeFormatter minFmt;
 	JComboBox<String> AMPM;
-	JComboBox<String> hrs;
-	JComboBox<String> mins;
+	//JComboBox<String> hrs;
+	//JComboBox<String> mins;
+	SpinnerDateModel hourmodel;
+	SpinnerDateModel minmodel;
+	JSpinner hrs;
+	JSpinner mins;
+	JSpinner.DateEditor houreditor;
+	JSpinner.DateEditor minuteeditor;
 	//JFormattedTextField time;
 	DatePicker linked;
 	
@@ -34,8 +46,9 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 		linked = mLinked;
 		
 		dateFmt = DateTimeFormat.forPattern("MM/dd/yy");
-		
 		dateTimeFmt = DateTimeFormat.forPattern("MM/dd/yy hh:mm aa");
+		hourFmt = DateTimeFormat.forPattern("hh");
+		minFmt = DateTimeFormat.forPattern("mm");
 		final MiniCalendarHostIface me = this;
 		try {
 			date = new JFormattedTextField(new MaskFormatter("##/##/##"));
@@ -45,10 +58,20 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 				//time = new JFormattedTextField(new MaskFormatter("##:##"));
 				//time.setFont(new Font("Monospaced", Font.PLAIN, 13));
 				//this.add(time);
+				//
+				Date date = new Date();
+				hourmodel = new SpinnerDateModel(date, null, null, Calendar.HOUR);
+				minmodel = new SpinnerDateModel(date, null, null, Calendar.MINUTE);
+				hrs = new JSpinner(hourmodel);
+				mins = new JSpinner(minmodel);
+				houreditor = new JSpinner.DateEditor(hrs, "hh");
+				minuteeditor = new JSpinner.DateEditor(mins, "mm");
+				hrs.setEditor(houreditor);
+				mins.setEditor(minuteeditor);
 				
 				// Add the numbers for the hours and minutes.
-				hrs = new JComboBox<>();
-				for (int i = 1; i <= 12; i++) {
+				//hrs = new JComboBox<>();
+				/*for (int i = 1; i <= 12; i++) {
 					String num = (i < 10) ? "0" + Integer.toString(i) : Integer.toString(i);
 					hrs.addItem(num);
 				}
@@ -56,7 +79,7 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 				for (int j = 1; j < 60; j++) {
 					String num = (j < 10) ? "0" + Integer.toString(j) : Integer.toString(j);
 					mins.addItem(num);
-				}
+				}*/
 				// Add everything into the display panel.
 				this.add(hrs);
 				this.add(new JLabel(":"));
@@ -109,7 +132,10 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 	}
 	
 	public DateTime getDate() {
+	      System.out.println(date);
 		return dateTimeFmt.parseDateTime(date.getText()
-				+ " " + hrs.getSelectedItem() + ":" + mins.getSelectedItem() + " " + AMPM.getSelectedItem());
+				//+ " " + hrs.getSelectedItem() + ":" + mins.getSelectedItem() + " " + AMPM.getSelectedItem());
+				//+ " " + ((Date) hrs.getValue()).getHours() + ":" + ((Date) mins.getValue()).getMinutes() + " " + AMPM.getSelectedItem());
+				+ " " + houreditor.getTextField().getText() + ":" + minuteeditor.getTextField().getText() + " " + AMPM.getSelectedItem());
 	}
 }
