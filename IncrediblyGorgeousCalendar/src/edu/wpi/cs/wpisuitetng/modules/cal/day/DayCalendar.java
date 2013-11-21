@@ -9,6 +9,8 @@ import javax.swing.JScrollPane;
 
 import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
@@ -31,12 +33,15 @@ public class DayCalendar extends AbstractCalendar
 	
 	private int sizeW = 0;
 
+	private DateTimeFormatter titleFmt = DateTimeFormat.forPattern("EEEE, MMM d, yyyy");
+
 	public DayCalendar(DateTime on, EventModel emodel)
 	{
 		this.mainPanel = MainPanel.getInstance();
 		this.time = on;
 		eventModel = emodel;
-		this.setBackground(Colors.TABLE_BACKGROUND);
+		scroll.setBackground(Colors.TABLE_BACKGROUND);
+		holder.setBackground(Colors.TABLE_BACKGROUND);
 		
 		this.setLayout(new BorderLayout());
 		this.holder.setLayout(new BorderLayout());
@@ -50,11 +55,7 @@ public class DayCalendar extends AbstractCalendar
 		this.holder.removeAll();
 		this.removeAll();
 		this.add(scroll, BorderLayout.CENTER);
-		this.add(new JLabel(new StringBuilder().append(time.monthOfYear().getAsText())
-											   .append("  ")
-											   .append(String.valueOf(time.getDayOfMonth()))
-											   .toString()),
-							BorderLayout.NORTH);
+		this.add(new JLabel(time.toString(titleFmt)), BorderLayout.NORTH);
 
 		this.current = new DrawnDay(this.time, this.sizeW);
 		this.current.addEvents(getVisibleEvents());

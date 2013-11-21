@@ -91,6 +91,8 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		if (mTabbedPane == this)
 			return;
 		mTabbedPane = this;
+		this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+		
 		events = new EventModel(); // used for accessing events
 		
 		this.mainPaneContainer = new JPanel(); // Container for the navigation and calendars
@@ -106,7 +108,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		this.mainCalendarNavigationPanel = new MainCalendarNavigation(this, mCalendar); // Navigation bar 
 		
 		// Components of side panel
-		this.mGoToPanel = new GoToPanel(DateTime.now(), mCalendar); // Go to date
+		this.mGoToPanel = new GoToPanel(DateTime.now()); // Go to date
 		
 		// Calendar selector
 		this.mCalendarSelector = new CalendarSelector();
@@ -175,12 +177,13 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	 * @param closeable whether the tab can be closed
 	 */
 	
-	public void addTopLevelTab(JComponent component, String name, boolean closeable)
+	public int addTopLevelTab(JComponent component, String name, boolean closeable)
 	{
 		
 		if (!closeable)
 		{
 			mTabbedPane.addTab(name, component);
+			return -1;
 		}
 		else
 		{
@@ -226,6 +229,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 			
 			tabInfoClose.addActionListener(listener);
 			mTabbedPane.setSelectedIndex(tabPosition);
+			return tabInfoClose.ID;
 		}
 	}
 

@@ -6,6 +6,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -14,7 +15,6 @@ import javax.swing.text.MaskFormatter;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.DateTimeFormatterBuilder;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarHostIface;
 
@@ -25,12 +25,15 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 	DateTimeFormatter dateTimeFmt;
 	JComboBox<String> AMPM;
 	JFormattedTextField time;
+	DatePicker linked;
 	
-	public DatePicker(boolean showTime) {
+	public DatePicker(boolean showTime, DatePicker mLinked) {
 		super();
+		linked = mLinked;
+		
 		dateFmt = DateTimeFormat.forPattern("MM/dd/yy");
 		
-		dateTimeFmt = DateTimeFormat.forPattern("MM/dd/yy HH:mma");
+		dateTimeFmt = DateTimeFormat.forPattern("MM/dd/yy h:mmaa");
 		final MiniCalendarHostIface me = this;
 		try {
 			date = new JFormattedTextField(new MaskFormatter("##/##/##"));
@@ -83,6 +86,8 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 
 	public void display(DateTime value) {		
 		date.setText(value.toString(dateFmt));
+		if(linked!=null)
+			linked.display(value);
 	}
 	
 	public DateTime getDate(){

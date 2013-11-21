@@ -63,8 +63,13 @@ public class MonthItem extends JPanel
 			ret = Integer.toString(when.getHourOfDay());
 
 		if (when.getMinuteOfHour() != 0)
-			ret += ":" + Integer.toString(when.getMinuteOfHour());
-
+		{
+			ret += ":";
+			if (when.getMinuteOfHour() < 10)
+				ret += "0";
+			ret += Integer.toString(when.getMinuteOfHour());
+		}
+		
 		if (pm)
 			ret += "p";
 

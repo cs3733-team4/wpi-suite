@@ -17,6 +17,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
@@ -31,6 +33,9 @@ public class DrawnDay extends JPanel{
 	private int[] collisions = new int[48];
 	private int largestCollision = 0;
 	private int widthDim = 0;
+	
+	private DateTimeFormatter dateFmt = DateTimeFormat.forPattern("h:mm a");;
+
 	
 	public DrawnDay(DateTime d, int width)
 	{
@@ -66,10 +71,10 @@ public class DrawnDay extends JPanel{
 				int contentToDisplay = 0;
 				boolean wordWrap = 84*this.largestCollision-1 > this.getWidth();
 				
-				String[] description = e.getDescription().split(" ");
+				String[] description = e.getDescription().split("@");
 				int descriptionCounter = 0;
-				
-				if (halfHour < 47)
+
+				if (halfHour < 47)//need a check for short events like: && e.getEnd().getMinuteOfDay()/30-halfHour>1)
 				{
 					do{
 						halfHour++;
@@ -77,15 +82,17 @@ public class DrawnDay extends JPanel{
 						
 						String message = "";
 						
-						if (wordWrap) // stick time on two lines
+						//doesn't ever wrap anyways, time looked better formatted on one line and can not be squished anyways
+						//if (!wordWrap) // stick time on two lines
+						if(1==0)
 						{
 							if (contentToDisplay == 0)
 							{
-								message = e.getStart().getHourOfDay()+":"+e.getStart().getMinuteOfHour();
+								message = "From: " + e.getStart().toString(dateFmt) + " ";
 							}
 							else if (contentToDisplay == 1)
 							{
-								message = e.getEnd().getHourOfDay()+":"+e.getEnd().getMinuteOfHour();
+								message = "To: " + e.getEnd().toString(dateFmt) + " ";
 							}
 							else if (contentToDisplay > 1)
 							{
@@ -109,14 +116,7 @@ public class DrawnDay extends JPanel{
 						{
 							if (contentToDisplay == 0)
 							{
-								message = new StringBuilder().append(e.getStart().getHourOfDay())
-										                     .append(":")
-										                     .append(e.getStart().getMinuteOfHour())
-										                     .append(" - ")
-										                     .append(e.getEnd().getHourOfDay())
-										                     .append(":")
-										                     .append(e.getEnd().getMinuteOfHour())
-										                     .toString();
+								message = e.getStart().toString(dateFmt) + " - " + e.getEnd().toString(dateFmt) + " ";
 							}
 							if (contentToDisplay > 0)
 							{
@@ -142,7 +142,7 @@ public class DrawnDay extends JPanel{
 							exc.printStackTrace();
 						}
 					}
-					while(halfHour < e.getEnd().getMinuteOfDay()/30);
+					while(halfHour + 1 < e.getEnd().getMinuteOfDay()/30);
 					
 					
 					halfHour++;
@@ -233,6 +233,7 @@ public class DrawnDay extends JPanel{
 				{
 					this.subsections[r][i] = new JPanel();
 					this.add(this.subsections[r][i]);
+					this.subsections[r][i].setBackground(Colors.TABLE_BACKGROUND);
 					this.subsections[r][i].setBorder(null);
 				}
 			}
@@ -307,10 +308,12 @@ public class DrawnDay extends JPanel{
 			}
 			int topBot = fos?0:1;
 			int pos = (!fos?(this.bottomPosition++):(this.topPosition++));
+			try{
 			this.subsections[topBot][pos].setBorder(BorderFactory.createMatteBorder(1, 1, 0, 1, border));
 			this.subsections[topBot][pos].setLayout(new GridLayout(1,1));
 			this.subsections[topBot][pos].add(contentHolder);
 			this.subsections[topBot][pos].setBackground(body);
+			}catch(Exception e){}// TODO: fix
 			return pos;
 		}
 	}

@@ -20,6 +20,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
+import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 
 @SuppressWarnings("serial")
 public class GoToPanel extends JPanel {
@@ -32,16 +33,14 @@ public class GoToPanel extends JPanel {
 	private JTextField gotoDateField;
 	private JButton updateGotoButton;
 	private DateTime currentDate;
-	private AbstractCalendar mCalendar;
 	
-	public GoToPanel(DateTime date, AbstractCalendar mCalendar) {
+	public GoToPanel(DateTime date) {
 		
 		JPanel top = new JPanel();
 		JPanel bot = new JPanel();
 		
 		
 		this.currentDate = date;
-		this.mCalendar = mCalendar;
 		this.setBorder(new EmptyBorder(5, 0, 0, 0));
 
 		// Go to field
@@ -128,7 +127,10 @@ public class GoToPanel extends JPanel {
 			}
 		}
 		if (dt != null)
-			mCalendar.display(dt);
+		{
+			MainPanel.getInstance().display(dt);
+			MainPanel.getInstance().refreshView();
+		}
 		else
 		{
 			if(isValidYear)
