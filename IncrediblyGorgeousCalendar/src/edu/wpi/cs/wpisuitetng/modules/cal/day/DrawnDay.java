@@ -161,10 +161,21 @@ public class DrawnDay extends JPanel{
 	/**
 	 * 
 	 * @param events a list of events THIS MUST BE SORTED BY START TIME
+	 * 
+	 * UPDATE: events no longer need to be sorted because
+	 *         the condition was being ignored anyways.
 	 */
 	public void addEvents(List<Event> events)
 	{
 		this.events.addAll(events);
+		Collections.sort(this.events, new Comparator<Event>(){
+
+			@Override
+			public int compare(Event arg0, Event arg1) {
+				return arg0.getStart().compareTo(arg1.getStart());
+			}
+			
+		});
 		for(Event e : events)
 		{
 			int startingHalfHour = e.getStart().getMinuteOfDay() / 30;
