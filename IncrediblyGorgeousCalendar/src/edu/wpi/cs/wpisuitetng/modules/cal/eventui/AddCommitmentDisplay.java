@@ -56,18 +56,19 @@ public class AddCommitmentDisplay extends JPanel
 		add(DateLabelPane);
 		DateLabelPane.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		
-		JLabel lblDateTime = new JLabel("Date and Time:");
+		JLabel lblDateTime = new JLabel("Date:");
 		lblDateTime.setVerticalAlignment(SwingConstants.BOTTOM);
 		lblDateTime.setHorizontalAlignment(SwingConstants.LEFT);
 		DateLabelPane.add(lblDateTime);
 		
-		JPanel CommitDatePickerPanel = new JPanel();
-		FlowLayout flowLayout_5 = (FlowLayout) CommitDatePickerPanel.getLayout();
-		flowLayout_5.setAlignment(FlowLayout.LEFT);
-		add(CommitDatePickerPanel);
-		final CommitmentDatePicker commitTime = new CommitmentDatePicker(true, null);
-		CommitDatePickerPanel.add(new JLabel("Time: "));
-		CommitDatePickerPanel.add(commitTime);
+		JPanel DatePickerPanel = new JPanel();
+		FlowLayout flowLayout_51 = (FlowLayout) DatePickerPanel.getLayout();
+		flowLayout_51.setAlignment(FlowLayout.LEFT);
+		add(DatePickerPanel);
+		
+		final DatePicker commitTime1 = new DatePicker(true, null);
+		
+		DatePickerPanel.add(commitTime1);
 		
 		JPanel ParticipantsLabelPane = new JPanel();
 		FlowLayout flowLayout_1 = (FlowLayout) ParticipantsLabelPane.getLayout();
@@ -91,8 +92,8 @@ public class AddCommitmentDisplay extends JPanel
 		FlowLayout fl_DescriptionLabelPane = (FlowLayout) DescriptionLabelPane.getLayout();
 		fl_DescriptionLabelPane.setAlignment(FlowLayout.LEFT);
 		add(DescriptionLabelPane);
-		final JCheckBox chckbxProjectEvent = new JCheckBox("Project Event");
-		chckbxProjectEvent.setSelected(true);
+		
+		
 		JLabel lblDescription = new JLabel("Description:");
 		lblDescription.setVerticalAlignment(SwingConstants.BOTTOM);
 		DescriptionLabelPane.add(lblDescription);
@@ -131,7 +132,7 @@ public class AddCommitmentDisplay extends JPanel
 			public void actionPerformed(ActionEvent arg0) {
 				try
 				{
-					commitTime.getDate();
+					commitTime1.getDate();
 					errorText.setVisible(true);
 					
 					if (Name.getText() == null || Name.getText().trim().length() == 0)
@@ -144,8 +145,7 @@ public class AddCommitmentDisplay extends JPanel
 						Event e = new Event();
 						e.setName(Name.getText().trim());
 						e.setDescription(Description.getText());
-						e.setStart(commitTime.getDate());
-						e.setProjectEvent(chckbxProjectEvent.isSelected());
+						e.setStart(commitTime1.getDate());
 						MainPanel.getInstance().addEvent(e);
 						btnSave.setEnabled(false);
 						btnSave.setText("Saved!");
@@ -172,7 +172,6 @@ public class AddCommitmentDisplay extends JPanel
 			}
 		});
 		SubmitPanel.add(btnCancel);
-		SubmitPanel.add(chckbxProjectEvent);
 		SubmitPanel.add(errorText);
 	}
 	

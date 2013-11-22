@@ -162,7 +162,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				//remove all but calender
+				//remove all but calendar
 				while (getTabCount() > 1)
 				{
 					removeTabAt(1);
