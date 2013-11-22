@@ -31,7 +31,6 @@ public class AddCommitmentDisplay extends JPanel
 	public AddCommitmentDisplay()
 	{
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		final JPanel me = this;
 		JPanel NameLabelPanel = new JPanel();
 		FlowLayout flowLayout_2 = (FlowLayout) NameLabelPanel.getLayout();
 		flowLayout_2.setAlignment(FlowLayout.LEFT);
@@ -53,7 +52,6 @@ public class AddCommitmentDisplay extends JPanel
 		Name.setColumns(25);
 		
 		JPanel DateLabelPane = new JPanel();
-		add(DateLabelPane);
 		DateLabelPane.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		
 		JLabel lblDateTime = new JLabel("Date:");
@@ -61,14 +59,15 @@ public class AddCommitmentDisplay extends JPanel
 		lblDateTime.setHorizontalAlignment(SwingConstants.LEFT);
 		DateLabelPane.add(lblDateTime);
 		
-		JPanel DatePickerPanel = new JPanel();
-		FlowLayout flowLayout_51 = (FlowLayout) DatePickerPanel.getLayout();
+		JPanel CommitDatePickerPanel = new JPanel();
+		FlowLayout flowLayout_51 = (FlowLayout) CommitDatePickerPanel.getLayout();
 		flowLayout_51.setAlignment(FlowLayout.LEFT);
-		add(DatePickerPanel);
+		add(CommitDatePickerPanel);
 		
-		final DatePicker commitTime1 = new DatePicker(true, null);
+		final CommitmentDatePicker commitTime1 = new CommitmentDatePicker(true, null);
 		
-		DatePickerPanel.add(commitTime1);
+		CommitDatePickerPanel.add(lblDateTime);
+		CommitDatePickerPanel.add(commitTime1);
 		
 		JPanel ParticipantsLabelPane = new JPanel();
 		FlowLayout flowLayout_1 = (FlowLayout) ParticipantsLabelPane.getLayout();

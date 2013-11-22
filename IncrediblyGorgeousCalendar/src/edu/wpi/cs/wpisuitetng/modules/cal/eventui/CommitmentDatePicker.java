@@ -1,5 +1,6 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.eventui;
 
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
@@ -7,7 +8,9 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.text.MaskFormatter;
 
 import org.joda.time.DateTime;
@@ -21,7 +24,6 @@ public class CommitmentDatePicker extends JPanel implements MiniCalendarHostIfac
 	JFormattedTextField date;
 	DateTimeFormatter dateFmt;
 	CommitmentDatePicker linked;
-	
 	public CommitmentDatePicker (boolean showTime, CommitmentDatePicker mLinked) {
 		super();
 		linked = mLinked;
