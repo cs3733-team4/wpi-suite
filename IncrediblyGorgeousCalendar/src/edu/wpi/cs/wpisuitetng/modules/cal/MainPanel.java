@@ -145,7 +145,6 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		
 		// Add default tabs to main panel
 		addTopLevelTab(mainPaneContainer, "Calendar", false);
-		addTopLevelTab(commitment, "New Commitment", true);
 		
 		// add context menu
 		this.addMouseListener(new MouseAdapter()
