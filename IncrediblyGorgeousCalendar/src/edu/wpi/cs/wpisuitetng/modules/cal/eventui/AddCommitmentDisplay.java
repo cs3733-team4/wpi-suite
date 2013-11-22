@@ -131,21 +131,12 @@ public class AddCommitmentDisplay extends JPanel
 			public void actionPerformed(ActionEvent arg0) {
 				try
 				{
-					startTime.getDate();
-					endTime.getDate();
+					commitTime.getDate();
 					errorText.setVisible(true);
 					
 					if (Name.getText() == null || Name.getText().trim().length() == 0)
 					{
-						errorText.setText("* Please enter an event title");
-					}
-					else if (!(startTime.getDate().getDayOfYear() == endTime.getDate().getDayOfYear() &&
-						startTime.getDate().getYear() == endTime.getDate().getYear()))
-					{
-						errorText.setText("* Event must start and end on the same date");
-					}
-					else if (startTime.getDate().isAfter(endTime.getDate())) {
-						errorText.setText("* Event start date must be before end date");
+						errorText.setText("* Please enter a commitment title");
 					}
 					else
 					{
@@ -153,8 +144,7 @@ public class AddCommitmentDisplay extends JPanel
 						Event e = new Event();
 						e.setName(Name.getText().trim());
 						e.setDescription(Description.getText());
-						e.setStart(startTime.getDate());
-						e.setEnd(endTime.getDate());
+						e.setStart(commitTime.getDate());
 						e.setProjectEvent(chckbxProjectEvent.isSelected());
 						MainPanel.getInstance().addEvent(e);
 						btnSave.setEnabled(false);

@@ -24,14 +24,15 @@ import javax.swing.border.EmptyBorder;
 import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.day.DayCalendar;
+import edu.wpi.cs.wpisuitetng.modules.cal.eventui.AddCommitmentDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.month.MonthCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.CalendarSelector;
-import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MainCalendarNavigation;
-import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.GoToPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MainCalendarNavigation;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarHostIface;
+import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.ViewSize;
 
 public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
@@ -56,6 +57,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	private EventModel events;
 	private ViewSize view = ViewSize.Month;
 	private static MainPanel instance;
+	private AddCommitmentDisplay commitment = new AddCommitmentDisplay();
 	
 	//TODO: "make this better" -Patrick
 	public boolean showPersonal = true;
@@ -143,6 +145,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		
 		// Add default tabs to main panel
 		addTopLevelTab(mainPaneContainer, "Calendar", false);
+		addTopLevelTab(commitment, "New Commitment", true);
 		
 		// add context menu
 		this.addMouseListener(new MouseAdapter()
