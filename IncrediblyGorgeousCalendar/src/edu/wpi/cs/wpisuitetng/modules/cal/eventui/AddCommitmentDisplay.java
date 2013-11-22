@@ -52,22 +52,22 @@ public class AddCommitmentDisplay extends JPanel
 		Name.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		Name.setColumns(25);
 		
-		JPanel DateandTimeLabelPane = new JPanel();
-		add(DateandTimeLabelPane);
-		DateandTimeLabelPane.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+		JPanel DateLabelPane = new JPanel();
+		add(DateLabelPane);
+		DateLabelPane.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		
 		JLabel lblDateTime = new JLabel("Date and Time:");
 		lblDateTime.setVerticalAlignment(SwingConstants.BOTTOM);
 		lblDateTime.setHorizontalAlignment(SwingConstants.LEFT);
-		DateandTimeLabelPane.add(lblDateTime);
+		DateLabelPane.add(lblDateTime);
 		
-		JPanel DatePickerPanel = new JPanel();
-		FlowLayout flowLayout_5 = (FlowLayout) DatePickerPanel.getLayout();
+		JPanel CommitDatePickerPanel = new JPanel();
+		FlowLayout flowLayout_5 = (FlowLayout) CommitDatePickerPanel.getLayout();
 		flowLayout_5.setAlignment(FlowLayout.LEFT);
-		add(DatePickerPanel);
-		final DatePicker commitTime = new DatePicker(true, null);
-		DatePickerPanel.add(new JLabel("Time: "));
-		DatePickerPanel.add(commitTime);
+		add(CommitDatePickerPanel);
+		final CommitmentDatePicker commitTime = new CommitmentDatePicker(true, null);
+		CommitDatePickerPanel.add(new JLabel("Time: "));
+		CommitDatePickerPanel.add(commitTime);
 		
 		JPanel ParticipantsLabelPane = new JPanel();
 		FlowLayout flowLayout_1 = (FlowLayout) ParticipantsLabelPane.getLayout();
@@ -155,7 +155,7 @@ public class AddCommitmentDisplay extends JPanel
 				}
 				catch (IllegalArgumentException exception)
 				{
-					errorText.setText("* Invalid Date/Time");
+					errorText.setText("* Invalid Date");
 					errorText.setVisible(true);
 				}
 			}
