@@ -20,11 +20,11 @@ import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarHostIface;
 
 @SuppressWarnings("serial")
 public class DatePicker extends JPanel implements MiniCalendarHostIface {
-	JFormattedTextField date;
 	DateTimeFormatter dateFmt;
 	DateTimeFormatter dateTimeFmt;
-	JComboBox<String> AMPM;
-	JFormattedTextField time;
+	public JComboBox<String> AMPM;
+	public JFormattedTextField date;
+	public JFormattedTextField time;
 	DatePicker linked;
 	
 	public DatePicker(boolean showTime, DatePicker mLinked) {
