@@ -52,7 +52,7 @@ public class EventEntityManager implements EntityManager<Event> {
 	}
 
 	/**
-	 * Saves a Event when it is received from a client
+	 * Saves an Event when it is received from a client
 	 * 
 	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#makeEntity(edu.wpi.cs.wpisuitetng.Session, java.lang.String)
 	 */
