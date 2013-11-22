@@ -272,6 +272,17 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		events.putEvent(newEvent);
 		mCalendar.updateEvents(newEvent, true);
 	}
+	/**
+	 * Adds a new commitment to the database and refreshes the UI
+	 * TODO make not for event
+	 * @param newEvent The event to add
+	 */
+	public void addCommitment(Event newEvent)
+	{
+		//TODO: MAKE ME WORK! still as event
+		events.putEvent(newEvent);
+		mCalendar.updateEvents(newEvent, true);
+	}
 
 	/**
 	 * Gets the singleton instance of this panel to avoid passing it everywhere
