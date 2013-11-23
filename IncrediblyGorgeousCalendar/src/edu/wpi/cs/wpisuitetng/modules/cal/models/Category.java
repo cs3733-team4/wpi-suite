@@ -6,6 +6,7 @@ import java.util.UUID;
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
+import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 
 /**
@@ -17,6 +18,7 @@ public class Category extends AbstractModel
 	private UUID categoryID = UUID.randomUUID();
 	private String name;
 	private Color color;
+	private User owner;
 	
 	/**
 	 * @param name
@@ -66,5 +68,9 @@ public class Category extends AbstractModel
 			
 		}
 		return false;
+	}
+
+	public void setOwner(User user) {
+		this.owner = user;
 	}
 }

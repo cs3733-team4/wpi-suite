@@ -1,5 +1,7 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.models;
 
+import java.util.UUID;
+
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.database.Data;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
