@@ -98,8 +98,8 @@ public class CategoryEntityManager implements EntityManager<Category> {
 	
 	@Override
 	public Category[] getAll(Session s) throws WPISuiteException {
-		// TODO Auto-generated method stub
-		return null;
+		System.out.println("GET ALL!");
+		return db.retrieveAll(new Category(), s.getProject()).toArray(new Category[0]);
 	}
 
 	@Override
@@ -138,13 +138,12 @@ public class CategoryEntityManager implements EntityManager<Category> {
 
 	@Override
 	public boolean deleteEntity(Session s, String id) throws WPISuiteException {
-		// TODO Auto-generated method stub
-		return false;
+		return (db.delete(getEntity(s, id)[0]) != null) ? true : false;
 	}
 
 	@Override
 	public void deleteAll(Session s) throws WPISuiteException {
-		// TODO Auto-generated method stub
+		db.deleteAll(new Event(), s.getProject());
 		
 	}
 
