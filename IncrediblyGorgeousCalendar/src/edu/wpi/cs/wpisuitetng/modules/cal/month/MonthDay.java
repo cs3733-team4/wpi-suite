@@ -11,10 +11,12 @@ import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
 import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.DayStyle;
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
 
@@ -23,6 +25,7 @@ public class MonthDay extends JPanel
 	private boolean borderTop;
 	JLabel header = new JLabel();
 	private List<Event> items = new ArrayList<Event>();
+	private List<Commitment> commitments = new ArrayList<Commitment>();
 
 	public MonthDay(DateTime day, DayStyle style)
 	{
@@ -65,6 +68,7 @@ public class MonthDay extends JPanel
 	{
 		setBorder(javax.swing.BorderFactory.createMatteBorder((top || borderTop) ? 1 : 0, left ? 1 : 0, bottom ? 1 : 0, 1, Colors.BORDER));
 	}
+	
 	/**
 	 * Add an event to a given day of the month
 	 * @param e
@@ -76,12 +80,28 @@ public class MonthDay extends JPanel
 	}
 	
 	/**
+	 * Add a commitment to a given day of the month.
+	 * @param c
+	 */
+	public void addCommitment(Commitment c)
+	{
+		this.commitments.add(c);
+		revalidate();
+	}
+	
+	/**
 	 * Remove an event from a given day of the month
 	 * @param e
 	 */
 	public void removeEvent(Event e)
 	{
 		this.items.remove(e);
+		revalidate();
+	}
+	
+	public void removeCommitment(Commitment c)
+	{
+		this.commitments.remove(c);
 		revalidate();
 	}
 	
@@ -135,6 +155,12 @@ public class MonthDay extends JPanel
 	public void clear()
 	{
 		items.clear();
+		revalidate();
+	}
+	
+	public void clearComms()
+	{
+		commitments.clear();
 		revalidate();
 	}
 }
