@@ -60,7 +60,7 @@ public class DayCalendar extends AbstractCalendar
 		this.current = new DrawnDay(this.time, this.sizeW);
 		this.current.addEvents(getVisibleEvents());
 
-		this.holder.add(new DayGridLabel(), BorderLayout.WEST);
+		this.holder.add(DayGridLabel.getInstance(), BorderLayout.WEST);
 		this.holder.add(this.current, BorderLayout.CENTER);
 
 		// notify mini-calendar to change

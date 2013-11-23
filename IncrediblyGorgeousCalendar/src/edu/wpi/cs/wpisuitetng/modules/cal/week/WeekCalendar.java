@@ -2,81 +2,121 @@ package edu.wpi.cs.wpisuitetng.modules.cal.week;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
+import edu.wpi.cs.wpisuitetng.modules.cal.day.DayGridLabel;
 import edu.wpi.cs.wpisuitetng.modules.cal.day.DrawnDay;
+import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Events;
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Months;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 
 public class WeekCalendar extends AbstractCalendar {
-	
 
-	// does this make sense? if not it should be pretty easy to change, just a skeleton for now.
-	//DrawnDay[] calendar = new DrawnDay[7];
+	JPanel weekHolder = new JPanel();
+	JPanel weekDaysHolder = new JPanel();
+	JPanel weekTimeLabel = new JPanel();
 	
-	JPanel title = new JPanel(),
-		   body  = new JPanel();
+	JScrollPane fullWeek = new JScrollPane(weekHolder);
+	
+	DrawnDay[] weekDays = new DrawnDay[7]; 
 	
 	DateTime time;
+	EventModel emodel;
 	
-	public WeekCalendar(DateTime time)
+	public WeekCalendar(DateTime time, EventModel emodel)
 	{
-		this.time = time;
-		this.body.setLayout(new GridLayout(1,7));
+		updateUI();
+		this.emodel = emodel;
+		
+		this.updateDays(Months.getWeekStart(time));
 	}
 	
-	public void update()
+	public void updateUI()
 	{
-		MutableDateTime mdt = new MutableDateTime(time);
-		mdt.addDays(1 - time.getDayOfWeek());
-		DateTime startOfWeek = mdt.toDateTime();
-		
 		this.removeAll();
+		this.setLayout(new GridLayout(1,1));
+		this.weekHolder.setLayout(new BorderLayout());
+		this.weekDaysHolder.setLayout(new GridLayout(1,7));
+		this.weekTimeLabel.setLayout(new GridLayout(1,1));
+		
+		this.weekHolder.add(this.weekDaysHolder, BorderLayout.CENTER);
+		this.weekHolder.add(this.weekTimeLabel, BorderLayout.WEST);
+		
+		this.weekTimeLabel.add(DayGridLabel.getInstance());
+		
+		this.add(fullWeek);
+	}
+	
+	
+	public void updateDays(DateTime startOfWeek)
+	{
+		this.updateUI();
+		this.time = startOfWeek;
+		MutableDateTime mdt = new MutableDateTime(startOfWeek);
+		this.weekDaysHolder.removeAll();
+		
+		List<Event> events = Events.getEventsForWeek(emodel, time);
+		List<List<Event>> eventsByDay = new ArrayList<List<Event>>();
+		
 		
 		for(int i = 0; i < 7; i++)
 		{
-			JPanel p = new JPanel();
-			p.add(new JLabel(startOfWeek.dayOfWeek().toString()), BorderLayout.NORTH);
-			p.add(new DrawnDay(startOfWeek, 0));
-			this.add(p);
-			
-			startOfWeek = Months.nextDay(startOfWeek);
+			eventsByDay.add(new ArrayList<Event>());
 		}
 		
+		for(Event e : events)
+		{
+			int dayOfWeek = e.getStart().getDayOfWeek() % 7;
+			eventsByDay.get(dayOfWeek).add(e);
+		}
+		
+		
+		
+		for(int i = 0; i < 7; i++)
+		{
+			mdt.addDays(1);
+			DateTime thisDate = mdt.toDateTime();
+			DrawnDay thisDay = new DrawnDay(thisDate, 50);
+			thisDay.addEvents(eventsByDay.get(i));
+			
+			JPanel day = new JPanel(new BorderLayout());
+			day.add(thisDay, BorderLayout.CENTER);
+			day.add(new JLabel(thisDate.dayOfWeek().getAsText()), BorderLayout.NORTH);
+			
+			this.weekDaysHolder.add(day);
+			this.weekDays[i] = thisDay;
+		}
 	}
 	
 	
 	@Override
 	public void next() {
-		// TODO Auto-generated method stub
-
+		this.updateDays(Months.nextWeek(time));
 	}
 
 	@Override
 	public void previous() {
-		// TODO Auto-generated method stub
-
+		this.updateDays(Months.prevWeek(time));
 	}
 
 	@Override
 	public void display(DateTime newTime) {
-		// TODO Auto-generated method stub
-
+		this.updateDays(Months.getWeekStart(newTime));
 	}
 
 	@Override
-	public void updateEvents(Event events, boolean addOrRemove) {
-		// TODO Auto-generated method stub
-		
+	public void updateEvents(Event event, boolean added) {
+		this.updateDays(Months.getWeekStart(time));
 	}
-	
-	
 	
 }

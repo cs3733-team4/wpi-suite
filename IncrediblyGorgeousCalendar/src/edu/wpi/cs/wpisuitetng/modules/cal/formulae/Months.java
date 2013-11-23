@@ -78,7 +78,6 @@ public class Months {
 	
 
 	
-	
 	public static DateTime nextMonth(DateTime time)
 	{
 		MutableDateTime mdt = new MutableDateTime(time);
@@ -108,5 +107,34 @@ public class Months {
 		return mdt.toDateTime();
 	}
 	
+	
+	
+	
+	public static DateTime nextWeek(DateTime time)
+	{
+		MutableDateTime mdt = new MutableDateTime(time);
+		mdt.addDays(7);
+		return getWeekStart(mdt.toDateTime());
+	}
+	
+	public static DateTime prevWeek(DateTime time)
+	{
+		MutableDateTime mdt = new MutableDateTime(time);
+		mdt.addDays(7);
+		return getWeekStart(mdt.toDateTime());
+	}
+	
+	
+	/**
+	 * 
+	 * @param d any DateTime
+	 * @return get's the Sundae of the provided day's week
+	 */
+	public static DateTime getWeekStart(DateTime d)
+	{
+		MutableDateTime t = new MutableDateTime(d);
+		t.addDays(0-d.getDayOfWeek());
+		return t.toDateTime();
+	}
 	
 }
