@@ -7,6 +7,7 @@ import edu.wpi.cs.wpisuitetng.database.Data;
 import edu.wpi.cs.wpisuitetng.exceptions.BadRequestException;
 import edu.wpi.cs.wpisuitetng.exceptions.ConflictException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
+import edu.wpi.cs.wpisuitetng.exceptions.NotImplementedException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 
@@ -14,11 +15,11 @@ import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 /**
  * This is the entity manager for the Category
  * in the CategoryManager module.
- * @author Prateek, SarahS
+ * @author Prateek, SarahS, Etienne
  *
  */
 
-public class CategoryEntityManager implements EntityManager<Event> {
+public class CategoryEntityManager implements EntityManager<Category> {
 	/** The database */
 	Data db;
 	
@@ -82,13 +83,6 @@ public class CategoryEntityManager implements EntityManager<Event> {
 	}
 
 	@Override
-	public String advancedGet(Session s, String[] args)
-			throws WPISuiteException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public void deleteAll(Session s) throws WPISuiteException {
 		// TODO Auto-generated method stub
 		
@@ -101,17 +95,18 @@ public class CategoryEntityManager implements EntityManager<Event> {
 	}
 
 	@Override
-	public String advancedPut(Session s, String[] args, String content)
-			throws WPISuiteException {
-		// TODO Auto-generated method stub
-		return null;
+	public String advancedGet(Session s, String[] args) throws NotImplementedException {
+		throw new NotImplementedException();
+	}
+	
+	@Override
+	public String advancedPut(Session s, String[] args, String content) throws NotImplementedException {
+		throw new NotImplementedException();
 	}
 
 	@Override
-	public String advancedPost(Session s, String string, String content)
-			throws WPISuiteException {
-		// TODO Auto-generated method stub
-		return null;
+	public String advancedPost(Session s, String string, String content) throws NotImplementedException {
+		throw new NotImplementedException();
 	}
 	
 }
