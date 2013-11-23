@@ -12,8 +12,7 @@ public class CommitmentModel {
 
 
 	public List<Commitment> getCommitments(DateTime from, DateTime to) {
-		return ServerManager.get("cal/commitments/", Commitment[].class, 
-				"filter-commitments-by-range", 
+		return ServerManager.get("cal/commitments/", Commitment[].class, "filter-commitments-by-range", 
 				from.toString(serializer),
 				to.toString(serializer));
 	}

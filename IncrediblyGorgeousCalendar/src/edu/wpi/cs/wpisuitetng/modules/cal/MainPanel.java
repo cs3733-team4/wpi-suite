@@ -276,14 +276,11 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	}
 	/**
 	 * Adds a new commitment to the database and refreshes the UI
-	 * TODO make not for event
-	 * @param newEvent The event to add
+	 * @param newCommitment The commitment to add
 	 */
 	public void addCommitment(Commitment newCommitment)
 	{
-		//TODO: MAKE ME WORK! still as event
 		commitments.putCommitment(newCommitment);
-		System.out.println("Add commitment called, should have been added");
 	}
 
 	/**
