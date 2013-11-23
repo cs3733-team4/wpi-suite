@@ -12,6 +12,8 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 /**
  *  Basic categories class that contains all information required to 
  *  designate an event category in the calendar
+ *  
+ *  @author SarahS Etienne Prateek
  */
 public class Category extends AbstractModel
 {

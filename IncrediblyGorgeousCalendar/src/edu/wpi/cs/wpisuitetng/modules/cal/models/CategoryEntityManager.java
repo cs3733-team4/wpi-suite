@@ -1,7 +1,10 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.models;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import org.joda.time.Interval;
 
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.database.Data;
@@ -90,7 +93,16 @@ public class CategoryEntityManager implements EntityManager<Category> {
 		}
 	}
 
-	private Category[] getCategoryByName(String name) {
+	private Category[] getCategoryByName(Session ses, String name) {
+		List<Category> retrievedCategories = new ArrayList<>();
+		
+		Category[] all = getAll(ses);
+		
+		for(Category c: all) {
+			c.getName();
+			
+		}
+
 		
 		
 		return 
