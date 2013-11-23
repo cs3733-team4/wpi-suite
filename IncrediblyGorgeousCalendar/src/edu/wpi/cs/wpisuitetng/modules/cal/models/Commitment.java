@@ -21,7 +21,7 @@ public class Commitment extends AbstractModel
 	private UUID eventID = UUID.randomUUID();
 	private String name;
 	private String description;
-	private Date start;
+	private Date duedate;
 	private String participants;
 	private User owner;
 
@@ -154,7 +154,7 @@ public class Commitment extends AbstractModel
 	 */
 	public DateTime getStart()
 	{
-		return new DateTime(start);
+		return new DateTime(duedate);
 	}
 
 	/**
@@ -163,7 +163,7 @@ public class Commitment extends AbstractModel
 	 */
 	public void setStart(DateTime start)
 	{
-		this.start = start.toDate();
+		this.duedate = start.toDate();
 	}
 
 	
