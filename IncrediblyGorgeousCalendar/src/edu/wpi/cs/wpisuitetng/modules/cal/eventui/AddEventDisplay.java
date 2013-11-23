@@ -39,12 +39,12 @@ public class AddEventDisplay extends JPanel
 	private JLabel partiipantsLabel;
 	private JLabel descriptionLabel;
 	private JPanel nameTextFieldPanel;
-	private JTextField nameTextField;
-	private JTextField participantsTextField;
-	private JTextArea descriptionTextArea;
+	private JTextField nameTextField = new JTextField();
+	private JTextField participantsTextField = new JTextField();
+	private JTextArea descriptionTextArea = new JTextArea(5,35);
 	private DatePicker startTime;
 	private DatePicker endTime;
-	private JCheckBox teamProjectCheckBox;
+	private JCheckBox teamProjectCheckBox = new JCheckBox("Project Event");
 	private JLabel errorText;
 	private JButton saveButton;
 	private JButton cancelButton;
@@ -65,6 +65,21 @@ public class AddEventDisplay extends JPanel
 	{
 		setUpUI();
 		setUpListenersAdd();
+		
+	}
+	
+	/**
+	 * Populates the events field if the class was invoked with an existing event.
+	 * Allows for the edition of events 
+	 */
+	private void populateEventFields(Event eventToEdit){
+		
+		this.participantsTextField.setText(eventToEdit.getParticipants());
+		this.nameTextField.setText(eventToEdit.getName());
+		this.descriptionTextArea.setText(eventToEdit.getDescription());
+		this.teamProjectCheckBox.setSelected(eventToEdit.isProjectEvent());
+		
+		//TODO start date, end date, start time, end time
 		
 	}
 	
@@ -100,8 +115,6 @@ public class AddEventDisplay extends JPanel
 		fl_NamePane.setAlignment(FlowLayout.LEFT);
 		
 		// Text Field
-		
-		this.nameTextField = new JTextField();
 		nameTextField.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		nameTextField.setColumns(25);
 		nameTextFieldPanel.add(nameTextField);
@@ -169,7 +182,6 @@ public class AddEventDisplay extends JPanel
 		flowLayout_4.setAlignment(FlowLayout.LEFT);
 		
 		// Text Field
-		this.participantsTextField = new JTextField();
 		participantsTextFieldPanel.add(participantsTextField);
 		participantsTextField.setColumns(30);
 		
@@ -203,7 +215,6 @@ public class AddEventDisplay extends JPanel
 		descriptionTextFieldPanel.setMinimumSize(new Dimension(100, 100));
 		
 		// Text Area
-		this.descriptionTextArea = new JTextArea(5,35);
 		descriptionTextArea.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		descriptionTextArea.setLineWrap(true);
 		descriptionTextArea.setWrapStyleWord(true);
@@ -226,7 +237,6 @@ public class AddEventDisplay extends JPanel
 		flowLayout.setAlignment(FlowLayout.LEFT);
 		
 		// CheckBox
-		teamProjectCheckBox = new JCheckBox("Project Event");
 		teamProjectCheckBox.setSelected(true);
 		
 		// Error label
@@ -250,21 +260,6 @@ public class AddEventDisplay extends JPanel
 		// Add panel to UI
 		this.add(submissionPanel);
 		
-		
-	}
-	
-	/**
-	 * Populates the events field if the class was invoked with an existing event.
-	 * Allows for the edition of events 
-	 */
-	private void populateEventFields(Event eventToEdit){
-		
-		this.participantsTextField.setText(eventToEdit.getParticipants());
-		this.nameTextField.setText(eventToEdit.getName());
-		this.descriptionTextArea.setText(eventToEdit.getDescription());
-		this.teamProjectCheckBox.setSelected(eventToEdit.isProjectEvent());
-		
-		//TODO start date, end date, start time, end time
 		
 	}
 	
