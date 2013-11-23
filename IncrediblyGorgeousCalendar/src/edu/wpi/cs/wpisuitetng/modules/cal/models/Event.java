@@ -1,5 +1,6 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.models;
 
+import java.awt.Color;
 import java.util.Date;
 import java.util.UUID;
 
@@ -8,7 +9,6 @@ import org.joda.time.DateTime;
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
-
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
@@ -284,6 +284,11 @@ public class Event extends AbstractModel
 		this.owner = owner;
 	}
 
-	// Accessor and Mutator Methods:
-
+	// custom "getters"
+	
+	public Color getColor()
+	{
+		// TODO: if category, get category color
+		return isProjectEvent ? new Color(125,157,227) : new Color(227,125,147);
+	}
 }

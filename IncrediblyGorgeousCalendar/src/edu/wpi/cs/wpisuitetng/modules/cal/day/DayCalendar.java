@@ -14,6 +14,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.day.france.LouvreTour;
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Months;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
@@ -24,7 +25,7 @@ public class DayCalendar extends AbstractCalendar
 
 	private DateTime time;
 	private MainPanel mainPanel;
-	private DrawnDay current;
+	private LouvreTour current;
 	
 	private JPanel holder = new JPanel();
 	private JScrollPane scroll = new JScrollPane(holder);
@@ -41,6 +42,9 @@ public class DayCalendar extends AbstractCalendar
 		this.time = on;
 		eventModel = emodel;
 		scroll.setBackground(Colors.TABLE_BACKGROUND);
+		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scroll.getVerticalScrollBar().setUnitIncrement(20);
 		holder.setBackground(Colors.TABLE_BACKGROUND);
 		
 		this.setLayout(new BorderLayout());
@@ -57,8 +61,8 @@ public class DayCalendar extends AbstractCalendar
 		this.add(scroll, BorderLayout.CENTER);
 		this.add(new JLabel(time.toString(titleFmt)), BorderLayout.NORTH);
 
-		this.current = new DrawnDay(this.time, this.sizeW);
-		this.current.addEvents(getVisibleEvents());
+		this.current = new LouvreTour();
+		this.current.setEvents(getVisibleEvents());
 
 		this.holder.add(new DayGridLabel(), BorderLayout.WEST);
 		this.holder.add(this.current, BorderLayout.CENTER);
