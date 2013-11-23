@@ -92,8 +92,8 @@ public class CategoryEntityManager implements EntityManager<Category> {
 
 	@Override
 	public Category[] getAll(Session s) throws WPISuiteException {
-		// TODO Auto-generated method stub
-		return null;
+		System.out.println("GET ALL!");
+		return db.retrieveAll(new Category(), s.getProject()).toArray(new Category[0]);
 	}
 
 	@Override
