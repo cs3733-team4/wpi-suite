@@ -132,13 +132,12 @@ public class CategoryEntityManager implements EntityManager<Category> {
 
 	@Override
 	public boolean deleteEntity(Session s, String id) throws WPISuiteException {
-		// TODO Auto-generated method stub
-		return false;
+		return (db.delete(getEntity(s, id)[0]) != null) ? true : false;
 	}
 
 	@Override
 	public void deleteAll(Session s) throws WPISuiteException {
-		// TODO Auto-generated method stub
+		db.deleteAll(new Event(), s.getProject());
 		
 	}
 
