@@ -29,7 +29,7 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 	DateTimeFormatter dateTimeFmt;
 	DateTimeFormatter hourFmt;
 	DateTimeFormatter minFmt;
-	JComboBox<String> AMPM;;
+	JComboBox<String> AMPM;
 	SpinnerDateModel hourmodel;
 	SpinnerDateModel minmodel;
 	JSpinner hrs;
@@ -52,6 +52,7 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 			date.setFont(new Font("Monospaced", Font.PLAIN, 13));
 			this.add(date);
 			if (showTime) {
+				// Set the spinners for time selection.
 				Date date = new Date();
 				hourmodel = new SpinnerDateModel(date, null, null, Calendar.HOUR);
 				minmodel = new SpinnerDateModel(date, null, null, Calendar.MINUTE);
