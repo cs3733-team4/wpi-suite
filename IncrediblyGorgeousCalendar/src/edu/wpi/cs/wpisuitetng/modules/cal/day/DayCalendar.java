@@ -6,6 +6,7 @@ import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
 
 import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
@@ -66,7 +67,14 @@ public class DayCalendar extends AbstractCalendar
 
 		this.holder.add(new DayGridLabel(), BorderLayout.WEST);
 		this.holder.add(this.current, BorderLayout.CENTER);
-
+		SwingUtilities.invokeLater(new Runnable() {
+			
+			@Override
+			public void run() {
+				holder.revalidate();
+				holder.repaint();
+			}
+		});
 		// notify mini-calendar to change
 		mainPanel.miniMove(time);
 	}
