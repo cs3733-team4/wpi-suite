@@ -48,7 +48,7 @@ public class CommitmentEntityManager implements EntityManager<Event> {
 	 * @param db a reference to the persistent database
 	 */
 	public CommitmentEntityManager(Data db) {
-		this.db = db; 
+		this.db = db;
 	}
 
 	/**

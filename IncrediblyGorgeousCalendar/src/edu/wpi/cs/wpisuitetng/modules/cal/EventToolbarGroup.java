@@ -1,24 +1,18 @@
 package edu.wpi.cs.wpisuitetng.modules.cal;
 
-import java.awt.BorderLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import org.joda.time.DateTime;
-
 import edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar.ToolbarGroupView;
 import edu.wpi.cs.wpisuitetng.modules.cal.eventui.AddCommitmentDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.eventui.AddEventDisplay;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 
 public class EventToolbarGroup extends ToolbarGroupView {
 	

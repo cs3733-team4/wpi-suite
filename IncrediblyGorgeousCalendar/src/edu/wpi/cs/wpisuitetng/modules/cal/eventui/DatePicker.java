@@ -29,16 +29,13 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 	DateTimeFormatter dateTimeFmt;
 	DateTimeFormatter hourFmt;
 	DateTimeFormatter minFmt;
-	JComboBox<String> AMPM;
-	//JComboBox<String> hrs;
-	//JComboBox<String> mins;
+	JComboBox<String> AMPM;;
 	SpinnerDateModel hourmodel;
 	SpinnerDateModel minmodel;
 	JSpinner hrs;
 	JSpinner mins;
 	JSpinner.DateEditor houreditor;
 	JSpinner.DateEditor minuteeditor;
-	//JFormattedTextField time;
 	DatePicker linked;
 	
 	public DatePicker(boolean showTime, DatePicker mLinked) {
@@ -55,10 +52,6 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 			date.setFont(new Font("Monospaced", Font.PLAIN, 13));
 			this.add(date);
 			if (showTime) {
-				//time = new JFormattedTextField(new MaskFormatter("##:##"));
-				//time.setFont(new Font("Monospaced", Font.PLAIN, 13));
-				//this.add(time);
-				//
 				Date date = new Date();
 				hourmodel = new SpinnerDateModel(date, null, null, Calendar.HOUR);
 				minmodel = new SpinnerDateModel(date, null, null, Calendar.MINUTE);
@@ -69,17 +62,6 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 				hrs.setEditor(houreditor);
 				mins.setEditor(minuteeditor);
 				
-				// Add the numbers for the hours and minutes.
-				//hrs = new JComboBox<>();
-				/*for (int i = 1; i <= 12; i++) {
-					String num = (i < 10) ? "0" + Integer.toString(i) : Integer.toString(i);
-					hrs.addItem(num);
-				}
-				mins = new JComboBox<>();
-				for (int j = 1; j < 60; j++) {
-					String num = (j < 10) ? "0" + Integer.toString(j) : Integer.toString(j);
-					mins.addItem(num);
-				}*/
 				// Add everything into the display panel.
 				this.add(hrs);
 				this.add(new JLabel(":"));
@@ -134,8 +116,8 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 	public DateTime getDate() {
 	      System.out.println(date);
 		return dateTimeFmt.parseDateTime(date.getText()
-				//+ " " + hrs.getSelectedItem() + ":" + mins.getSelectedItem() + " " + AMPM.getSelectedItem());
-				//+ " " + ((Date) hrs.getValue()).getHours() + ":" + ((Date) mins.getValue()).getMinutes() + " " + AMPM.getSelectedItem());
-				+ " " + houreditor.getTextField().getText() + ":" + minuteeditor.getTextField().getText() + " " + AMPM.getSelectedItem());
+				+ " " + houreditor.getTextField().getText() + 
+				":" + minuteeditor.getTextField().getText() + 
+				" " + AMPM.getSelectedItem());
 	}
 }
