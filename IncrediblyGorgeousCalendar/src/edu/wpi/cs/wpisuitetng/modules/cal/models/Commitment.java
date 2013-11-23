@@ -18,7 +18,7 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
  */
 public class Commitment extends AbstractModel
 {
-	private UUID eventID = UUID.randomUUID();
+	private UUID commitmentID = UUID.randomUUID();
 	private String name;
 	private String description;
 	private Date duedate;
@@ -54,7 +54,7 @@ public class Commitment extends AbstractModel
 	 */
 	public Commitment addStartTime(DateTime date)
 	{
-		setStart(date);
+		setDate(date);
 		return this;
 	}
 	
@@ -101,18 +101,18 @@ public class Commitment extends AbstractModel
 	/**
 	 * @return the eventID
 	 */
-	public UUID getEventID()
+	public UUID getCommitmentID()
 	{
-		return eventID;
+		return commitmentID;
 	}
 
 	/**
 	 * @param eventID
 	 *            the eventID to set
 	 */
-	public void setEventID(UUID eventID)
+	public void setCommitmentID(UUID commitmentID)
 	{
-		this.eventID = eventID;
+		this.commitmentID = commitmentID;
 	}
 
 	/**
@@ -152,7 +152,7 @@ public class Commitment extends AbstractModel
 	/**
 	 * @return the start
 	 */
-	public DateTime getStart()
+	public DateTime getDate()
 	{
 		return new DateTime(duedate);
 	}
@@ -161,7 +161,7 @@ public class Commitment extends AbstractModel
 	 * @param start
 	 *            the start to set
 	 */
-	public void setStart(DateTime start)
+	public void setDate(DateTime start)
 	{
 		this.duedate = start.toDate();
 	}
