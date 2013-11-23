@@ -24,6 +24,7 @@ import javax.swing.border.EmptyBorder;
 import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.day.DayCalendar;
+import edu.wpi.cs.wpisuitetng.modules.cal.eventui.AddEventDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.month.MonthCalendar;
@@ -56,6 +57,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	private EventModel events;
 	private ViewSize view = ViewSize.Month;
 	private static MainPanel instance;
+	private Event selectedEvent;
 	
 	//TODO: "make this better" -Patrick
 	public boolean showPersonal = true;
@@ -159,7 +161,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				//remove all but calender
+				//remove all but calendar
 				while (getTabCount() > 1)
 				{
 					removeTabAt(1);
@@ -318,5 +320,12 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	
 	public void closeTab(int id){
 		mTabbedPane.remove(tabs.get(id));
+	}
+	
+	public void updateSelectedEvent(Event mEvent){
+		this.selectedEvent = mEvent;
+		AddEventDisplay mAddEventDisplay = new AddEventDisplay(mEvent);
+		mAddEventDisplay.setTabId(instance.addTopLevelTab(mAddEventDisplay, "Edit Event", true));
+		
 	}
 }

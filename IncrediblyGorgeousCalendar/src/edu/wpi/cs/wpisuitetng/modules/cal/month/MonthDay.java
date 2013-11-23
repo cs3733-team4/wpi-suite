@@ -11,6 +11,7 @@ import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
 import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.DayStyle;
@@ -118,6 +119,8 @@ public class MonthDay extends JPanel
 		if (hidden == 1) // silly, add it anyway
 		{
 			this.add(MonthItem.generateFrom(this.items.get(this.items.size() - 1)));
+			
+			
 		}
 		else if (hidden > 1)
 		{
