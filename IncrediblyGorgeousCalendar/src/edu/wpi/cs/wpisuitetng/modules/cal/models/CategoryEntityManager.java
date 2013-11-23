@@ -79,17 +79,23 @@ public class CategoryEntityManager implements EntityManager<Category> {
 		Category[] retrievedCategories = null;
 		
 		switch (args[0]) {
-			case "add-event-by-name":
+			case "get-category-by-name":
 				return 		
-			case "add-event-by-id":
+			case "get-category-by-id":
 				return
-			case "add-event-by-color":
+			case "get-category-by-color":
 				return
 			default:
 				System.out.println("Error: " + args[0] + " not a valid method");			
 		}
 	}
 
+	private Category[] getCategoryByName(String name) {
+		
+		
+		return 
+	}
+	
 	@Override
 	public Category[] getAll(Session s) throws WPISuiteException {
 		// TODO Auto-generated method stub
