@@ -102,7 +102,9 @@ public class CategoryEntityManager implements EntityManager<Category> {
 
 	@Override
 	public void save(Session s, Category model) throws WPISuiteException {
-		// TODO Auto-generated method stub
+		if (model.isProjectCategory())
+			model.setProject(s.getProject());
+		db.save(model);
 		
 	}
 
@@ -120,8 +122,7 @@ public class CategoryEntityManager implements EntityManager<Category> {
 
 	@Override
 	public int Count() throws WPISuiteException {
-		// TODO Auto-generated method stub
-		return 0;
+		return db.retrieveAll(new Category()).size();
 	}
 
 	@Override
