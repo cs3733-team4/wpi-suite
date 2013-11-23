@@ -54,8 +54,38 @@ public class CategoryEntityManager implements EntityManager<Category> {
 	@Override
 	public Category[] getEntity(Session s, String id) throws NotFoundException,
 			WPISuiteException {
-		// TODO Auto-generated method stub
-		return null;
+		/**
+		 * System.out.println(data+ " was just sent!");
+		String[] args = data.split(",");
+		
+		Event[] retrievedEvents = null;
+		
+		switch (args[0]) {
+			case "filter-events-by-range":
+				return getEventsByRange(s, args[1], args[2]);
+			default:
+				System.out.println("Error: " + args[0] + " not a valid method");
+		}
+
+	
+		return retrievedEvents;
+		 */
+		
+		System.out.println(id+ " was just sent!");
+		String[] args = id.split(",");
+		
+		Category[] retrievedCategories = null;
+		
+		switch (args[0]) {
+			case "add-event-by-name":
+				return 		
+			case "add-event-by-id":
+				return
+			case "add-event-by-color":
+				return
+			default:
+				System.out.println("Error: " + args[0] + " not a valid method");			
+		}
 	}
 
 	@Override
