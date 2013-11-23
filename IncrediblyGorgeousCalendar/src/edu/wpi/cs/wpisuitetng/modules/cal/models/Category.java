@@ -30,6 +30,14 @@ public class Category extends AbstractModel
 		this.name = name;
 	}
 	
+	/**
+	 * @return name
+	 */
+	public String getName()
+	{
+		return this.name;
+	}
+	
 	/** 
 	 * @param color 
 	 * 		the color to set the category
@@ -37,6 +45,15 @@ public class Category extends AbstractModel
 	public void setColor(Color color)
 	{
 		this.color = color;
+	}
+	
+	/**
+	 * 
+	 * @return color
+	 */
+	public Color getColor()
+	{
+		return this.color;
 	}
 	
 	public UUID getUUID()
