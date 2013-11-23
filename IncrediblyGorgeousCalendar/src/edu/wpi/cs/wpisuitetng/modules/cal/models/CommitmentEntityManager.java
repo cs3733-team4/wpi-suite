@@ -108,7 +108,7 @@ public class CommitmentEntityManager implements EntityManager<Commitment> {
 		
 		for (Commitment commitment : all)
 		{
-			DateTime s = commitment.getStart();
+			DateTime s = commitment.getDate();
 			if (range.contains(s))
 			{
 				retrievedCommitments.add(commitment);
@@ -124,7 +124,7 @@ public class CommitmentEntityManager implements EntityManager<Commitment> {
 	 */
 	@Override
 	public Commitment[] getAll(Session s) {
-		System.out.println("GET ALL!");
+		System.out.println("GET ALL COMMITMENTS!");
 		return db.retrieveAll(new Commitment(), s.getProject()).toArray(new Commitment[0]);
 	}
 
@@ -137,6 +137,8 @@ public class CommitmentEntityManager implements EntityManager<Commitment> {
 	public void save(Session s, Commitment model) {
 		
 		db.save(model);
+
+		System.out.println("Commitmen saved...?");
 	}
 	
 
@@ -199,9 +201,9 @@ public class CommitmentEntityManager implements EntityManager<Commitment> {
 		 * We have to get the original defect from db4o, copy properties from updatedEvent,
 		 * then save the original Event again.
 		 */
-		List<Model> oldCommitments = db.retrieve(Commitment.class, "eventID", updatedCommitment.getEventID(), session.getProject());
+		List<Model> oldCommitments = db.retrieve(Commitment.class, "commitmentID", updatedCommitment.getCommitmentID(), session.getProject());
 		if(oldCommitments.size() < 1 || oldCommitments.get(0) == null) {
-			throw new BadRequestException("Event with ID does not exist.");
+			throw new BadRequestException("Commitment with ID does not exist.");
 		}
 				
 		Commitment existingCommitment = (Commitment)oldCommitments.get(0);		

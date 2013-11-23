@@ -12,6 +12,7 @@ import javax.swing.JCheckBox;
 import javax.swing.SwingConstants;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
 import java.awt.Color;
@@ -141,11 +142,11 @@ public class AddCommitmentDisplay extends JPanel
 					else
 					{
 						errorText.setVisible(false);
-						Event e = new Event();
+						Commitment e = new Commitment();
 						e.setName(Name.getText().trim());
 						e.setDescription(Description.getText());
-						e.setStart(commitTime1.getDate());
-						MainPanel.getInstance().addEvent(e);
+						e.setDate(commitTime1.getDate());
+						MainPanel.getInstance().addCommitment(e);
 						btnSave.setEnabled(false);
 						btnSave.setText("Saved!");
 						MainPanel.getInstance().closeTab(tabid);
