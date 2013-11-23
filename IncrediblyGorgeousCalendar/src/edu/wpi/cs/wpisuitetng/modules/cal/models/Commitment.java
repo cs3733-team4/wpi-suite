@@ -165,14 +165,7 @@ public class Commitment extends AbstractModel
 	{
 		this.duedate = start.toDate();
 	}
-
 	
-	
-
-
-
-
-
 	/**
 	 * @return the participants
 	 */
