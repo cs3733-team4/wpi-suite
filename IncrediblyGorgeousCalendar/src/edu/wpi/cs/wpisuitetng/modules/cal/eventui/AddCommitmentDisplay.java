@@ -22,15 +22,31 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.UUID;
 
 public class AddCommitmentDisplay extends JPanel
 {
-	private JTextField Name;
-	private JTextField Participants;
+	private JTextField nameTextField;
+	private JTextField participantsTextField;
 	private int tabid;
+	private UUID existingID;//the old ID of the commitment, might be unused if it is a new commitment
+	private boolean editingCommitment;
 	
 	public AddCommitmentDisplay()
 	{
+		editingCommitment=false;
+		init(new Commitment());
+	}
+	public AddCommitmentDisplay(Commitment oldCommitment)
+	{
+		editingCommitment=true;
+		existingID=oldCommitment.getCommitmentID();
+		init(oldCommitment);
+	}
+	private void init(Commitment oldCommitment)
+	{
+
+		
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		JPanel NameLabelPanel = new JPanel();
 		FlowLayout flowLayout_2 = (FlowLayout) NameLabelPanel.getLayout();
@@ -47,10 +63,13 @@ public class AddCommitmentDisplay extends JPanel
 		fl_NamePane.setAlignment(FlowLayout.LEFT);
 		add(NamePane);
 		
-		Name = new JTextField();
-		NamePane.add(Name);
-		Name.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		Name.setColumns(25);
+		nameTextField = new JTextField();
+		NamePane.add(nameTextField);
+		nameTextField.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		nameTextField.setColumns(25);
+		if (editingCommitment)
+			nameTextField.setText(oldCommitment.getName());
+		
 		
 		JPanel DateLabelPane = new JPanel();
 		DateLabelPane.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
@@ -66,6 +85,8 @@ public class AddCommitmentDisplay extends JPanel
 		add(CommitDatePickerPanel);
 		
 		final CommitmentDatePicker commitTime1 = new CommitmentDatePicker(true, null);
+		if (editingCommitment)
+			commitTime1.display(oldCommitment.getDate());
 		
 		CommitDatePickerPanel.add(lblDateTime);
 		CommitDatePickerPanel.add(commitTime1);
@@ -84,9 +105,12 @@ public class AddCommitmentDisplay extends JPanel
 		flowLayout_4.setAlignment(FlowLayout.LEFT);
 		add(ParticipantsPanel);
 		
-		Participants = new JTextField();
-		ParticipantsPanel.add(Participants);
-		Participants.setColumns(30);
+		participantsTextField = new JTextField();
+		ParticipantsPanel.add(participantsTextField);
+		participantsTextField.setColumns(30);
+		if (editingCommitment)
+			participantsTextField.setText(oldCommitment.getParticipants());
+		
 		
 		JPanel DescriptionLabelPane = new JPanel();
 		FlowLayout fl_DescriptionLabelPane = (FlowLayout) DescriptionLabelPane.getLayout();
@@ -109,12 +133,14 @@ public class AddCommitmentDisplay extends JPanel
         
         add(filler1);
 		
-		final JTextArea Description = new JTextArea(5,35);
-		Description.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		Description.setLineWrap(true);
-		Description.setWrapStyleWord(true);
+        final JTextArea descriptionTextArea = new JTextArea(5,35);
+		descriptionTextArea.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		descriptionTextArea.setLineWrap(true);
+		descriptionTextArea.setWrapStyleWord(true);
+		if (editingCommitment)
+			descriptionTextArea.setText(oldCommitment.getDescription());
 		
-		JScrollPane descriptionScrollPane = new JScrollPane(Description);
+		JScrollPane descriptionScrollPane = new JScrollPane(descriptionTextArea);
 		DescriptionPanel.add(descriptionScrollPane);
 		
 		JPanel SubmitPanel = new JPanel();
@@ -135,7 +161,7 @@ public class AddCommitmentDisplay extends JPanel
 					commitTime1.getDate();
 					errorText.setVisible(true);
 					
-					if (Name.getText() == null || Name.getText().trim().length() == 0)
+					if (nameTextField.getText() == null || nameTextField.getText().trim().length() == 0)
 					{
 						errorText.setText("* Please enter a commitment title");
 					}
@@ -143,10 +169,12 @@ public class AddCommitmentDisplay extends JPanel
 					{
 						errorText.setVisible(false);
 						Commitment e = new Commitment();
-						e.setName(Name.getText().trim());
-						e.setDescription(Description.getText());
+						e.setName(nameTextField.getText().trim());
+						e.setDescription(descriptionTextArea.getText());
 						e.setDate(commitTime1.getDate());
-						MainPanel.getInstance().addCommitment(e);
+						if (!editingCommitment)
+							MainPanel.getInstance().addCommitment(e);
+						
 						btnSave.setEnabled(false);
 						btnSave.setText("Saved!");
 						MainPanel.getInstance().closeTab(tabid);
