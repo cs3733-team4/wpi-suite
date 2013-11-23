@@ -5,6 +5,7 @@ import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
@@ -12,6 +13,7 @@ import javax.swing.border.LineBorder;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
 import javax.swing.JLabel;
@@ -38,7 +40,7 @@ public class VanGoghPainting extends JPanel
 	{
 		event = traveller.getEvent();
 		Color bg = event.getColor();
-		setBorder(new CompoundBorder(new LineBorder(bg.darker()), new EmptyBorder(6, 6, 6, 6)));
+		setBorder(new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new LineBorder(bg.darker()), new EmptyBorder(6, 6, 6, 6))));
 		setBackground(bg);
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		lblEventTitle = new JLabel(event.getName());
@@ -61,12 +63,13 @@ public class VanGoghPainting extends JPanel
 		
 		if (X.toInt(10000) + Width.toInt(10000) > 10000)
 			Width = new Rational(1,Width.getDenominator());
+		recalcBounds(200, 1400);
 	}
 	
 	@Override
 	public void paint(Graphics g)
 	{
-		doLayout();
+		recalcBounds(getParent().getWidth(), getParent().getHeight());
 		super.paint(g);
 	}
 	
@@ -74,22 +77,27 @@ public class VanGoghPainting extends JPanel
 	public void doLayout()
 	{
 		int width = this.getParent().getWidth();
+		if (recalcBounds(width, getParent().getHeight()))
+			super.doLayout();
+	}
+	
+	private boolean recalcBounds(int width, int parentHeight)
+	{
 		if (width != lastWidth)
 		{
 			lastWidth = width;
 		}
 		else
 		{
-			super.doLayout();
-			return;
-		}		
-		int height = (int) map(new Interval(event.getStart(), event.getEnd()).toDurationMillis(), getParent().getHeight());
+			return false;
+		}
+		int height = (int) map(new Interval(event.getStart(), event.getEnd()).toDurationMillis(), parentHeight);
 		lblStarryNightdutch.setMaximumSize(new Dimension(Width.toInt(width), height-20));
 		int outWidth = Width.toInt(width);
-		this.setBounds(X.toInt(width), (int) map(event.getStart().getMillisOfDay(), getParent().getHeight()), outWidth, height);
-		super.doLayout();
+		this.setBounds(X.toInt(width), (int) map(event.getStart().getMillisOfDay(), parentHeight), outWidth, height);
+		return true;
 	}
-	
+		
 	private long map(long num, long high){
 		return (long)(num/(double)millisInDay * high);
 	}

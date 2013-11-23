@@ -30,6 +30,7 @@ public class LouvreTour extends JPanel
 			guides.put(vanGoghPainting.event, vanGoghPainting);
 			add(vanGoghPainting); // priceless
 		}
+		revalidate();
 	}
 	
 // //TODO: fix so that we can easily re-compute a part of the events stack	
