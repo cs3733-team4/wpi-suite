@@ -83,7 +83,7 @@ public class CategoryEntityManager implements EntityManager<Category> {
 		
 		switch (args[0]) {
 			case "get-category-by-name":
-				return 		
+				return 	getCategoryByName(s, args[1]);	
 			case "get-category-by-id":
 				return
 			case "get-category-by-color":
@@ -92,20 +92,30 @@ public class CategoryEntityManager implements EntityManager<Category> {
 				System.out.println("Error: " + args[0] + " not a valid method");			
 		}
 	}
-
-	private Category[] getCategoryByName(Session ses, String name) {
+	/**For now, only return the first category it finds with a matching name.
+	 * Currently have not decided how to approach categories with matching names.
+	 * If a matching name is not there, returns a blank array.
+	 * 
+	 * @param ses
+	 * @param name
+	 * @return
+	 * @throws WPISuiteException
+	 */
+	private Category[] getCategoryByName(Session ses, String name) throws WPISuiteException {
 		List<Category> retrievedCategories = new ArrayList<>();
 		
 		Category[] all = getAll(ses);
 		
-		for(Category c: all) {
-			c.getName();
-			
+		for(Category c: all) 
+		{
+			if(c.getName().contains(name)){
+				retrievedCategories.add(c);
+				return new Category[] {retrievedCategories.get(0)};
+			}	
 		}
-
 		
-		
-		return 
+		return new Category[] {};
+				
 	}
 	
 	@Override
