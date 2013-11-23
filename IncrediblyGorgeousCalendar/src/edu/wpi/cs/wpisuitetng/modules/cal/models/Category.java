@@ -82,4 +82,8 @@ public class Category extends AbstractModel
 	public boolean isProjectCategory() {
 		return isProjectCategory;
 	}
+
+	public Object getCategoryID() {
+		return this.categoryID;
+	}
 }

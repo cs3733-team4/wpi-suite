@@ -1,5 +1,6 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.models;
 
+import java.util.List;
 import java.util.UUID;
 
 import edu.wpi.cs.wpisuitetng.Session;
@@ -10,6 +11,7 @@ import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotImplementedException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
+import edu.wpi.cs.wpisuitetng.modules.Model;
 
 
 /**
@@ -95,9 +97,29 @@ public class CategoryEntityManager implements EntityManager<Category> {
 	}
 
 	@Override
-	public Category update(Session s, String content) throws WPISuiteException {
-		// TODO Auto-generated method stub
-		return null;
+	public Category update(Session session, String content) throws WPISuiteException {
+		
+		Category updatedCategory = Category.fromJson(content);
+		/*
+		 * Because of the disconnected objects problem in db4o, we can't just save Categories.
+		 * We have to get the original defect from db4o, copy properties from updatedCategory,
+		 * then save the original Category again.
+		 */
+		List<Model> oldCategories = db.retrieve(Category.class, "categoryID", updatedCategory.getCategoryID(), session.getProject());
+		if(oldCategories.size() < 1 || oldCategories.get(0) == null) {
+			throw new BadRequestException("Category with ID does not exist.");
+		}
+				
+		Category existingCategory = (Category)oldCategories.get(0);		
+
+		// Copy values to old event and fill in our changeset appropriately
+		// TODO: existingCategory.copyFrom(updatedCategory);
+		
+		if(!db.save(existingCategory, session.getProject())) {
+			throw new WPISuiteException();
+		}
+		
+		return existingCategory;
 	}
 
 	@Override
