@@ -9,7 +9,6 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.models;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +32,7 @@ import edu.wpi.cs.wpisuitetng.modules.Model;
  * @version $Revision: 1.0 $
  * @author NileshP
  */
-public class CommitmentEntityManager implements EntityManager<Event> {
+public class CommitmentEntityManager implements EntityManager<Commitment> {
 
 	private static final DateTimeFormatter serializer = ISODateTimeFormat.basicDateTime();
 	/** The database */
@@ -57,15 +56,15 @@ public class CommitmentEntityManager implements EntityManager<Event> {
 	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#makeEntity(edu.wpi.cs.wpisuitetng.Session, java.lang.String)
 	 */
 	@Override
-	public Event makeEntity(Session s, String content) throws WPISuiteException {
+	public Commitment makeEntity(Session s, String content) throws WPISuiteException {
 		System.out.println(content+ " was just sent!");
-		final Event newEvent = Event.fromJson(content);
-		newEvent.setOwner(s.getUser());
-		newEvent.setProject(s.getProject());
-		if(!db.save(newEvent, s.getProject())) {
+		final Commitment newCommitment = Commitment.fromJson(content);
+		newCommitment.setOwner(s.getUser());
+		newCommitment.setProject(s.getProject());
+		if(!db.save(newCommitment, s.getProject())) {
 			throw new WPISuiteException();
 		}
-		return newEvent;
+		return newCommitment;
 	}
 	
 	/**
@@ -75,21 +74,21 @@ public class CommitmentEntityManager implements EntityManager<Event> {
 	 * @return the event matching the given id * @throws NotFoundException * @throws NotFoundException * @throws NotFoundException
 	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#getEntity(Session, String) */
 	@Override
-	public Event[] getEntity(Session s, String data) throws NotFoundException {
+	public Commitment[] getEntity(Session s, String data) throws NotFoundException {
 		System.out.println(data+ " was just sent!");
 		String[] args = data.split(",");
 		
-		Event[] retrievedEvents = null;
+		Commitment[] retrievedCommitments = null;
 		
 		switch (args[0]) {
-			case "filter-events-by-range":
-				return getEventsByRange(s, args[1], args[2]);
+			case "filter-commitments-by-range":
+				return getCommitmentsByRange(s, args[1], args[2]);
 			default:
 				System.out.println("Error: " + args[0] + " not a valid method");
 		}
 
 	
-		return retrievedEvents;
+		return retrievedCommitments;
 	}
 	
 	/**
@@ -98,24 +97,24 @@ public class CommitmentEntityManager implements EntityManager<Event> {
 	 * @param sto date to, DateTime formatted as String
 	 * @return retrieved events with overlapping range
 	 */
-	private Event[] getEventsByRange(Session ses, String sfrom, String sto) {
+	private Commitment[] getCommitmentsByRange(Session ses, String sfrom, String sto) {
 		DateTime from = serializer.parseDateTime(sfrom);
 		DateTime to = serializer.parseDateTime(sto);
-		List<Event> retrievedEvents = new ArrayList<>();
+		List<Commitment> retrievedCommitments = new ArrayList<>();
 		
-		Event[] all = getAll(ses);
+		Commitment[] all = getAll(ses);
 
 		final Interval range = new Interval(from, to);
 		
-		for (Event event : all)
+		for (Commitment commitment : all)
 		{
-			DateTime s = event.getStart(), e = event.getEnd();
-			if (s.isBefore(e) && range.overlaps(new Interval(s, e)))
+			DateTime s = commitment.getStart();
+			if (range.contains(s))
 			{
-				retrievedEvents.add(event);
+				retrievedCommitments.add(commitment);
 			}
 		}
-		return retrievedEvents.toArray(new Event[0]);
+		return retrievedCommitments.toArray(new Commitment[0]);
 	}
 
 	/**
@@ -124,9 +123,9 @@ public class CommitmentEntityManager implements EntityManager<Event> {
 	 * @return array of all stored events * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#getAll(Session) * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#getAll(Session) * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#getAll(Session)
 	 */
 	@Override
-	public Event[] getAll(Session s) {
+	public Commitment[] getAll(Session s) {
 		System.out.println("GET ALL!");
-		return db.retrieveAll(new Event(), s.getProject()).toArray(new Event[0]);
+		return db.retrieveAll(new Commitment(), s.getProject()).toArray(new Commitment[0]);
 	}
 
 	/**
@@ -135,9 +134,8 @@ public class CommitmentEntityManager implements EntityManager<Event> {
 	 * @param model the model to be saved
 	 */
 	@Override
-	public void save(Session s, Event model) {
-		if (model.isProjectEvent())
-			model.setProject(s.getProject());
+	public void save(Session s, Commitment model) {
+		
 		db.save(model);
 	}
 	
@@ -193,29 +191,29 @@ public class CommitmentEntityManager implements EntityManager<Event> {
 	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#update(Session, String)
 	 */
 	@Override
-	public Event update(Session session, String content) throws WPISuiteException {
+	public Commitment update(Session session, String content) throws WPISuiteException {
 		
-		Event updatedEvent = Event.fromJson(content);
+		Commitment updatedCommitment = Commitment.fromJson(content);
 		/*
 		 * Because of the disconnected objects problem in db4o, we can't just save Events.
 		 * We have to get the original defect from db4o, copy properties from updatedEvent,
 		 * then save the original Event again.
 		 */
-		List<Model> oldEvents = db.retrieve(Event.class, "eventID", updatedEvent.getEventID(), session.getProject());
-		if(oldEvents.size() < 1 || oldEvents.get(0) == null) {
+		List<Model> oldCommitments = db.retrieve(Commitment.class, "eventID", updatedCommitment.getEventID(), session.getProject());
+		if(oldCommitments.size() < 1 || oldCommitments.get(0) == null) {
 			throw new BadRequestException("Event with ID does not exist.");
 		}
 				
-		Event existingEvent = (Event)oldEvents.get(0);		
+		Commitment existingCommitment = (Commitment)oldCommitments.get(0);		
 
 		// copy values to old event and fill in our changeset appropriately
 		// TODO: existingEvent.copyFrom(updatedEvent);
 		
-		if(!db.save(existingEvent, session.getProject())) {
+		if(!db.save(existingCommitment, session.getProject())) {
 			throw new WPISuiteException();
 		}
 		
-		return existingEvent;
+		return existingCommitment;
 	}
 
 	/**
