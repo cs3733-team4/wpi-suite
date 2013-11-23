@@ -8,6 +8,7 @@ import org.joda.time.DateTime;
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
+
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
@@ -24,7 +25,7 @@ public class Event extends AbstractModel
 	private Date end;
 	private boolean isProjectEvent;
 	private boolean isAllDay;
-	private String[] categories;
+	private UUID category;
 	private String participants;
 	private User owner;
 
@@ -118,11 +119,7 @@ public class Event extends AbstractModel
 	@Override
 	public Boolean identify(Object o)
 	{
-		if(o instanceof Event)
-		{
-			return ((Event) o).toJSON().equals(this.toJSON());
-		}
-		return false;
+		return null;
 	}
 
 	/**
@@ -228,20 +225,20 @@ public class Event extends AbstractModel
 	}
 
 	/**
-	 * @return the categories
+	 * @return the category
 	 */
-	public String[] getCategories()
+	public UUID getCategory()
 	{
-		return categories;
+		return category;
 	}
 
 	/**
-	 * @param categories
-	 *            the categories to set
+	 * @param category
+	 *            the category to set
 	 */
-	public void setCategories(String[] categories)
+	public void setCategory(UUID category)
 	{
-		this.categories = categories;
+		this.category = category;
 	}
 
 	/**
