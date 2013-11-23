@@ -19,6 +19,7 @@ public class Category extends AbstractModel
 	private String name;
 	private Color color;
 	private User owner;
+	private boolean isProjectCategory;
 	
 	/**
 	 * @param name
@@ -76,5 +77,9 @@ public class Category extends AbstractModel
 
 	public static Category fromJson(String content) {
 		return null;
+	}
+
+	public boolean isProjectCategory() {
+		return isProjectCategory;
 	}
 }
