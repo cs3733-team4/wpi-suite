@@ -52,26 +52,26 @@ public class CategoryEntityManager implements EntityManager<Category> {
 	}
 
 	@Override
-	public Event[] getEntity(Session s, String id) throws NotFoundException,
+	public Category[] getEntity(Session s, String id) throws NotFoundException,
 			WPISuiteException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Event[] getAll(Session s) throws WPISuiteException {
+	public Category[] getAll(Session s) throws WPISuiteException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Event update(Session s, String content) throws WPISuiteException {
+	public Category update(Session s, String content) throws WPISuiteException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void save(Session s, Event model) throws WPISuiteException {
+	public void save(Session s, Category model) throws WPISuiteException {
 		// TODO Auto-generated method stub
 		
 	}
