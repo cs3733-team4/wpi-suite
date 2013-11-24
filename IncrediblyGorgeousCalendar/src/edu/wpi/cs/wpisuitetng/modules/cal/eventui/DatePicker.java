@@ -34,8 +34,7 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 		linked = mLinked;
 		
 		dateFmt = DateTimeFormat.forPattern("MM/dd/yy");
-		
-		dateTimeFmt = DateTimeFormat.forPattern("MM/dd/yy h:mmaa");
+		dateTimeFmt = DateTimeFormat.forPattern("MM/dd/yy hh:mm aa");
 		final MiniCalendarHostIface me = this;
 		try {
 			date = new JFormattedTextField(new MaskFormatter("##/##/##"));
@@ -88,6 +87,7 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 				});
 				
 				this.add(time);
+
 				AMPM = new JComboBox<>();
 				AMPM.addItem("AM");
 				AMPM.addItem("PM");
@@ -108,7 +108,7 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 				    cal.setUndecorated(true);
 				    cal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				    Point loc = date.getLocationOnScreen();
-				    loc.setLocation(loc.x, loc.y+26);
+				    loc.setLocation(loc.x, loc.y + 26);
 					cal.setLocation(loc);
 					cal.setSize(220, 220);
 				    cal.setVisible(true);
@@ -131,12 +131,12 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 
 	public void display(DateTime value) {		
 		date.setText(value.toString(dateFmt));
-		if(linked!=null)
+		if(linked != null)
 			linked.display(value);
 	}
 	
-	public DateTime getDate(){
-		return dateTimeFmt.parseDateTime(date.getText()
-				+ " " + time.getText() + AMPM.getSelectedItem());
+	public DateTime getDate() {
+	      System.out.println(date);
+		return dateTimeFmt.parseDateTime(date.getText()+" "+time.getText()+" "+AMPM.getSelectedItem());
 	}
 }
