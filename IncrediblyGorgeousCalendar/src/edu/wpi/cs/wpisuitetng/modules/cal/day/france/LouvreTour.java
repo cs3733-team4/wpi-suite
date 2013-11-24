@@ -1,6 +1,7 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.day.france;
 
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.util.HashMap;
 import java.util.List;
 
@@ -31,6 +32,36 @@ public class LouvreTour extends JPanel
 			add(vanGoghPainting); // priceless
 		}
 		revalidate();
+	}
+	
+	public void paintComponent(Graphics g)
+	{
+		super.paintComponent(g);
+		
+		
+		int distanceBetweenBorders = (this.getHeight()-23)/24;
+		g.setColor(Colors.BORDER);
+		int currentPosition = distanceBetweenBorders+1;
+		
+		for(int i = 0; i < 23; i++)
+		{
+			g.drawLine(0, currentPosition, this.getWidth(), currentPosition);
+			currentPosition++;
+			//g.drawLine(0, currentPosition, this.getWidth(), currentPosition);
+			currentPosition += distanceBetweenBorders;
+		}
+		
+		currentPosition = distanceBetweenBorders/2+1;
+		g.setColor(Colors.BORDER.brighter());
+		for(int i = 0; i < 24; i++)
+		{
+			g.drawLine(0, currentPosition, this.getWidth(), currentPosition);
+			currentPosition++;
+			//g.drawLine(0, currentPosition, this.getWidth(), currentPosition);
+			currentPosition += distanceBetweenBorders;
+		}
+		
+		
 	}
 	
 // //TODO: fix so that we can easily re-compute a part of the events stack	
