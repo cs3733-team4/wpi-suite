@@ -2,14 +2,16 @@ package edu.wpi.cs.wpisuitetng.modules.cal.eventui;
 
 import java.awt.Font;
 import java.awt.Point;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.text.MaskFormatter;
 
 import org.joda.time.DateTime;
@@ -40,8 +42,51 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 			date.setFont(new Font("Monospaced", Font.PLAIN, 13));
 			this.add(date);
 			if (showTime) {
-				time = new JFormattedTextField(new MaskFormatter("##:##"));
-				time.setFont(new Font("Monospaced", Font.PLAIN, 13));
+				MaskFormatter mask = new MaskFormatter("##:##");
+				mask.setPlaceholder("00:00");
+				time = new JFormattedTextField(mask);
+				time.setFont(new Font("Monospaced", Font.PLAIN, 13));				
+				time.addFocusListener(new FocusListener() {
+					
+					@Override
+					public void focusLost(FocusEvent arg0) {
+						switch(time.getText().replace(":", "").trim().length())
+						{
+						case 4:
+							break;
+							
+						case 3:
+							time.setValue("0" + time.getText().replace(":", "").trim().charAt(0)+":"+time.getText().replace(":", "").trim().substring(1));
+							break;
+							
+						case 2:
+							if(Integer.valueOf(time.getText().replace(":", "").trim())<13)
+								time.setValue(time.getText().replace(":", "").trim()+":00");
+							else
+								time.setValue("00:00");	
+							break;
+							
+						case 1:
+							time.setValue("0"+time.getText().replace(":", "").trim()+":00");
+							break;
+							
+						default:
+							time.setValue("00:00");	
+						}
+					}
+					
+					@Override
+					public void focusGained(FocusEvent arg0) {
+						 SwingUtilities.invokeLater(new Runnable() {
+							
+							@Override
+							public void run() {
+								time.selectAll();
+							}
+						});
+					}
+				});
+				
 				this.add(time);
 				AMPM = new JComboBox<>();
 				AMPM.addItem("AM");

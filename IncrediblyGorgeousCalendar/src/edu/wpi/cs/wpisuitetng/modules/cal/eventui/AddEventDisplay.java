@@ -103,6 +103,7 @@ public class AddEventDisplay extends JPanel
 		startTime = new DatePicker(true, endTime);
 		
 		startTime.time.getDocument().addDocumentListener(dateValidationDocListener);
+		startTime.date.getDocument().addDocumentListener(dateValidationDocListener);
 		startTime.AMPM.addActionListener(new ActionListener() {
 			
 			@Override
@@ -113,6 +114,7 @@ public class AddEventDisplay extends JPanel
 		});
 		
 		endTime.time.getDocument().addDocumentListener(dateValidationDocListener);
+		endTime.date.getDocument().addDocumentListener(dateValidationDocListener);
 		endTime.AMPM.addActionListener(new ActionListener() {
 			
 			@Override
@@ -222,7 +224,8 @@ public class AddEventDisplay extends JPanel
 		SubmitPanel.add(chckbxProjectEvent);
 		SubmitPanel.add(errorText);
 		
-		//this should be called in updateSaveable() and unnecessary but error msg didn't start visible unless I called directly
+		//this should be called in updateSaveable() and thus isnt necessary here
+		//but error msg didn't start visible unless I called it directly
 		validateDate(startTime, endTime, dateErrorLabel);
 		
 		saveEventButton.setEnabled(isSaveable());
