@@ -22,16 +22,15 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class AddEventDisplay extends JPanel
+public class AddCommitmentDisplay extends JPanel
 {
 	private JTextField Name;
 	private JTextField Participants;
 	private int tabid;
 	
-	public AddEventDisplay()
+	public AddCommitmentDisplay()
 	{
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		final JPanel me = this;
 		JPanel NameLabelPanel = new JPanel();
 		FlowLayout flowLayout_2 = (FlowLayout) NameLabelPanel.getLayout();
 		flowLayout_2.setAlignment(FlowLayout.LEFT);
@@ -52,27 +51,23 @@ public class AddEventDisplay extends JPanel
 		Name.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		Name.setColumns(25);
 		
-		JPanel DateandTimeLabelPane = new JPanel();
-		add(DateandTimeLabelPane);
-		DateandTimeLabelPane.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+		JPanel DateLabelPane = new JPanel();
+		DateLabelPane.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		
-		JLabel lblDateTime = new JLabel("Date and Time:");
+		JLabel lblDateTime = new JLabel("Date:");
 		lblDateTime.setVerticalAlignment(SwingConstants.BOTTOM);
 		lblDateTime.setHorizontalAlignment(SwingConstants.LEFT);
-		DateandTimeLabelPane.add(lblDateTime);
+		DateLabelPane.add(lblDateTime);
 		
-		JPanel DatePickerPanel = new JPanel();
-		FlowLayout flowLayout_5 = (FlowLayout) DatePickerPanel.getLayout();
-		flowLayout_5.setAlignment(FlowLayout.LEFT);
-		add(DatePickerPanel);
-		final DatePicker endTime = new DatePicker(true, null);
-		final DatePicker startTime = new DatePicker(true, endTime);
-		DatePickerPanel.add(new JLabel("From "));
-		DatePickerPanel.add(startTime);
-		DatePickerPanel.add(new JLabel(" To "));
-		DatePickerPanel.add(endTime);
-//		JCheckBox chckbxAllDayEvent = new JCheckBox("All Day Event");
-//		DatePickerPanel.add(chckbxAllDayEvent);
+		JPanel CommitDatePickerPanel = new JPanel();
+		FlowLayout flowLayout_51 = (FlowLayout) CommitDatePickerPanel.getLayout();
+		flowLayout_51.setAlignment(FlowLayout.LEFT);
+		add(CommitDatePickerPanel);
+		
+		final CommitmentDatePicker commitTime1 = new CommitmentDatePicker(true, null);
+		
+		CommitDatePickerPanel.add(lblDateTime);
+		CommitDatePickerPanel.add(commitTime1);
 		
 		JPanel ParticipantsLabelPane = new JPanel();
 		FlowLayout flowLayout_1 = (FlowLayout) ParticipantsLabelPane.getLayout();
@@ -96,8 +91,8 @@ public class AddEventDisplay extends JPanel
 		FlowLayout fl_DescriptionLabelPane = (FlowLayout) DescriptionLabelPane.getLayout();
 		fl_DescriptionLabelPane.setAlignment(FlowLayout.LEFT);
 		add(DescriptionLabelPane);
-		final JCheckBox chckbxProjectEvent = new JCheckBox("Project Event");
-		chckbxProjectEvent.setSelected(true);
+		
+		
 		JLabel lblDescription = new JLabel("Description:");
 		lblDescription.setVerticalAlignment(SwingConstants.BOTTOM);
 		DescriptionLabelPane.add(lblDescription);
@@ -136,21 +131,12 @@ public class AddEventDisplay extends JPanel
 			public void actionPerformed(ActionEvent arg0) {
 				try
 				{
-					startTime.getDate();
-					endTime.getDate();
+					commitTime1.getDate();
 					errorText.setVisible(true);
 					
 					if (Name.getText() == null || Name.getText().trim().length() == 0)
 					{
-						errorText.setText("* Please enter an event title");
-					}
-					else if (!(startTime.getDate().getDayOfYear() == endTime.getDate().getDayOfYear() &&
-						startTime.getDate().getYear() == endTime.getDate().getYear()))
-					{
-						errorText.setText("* Event must start and end on the same date");
-					}
-					else if (startTime.getDate().isAfter(endTime.getDate())) {
-						errorText.setText("* Event start date must be before end date");
+						errorText.setText("* Please enter a commitment title");
 					}
 					else
 					{
@@ -158,9 +144,7 @@ public class AddEventDisplay extends JPanel
 						Event e = new Event();
 						e.setName(Name.getText().trim());
 						e.setDescription(Description.getText());
-						e.setStart(startTime.getDate());
-						e.setEnd(endTime.getDate());
-						e.setProjectEvent(chckbxProjectEvent.isSelected());
+						e.setStart(commitTime1.getDate());
 						MainPanel.getInstance().addEvent(e);
 						btnSave.setEnabled(false);
 						btnSave.setText("Saved!");
@@ -170,7 +154,7 @@ public class AddEventDisplay extends JPanel
 				}
 				catch (IllegalArgumentException exception)
 				{
-					errorText.setText("* Invalid Date/Time");
+					errorText.setText("* Invalid Date");
 					errorText.setVisible(true);
 				}
 			}
@@ -187,7 +171,6 @@ public class AddEventDisplay extends JPanel
 			}
 		});
 		SubmitPanel.add(btnCancel);
-		SubmitPanel.add(chckbxProjectEvent);
 		SubmitPanel.add(errorText);
 	}
 	
