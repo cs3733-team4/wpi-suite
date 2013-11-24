@@ -10,7 +10,6 @@ import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
 /**
  * Tests for MonthItem class
- * Currently broken
  */
 
 
