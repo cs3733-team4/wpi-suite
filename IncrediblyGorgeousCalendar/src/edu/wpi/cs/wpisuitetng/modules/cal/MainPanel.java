@@ -177,12 +177,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		});
 		
 		
-		Commitment[] allCommitments = commitments.getAllCommitments().toArray(new Commitment[0]);
 		
-		for (int i=0; i<allCommitments.length; i++)
-		{
-			addTopLevelTab(new AddCommitmentDisplay(allCommitments[i]), "Edit Commitment", true);
-		}
 	}
 	
 	
