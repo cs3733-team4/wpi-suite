@@ -63,8 +63,21 @@ public class ServerManager {
 		}
 		return events;
 	}
-
-	public static boolean put(String path, String json) {
+	public static boolean put(String path, String json)
+	{
+		final Request request = Network.getInstance().makeRequest(path,
+				HttpMethod.PUT);
+		return sendData(request, path, json);
+	}
+	
+	public static boolean post(String path, String json)
+	{
+		final Request request = Network.getInstance().makeRequest(path,
+				HttpMethod.POST);
+		return sendData(request, path, json);
+	}
+	
+	public static boolean sendData(final Request request, String path, String json) {
 		final Semaphore sem = new Semaphore(1);
 		try {
 			sem.acquire();
@@ -75,8 +88,7 @@ public class ServerManager {
 		final Boolean[] success = new Boolean[1];
 		success[0] = Boolean.FALSE;
 		// Send a request to the core to save this message
-		final Request request = Network.getInstance().makeRequest(path,
-				HttpMethod.PUT);
+		
 		request.setBody(json);
 		request.addObserver(new RequestObserver() {
 
@@ -88,7 +100,7 @@ public class ServerManager {
 
 			@Override
 			public void responseError(IRequest iReq) {
-				System.err.println("The request to add events errored:");
+				System.err.println("The request to add data errored:");
 				System.err.println(iReq.getResponse().getBody());
 				sem.release();
 

@@ -83,6 +83,8 @@ public class CommitmentEntityManager implements EntityManager<Commitment> {
 		switch (args[0]) {
 			case "filter-commitments-by-range":
 				return getCommitmentsByRange(s, args[1], args[2]);
+			case "get-all-commitments":
+				return getAll(s);
 			default:
 				System.out.println("Error: " + args[0] + " not a valid method");
 		}
@@ -138,7 +140,7 @@ public class CommitmentEntityManager implements EntityManager<Commitment> {
 		
 		db.save(model);
 
-		System.out.println("Commitmen saved...?");
+		System.out.println("Commitment saved...?");
 	}
 	
 

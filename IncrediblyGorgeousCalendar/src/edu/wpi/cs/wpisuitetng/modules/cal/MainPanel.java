@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Insets;
+import java.awt.color.CMMException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -151,7 +152,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		
 		// Add default tabs to main panel
 		addTopLevelTab(mainPaneContainer, "Calendar", false);
-		
+	
 		// add context menu
 		this.addMouseListener(new MouseAdapter()
 		{
@@ -174,6 +175,14 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 				}
 			}
 		});
+		
+		
+		Commitment[] allCommitments = commitments.getAllCommitments().toArray(new Commitment[0]);
+		
+		for (int i=0; i<allCommitments.length; i++)
+		{
+			addTopLevelTab(new AddCommitmentDisplay(allCommitments[i]), "Edit Commitment", true);
+		}
 	}
 	
 	
@@ -284,6 +293,15 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	public void addCommitment(Commitment newCommitment)
 	{
 		commitments.putCommitment(newCommitment);
+	}
+	/**
+	 * Updates a commitment as long both commitments have the same ID
+	 * TODO: Implement updating on the commitment model
+	 * @param newCommitment
+	 */
+	public void updateCommitment(Commitment newCommitment)
+	{
+		commitments.updateCommitment(newCommitment);
 	}
 
 	/**

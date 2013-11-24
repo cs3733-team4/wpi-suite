@@ -207,7 +207,7 @@ public class EventEntityManager implements EntityManager<Event> {
 				
 		Event existingEvent = (Event)oldEvents.get(0);		
 
-		// copy values to old event and fill in our changeset appropriately
+		// copy values to old event and fill in our change set appropriately
 		// TODO: existingEvent.copyFrom(updatedEvent);
 		
 		if(!db.save(existingEvent, session.getProject())) {

@@ -172,9 +172,13 @@ public class AddCommitmentDisplay extends JPanel
 						e.setName(nameTextField.getText().trim());
 						e.setDescription(descriptionTextArea.getText());
 						e.setDate(commitTime1.getDate());
-						if (!editingCommitment)
-							MainPanel.getInstance().addCommitment(e);
+						if (editingCommitment)
+							e.setCommitmentID(existingID);
 						
+						if (editingCommitment)
+							MainPanel.getInstance().updateCommitment(e);
+						else
+							MainPanel.getInstance().addCommitment(e);
 						btnSave.setEnabled(false);
 						btnSave.setText("Saved!");
 						MainPanel.getInstance().closeTab(tabid);

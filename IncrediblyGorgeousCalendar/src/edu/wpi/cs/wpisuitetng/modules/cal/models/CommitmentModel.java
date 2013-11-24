@@ -17,8 +17,16 @@ public class CommitmentModel {
 				to.toString(serializer));
 	}
 
+	public List<Commitment> getAllCommitments() {
+		return ServerManager.get("cal/commitments/", Commitment[].class, "get-all-commitments");
+	}
+
 	public boolean putCommitment(Commitment toAdd){
 		return ServerManager.put("cal/commitments", toAdd.toJSON());
+	}
+	public boolean updateCommitment(Commitment toUpdate)
+	{
+		return ServerManager.post("cal/commitments", toUpdate.toJSON());
 	}
 	
 	
