@@ -57,25 +57,17 @@ public class CategoryEntityManager implements EntityManager<Category> {
 		return newCategory;
 	}
 
+	/**
+	 * gets entity depending on parameter passed in the string
+	 * @param s, current users cookies
+	 * @param id, content will determine
+	 * @return retrievedCategories, array of categories matching the entity specifications
+	 * @author sarahsawatzki, Etienne
+	 */
+	
 	@Override
 	public Category[] getEntity(Session s, String id) throws NotFoundException, WPISuiteException {
-		/**
-		 * System.out.println(data+ " was just sent!");
-		String[] args = data.split(",");
-		
-		Event[] retrievedEvents = null;
-		
-		switch (args[0]) {
-			case "filter-events-by-range":
-				return getEventsByRange(s, args[1], args[2]);
-			default:
-				System.out.println("Error: " + args[0] + " not a valid method");
-		}
 
-	
-		return retrievedEvents;
-		 */
-		
 		System.out.println(id+ " was just sent!");
 		String[] args = id.split(",");
 		
@@ -91,7 +83,10 @@ public class CategoryEntityManager implements EntityManager<Category> {
 			default:
 				System.out.println("Error: " + args[0] + " not a valid method");			
 		}
+		
+		return retrievedCategories;
 	}
+	
 	/**For now, only return the first category it finds with a matching name.
 	 * Currently have not decided how to approach categories with matching names.
 	 * If a matching name is not there, returns a blank array.
