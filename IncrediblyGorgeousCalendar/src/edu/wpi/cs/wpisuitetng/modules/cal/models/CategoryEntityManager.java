@@ -1,5 +1,6 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.models;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -57,8 +58,7 @@ public class CategoryEntityManager implements EntityManager<Category> {
 	}
 
 	@Override
-	public Category[] getEntity(Session s, String id) throws NotFoundException,
-			WPISuiteException {
+	public Category[] getEntity(Session s, String id) throws NotFoundException, WPISuiteException {
 		/**
 		 * System.out.println(data+ " was just sent!");
 		String[] args = data.split(",");
@@ -85,9 +85,9 @@ public class CategoryEntityManager implements EntityManager<Category> {
 			case "get-category-by-name":
 				return 	getCategoryByName(s, args[1]);	
 			case "get-category-by-id":
-				return
+				return getCategoryByID(s, args[1]);
 			case "get-category-by-color":
-				return
+				return getCategoryByColor(s, args[1]);
 			default:
 				System.out.println("Error: " + args[0] + " not a valid method");			
 		}
@@ -96,19 +96,19 @@ public class CategoryEntityManager implements EntityManager<Category> {
 	 * Currently have not decided how to approach categories with matching names.
 	 * If a matching name is not there, returns a blank array.
 	 * 
-	 * @param ses
+	 * @param s
 	 * @param name
 	 * @return
 	 * @throws WPISuiteException
 	 */
-	private Category[] getCategoryByName(Session ses, String name) throws WPISuiteException {
+	private Category[] getCategoryByName(Session s, String name) throws WPISuiteException {
 		List<Category> retrievedCategories = new ArrayList<>();
 		
-		Category[] all = getAll(ses);
+		Category[] all = getAll(s);
 		
 		for(Category c: all) 
 		{
-			if(c.getName().contains(name)){
+			if(c.getName() == name){
 				retrievedCategories.add(c);
 				return new Category[] {retrievedCategories.get(0)};
 			}	
@@ -117,7 +117,53 @@ public class CategoryEntityManager implements EntityManager<Category> {
 		return new Category[] {};
 				
 	}
-	
+	/**
+	 * For now only returns the first category with this specific ID.
+	 * @param s
+	 * @param id
+	 * @return
+	 * @throws WPISuiteException
+	 */
+	private Category[] getCategoryByID(Session s, String id) throws WPISuiteException
+	{
+		List<Category> retrievedCategories = new ArrayList<>();
+		Category[] all = getAll(s);
+		UUID idVal = UUID.fromString(id);
+		for(Category c: all)
+		{
+			if (c.getCategoryID() == idVal)
+			{
+				retrievedCategories.add(c);
+				return new Category[] {retrievedCategories.get(0)};
+			}
+		}
+		return new Category[] {};
+	}
+	/**
+	 * For now returns the first Category with the matching color.
+	 * Colors must be passed in RGB format.
+	 * @param s
+	 * @param color
+	 * @return
+	 * @throws WPISuiteException
+	 */
+	private Category[] getCategoryByColor(Session s, String color) throws WPISuiteException
+	{
+		List<Category> retrievedCategories = new ArrayList<>();
+		Category[] all = getAll(s);
+		
+		for(Category c: all)
+		{
+			int rgbVal = Integer.parseInt(color);
+			
+			if (c.getColor() == new Color(rgbVal))
+			{
+				retrievedCategories.add(c);
+				return new Category[] {retrievedCategories.get(0)};
+			}
+		}
+		return new Category[] {};
+	}
 	@Override
 	public Category[] getAll(Session s) throws WPISuiteException {
 		System.out.println("GET ALL!");
