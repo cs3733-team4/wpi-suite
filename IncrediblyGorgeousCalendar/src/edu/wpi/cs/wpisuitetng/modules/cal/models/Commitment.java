@@ -16,7 +16,7 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
  * Commitment on a calendar.
  * 
  */
-public class Commitment extends AbstractModel
+public class Commitment extends AbstractModel implements Displayable
 {
 	private UUID commitmentID = UUID.randomUUID();
 	private String name;

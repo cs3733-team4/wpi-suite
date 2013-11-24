@@ -111,7 +111,7 @@ public class MonthDay extends JPanel
 	{
 		int total = this.getHeight();
 		int hidden = 0;
-		//int chidden = 0;
+		int chidden = 0;
 		removeAll();
 		add(header);
 		total -= header.getHeight();
@@ -146,7 +146,7 @@ public class MonthDay extends JPanel
 		{
 			this.add(new CollapsedMonthItem(hidden));
 		}
-		/*
+		
 		if (commitments != null){
 			for (Commitment elt : this.commitments)
 			{
@@ -167,7 +167,7 @@ public class MonthDay extends JPanel
 					}
 				}
 			}
-		}*/
+		}
 		super.doLayout();
 	}
 	

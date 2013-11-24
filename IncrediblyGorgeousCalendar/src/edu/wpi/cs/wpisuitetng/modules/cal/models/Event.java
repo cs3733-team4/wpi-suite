@@ -16,7 +16,7 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
  * event on a calendar.
  * 
  */
-public class Event extends AbstractModel
+public class Event extends AbstractModel implements Displayable
 {
 	private UUID eventID = UUID.randomUUID();
 	private String name;
@@ -284,6 +284,8 @@ public class Event extends AbstractModel
 		this.owner = owner;
 	}
 
-	// Accessor and Mutator Methods:
-
+	@Override
+	public DateTime getDate() {
+		return this.getStart();
+	}
 }

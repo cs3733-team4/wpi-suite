@@ -27,6 +27,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.day.DayCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.eventui.AddCommitmentDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.eventui.AddEventDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
@@ -62,7 +63,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	private ViewSize view = ViewSize.Month;
 	private static MainPanel instance;
 	private AddCommitmentDisplay commitment = new AddCommitmentDisplay();
-	private Event selectedEvent;
+	private Displayable selectedEvent;
 	
 	//TODO: "make this better" -Patrick
 	public boolean showPersonal = true;
@@ -335,10 +336,15 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		mTabbedPane.remove(tabs.get(id));
 	}
 	
-	public void updateSelectedEvent(Event mEvent){
+	public void updateSelectedEvent(Displayable mEvent){
 		this.selectedEvent = mEvent;
-		AddEventDisplay mAddEventDisplay = new AddEventDisplay(mEvent);
-		mAddEventDisplay.setTabId(instance.addTopLevelTab(mAddEventDisplay, "Edit Event", true));
-		
+		if (mEvent instanceof Event) {
+			AddEventDisplay mAddEventDisplay = new AddEventDisplay((Event) mEvent);
+			mAddEventDisplay.setTabId(instance.addTopLevelTab(mAddEventDisplay, "Edit Event", true));
+		}
+		else if (mEvent instanceof Commitment) {
+			AddCommitmentDisplay mAddCommitmentDisplay = new AddCommitmentDisplay((Commitment) mEvent);
+			mAddCommitmentDisplay.setTabId(instance.addTopLevelTab(mAddCommitmentDisplay, "Edit Commitment", true));
+		}
 	}
 }

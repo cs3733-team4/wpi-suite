@@ -16,6 +16,7 @@ import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
 
@@ -24,23 +25,23 @@ public class MonthItem extends JPanel
 	private static final long serialVersionUID = 6475224766889058195L;
 	
 	JLabel time = new JLabel(), desc = new JLabel();
-	private Event mEvent;
+	private Displayable mEvent;
 	/**
 	 * MonthItem Constructor
 	 * @param when
 	 * @param descr
 	 */
-	public MonthItem(Event event)
+	public MonthItem(Displayable ndisp)
 	{
         setBackground(Colors.TABLE_BACKGROUND);
         setMaximumSize(new java.awt.Dimension(32767, 24));
         setMinimumSize(new java.awt.Dimension(0, 0));
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.X_AXIS));
 
-        this.mEvent = event;
+        this.mEvent = ndisp;
         
         time.setFont(new java.awt.Font("DejaVu Sans", Font.BOLD, 12));
-        time.setText(simpleTime(mEvent.getStart()));
+        time.setText(simpleTime(mEvent.getDate()));
         time.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 3));
         add(time);
 
@@ -114,7 +115,7 @@ public class MonthItem extends JPanel
 	}
 
 
-	public static Component generateFrom(Event elt) {
+	public static Component generateFrom(Displayable elt) {
 		return new MonthItem(elt);
 	}
 }
