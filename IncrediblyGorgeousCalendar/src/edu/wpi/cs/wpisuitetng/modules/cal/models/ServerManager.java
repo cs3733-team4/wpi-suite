@@ -76,7 +76,12 @@ public class ServerManager {
 				HttpMethod.POST);
 		return sendData(request, path, json);
 	}
-	
+	public static boolean delete(String path, String json)
+	{
+		final Request request = Network.getInstance().makeRequest(path,
+				HttpMethod.DELETE);
+		return sendData(request, path, json);
+	}
 	public static boolean sendData(final Request request, String path, String json) {
 		final Semaphore sem = new Semaphore(1);
 		try {
