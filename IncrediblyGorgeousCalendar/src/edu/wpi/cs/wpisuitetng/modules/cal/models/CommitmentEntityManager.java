@@ -210,14 +210,14 @@ public class CommitmentEntityManager implements EntityManager<Commitment> {
 				
 		Commitment existingCommitment = (Commitment)oldCommitments.get(0);		
 
-		// copy values to old event and fill in our changeset appropriately
-		// TODO: existingEvent.copyFrom(updatedEvent);
+		db.delete(existingCommitment);
 		
-		if(!db.save(existingCommitment, session.getProject())) {
+		
+		if(!db.save(updatedCommitment, session.getProject())) {
 			throw new WPISuiteException();
 		}
 		
-		return existingCommitment;
+		return updatedCommitment;
 	}
 
 	/**
