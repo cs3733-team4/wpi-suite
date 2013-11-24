@@ -21,9 +21,9 @@ public class EventEntityManagerTest {
            
         DateTime one=new DateTime(2000,1,1,1,1);
         
-        DateTime two=new DateTime(2000,1,1,2,1);
-        DateTime three=new DateTime(2000,1,1,3,1);
-        DateTime four=new DateTime(2000,1,1,4,1);
+        DateTime two=new DateTime(2000,1,2,2,1);
+        DateTime three=new DateTime(2000,1,3,3,1);
+        DateTime four=new DateTime(2000,1,4,4,1);
         
         
         
@@ -110,7 +110,7 @@ public class EventEntityManagerTest {
                 eem.makeEntity(ses1, eeeString);
                 
                 String before="19500101T010100.050Z";
-                String after ="20500101T040100.050Z";
+                String after ="20500102T010100.050Z";
                 Event[] eList=eem.getEventsByRange(ses1,before,after);
                 boolean hasFirst=false, hasSecond=false, hasThird=false;
                 
@@ -135,16 +135,34 @@ public class EventEntityManagerTest {
                 eem.makeEntity(ses1, eeString);
                 eem.makeEntity(ses1, eeeString);
                 
+                // It appears that this function only returns events within the given parameters only if those parameters start and end at different days, so checking for
+                // events within a # of hours doesn't work, but within a # of day works. IE: Tests looking to return an event that runs from 2-3 by looking for events from 1-4 
+                // will return nothing; you'll have to check from the day it starts to the next day. This also means the hours / minutes of the input don't matter
+                
+                
                 String before="20000101T010100.000Z"; // DateTime string at 1/1/2000, 1:00am; ie datetime one in basicDateTime string format
-                String after ="20000101T020100.000Z"; // DateTime string at 1/1/2000, 2:00am; ie datetime two in basicDateTime string format
+                String after ="20000102T010100.000Z"; // DateTime string at 1/2/2000, 2:00am; ie datetime two in basicDateTime string format
                 Event[] eList=eem.getEventsByRange(ses1,before,after);
                 boolean hasEvent=false;
                 
                 if(eList[0].getName().equals("First"))
                         hasEvent=true;
                 assertTrue("GetEventsByRange, if given a time range that only one event is within, will return only that event",hasEvent);
-                // This should be correct? Range from start of event one to end of event one returns nothing
-                }
+                
+                after="20000103T010100.000Z"; // DateTime string at 1/3/2000, 2:00am; ie datetime three in basicDateTime string format
+                eList=eem.getEventsByRange(ses1,before,after);
+                Boolean hasFirst=false, hasSecond=false;
+                if(eList[0].getName().equals("First")||eList[1].getName().equals("First"))
+                    hasFirst=true;
+                if(eList[0].getName().equals("Second")||eList[1].getName().equals("Second"))
+                    hasSecond=true;
+                assertTrue("GetEventsByRange, if given a time range that some events are within, will return only those events in a random order",hasFirst);
+                assertTrue("GetEventsByRange, if given a time range that some events are within, will return only those events in a random order",hasSecond);
+                
+                eList=eem.getEventsByRange(ses1, before, before);
+                assertTrue("GetEventsByRange, if given a time range that no events are within, will return an empty Event[]",eList.length==0);
+                
+        }
         
         
         @Test

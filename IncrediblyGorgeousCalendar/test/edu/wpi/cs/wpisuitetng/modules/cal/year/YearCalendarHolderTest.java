@@ -9,17 +9,27 @@ import edu.wpi.cs.wpisuitetng.modules.cal.month.MonthCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.year.YearCalendarHolder;
 
 import org.joda.time.DateTime;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class YearCalendarHolderTest {
 
-        //MainPanel dummyPanel=new MainPanel();
+        MainPanel dummyPanel;
         
-        DateTime now =new DateTime(2000, 6, 1, 0, 0);
-        DateTime then =new DateTime(2000, 7, 1, 0, 0);
-        DateTime before =new DateTime(1900, 7, 1, 0, 0);
-        DateTime after =new DateTime(2100, 7, 1, 0, 0);
+        DateTime now=new DateTime(2000, 6, 1, 0, 0), then, before, after;
         
+        
+        @BeforeClass public static void setup() {
+        	 MainPanel dummyPanel=new MainPanel();
+        	 
+        	 DateTime now =new DateTime(2000, 6, 1, 0, 0);
+             DateTime then =new DateTime(2000, 7, 1, 0, 0);
+             DateTime before =new DateTime(1900, 7, 1, 0, 0);
+             DateTime after =new DateTime(2100, 7, 1, 0, 0);
+        }
+        
+        
+   
         @Test
         public void testExists() {
                 YearCalendarHolder YCH=new YearCalendarHolder(now, MainPanel.getInstance());
@@ -30,10 +40,10 @@ public class YearCalendarHolderTest {
         
         @Test
         public void testGoto() {
-                MainPanel dummyPanel=new MainPanel();
-                //dummyPanel.finishInit();  Is there a way to call this without making it public?
+                
                 YearCalendarHolder YCH=new YearCalendarHolder(now, MainPanel.getInstance());
                 YCH.parseGoto("07/01/2000");
+                // Currently broken; dummyPanel isn't actually initialized, and has nullpointer errors trying to display the correct month on the uninitialized mCalendar
                 assertEquals("If the input is acceptable, the gotoDate box function will cause the calendar at mainPanel to display the designated month on the main screen", ((MonthCalendar)MainPanel.getInstance().getMOCA()).getTime().getMonthOfYear(), then.getMonthOfYear());
                 YCH.parseGoto("7/1/1900");
                 assertEquals("If the input is acceptable, the gotoDate box function will cause the calendar at mainPanel to display the designated month on the main screen", ((MonthCalendar)MainPanel.getInstance().getMOCA()).getTime().getMonthOfYear(), before.getMonthOfYear());
@@ -43,7 +53,7 @@ public class YearCalendarHolderTest {
                 assertEquals("If the input is acceptable, the gotoDate box function will cause the calendar at mainPanel to display the designated month on the main screen", ((MonthCalendar)MainPanel.getInstance().getMOCA()).getTime().getMonthOfYear(), before.getMonthOfYear());
                 
         }
-        /*
+        
         @Test
         public void testGotoErrorEarly() {
                 YearCalendarHolder YCH=new YearCalendarHolder(now, MainPanel.getInstance());
@@ -113,5 +123,5 @@ public class YearCalendarHolderTest {
                 YCH3.parseGoto("31/12/2000");
                 assertEquals("WE do not accept the English version of dd/m/yyyy, regardless of how amazingly logical it is", YCH3.getError(), "* Invalid format, use: mm/dd/yyyy");
         }
-*/
+
 }
