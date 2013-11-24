@@ -24,14 +24,15 @@ import javax.swing.border.EmptyBorder;
 import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.day.DayCalendar;
+import edu.wpi.cs.wpisuitetng.modules.cal.eventui.AddCommitmentDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.month.MonthCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.CalendarSelector;
-import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MainCalendarNavigation;
-import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.GoToPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MainCalendarNavigation;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarHostIface;
+import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.ViewSize;
 
 public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
@@ -56,6 +57,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	private EventModel events;
 	private ViewSize view = ViewSize.Month;
 	private static MainPanel instance;
+	private AddCommitmentDisplay commitment = new AddCommitmentDisplay();
 	
 	//TODO: "make this better" -Patrick
 	public boolean showPersonal = true;
@@ -159,7 +161,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				//remove all but calender
+				//remove all but calendar
 				while (getTabCount() > 1)
 				{
 					removeTabAt(1);
@@ -266,6 +268,17 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	 */
 	public void addEvent(Event newEvent)
 	{
+		events.putEvent(newEvent);
+		mCalendar.updateEvents(newEvent, true);
+	}
+	/**
+	 * Adds a new commitment to the database and refreshes the UI
+	 * TODO make not for event
+	 * @param newEvent The event to add
+	 */
+	public void addCommitment(Event newEvent)
+	{
+		//TODO: MAKE ME WORK! still as event
 		events.putEvent(newEvent);
 		mCalendar.updateEvents(newEvent, true);
 	}
