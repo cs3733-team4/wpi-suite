@@ -24,15 +24,19 @@ import javax.swing.border.EmptyBorder;
 import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.day.DayCalendar;
+import edu.wpi.cs.wpisuitetng.modules.cal.eventui.AddCommitmentDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.eventui.AddEventDisplay;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.month.MonthCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.CalendarSelector;
-import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MainCalendarNavigation;
-import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.GoToPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MainCalendarNavigation;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarHostIface;
+import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.ViewSize;
 
 public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
@@ -55,9 +59,11 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	private final HashMap<Integer, JComponent> tabs = new HashMap<Integer, JComponent>();
 	private int tab_id = 0;
 	private EventModel events;
+	private CommitmentModel commitments;
 	private ViewSize view = ViewSize.Month;
 	private static MainPanel instance;
-	private Event selectedEvent;
+	private AddCommitmentDisplay commitment = new AddCommitmentDisplay();
+	private Displayable selectedEvent;
 	
 	//TODO: "make this better" -Patrick
 	public boolean showPersonal = true;
@@ -96,7 +102,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		
 		events = new EventModel(); // used for accessing events
-		
+		commitments= new CommitmentModel();
 		this.mainPaneContainer = new JPanel(); // Container for the navigation and calendars
 		this.sidePanel = new JPanel(); // Panel to hold the mini calendar and the goto date
 		this.centerPanel = new JPanel(); // Container for top and bottom sub-panels
@@ -105,7 +111,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		
 		// Components of center panel
 		this.mMiniCalendarPanel = new MiniCalendarPanel(DateTime.now(), this); // Mini calendar
-		this.mCalendar = monthCal = new MonthCalendar(DateTime.now(), events); // Monthly calendar
+		this.mCalendar = monthCal = new MonthCalendar(DateTime.now(), events, commitments); // Monthly calendar
 		dayCal = new DayCalendar(DateTime.now(), events); // Day calendar (hidden)
 		this.mainCalendarNavigationPanel = new MainCalendarNavigation(this, mCalendar); // Navigation bar 
 		
@@ -145,7 +151,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		
 		// Add default tabs to main panel
 		addTopLevelTab(mainPaneContainer, "Calendar", false);
-		
+	
 		// add context menu
 		this.addMouseListener(new MouseAdapter()
 		{
@@ -168,6 +174,9 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 				}
 			}
 		});
+		
+		
+		
 	}
 	
 	
@@ -271,6 +280,23 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		events.putEvent(newEvent);
 		mCalendar.updateEvents(newEvent, true);
 	}
+	/**
+	 * Adds a new commitment to the database and refreshes the UI
+	 * @param newCommitment The commitment to add
+	 */
+	public void addCommitment(Commitment newCommitment)
+	{
+		commitments.putCommitment(newCommitment);
+	}
+	/**
+	 * Updates a commitment as long both commitments have the same ID
+	 * TODO: Implement updating on the commitment model
+	 * @param newCommitment
+	 */
+	public void updateCommitment(Commitment newCommitment)
+	{
+		commitments.updateCommitment(newCommitment);
+	}
 
 	/**
 	 * Gets the singleton instance of this panel to avoid passing it everywhere
@@ -322,10 +348,15 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		mTabbedPane.remove(tabs.get(id));
 	}
 	
-	public void updateSelectedEvent(Event mEvent){
+	public void updateSelectedEvent(Displayable mEvent){
 		this.selectedEvent = mEvent;
-		AddEventDisplay mAddEventDisplay = new AddEventDisplay(mEvent);
-		mAddEventDisplay.setTabId(instance.addTopLevelTab(mAddEventDisplay, "Edit Event", true));
-		
+		if (mEvent instanceof Event) {
+			AddEventDisplay mAddEventDisplay = new AddEventDisplay((Event) mEvent);
+			mAddEventDisplay.setTabId(instance.addTopLevelTab(mAddEventDisplay, "Edit Event", true));
+		}
+		else if (mEvent instanceof Commitment) {
+			AddCommitmentDisplay mAddCommitmentDisplay = new AddCommitmentDisplay((Commitment) mEvent);
+			mAddCommitmentDisplay.setTabId(instance.addTopLevelTab(mAddCommitmentDisplay, "Edit Commitment", true));
+		}
 	}
 }

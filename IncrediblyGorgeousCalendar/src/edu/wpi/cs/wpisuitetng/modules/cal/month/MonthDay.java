@@ -16,6 +16,7 @@ import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.DayStyle;
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
 
@@ -24,6 +25,7 @@ public class MonthDay extends JPanel
 	private boolean borderTop;
 	JLabel header = new JLabel();
 	private List<Event> items = new ArrayList<Event>();
+	private List<Commitment> commitments = new ArrayList<Commitment>();
 
 	public MonthDay(DateTime day, DayStyle style)
 	{
@@ -66,6 +68,7 @@ public class MonthDay extends JPanel
 	{
 		setBorder(javax.swing.BorderFactory.createMatteBorder((top || borderTop) ? 1 : 0, left ? 1 : 0, bottom ? 1 : 0, 1, Colors.BORDER));
 	}
+	
 	/**
 	 * Add an event to a given day of the month
 	 * @param e
@@ -73,6 +76,16 @@ public class MonthDay extends JPanel
 	public void addEvent(Event e)
 	{
 		this.items.add(e);
+		revalidate();
+	}
+	
+	/**
+	 * Add a commitment to a given day of the month.
+	 * @param c
+	 */
+	public void addCommitment(Commitment c)
+	{
+		this.commitments.add(c);
 		revalidate();
 	}
 	
@@ -86,12 +99,19 @@ public class MonthDay extends JPanel
 		revalidate();
 	}
 	
+	public void removeCommitment(Commitment c)
+	{
+		this.commitments.remove(c);
+		revalidate();
+	}
+	
 	// call revalidate, not this method directly, it is an override
 	@Override
 	public void doLayout()
 	{
 		int total = this.getHeight();
 		int hidden = 0;
+		int chidden = 0;
 		removeAll();
 		add(header);
 		total -= header.getHeight();
@@ -126,6 +146,28 @@ public class MonthDay extends JPanel
 		{
 			this.add(new CollapsedMonthItem(hidden));
 		}
+		
+		if (commitments != null){
+			for (Commitment elt : this.commitments)
+			{
+				if (chidden > 0)
+				{
+					chidden++;
+				}
+				else
+				{
+					total -= 24; //TODO: don't use constant. getHeight fails when slow resizing to min though...
+					if (total <= 10)
+					{
+						chidden = 1;
+					}
+					else
+					{
+						this.add(MonthItem.generateFrom(elt));
+					}
+				}
+			}
+		}
 		super.doLayout();
 	}
 	
@@ -138,6 +180,12 @@ public class MonthDay extends JPanel
 	public void clear()
 	{
 		items.clear();
+		revalidate();
+	}
+	
+	public void clearComms()
+	{
+		commitments.clear();
 		revalidate();
 	}
 }

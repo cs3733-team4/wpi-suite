@@ -9,7 +9,6 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.models;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +51,7 @@ public class EventEntityManager implements EntityManager<Event> {
 	}
 
 	/**
-	 * Saves a Event when it is received from a client
+	 * Saves an Event when it is received from a client
 	 * 
 	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#makeEntity(edu.wpi.cs.wpisuitetng.Session, java.lang.String)
 	 */
@@ -208,7 +207,7 @@ public class EventEntityManager implements EntityManager<Event> {
 				
 		Event existingEvent = (Event)oldEvents.get(0);		
 
-		// copy values to old event and fill in our changeset appropriately
+		// copy values to old event and fill in our change set appropriately
 		// TODO: existingEvent.copyFrom(updatedEvent);
 		
 		if(!db.save(existingEvent, session.getProject())) {

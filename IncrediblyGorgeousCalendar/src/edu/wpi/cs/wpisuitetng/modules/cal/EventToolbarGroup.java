@@ -6,22 +6,18 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import org.joda.time.DateTime;
-
 import edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar.ToolbarGroupView;
+import edu.wpi.cs.wpisuitetng.modules.cal.eventui.AddCommitmentDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.eventui.AddEventDisplay;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 
 public class EventToolbarGroup extends ToolbarGroupView {
 	
 	private final JPanel eventContentPanel = new JPanel();
-	private final JButton addEventButton, removeEventButton;
+	private final JButton addEventButton, removeEventButton, addCommitmentButton;
 	
 	public EventToolbarGroup(final MainPanel mMainPanel) {
 		super("Events");
@@ -39,6 +35,17 @@ public class EventToolbarGroup extends ToolbarGroupView {
 			}
 		});
 		
+		addCommitmentButton = new JButton("<html>Add<br/>Commitment</html>");
+		addCommitmentButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				AddCommitmentDisplay newCommitment = new AddCommitmentDisplay();
+				newCommitment.setTabId(mMainPanel.addTopLevelTab(newCommitment, "New Commitment", true));
+				
+				//TODO: use selected times. ned.display(DateTime.now());
+			}
+		});
+		
 		removeEventButton = new JButton("<html>Remove<br/>Event</html>");
 		removeEventButton.addActionListener(new ActionListener(){
 			@Override
@@ -47,18 +54,20 @@ public class EventToolbarGroup extends ToolbarGroupView {
 			}
 		});
 		
+		
 		try {
 		    Image img = ImageIO.read(getClass().getResource("add_event.png"));
 		    addEventButton.setIcon(new ImageIcon(img));
+		    addCommitmentButton.setIcon(new ImageIcon(img));
 		    
 		    img = ImageIO.read(getClass().getResource("del_event.png"));
 		    removeEventButton.setIcon(new ImageIcon(img));
 		} catch (IOException ex) {}
 
-		///eventContentPanel.add(addEventButton);
+		//eventContentPanel.add(addEventButton);
 		//eventContentPanel.add(removeEventButton);
-		
-		this.add(addEventButton);
+		this.getContent().add(addEventButton);
+		this.getContent().add(addCommitmentButton);
 	}
 	
 	public JButton getRemoveEventButton(){
