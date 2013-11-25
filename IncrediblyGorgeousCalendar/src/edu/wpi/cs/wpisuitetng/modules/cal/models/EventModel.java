@@ -39,6 +39,11 @@ public class EventModel {
 		return ServerManager.put("cal/events", toAdd.toJSON());
 	}
 	
+	public boolean updateEvent(Event toUpdate)
+	{
+		return ServerManager.post("cal/events", toUpdate.toJSON());
+	}
+	
 	
 
 }

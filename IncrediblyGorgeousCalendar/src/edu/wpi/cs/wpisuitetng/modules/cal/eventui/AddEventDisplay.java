@@ -21,6 +21,7 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.UUID;
 
 public class AddEventDisplay extends JPanel
 {
@@ -49,22 +50,27 @@ public class AddEventDisplay extends JPanel
 	private JButton saveButton;
 	private JButton cancelButton;
 	private Event eventToEdit;
+	private boolean editEvent;
+	private UUID existingEventID; // UUID of event being edited
 	
 	
 	// Constructor for edit event.
 	public AddEventDisplay(Event mEvent){
 		
 		this.eventToEdit = mEvent;
+		this.editEvent = true;
+		this.existingEventID = eventToEdit.getEventID();
 		setUpUI();
 		populateEventFields(eventToEdit);
-		setUpListenersEdit();
+		setUpListeners();
 	}
 	
 	// Constructor for create new event.
 	public AddEventDisplay()
 	{
+		this.editEvent = false;
 		setUpUI();
-		setUpListenersAdd();
+		setUpListeners();
 		
 	}
 	
@@ -264,9 +270,9 @@ public class AddEventDisplay extends JPanel
 	}
 	
 	/**
-	 * Adds button listeners for creating new events
+	 * Adds button listeners based on whether an event is being edited or created
 	 */
-	private void setUpListenersAdd(){
+	private void setUpListeners(){
 		
 		// Save Button
 		
@@ -301,7 +307,14 @@ public class AddEventDisplay extends JPanel
 						e.setEnd(endTime.getDate());
 						e.setProjectEvent(teamProjectCheckBox.isSelected());
 						e.setParticipants(participantsTextField.getText().trim());
-						MainPanel.getInstance().addEvent(e);
+						
+						if (editEvent){
+							e.setEventID(existingEventID);
+							MainPanel.getInstance().updateEvent(e);
+						} else {
+							MainPanel.getInstance().addEvent(e);
+						}
+						
 						saveButton.setEnabled(false);
 						saveButton.setText("Saved!");
 						MainPanel.getInstance().closeTab(tabid);
@@ -327,67 +340,10 @@ public class AddEventDisplay extends JPanel
 		});
 	}
 	
-	private void setUpListenersEdit(){
-		
-		//TODO FIX THIS!
-		// Save Button
-		
-		saveButton.addActionListener(new ActionListener(){
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				try
-				{
-					startTime.getDate();
-					endTime.getDate();
-					errorText.setVisible(true);
-					
-					if (nameTextField.getText() == null || nameTextField.getText().trim().length() == 0)
-					{
-						errorText.setText("* Please enter an event title");
-					}
-					else if (!(startTime.getDate().getDayOfYear() == endTime.getDate().getDayOfYear() &&
-						startTime.getDate().getYear() == endTime.getDate().getYear()))
-					{
-						errorText.setText("* Event must start and end on the same date");
-					}
-					else if (startTime.getDate().isAfter(endTime.getDate())) {
-						errorText.setText("* Event start date must be before end date");
-					}
-					else
-					{
-						errorText.setVisible(false);
-						Event e = new Event();
-						e.setName(nameTextField.getText().trim());
-						e.setDescription(descriptionTextArea.getText());
-						e.setStart(startTime.getDate());
-						e.setEnd(endTime.getDate());
-						e.setProjectEvent(teamProjectCheckBox.isSelected());
-						MainPanel.getInstance().addEvent(e);
-						saveButton.setEnabled(false);
-						saveButton.setText("Saved!");
-						MainPanel.getInstance().closeTab(tabid);
-						MainPanel.getInstance().refreshView();
-					}
-				}
-				catch (IllegalArgumentException exception)
-				{
-					errorText.setText("* Invalid Date/Time");
-					errorText.setVisible(true);
-				}
-			}
-		});
-		
-		// Cancel Button
-		
-		cancelButton.addActionListener(new ActionListener(){
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				MainPanel.getInstance().closeTab(tabid);
-			}
-		});
-	}
-	
+	/**
+	 * Set tab id for the created event view
+	 * @param id value to set id to
+	 */
 	public void setTabId(int id)
 	{
 		tabid = id;

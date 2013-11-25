@@ -144,11 +144,7 @@ public class EventEntityManager implements EntityManager<Event> {
 	/**
 	 * Deletes a event from the database
 	 * @param s the session
-	 * @param id the id of the event to delete
-	
-	
-	
-	
+	 * @param id the id of the event to delete	
 	 * @return true if the deletion was successful * @throws WPISuiteException * @throws WPISuiteException * @throws WPISuiteException
 	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#deleteEntity(Session, String) */
 	@Override
@@ -159,8 +155,6 @@ public class EventEntityManager implements EntityManager<Event> {
 	/**
 	 * Deletes all events from the database
 	 * @param s the session
-	
-	
 	 * @throws WPISuiteException * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#deleteAll(Session) * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#deleteAll(Session)
 	 */
 	@Override
@@ -170,10 +164,6 @@ public class EventEntityManager implements EntityManager<Event> {
 	
 	/**
 	 * Returns the number of events in the database
-	
-	
-	
-	
 	 * @return number of events stored * @throws WPISuiteException * @throws WPISuiteException * @throws WPISuiteException
 	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#Count() */
 	@Override
@@ -185,9 +175,6 @@ public class EventEntityManager implements EntityManager<Event> {
 	 * Method update.
 	 * @param session Session
 	 * @param content String
-	
-	
-	
 	 * @return Event * @throws WPISuiteException * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#update(Session, String) * @throws WPISuiteException
 	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#update(Session, String)
 	 */
@@ -206,15 +193,15 @@ public class EventEntityManager implements EntityManager<Event> {
 		}
 				
 		Event existingEvent = (Event)oldEvents.get(0);		
-
-		// copy values to old event and fill in our change set appropriately
-		// TODO: existingEvent.copyFrom(updatedEvent);
 		
-		if(!db.save(existingEvent, session.getProject())) {
+		db.delete(existingEvent);
+		
+		if(!db.save(updatedEvent, session.getProject())) {
 			throw new WPISuiteException();
 		}
 		
 		return existingEvent;
+		
 	}
 
 	/**

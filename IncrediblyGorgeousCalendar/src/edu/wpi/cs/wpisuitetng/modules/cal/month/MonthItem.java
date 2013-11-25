@@ -60,7 +60,7 @@ public class MonthItem extends JPanel
 			
 			@Override
 			public void mousePressed(MouseEvent e) {
-				MainPanel.getInstance().updateSelectedEvent(MonthItem.this.mEvent);
+				MainPanel.getInstance().updateSelectedDisplayable(MonthItem.this.mEvent);
 			}
 			
 			@Override

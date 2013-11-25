@@ -51,7 +51,7 @@ public class CommitmentEntityManager implements EntityManager<Commitment> {
 	}
 
 	/**
-	 * Saves an Event when it is received from a client
+	 * Saves an Commitment when it is received from a client
 	 * 
 	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#makeEntity(edu.wpi.cs.wpisuitetng.Session, java.lang.String)
 	 */
@@ -68,7 +68,7 @@ public class CommitmentEntityManager implements EntityManager<Commitment> {
 	}
 	
 	/**
-	 * Retrieves events from the database in the range of String data
+	 * Retrieves commitments from the database in the range of String data
 	 * @param s the session
 	 * @param data the data (String from and String to) of the events to retrieve
 	 * @return the event matching the given id * @throws NotFoundException * @throws NotFoundException * @throws NotFoundException
@@ -94,7 +94,7 @@ public class CommitmentEntityManager implements EntityManager<Commitment> {
 	}
 	
 	/**
-	 * Query database to retrieve events with overlapping range
+	 * Query database to retrieve commitments with overlapping range
 	 * @param sfrom date from, DateTime formatted as String
 	 * @param sto date to, DateTime formatted as String
 	 * @return retrieved events with overlapping range
@@ -120,7 +120,7 @@ public class CommitmentEntityManager implements EntityManager<Commitment> {
 	}
 
 	/**
-	 * Retrieves all events from the database
+	 * Retrieves all commitments from the database
 	 * @param s the session
 	 * @return array of all stored events * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#getAll(Session) * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#getAll(Session) * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#getAll(Session)
 	 */
@@ -145,13 +145,9 @@ public class CommitmentEntityManager implements EntityManager<Commitment> {
 	
 
 	/**
-	 * Deletes a event from the database
+	 * Deletes a commitment from the database
 	 * @param s the session
 	 * @param id the id of the event to delete
-	
-	
-	
-	
 	 * @return true if the deletion was successful * @throws WPISuiteException * @throws WPISuiteException * @throws WPISuiteException
 	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#deleteEntity(Session, String) */
 	@Override
@@ -160,38 +156,29 @@ public class CommitmentEntityManager implements EntityManager<Commitment> {
 	}
 	
 	/**
-	 * Deletes all events from the database
+	 * Deletes all commitments from the database
 	 * @param s the session
-	
-	
 	 * @throws WPISuiteException * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#deleteAll(Session) * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#deleteAll(Session)
 	 */
 	@Override
 	public void deleteAll(Session s) throws WPISuiteException {
-		db.deleteAll(new Event(), s.getProject());
+		db.deleteAll(new Commitment(), s.getProject());
 	}
 	
 	/**
-	 * Returns the number of events in the database
-	
-	
-	
-	
+	 * Returns the number of commitments in the database	
 	 * @return number of events stored * @throws WPISuiteException * @throws WPISuiteException * @throws WPISuiteException
 	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#Count() */
 	@Override
 	public int Count() throws WPISuiteException {
-		return db.retrieveAll(new Event()).size();
+		return db.retrieveAll(new Commitment()).size();
 	}
 
 	/**
 	 * Method update.
 	 * @param session Session
 	 * @param content String
-	
-	
-	
-	 * @return Event * @throws WPISuiteException * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#update(Session, String) * @throws WPISuiteException
+	 * @return Commitment * @throws WPISuiteException * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#update(Session, String) * @throws WPISuiteException
 	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#update(Session, String)
 	 */
 	@Override
@@ -199,9 +186,9 @@ public class CommitmentEntityManager implements EntityManager<Commitment> {
 		
 		Commitment updatedCommitment = Commitment.fromJson(content);
 		/*
-		 * Because of the disconnected objects problem in db4o, we can't just save Events.
-		 * We have to get the original defect from db4o, copy properties from updatedEvent,
-		 * then save the original Event again.
+		 * Because of the disconnected objects problem in db4o, we can't just save Commitments.
+		 * We have to get the original defect from db4o, copy properties from updatedCommitments,
+		 * then save the original Commitment again.
 		 */
 		List<Model> oldCommitments = db.retrieve(Commitment.class, "commitmentID", updatedCommitment.getCommitmentID(), session.getProject());
 		if(oldCommitments.size() < 1 || oldCommitments.get(0) == null) {
@@ -224,9 +211,6 @@ public class CommitmentEntityManager implements EntityManager<Commitment> {
 	 * Method advancedGet.
 	 * @param arg0 Session
 	 * @param arg1 String[]
-	
-	
-	
 	 * @return String * @throws NotImplementedException * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#advancedGet(Session, String[]) * @throws NotImplementedException
 	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#advancedGet(Session, String[])
 	 */
@@ -240,9 +224,6 @@ public class CommitmentEntityManager implements EntityManager<Commitment> {
 	 * @param arg0 Session
 	 * @param arg1 String
 	 * @param arg2 String
-	
-	
-	
 	 * @return String * @throws NotImplementedException * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#advancedPost(Session, String, String) * @throws NotImplementedException
 	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#advancedPost(Session, String, String)
 	 */
@@ -256,9 +237,6 @@ public class CommitmentEntityManager implements EntityManager<Commitment> {
 	 * @param arg0 Session
 	 * @param arg1 String[]
 	 * @param arg2 String
-	
-	
-	
 	 * @return String * @throws NotImplementedException * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#advancedPut(Session, String[], String) * @throws NotImplementedException
 	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#advancedPut(Session, String[], String)
 	 */

@@ -62,8 +62,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	private CommitmentModel commitments;
 	private ViewSize view = ViewSize.Month;
 	private static MainPanel instance;
-	private AddCommitmentDisplay commitment = new AddCommitmentDisplay();
-	private Displayable selectedEvent;
+	private Displayable selectedDisplayable;
 	
 	//TODO: "make this better" -Patrick
 	public boolean showPersonal = true;
@@ -280,6 +279,15 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		events.putEvent(newEvent);
 		mCalendar.updateEvents(newEvent, true);
 	}
+	
+	/**
+	 * Updates an event as long as it retains its ID
+	 * @param updateEvent event to update
+	 */
+	public void updateEvent(Event updateEvent){
+		events.updateEvent(updateEvent);
+	}
+	
 	/**
 	 * Adds a new commitment to the database and refreshes the UI
 	 * @param newCommitment The commitment to add
@@ -290,12 +298,11 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	}
 	/**
 	 * Updates a commitment as long both commitments have the same ID
-	 * TODO: Implement updating on the commitment model
-	 * @param newCommitment
+	 * @param updateCommitment
 	 */
-	public void updateCommitment(Commitment newCommitment)
+	public void updateCommitment(Commitment updateCommitment)
 	{
-		commitments.updateCommitment(newCommitment);
+		commitments.updateCommitment(updateCommitment);
 	}
 
 	/**
@@ -309,18 +316,28 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		return instance;
 	}
 
+	/**
+	 * Toggle monthly calendar view
+	 */
 	public void viewMonth()
 	{
 		view = ViewSize.Month;
 		refreshView(monthCal);
 	}
 	
+	/**
+	 * Toggle daily calendar view
+	 */
 	public void viewDay()
 	{
 		view = ViewSize.Day;
 		refreshView(dayCal);
 	}
 	
+	/**
+	 * Updates calendar in view and sets navigation panel to act on the active view
+	 * @param monthCal2
+	 */
 	private void refreshView(AbstractCalendar monthCal2)
 	{
 		centerPanelBottom.remove(mCalendar);
@@ -332,6 +349,9 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		repaint();
 	}
 	
+	/**
+	 * Refresh the view to properly show additions and navigation
+	 */
 	public void refreshView()
 	{
 		mCalendar.display(lastTime);
@@ -339,23 +359,34 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		repaint();
 	}
 
+	/**
+	 * @return current view
+	 */
 	public ViewSize getView()
 	{
 		return view;
 	}
 	
+	/**
+	 * Close specified tab
+	 * @param id
+	 */
 	public void closeTab(int id){
 		mTabbedPane.remove(tabs.get(id));
 	}
 	
-	public void updateSelectedEvent(Displayable mEvent){
-		this.selectedEvent = mEvent;
-		if (mEvent instanceof Event) {
-			AddEventDisplay mAddEventDisplay = new AddEventDisplay((Event) mEvent);
+	/**
+	 * Opens edit window for the selected displayable
+	 * @param mDisplayable the displayable to edit.
+	 */
+	public void updateSelectedDisplayable(Displayable mDisplayable){
+		this.selectedDisplayable = mDisplayable;
+		if (selectedDisplayable instanceof Event) {
+			AddEventDisplay mAddEventDisplay = new AddEventDisplay((Event) selectedDisplayable);
 			mAddEventDisplay.setTabId(instance.addTopLevelTab(mAddEventDisplay, "Edit Event", true));
 		}
-		else if (mEvent instanceof Commitment) {
-			AddCommitmentDisplay mAddCommitmentDisplay = new AddCommitmentDisplay((Commitment) mEvent);
+		else if (selectedDisplayable instanceof Commitment) {
+			AddCommitmentDisplay mAddCommitmentDisplay = new AddCommitmentDisplay((Commitment) selectedDisplayable);
 			mAddCommitmentDisplay.setTabId(instance.addTopLevelTab(mAddCommitmentDisplay, "Edit Commitment", true));
 		}
 	}
