@@ -1,6 +1,7 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.eventui;
 
 import javax.swing.Box.Filler;
+import javax.swing.border.BevelBorder;
 import javax.swing.JPanel;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
@@ -65,6 +66,7 @@ public class AddCommitmentDisplay extends JPanel
 		
 		nameTextField = new JTextField();
 		NamePane.add(nameTextField);
+		nameTextField.setBorder( new BevelBorder(BevelBorder.LOWERED));
 		nameTextField.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		nameTextField.setColumns(25);
 		if (editingCommitment)
@@ -106,6 +108,7 @@ public class AddCommitmentDisplay extends JPanel
 		add(ParticipantsPanel);
 		
 		participantsTextField = new JTextField();
+		participantsTextField.setBorder( new BevelBorder(BevelBorder.LOWERED));
 		ParticipantsPanel.add(participantsTextField);
 		participantsTextField.setColumns(30);
 		if (editingCommitment)
@@ -134,6 +137,7 @@ public class AddCommitmentDisplay extends JPanel
         add(filler1);
 		
         final JTextArea descriptionTextArea = new JTextArea(5,35);
+        descriptionTextArea.setBorder( new BevelBorder(BevelBorder.LOWERED));
 		descriptionTextArea.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		descriptionTextArea.setLineWrap(true);
 		descriptionTextArea.setWrapStyleWord(true);
@@ -141,6 +145,7 @@ public class AddCommitmentDisplay extends JPanel
 			descriptionTextArea.setText(oldCommitment.getDescription());
 		
 		JScrollPane descriptionScrollPane = new JScrollPane(descriptionTextArea);
+		descriptionScrollPane.setBorder(null);
 		DescriptionPanel.add(descriptionScrollPane);
 		
 		JPanel SubmitPanel = new JPanel();

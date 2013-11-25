@@ -10,6 +10,11 @@ import javax.swing.JTextArea;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.SwingConstants;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
@@ -19,6 +24,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.UUID;
@@ -123,6 +129,7 @@ public class AddEventDisplay extends JPanel
 		// Text Field
 		nameTextField.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		nameTextField.setColumns(25);
+		nameTextField.setBorder( new BevelBorder(BevelBorder.LOWERED));
 		nameTextFieldPanel.add(nameTextField);
 		
 		// Add panel to UI
@@ -189,6 +196,7 @@ public class AddEventDisplay extends JPanel
 		
 		// Text Field
 		participantsTextFieldPanel.add(participantsTextField);
+		participantsTextField.setBorder( new BevelBorder(BevelBorder.LOWERED));
 		participantsTextField.setColumns(30);
 		
 		// Add panel to UI
@@ -222,10 +230,12 @@ public class AddEventDisplay extends JPanel
 		
 		// Text Area
 		descriptionTextArea.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		descriptionTextArea.setBorder( new BevelBorder(BevelBorder.LOWERED));
 		descriptionTextArea.setLineWrap(true);
 		descriptionTextArea.setWrapStyleWord(true);
 		
 		JScrollPane descriptionScrollPane = new JScrollPane(descriptionTextArea);
+		descriptionScrollPane.setBorder(null);
 		descriptionTextFieldPanel.add(descriptionScrollPane);
 		
 		// Add panel to UI
