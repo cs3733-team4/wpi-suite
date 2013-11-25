@@ -13,6 +13,8 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.SwingConstants;
 
+import org.joda.time.DateTime;
+
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
@@ -20,7 +22,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Component;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -32,7 +33,6 @@ public class AddEventDisplay extends JPanel
 	private int tabid;
 	private JLabel nameErrorLabel;
 	private JLabel dateErrorLabel;
-	private JLabel descriptionErrorLabel;
 	private DatePicker startTimePicker;
 	private DatePicker endTimePicker;
 	
@@ -99,25 +99,19 @@ public class AddEventDisplay extends JPanel
 		add(DatePickerPanel);
 		endTimePicker = new DatePicker(true, null);
 		startTimePicker = new DatePicker(true, endTimePicker);
-		
-		startTimePicker.time.getDocument().addDocumentListener(dateValidationDocListener);
-		startTimePicker.date.getDocument().addDocumentListener(dateValidationDocListener);
-		startTimePicker.AMPM.addActionListener(new ActionListener() {
+		startTimePicker.addChangeListener(new DatePickerListener() {
 			
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				dateErrorLabel.setVisible(!validateDate(startTimePicker, endTimePicker, dateErrorLabel));
+			public void datePickerUpdate(DateTime mDateTime) {
+				dateErrorLabel.setVisible(!validateDate(mDateTime, endTimePicker.getDate(), dateErrorLabel));
 				saveEventButton.setEnabled(isSaveable());
 			}
 		});
 		
-		endTimePicker.time.getDocument().addDocumentListener(dateValidationDocListener);
-		endTimePicker.date.getDocument().addDocumentListener(dateValidationDocListener);
-		endTimePicker.AMPM.addActionListener(new ActionListener() {
-			
+		endTimePicker.addChangeListener(new DatePickerListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				dateErrorLabel.setVisible(!validateDate(startTimePicker, endTimePicker, dateErrorLabel));
+			public void datePickerUpdate(DateTime mDateTime) {
+				dateErrorLabel.setVisible(!validateDate(startTimePicker.getDate(), mDateTime, dateErrorLabel));
 				saveEventButton.setEnabled(isSaveable());
 			}
 		});
@@ -191,16 +185,17 @@ public class AddEventDisplay extends JPanel
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				Event e = new Event();
+				MainPanel mMainPanel = MainPanel.getInstance();
 				e.setName(eventNameField.getText().trim());
 				e.setDescription(Description.getText());
 				e.setStart(startTimePicker.getDate());
 				e.setEnd(endTimePicker.getDate());
 				e.setProjectEvent(chckbxProjectEvent.isSelected());
-				MainPanel.getInstance().addEvent(e);
+				mMainPanel.addEvent(e);
 				saveEventButton.setEnabled(false);
 				saveEventButton.setText("Saved!");
-				MainPanel.getInstance().closeTab(tabid);
-				MainPanel.getInstance().refreshView();
+				mMainPanel.closeTab(tabid);
+				mMainPanel.refreshView();
 			}
 		});
 		
@@ -221,7 +216,7 @@ public class AddEventDisplay extends JPanel
 		
 		//this should be called in updateSaveable() and thus isnt necessary here
 		//but error msg didn't start visible unless I called it directly
-		validateDate(startTimePicker, endTimePicker, dateErrorLabel);
+		validateDate(startTimePicker.getDate(), endTimePicker.getDate(), dateErrorLabel);
 		
 		saveEventButton.setEnabled(isSaveable());
 	}
@@ -260,31 +255,23 @@ public class AddEventDisplay extends JPanel
 	 * @param mErrorLabel text field to be updated with any error message
 	 * @return true if all validation checks pass, else returns false
 	 */
-	private boolean validateDate(DatePicker mStartTime, DatePicker mEndTime, JLabel mErrorLabel)
+	private boolean validateDate(DateTime mStartTime, DateTime mEndTime, JLabel mErrorLabel)
 	{
-		try
-		{
-			//try to get the dates from the date pickers to check if properly formatted
-			mStartTime.getDate();
-			mEndTime.getDate();
-			
-			//if properly formatted, error if startDate is a different day than the endDate
-			if (!(mStartTime.getDate().getDayOfYear() == mEndTime.getDate().getDayOfYear() &&
-				mStartTime.getDate().getYear() == mEndTime.getDate().getYear()))
-			{
-				mErrorLabel.setText("* Multi-day events not supported");
-			}//error if the start time is after the end time
-			else if (mStartTime.getDate().isAfter(mEndTime.getDate())) {
-				mErrorLabel.setText("* Event has invalid duration");
-			}else
-			{
-				//no errors found
-				return true;
-			}
-		}
-		catch (IllegalArgumentException exception)
+		if(mStartTime == null || mEndTime == null)
 		{
 			mErrorLabel.setText("* Invalid Date/Time");
+		}//if properly formatted, error if startDate is a different day than the endDate
+		else if (!(mStartTime.getDayOfYear() == mEndTime.getDayOfYear() &&
+			mStartTime.getYear() == mEndTime.getYear()))
+		{
+			mErrorLabel.setText("* Multi-day events not supported");
+		}//error if the start time is after the end time
+		else if (mEndTime.isBefore(mStartTime)) {
+			mErrorLabel.setText("* Event has invalid duration");
+		}else
+		{
+			//no errors found
+			return true;
 		}
 		
 		//error found
@@ -297,31 +284,9 @@ public class AddEventDisplay extends JPanel
 	 */
 	public boolean isSaveable()
 	{
-		return validateText(eventNameField.getText(), nameErrorLabel) && validateDate(startTimePicker, endTimePicker, dateErrorLabel);
+		return validateText(eventNameField.getText(), nameErrorLabel) && 
+				validateDate(startTimePicker.getDate(), endTimePicker.getDate(), dateErrorLabel);
 	}
-	
-	private DocumentListener dateValidationDocListener = new DocumentListener() {
-		
-		@Override
-		public void removeUpdate(DocumentEvent e) {
-			// set the date error label to visible if validation fails
-			dateErrorLabel.setVisible(!validateDate(startTimePicker, endTimePicker, dateErrorLabel));
-			//enable the save event button if validation succeeds
-			saveEventButton.setEnabled(isSaveable());
-		}
-		
-		@Override
-		public void insertUpdate(DocumentEvent e) {
-			dateErrorLabel.setVisible(!validateDate(startTimePicker, endTimePicker, dateErrorLabel));
-			saveEventButton.setEnabled(isSaveable());
-		}
-		
-		@Override
-		public void changedUpdate(DocumentEvent e) {
-			dateErrorLabel.setVisible(!validateDate(startTimePicker, endTimePicker, dateErrorLabel));
-			saveEventButton.setEnabled(isSaveable());
-		}
-	};
 
 	public JTextField getEventNameField() {
 		return eventNameField;

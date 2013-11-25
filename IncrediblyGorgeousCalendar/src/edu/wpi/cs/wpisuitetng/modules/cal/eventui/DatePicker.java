@@ -2,16 +2,21 @@ package edu.wpi.cs.wpisuitetng.modules.cal.eventui;
 
 import java.awt.Font;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.MaskFormatter;
 
 import org.joda.time.DateTime;
@@ -24,10 +29,11 @@ import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarHostIface;
 public class DatePicker extends JPanel implements MiniCalendarHostIface {
 	DateTimeFormatter dateFmt;
 	DateTimeFormatter dateTimeFmt;
-	public JComboBox<String> AMPM;
-	public JFormattedTextField date;
-	public JFormattedTextField time;
+	JComboBox<String> AMPM;
+	JFormattedTextField date;
+	JFormattedTextField time;
 	DatePicker linked;
+	ArrayList<DatePickerListener> changeListeners = new ArrayList<DatePickerListener>();
 	
 	public DatePicker(boolean showTime, DatePicker mLinked) {
 		super();
@@ -38,38 +44,75 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 		final MiniCalendarHostIface me = this;
 		try {
 			date = new JFormattedTextField(new MaskFormatter("##/##/##"));
+			date.setFont(new Font("Monospaced", Font.PLAIN, 12));
+			date.getDocument().addDocumentListener(new DocumentListener() {
+				
+				@Override
+				public void removeUpdate(DocumentEvent arg0) {
+					notifyListeners();
+				}
+				
+				@Override
+				public void insertUpdate(DocumentEvent arg0) {
+					notifyListeners();						
+				}
+				
+				@Override
+				public void changedUpdate(DocumentEvent arg0) {
+					notifyListeners();
+				}
+			});
 			this.add(date);
+			
 			if (showTime) {
 				MaskFormatter mask = new MaskFormatter("##:##");
-				mask.setPlaceholder("00:00");
 				time = new JFormattedTextField(mask);
+				time.setFont(new Font("Monospaced", Font.PLAIN, 12));
+				time.getDocument().addDocumentListener(new DocumentListener() {
+					
+					@Override
+					public void removeUpdate(DocumentEvent arg0) {
+						notifyListeners();
+					}
+					
+					@Override
+					public void insertUpdate(DocumentEvent arg0) {
+						notifyListeners();						
+					}
+					
+					@Override
+					public void changedUpdate(DocumentEvent arg0) {
+						notifyListeners();
+					}
+				});
+				
 				time.addFocusListener(new FocusListener() {
 					
 					@Override
 					public void focusLost(FocusEvent arg0) {
+						String input = time.getText().replace(":", "").trim();
 						//If less than 4 characters are entered, intelligently fill textbox to fit format
-						switch(time.getText().replace(":", "").trim().length())
+						switch(input.length())
 						{
 						case 4:
 							break;
 							
 						case 3:
-							time.setValue("0" + time.getText().replace(":", "").trim().charAt(0)+":"+time.getText().replace(":", "").trim().substring(1));
+							time.setValue("0" + input.charAt(0)+":"+input.substring(1));
 							break;
 							
 						case 2:
-							if(Integer.valueOf(time.getText().replace(":", "").trim())<13)
-								time.setValue(time.getText().replace(":", "").trim()+":00");
+							if(Integer.valueOf(input)<13)
+								time.setValue(input+":00");
 							else
 								time.setValue("00:00");	
 							break;
 							
 						case 1:
-							time.setValue("0"+time.getText().replace(":", "").trim()+":00");
+							time.setValue("0"+input+":00");
 							break;
 							
 						default:
-							time.setValue("00:00");	
 						}
 					}
 					
@@ -91,8 +134,16 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 				AMPM = new JComboBox<>();
 				AMPM.addItem("AM");
 				AMPM.addItem("PM");
+				AMPM.addActionListener(new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						notifyListeners();						
+					}
+				});
 				this.add(AMPM);
 			}
+			
 			date.addMouseListener(new MouseListener() {
 
 				public void mouseClicked(MouseEvent e) {
@@ -136,7 +187,25 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 	}
 	
 	public DateTime getDate() {
-	      System.out.println(date);
-		return dateTimeFmt.parseDateTime(date.getText()+" "+time.getText()+" "+AMPM.getSelectedItem());
+		try
+		{
+			return dateTimeFmt.parseDateTime(date.getText()+" "+time.getText()+" "+AMPM.getSelectedItem());
+		}catch(IllegalArgumentException e)
+		{
+			return null;
+		}
+	}
+	
+	public void addChangeListener(DatePickerListener newListener)
+	{
+		changeListeners.add(newListener);
+	}
+	
+	public void notifyListeners()
+	{
+		for(DatePickerListener d : changeListeners)
+		{
+			d.datePickerUpdate(this.getDate());
+		}
 	}
 }
