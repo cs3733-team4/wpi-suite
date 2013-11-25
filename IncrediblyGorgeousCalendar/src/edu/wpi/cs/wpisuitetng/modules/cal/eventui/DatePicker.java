@@ -38,13 +38,11 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 		final MiniCalendarHostIface me = this;
 		try {
 			date = new JFormattedTextField(new MaskFormatter("##/##/##"));
-			date.setFont(new Font("Monospaced", Font.PLAIN, 13));
 			this.add(date);
 			if (showTime) {
 				MaskFormatter mask = new MaskFormatter("##:##");
 				mask.setPlaceholder("00:00");
 				time = new JFormattedTextField(mask);
-				time.setFont(new Font("Monospaced", Font.PLAIN, 13));				
 				time.addFocusListener(new FocusListener() {
 					
 					@Override
