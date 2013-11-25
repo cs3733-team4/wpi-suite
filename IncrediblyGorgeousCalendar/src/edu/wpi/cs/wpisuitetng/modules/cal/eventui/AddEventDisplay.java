@@ -57,7 +57,6 @@ public class AddEventDisplay extends JPanel
 		
 		eventNameField = new JTextField();
 		nameErrorLabel = new JLabel();
-		eventNameField.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		eventNameField.setColumns(25);
 		eventNameField.getDocument().addDocumentListener(new DocumentListener() {
 			
@@ -79,7 +78,6 @@ public class AddEventDisplay extends JPanel
 			}
 		});
 		
-		nameErrorLabel.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		nameErrorLabel.setForeground(Color.RED);
 		validateText(eventNameField.getText(), nameErrorLabel);
 		
@@ -126,12 +124,11 @@ public class AddEventDisplay extends JPanel
 
 		DatePickerPanel.add(new JLabel("From "));
 		DatePickerPanel.add(startTimePicker);
-		DatePickerPanel.add(new JLabel(" To "));
+		DatePickerPanel.add(new JLabel(" to "));
 		DatePickerPanel.add(endTimePicker);
 		JCheckBox chckbxAllDayEvent = new JCheckBox("All Day Event");
 		DatePickerPanel.add(chckbxAllDayEvent);
 		dateErrorLabel = new JLabel();
-		dateErrorLabel.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		dateErrorLabel.setForeground(Color.RED);
 		DatePickerPanel.add(dateErrorLabel);
 		
@@ -175,7 +172,6 @@ public class AddEventDisplay extends JPanel
         add(filler1);
 		
 		final JTextArea Description = new JTextArea(5,35);
-		Description.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		Description.setLineWrap(true);
 		Description.setWrapStyleWord(true);
 		
@@ -189,7 +185,6 @@ public class AddEventDisplay extends JPanel
 		
 		final JLabel errorText = new JLabel();
 		errorText.setForeground(Color.RED);
-		errorText.setFont(new java.awt.Font("Tahoma", Font.PLAIN, 13));
 		
 		saveEventButton = new JButton("Save");
 		saveEventButton.addActionListener(new ActionListener(){
