@@ -18,8 +18,6 @@ import org.joda.time.MutableDateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
-import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Months;
-import edu.wpi.cs.wpisuitetng.modules.cal.month.MonthDay;
 
 public class MiniMonth extends JPanel
 {
