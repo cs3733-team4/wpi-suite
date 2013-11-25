@@ -49,6 +49,7 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 					
 					@Override
 					public void focusLost(FocusEvent arg0) {
+						//If less than 4 characters are entered, intelligently fill textbox to fit format
 						switch(time.getText().replace(":", "").trim().length())
 						{
 						case 4:
@@ -74,6 +75,7 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 						}
 					}
 					
+					//Select all when user clicks text box
 					@Override
 					public void focusGained(FocusEvent arg0) {
 						 SwingUtilities.invokeLater(new Runnable() {
