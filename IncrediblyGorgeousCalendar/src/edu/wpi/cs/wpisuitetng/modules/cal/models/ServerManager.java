@@ -82,6 +82,7 @@ public class ServerManager {
 				HttpMethod.DELETE);
 		return sendData(request, path, json);
 	}
+	
 	public static boolean sendData(final Request request, String path, String json) {
 		final Semaphore sem = new Semaphore(1);
 		try {
