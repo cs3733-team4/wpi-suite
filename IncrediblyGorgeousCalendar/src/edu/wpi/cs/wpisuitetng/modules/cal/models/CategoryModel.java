@@ -2,7 +2,7 @@ package edu.wpi.cs.wpisuitetng.modules.cal.models;
 
 /**
  * 
- * @author Prateek, SarahS, Etienne
+ * @author SarahS, Etienne
  *
  */
 
