@@ -79,7 +79,7 @@ public class CategoryEntityManager implements EntityManager<Category> {
 			case "get-user-categories":
 				return getUserCategories(s);
 			case "get-team-categories":
-				return null;
+				return getTeamCategories(s);
 			case "get-category-by-name":
 				return 	getCategoryByName(s, args[1]);	
 			case "get-category-by-id":
@@ -114,6 +114,27 @@ public class CategoryEntityManager implements EntityManager<Category> {
 		}
 		Category[] userCategories = (Category[]) retrievedCategories.toArray();
 		return userCategories;
+	}
+	/**
+	 * Returns an array of team categories
+	 * @param s
+	 * @return the team categories
+	 * @throws WPISuiteException
+	 */
+	private Category[] getTeamCategories(Session s) throws WPISuiteException
+	{
+		List<Category> retrievedCategories = new ArrayList<>();
+		Category[] all = getAll(s);
+		
+		for (Category c : all)
+		{
+			if (c.isProjectCategory())
+			{
+				retrievedCategories.add(c);
+			}
+		}
+		Category[] teamCategories = (Category[]) retrievedCategories.toArray();
+		return teamCategories;
 	}
 	/**For now, only return the first category it finds with a matching name.
 	 * Currently have not decided how to approach categories with matching names.
