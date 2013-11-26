@@ -111,6 +111,7 @@ public class MonthDay extends JPanel
 	{
 		int total = this.getHeight();
 		int hidden = 0;
+		int added =0;
 		removeAll();
 		add(header);
 		total -= header.getHeight();
@@ -130,6 +131,7 @@ public class MonthDay extends JPanel
 					}
 					else
 					{
+						added++;
 						this.add(MonthItem.generateFrom(elt));
 					}
 				}
@@ -152,14 +154,17 @@ public class MonthDay extends JPanel
 					else
 					{
 						this.add(MonthItem.generateFrom(elt));
-					}
+}
 				}
 			}
 		}
 
 		if (hidden == 1) // silly, add it anyway
 		{
-			this.add(MonthItem.generateFrom(this.items.get(this.items.size() - 1)));
+			if (added>=items.size())
+				this.add(MonthItem.generateFrom(this.commitments.get(this.commitments.size() - 1)));
+			else
+				this.add(MonthItem.generateFrom(this.items.get(this.items.size() - 1)));
 			
 			
 		}
