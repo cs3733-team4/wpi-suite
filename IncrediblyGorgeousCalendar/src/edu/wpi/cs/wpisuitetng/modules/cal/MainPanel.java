@@ -1,6 +1,7 @@
 package edu.wpi.cs.wpisuitetng.modules.cal;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
@@ -26,12 +27,14 @@ import org.joda.time.DateTime;
 import edu.wpi.cs.wpisuitetng.modules.cal.day.DayCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.eventui.AddCommitmentDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.eventui.AddEventDisplay;
+import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.month.MonthCalendar;
+import edu.wpi.cs.wpisuitetng.modules.cal.month.MonthItem;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.CalendarSelector;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.GoToPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MainCalendarNavigation;
@@ -62,7 +65,9 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	private CommitmentModel commitments;
 	private ViewSize view = ViewSize.Month;
 	private static MainPanel instance;
-	private Displayable selectedDisplayable;
+	private MonthItem currentSelected;
+	private MonthItem previouslySelected;
+	private Displayable currentDisplayable;
 	
 	//TODO: "make this better" -Patrick
 	public boolean showPersonal = true;
@@ -376,18 +381,49 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	}
 	
 	/**
-	 * Opens edit window for the selected displayable
-	 * @param mDisplayable the displayable to edit.
+	 * Highlights the  selected monthItem on the calendar
+	 * @param Item the month item to highlight
 	 */
-	public void updateSelectedDisplayable(Displayable mDisplayable){
-		this.selectedDisplayable = mDisplayable;
-		if (selectedDisplayable instanceof Event) {
-			AddEventDisplay mAddEventDisplay = new AddEventDisplay((Event) selectedDisplayable);
+	public void updateSelectedDisplayable(MonthItem Item){
+		
+		this.currentSelected = Item;
+		
+		if (previouslySelected != null)
+			previouslySelected.setBackground(Colors.TABLE_BACKGROUND);
+		
+		currentSelected.setBackground(Colors.SELECTED_BACKGROUND);
+		previouslySelected = currentSelected;
+		
+	}
+	
+	/**
+	 * Edits the selected displayable
+	 * @param Item the month item containing the displayable to edit
+	 */
+	public void editSelectedDisplayable(MonthItem Item){
+		
+		this.currentSelected = Item;
+		this.currentDisplayable = Item.getDisplayable();
+		
+		
+		currentSelected.setBackground(Colors.TABLE_BACKGROUND);
+		previouslySelected = currentSelected;
+		
+		if (currentDisplayable instanceof Event) {
+			AddEventDisplay mAddEventDisplay = new AddEventDisplay((Event) currentDisplayable);
 			mAddEventDisplay.setTabId(instance.addTopLevelTab(mAddEventDisplay, "Edit Event", true));
 		}
-		else if (selectedDisplayable instanceof Commitment) {
-			AddCommitmentDisplay mAddCommitmentDisplay = new AddCommitmentDisplay((Commitment) selectedDisplayable);
+		else if (currentDisplayable instanceof Commitment) {
+			AddCommitmentDisplay mAddCommitmentDisplay = new AddCommitmentDisplay((Commitment) currentDisplayable);
 			mAddCommitmentDisplay.setTabId(instance.addTopLevelTab(mAddCommitmentDisplay, "Edit Commitment", true));
 		}
+	}
+	
+	/**
+	 * Clears selected MonthItem from calendar
+	 */
+	public void clearSelected(){
+		if (previouslySelected != null)
+			previouslySelected.setBackground(Colors.TABLE_BACKGROUND);
 	}
 }
