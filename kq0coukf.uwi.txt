@@ -1,0 +1,26 @@
+﻿Revert "Fixed some abstraction in ServerManager and updated addEventDisplay to"
+
+This reverts commit c9f25c2cf7924118986ba669452293c02fa6d06c.
+#
+# It looks like you may be committing a merge.
+# If this is not correct, please remove the file
+#	.git/MERGE_HEAD
+# and try again.
+
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch add_commitment
+# Your branch and 'origin/add_commitment' have diverged,
+# and have 1 and 3 different commits each, respectively.
+#   (use "git pull" to merge the remote branch into yours)
+#
+# All conflicts fixed but you are still merging.
+#   (use "git commit" to conclude merge)
+#
+# Changes to be committed:
+#
+#	modified:   IncrediblyGorgeousCalendar/src/edu/wpi/cs/wpisuitetng/modules/cal/eventui/AddEventDisplay.java
+#	modified:   IncrediblyGorgeousCalendar/src/edu/wpi/cs/wpisuitetng/modules/cal/models/ServerManager.java
+#
+
