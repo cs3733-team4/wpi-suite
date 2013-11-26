@@ -120,7 +120,9 @@ public class Category extends AbstractModel
 	 */
 	
 	public static Category fromJson(String content) {
-		return null;
+
+		final Gson parser = new Gson();
+		return parser.fromJson(content, Category.class);
 	}
 
 	/**
