@@ -46,7 +46,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	private JPanel sidePanel;
 	private MainCalendarNavigation mainCalendarNavigationPanel;
 	private GoToPanel mGoToPanel;
-	private AbstractCalendar mCalendar, monthCal, dayCal, weekCal;
+	private AbstractCalendar mCalendar, monthCal, dayCal, yearCal;
 	private DateTime lastTime = DateTime.now();
 	private CalendarSelector mCalendarSelector;
 	private JPopupMenu popup = new JPopupMenu();
@@ -61,7 +61,6 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	//TODO: "make this better" -Patrick
 	public boolean showPersonal = true;
 	public boolean showTeam = false;
-	private YearCalendar yearCal;
 
 	/** Tabbed main panel to display in the calendar module. This pane will contain
 	 *  the rest of the elements in the calendar module, including the calendar view,
