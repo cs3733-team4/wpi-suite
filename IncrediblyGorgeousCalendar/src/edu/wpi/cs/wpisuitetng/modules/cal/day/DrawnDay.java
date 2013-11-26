@@ -172,7 +172,9 @@ public class DrawnDay extends JPanel{
 
 			@Override
 			public int compare(Event arg0, Event arg1) {
-				return arg0.getStart().compareTo(arg1.getStart());
+				return arg0.isProjectEvent() && !arg1.isProjectEvent() ? 1
+						: !arg0.isProjectEvent() && arg1.isProjectEvent() ? -1
+								: arg0.getStart().compareTo(arg1.getStart());
 			}
 			
 		});
@@ -339,7 +341,9 @@ public class DrawnDay extends JPanel{
 			@Override
 			public int compare(Event e, Event e2)
 			{
-				return e.getStart().compareTo(e2.getStart());
+				return e.isProjectEvent() && !e2.isProjectEvent() ? 1
+						: !e.isProjectEvent() && e2.isProjectEvent() ? -1
+								: e.getStart().compareTo(e2.getStart());
 			}
 		});
 		
