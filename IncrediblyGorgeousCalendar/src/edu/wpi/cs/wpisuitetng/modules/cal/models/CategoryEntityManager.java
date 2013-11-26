@@ -74,6 +74,12 @@ public class CategoryEntityManager implements EntityManager<Category> {
 		Category[] retrievedCategories = null;
 		
 		switch (args[0]) {
+			case "get-all-categories":
+				return getAll(s);
+			case "get-user-categories":
+				return getUserCategories(s);
+			case "get-team-categories":
+				return null;
 			case "get-category-by-name":
 				return 	getCategoryByName(s, args[1]);	
 			case "get-category-by-id":
@@ -87,6 +93,28 @@ public class CategoryEntityManager implements EntityManager<Category> {
 		return retrievedCategories;
 	}
 	
+	/**
+	 * Returns an array of category exclusive to the user.
+	 * Does not do any user verification.
+	 * @param s
+	 * @return the user categories
+	 * @throws WPISuiteException
+	 */
+	private Category[] getUserCategories(Session s) throws WPISuiteException
+	{
+		List<Category> retrievedCategories = new ArrayList<>();
+		Category[] all = getAll(s);
+		
+		for (Category c : all)
+		{
+			if (!c.isProjectCategory())
+			{
+				retrievedCategories.add(c);
+			}
+		}
+		Category[] userCategories = (Category[]) retrievedCategories.toArray();
+		return userCategories;
+	}
 	/**For now, only return the first category it finds with a matching name.
 	 * Currently have not decided how to approach categories with matching names.
 	 * If a matching name is not there, returns a blank array.

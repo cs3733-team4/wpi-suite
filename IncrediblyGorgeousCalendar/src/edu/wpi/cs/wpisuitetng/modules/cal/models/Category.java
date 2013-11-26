@@ -93,6 +93,10 @@ public class Category extends AbstractModel
 	public void setOwner(User user) {
 		this.owner = user;
 	}
+	
+	public User getOwner() {
+		return this.owner;
+	}
 
 	public static Category fromJson(String content) {
 		return null;
