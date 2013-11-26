@@ -24,6 +24,7 @@ import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
+import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.VerticalLabelUI;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
@@ -160,7 +161,6 @@ public class YearCalendar extends AbstractCalendar
 			
 			Integer eventCount = events.get(start.getDayOfYear());
 			eventCount = eventCount==null?0:eventCount;
-			System.out.println(eventCount);
 			
 			YearlyDayHolder day = new YearlyDayHolder(start.toDateTime(), dayBackground, eventCount>0);
 			JLabel dayLabel = new JLabel(start.getDayOfMonth()+"");
@@ -193,13 +193,13 @@ public class YearCalendar extends AbstractCalendar
 
 				@Override
 				public void mousePressed(MouseEvent me) {
-					
+					//TODO: something? maybe nothing? have to decide with team/steakholders
 				}
 				
 				@Override
 				public void mouseReleased(MouseEvent me) {
 					YearlyDayHolder event = (YearlyDayHolder)(me.getSource());
-					JOptionPane.showMessageDialog(null, event.getDateTime().toString());
+					MainPanel.getInstance().miniMove(event.getDateTime());
 				}
 				
 			});
@@ -338,7 +338,6 @@ public class YearCalendar extends AbstractCalendar
 				Integer ec = this.events.get(day);
 				int eventCount = (ec==null)?1:ec+1;
 				this.events.put(day, eventCount);
-				System.out.println("insert on day: "+day);
 			}
 			start.addDays(1);
 		}
