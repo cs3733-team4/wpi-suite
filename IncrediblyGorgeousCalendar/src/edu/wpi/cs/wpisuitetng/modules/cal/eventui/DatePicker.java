@@ -145,6 +145,15 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 				});
 				this.add(AMPM);
 			}
+			else
+			{
+				MaskFormatter mask = new MaskFormatter("##:##");
+				time = new JFormattedTextField(mask);
+				time.setText("12:00");
+				AMPM = new JComboBox<>();
+				AMPM.addItem("PM");
+				AMPM.setSelectedIndex(0);
+			}
 			
 			date.addMouseListener(new MouseListener() {
 
@@ -191,6 +200,7 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 	public DateTime getDate() {
 		try
 		{
+			
 			return dateTimeFmt.parseDateTime(date.getText()+" "+time.getText()+" "+AMPM.getSelectedItem());
 		}catch(IllegalArgumentException e)
 		{
