@@ -20,15 +20,16 @@ import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.RequestObserver;
 import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 import edu.wpi.cs.wpisuitetng.network.models.IRequest;
+
 /**
  * 
- * @author SarahS, Etienne
+ * @author Etienne, sarahsawatzki
  *
  */
 
 public class CategoryModel {
 	public List<Category> getAllCategory() {
-		final List<Category> categories = ServerManager.get("cal/categories/", Category[].class, null); //Need to create directory in database
+		final List<Category> categories = ServerManager.get("cal/categories/", Category[].class, "get-all-categories"); 
 		
 		List<Category> filteredCategories = new ArrayList<Category>();
 		boolean showPersonal = MainPanel.getInstance().showPersonal; // Where do these go?
