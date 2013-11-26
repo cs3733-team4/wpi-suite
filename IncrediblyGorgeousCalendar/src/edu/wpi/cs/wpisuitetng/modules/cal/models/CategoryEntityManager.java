@@ -19,9 +19,8 @@ import edu.wpi.cs.wpisuitetng.modules.Model;
 
 
 /**
- * This is the entity manager for the Category
- * in the CategoryManager module.
- * @author Prateek, SarahS, Etienne
+ * This is the entity manager for the Category in the CategoryManager module.
+ * @author sarahsawatzki, Etienne, Prateek
  *
  */
 
@@ -43,7 +42,9 @@ public class CategoryEntityManager implements EntityManager<Category> {
 	
 	/**
 	 * Saves a Category when it is received from a client
-	 * 
+	 * @param s session
+	 * @param content string of what is actually being created
+	 * @return newCategory newly created entity of category
 	 */
 	@Override
 	public Category makeEntity(Session s, String content) throws WPISuiteException {
@@ -91,9 +92,9 @@ public class CategoryEntityManager implements EntityManager<Category> {
 	 * Currently have not decided how to approach categories with matching names.
 	 * If a matching name is not there, returns a blank array.
 	 * 
-	 * @param s
-	 * @param name
-	 * @return
+	 * @param s session
+	 * @param name name given for the desired category
+	 * @return Category[] returns a new Category array of one category matching the given color
 	 * @throws WPISuiteException
 	 */
 	private Category[] getCategoryByName(Session s, String name) throws WPISuiteException {
@@ -114,9 +115,9 @@ public class CategoryEntityManager implements EntityManager<Category> {
 	}
 	/**
 	 * For now only returns the first category with this specific ID.
-	 * @param s
-	 * @param id
-	 * @return
+	 * @param s new session
+	 * @param id given ID number for the category
+	 * @return Category[] returns a new Category array of one category matching the given UUID
 	 * @throws WPISuiteException
 	 */
 	private Category[] getCategoryByID(Session s, String id) throws WPISuiteException
@@ -137,9 +138,9 @@ public class CategoryEntityManager implements EntityManager<Category> {
 	/**
 	 * For now returns the first Category with the matching color.
 	 * Colors must be passed in RGB format.
-	 * @param s
-	 * @param color
-	 * @return
+	 * @param s session
+	 * @param color color that the category must match
+	 * @return Category[] returns a new Category array of one category matching the given color
 	 * @throws WPISuiteException
 	 */
 	private Category[] getCategoryByColor(Session s, String color) throws WPISuiteException
@@ -159,6 +160,9 @@ public class CategoryEntityManager implements EntityManager<Category> {
 		}
 		return new Category[] {};
 	}
+	
+	
+
 	@Override
 	public Category[] getAll(Session s) throws WPISuiteException {
 		System.out.println("GET ALL!");

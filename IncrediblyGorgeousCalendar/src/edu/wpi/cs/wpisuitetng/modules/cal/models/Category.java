@@ -13,7 +13,7 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
  *  Basic categories class that contains all information required to 
  *  designate an event category in the calendar
  *  
- *  @author SarahS Etienne Prateek
+ *  @author sarahsawatzki Etienne Prateek
  */
 public class Category extends AbstractModel
 {
@@ -24,8 +24,8 @@ public class Category extends AbstractModel
 	private boolean isProjectCategory;
 	
 	/**
-	 * @param name
-	 * 		the name to set
+	 * Sets the name of the category
+	 * @param name the name to set to the category	
 	 */
 	public void setName(String name)
 	{
@@ -33,7 +33,8 @@ public class Category extends AbstractModel
 	}
 	
 	/**
-	 * @return name
+	 * Gets the name of the category
+	 * @return name the name of the category
 	 */
 	public String getName()
 	{
@@ -41,8 +42,8 @@ public class Category extends AbstractModel
 	}
 	
 	/** 
-	 * @param color 
-	 * 		the color to set the category
+	 * Sets the color of the category
+	 * @param color the color to set the category
 	 */
 	public void setColor(Color color)
 	{
@@ -50,13 +51,18 @@ public class Category extends AbstractModel
 	}
 	
 	/**
-	 * 
-	 * @return color
+	 * Gets the color of the category
+	 * @return color the color of the category
 	 */
 	public Color getColor()
 	{
 		return this.color;
 	}
+	
+	/**
+	 * Gets the UUID of the given category
+	 * @return categoryID the UUID of the given category
+	 */
 	
 	public UUID getUUID()
 	{
@@ -90,18 +96,38 @@ public class Category extends AbstractModel
 		return false;
 	}
 
+	/**
+	 * Sets the owner of the category
+	 * @param user tracks the user ID of the person signed into the module
+	 */
+	
 	public void setOwner(User user) {
 		this.owner = user;
 	}
 
+	/**
+	 * @param content string of information for the category
+	 * @return nothing
+	 */
+	
 	public static Category fromJson(String content) {
 		return null;
 	}
 
+	/**
+	 * Checks to see if the given category is a ProjectCategory
+	 * @return boolean if the category is a ProjectCategory
+	 */
+	
 	public boolean isProjectCategory() {
 		return isProjectCategory;
 	}
 
+	/**
+	 * sets the category ID for each category
+	 * @return categoryID the UUID for the category
+	 */
+	
 	public Object getCategoryID() {
 		return this.categoryID;
 	}
