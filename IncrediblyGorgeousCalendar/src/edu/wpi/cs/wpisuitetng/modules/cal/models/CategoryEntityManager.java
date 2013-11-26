@@ -76,6 +76,7 @@ public class CategoryEntityManager implements EntityManager<Category> {
 		
 		switch (args[0]) {
 			case "get-all-categories":
+				System.out.println("All categories was requested");
 				return getAll(s);
 			case "get-user-categories":
 				return getUserCategories(s);

@@ -1,6 +1,7 @@
 package edu.wpi.cs.wpisuitetng.modules.cal;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
@@ -9,7 +10,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -25,6 +28,8 @@ import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.day.DayCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.eventui.AddCommitmentDisplay;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.month.MonthCalendar;
@@ -58,7 +63,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	private ViewSize view = ViewSize.Month;
 	private static MainPanel instance;
 	private AddCommitmentDisplay commitment = new AddCommitmentDisplay();
-	
+	private CategoryModel categories;
 	//TODO: "make this better" -Patrick
 	public boolean showPersonal = true;
 	public boolean showTeam = false;
@@ -96,7 +101,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		
 		events = new EventModel(); // used for accessing events
-		
+		categories=new CategoryModel();
 		this.mainPaneContainer = new JPanel(); // Container for the navigation and calendars
 		this.sidePanel = new JPanel(); // Panel to hold the mini calendar and the goto date
 		this.centerPanel = new JPanel(); // Container for top and bottom sub-panels
@@ -168,6 +173,13 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 				}
 			}
 		});
+		Category testCategory = new Category();
+		testCategory.setName("Brendan's name");
+		testCategory.setColor(Color.red);
+		categories.putCategory(testCategory);
+		System.out.println("Category sent to server!");
+		List<Category> allFromServer = categories.getAllCategory();
+		System.out.println(allFromServer.size() + " categories on the server");
 	}
 	
 	

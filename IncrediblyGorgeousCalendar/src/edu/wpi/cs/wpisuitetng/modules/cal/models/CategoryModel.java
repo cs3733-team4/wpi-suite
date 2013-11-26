@@ -57,7 +57,7 @@ public class CategoryModel {
 	 * @return boolean if the put request was successful
 	 */
 	public boolean putCategory(Category toAdd){
-		return ServerManager.put("cal/categories/", toAdd.toJSON());
+		return ServerManager.put("cal/categories", toAdd.toJSON());
 	}
 }
 	
