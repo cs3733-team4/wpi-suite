@@ -104,6 +104,10 @@ public class Category extends AbstractModel
 	public void setOwner(User user) {
 		this.owner = user;
 	}
+	
+	public User getOwner() {
+		return this.owner;
+	}
 
 	/**
 	 * @param content string of information for the category
