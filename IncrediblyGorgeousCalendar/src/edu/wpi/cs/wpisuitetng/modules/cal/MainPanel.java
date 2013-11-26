@@ -33,7 +33,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.GoToPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarHostIface;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.ViewSize;
-import edu.wpi.cs.wpisuitetng.modules.cal.week.WeekCalendar;
+import edu.wpi.cs.wpisuitetng.modules.cal.year.YearCalendar;
 
 public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	
@@ -61,6 +61,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	//TODO: "make this better" -Patrick
 	public boolean showPersonal = true;
 	public boolean showTeam = false;
+	private YearCalendar yearCal;
 
 	/** Tabbed main panel to display in the calendar module. This pane will contain
 	 *  the rest of the elements in the calendar module, including the calendar view,
@@ -106,7 +107,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		this.mMiniCalendarPanel = new MiniCalendarPanel(DateTime.now(), this); // Mini calendar
 		this.mCalendar = monthCal = new MonthCalendar(DateTime.now(), events); // Monthly calendar
 		this.dayCal = new DayCalendar(DateTime.now(), events); // Day calendar (hidden)
-		this.weekCal = new WeekCalendar(DateTime.now(), events);
+		this.yearCal = new YearCalendar(DateTime.now(), events); // Day calendar (hidden)
 		this.mainCalendarNavigationPanel = new MainCalendarNavigation(this, mCalendar); // Navigation bar 
 		
 		// Components of side panel
@@ -295,10 +296,10 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		refreshView(dayCal);
 	}
 	
-	public void viewWeek()
+	public void viewYear()
 	{
-		view = ViewSize.Week;
-		refreshView(weekCal);
+		view = ViewSize.Month;
+		refreshView(yearCal);
 	}
 	
 	private void refreshView(AbstractCalendar monthCal2)
