@@ -48,11 +48,11 @@ public class Commitment extends AbstractModel implements Displayable
 	}
 	
 	/**
-	 * 
+	 * This does the same things as setDate, it is only kept for compatibility with older code.
 	 * @param date the starting time
 	 * @return this event after having its start date set
 	 */
-	public Commitment addStartTime(DateTime date)
+	public Commitment setDueDate(DateTime date)
 	{
 		setDate(date);
 		return this;
