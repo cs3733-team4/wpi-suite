@@ -173,13 +173,6 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 				}
 			}
 		});
-		Category testCategory = new Category();
-		testCategory.setName("Brendan's name");
-		testCategory.setColor(Color.red);
-		categories.putCategory(testCategory);
-		System.out.println("Category sent to server!");
-		List<Category> allFromServer = categories.getAllCategory();
-		System.out.println(allFromServer.size() + " categories on the server");
 	}
 	
 	
