@@ -70,7 +70,7 @@ public class EventToolbarGroup extends ToolbarGroupView {
 		this.getContent().add(addCommitmentButton);
 	}
 	
-	public JButton getRemoveEventButton(){
-		return removeEventButton;
+	public void disableRemoveEventButton(){
+		removeEventButton.setEnabled(false);
 	}
 }
