@@ -33,6 +33,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.GoToPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarHostIface;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.ViewSize;
+import edu.wpi.cs.wpisuitetng.modules.cal.year.YearCalendar;
 
 public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	
@@ -45,7 +46,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	private JPanel sidePanel;
 	private MainCalendarNavigation mainCalendarNavigationPanel;
 	private GoToPanel mGoToPanel;
-	private AbstractCalendar mCalendar, monthCal, dayCal;
+	private AbstractCalendar mCalendar, monthCal, dayCal, yearCal;
 	private DateTime lastTime = DateTime.now();
 	private CalendarSelector mCalendarSelector;
 	private JPopupMenu popup = new JPopupMenu();
@@ -104,7 +105,8 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		// Components of center panel
 		this.mMiniCalendarPanel = new MiniCalendarPanel(DateTime.now(), this); // Mini calendar
 		this.mCalendar = monthCal = new MonthCalendar(DateTime.now(), events); // Monthly calendar
-		dayCal = new DayCalendar(DateTime.now(), events); // Day calendar (hidden)
+		this.dayCal = new DayCalendar(DateTime.now(), events); // Day calendar (hidden)
+		this.yearCal = new YearCalendar(DateTime.now(), events); // Year calendar (hidden)
 		this.mainCalendarNavigationPanel = new MainCalendarNavigation(this, mCalendar); // Navigation bar 
 		
 		// Components of side panel
@@ -291,6 +293,12 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	{
 		view = ViewSize.Day;
 		refreshView(dayCal);
+	}
+	
+	public void viewYear()
+	{
+		view = ViewSize.Month;
+		refreshView(yearCal);
 	}
 	
 	private void refreshView(AbstractCalendar monthCal2)

@@ -18,13 +18,15 @@ public class CalendarSelector extends JPanel
 		JToggleButton teamCalendar = new JToggleButton("Team"),
 				bothCalendar = new JToggleButton("Both"),
 				month = new JToggleButton("Month"),
-				day = new JToggleButton("Day");
+				day = new JToggleButton("Day"),
+				year = new JToggleButton("Year");
 		Filler filler1 = new Filler(new Dimension(6, 0), new Dimension(6, 0), new Dimension(6, 32767));
 
 		// build button groups
 		ButtonGroup view = new ButtonGroup();
 		view.add(month);
 		view.add(day);
+		view.add(year);
 		month.setSelected(true);
 		ButtonGroup cal = new ButtonGroup();
 		cal.add(personalCalendar);
@@ -36,6 +38,7 @@ public class CalendarSelector extends JPanel
 		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		add(month);
 		add(day);
+		add(year);
 		add(filler1);
 		this.add(personalCalendar);
 		this.add(teamCalendar);
@@ -52,6 +55,11 @@ public class CalendarSelector extends JPanel
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{MainPanel.getInstance().viewMonth();}
+		});
+		year.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{MainPanel.getInstance().viewYear();}
 		});
 		
 		personalCalendar.addActionListener(new ActionListener() {

@@ -18,8 +18,6 @@ import org.joda.time.MutableDateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
-import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Months;
-import edu.wpi.cs.wpisuitetng.modules.cal.month.MonthDay;
 
 public class MiniMonth extends JPanel
 {
@@ -79,8 +77,7 @@ public class MiniMonth extends JPanel
 			if (MainPanel.getInstance().getView() == ViewSize.Month)
 			{
 				if (referenceDay.getDayOfMonth() == 1)
-					flipFlop
-					    ^= true; // flops the flip flop
+					flipFlop ^= true; // flops the flip flop flappity flip
 			}
 			else if (MainPanel.getInstance().getView() == ViewSize.Day)
 				flipFlop = referenceDay.getDayOfYear() == time.getDayOfYear() && referenceDay.getYear() == time.getYear();

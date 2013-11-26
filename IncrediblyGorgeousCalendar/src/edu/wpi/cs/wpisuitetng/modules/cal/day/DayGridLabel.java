@@ -10,7 +10,16 @@ import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
 
 public class DayGridLabel extends JPanel{
 	
-	public DayGridLabel()
+	private static DayGridLabel instance;
+	
+	public static DayGridLabel getInstance()
+	{
+		if(instance == null)
+			instance = new DayGridLabel();
+		return instance;
+	}
+	
+	private DayGridLabel()
 	{
 		this.setLayout(new GridLayout(48, 1));
 		this.setBackground(Colors.TABLE_BACKGROUND);

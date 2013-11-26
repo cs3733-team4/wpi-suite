@@ -71,7 +71,7 @@ public class DrawnDay extends JPanel{
 				int contentToDisplay = 0;
 				boolean wordWrap = 84*this.largestCollision-1 > this.getWidth();
 				
-				String[] description = e.getDescription().split("@");
+				String[] description = e.getDescription().split(" ");
 				int descriptionCounter = 0;
 
 				if (halfHour < 47)//need a check for short events like: && e.getEnd().getMinuteOfDay()/30-halfHour>1)
