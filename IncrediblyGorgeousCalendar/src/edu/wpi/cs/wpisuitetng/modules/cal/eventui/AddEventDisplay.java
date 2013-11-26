@@ -90,8 +90,8 @@ public class AddEventDisplay extends JPanel
 		this.nameTextField.setText(eventToEdit.getName());
 		this.descriptionTextArea.setText(eventToEdit.getDescription());
 		this.teamProjectCheckBox.setSelected(eventToEdit.isProjectEvent());
-		this.startTimeDatePicker.setDate(eventToEdit.getStart());
-		this.endTimeDatePicker.setDate(eventToEdit.getEnd());
+		this.startTimeDatePicker.setDateTime(eventToEdit.getStart());
+		this.endTimeDatePicker.setDateTime(eventToEdit.getEnd());
 		
 	}
 	
