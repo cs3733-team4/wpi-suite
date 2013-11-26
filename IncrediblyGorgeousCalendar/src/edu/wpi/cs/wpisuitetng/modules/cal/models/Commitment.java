@@ -201,6 +201,4 @@ public class Commitment extends AbstractModel implements Displayable
 		this.owner = owner;
 	}
 
-	// Accessor and Mutator Methods:
-
 }
