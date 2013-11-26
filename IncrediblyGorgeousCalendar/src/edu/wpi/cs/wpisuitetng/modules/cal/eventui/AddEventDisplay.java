@@ -13,11 +13,6 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.EtchedBorder;
-import javax.swing.border.LineBorder;
-import javax.swing.border.TitledBorder;
-
 import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
@@ -28,7 +23,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Component;
 import java.awt.Font;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.UUID;
@@ -53,10 +47,12 @@ public class AddEventDisplay extends JPanel
 	private JTextField nameTextField = new JTextField();
 	private JTextField participantsTextField = new JTextField();
 	private JTextArea descriptionTextArea = new JTextArea(5,35);
-	private DatePicker startTime;
-	private DatePicker endTime;
+	private DatePicker endTimeDatePicker = new DatePicker(true, null);
+	private DatePicker startTimeDatePicker = new DatePicker(true, endTimeDatePicker);
 	private JCheckBox teamProjectCheckBox = new JCheckBox("Project Event");
 	private JLabel errorText;
+	private JLabel nameErrorLabel;
+	private JLabel dateErrorLabel;
 	private JButton saveButton;
 	private JButton cancelButton;
 	private Event eventToEdit;
@@ -94,8 +90,8 @@ public class AddEventDisplay extends JPanel
 		this.nameTextField.setText(eventToEdit.getName());
 		this.descriptionTextArea.setText(eventToEdit.getDescription());
 		this.teamProjectCheckBox.setSelected(eventToEdit.isProjectEvent());
-		
-		//TODO start date, end date, start time, end time
+		this.startTimeDatePicker.setDate(eventToEdit.getStart());
+		this.endTimeDatePicker.setDate(eventToEdit.getEnd());
 		
 	}
 	
@@ -130,21 +126,20 @@ public class AddEventDisplay extends JPanel
 		FlowLayout fl_NamePane = (FlowLayout) nameTextFieldPanel.getLayout();
 		fl_NamePane.setAlignment(FlowLayout.LEFT);
 		
-		eventNameField = new JTextField();
 		nameErrorLabel = new JLabel();
-		eventNameField.setColumns(25);
-		eventNameField.getDocument().addDocumentListener(new DocumentListener() {
+		nameTextField.setColumns(25);
+		nameTextField.getDocument().addDocumentListener(new DocumentListener() {
 			
 			@Override
 			public void removeUpdate(DocumentEvent e) {
-				nameErrorLabel.setVisible(!validateText(eventNameField.getText(), nameErrorLabel));
-				saveEventButton.setEnabled(isSaveable());
+				nameErrorLabel.setVisible(!validateText(nameTextField.getText(), nameErrorLabel));
+				saveButton.setEnabled(isSaveable());
 			}
 			
 			@Override
 			public void insertUpdate(DocumentEvent e) {
-				nameErrorLabel.setVisible(!validateText(eventNameField.getText(), nameErrorLabel));
-				saveEventButton.setEnabled(isSaveable());
+				nameErrorLabel.setVisible(!validateText(nameTextField.getText(), nameErrorLabel));
+				saveButton.setEnabled(isSaveable());
 			}
 			
 			@Override
@@ -159,10 +154,10 @@ public class AddEventDisplay extends JPanel
 		nameTextFieldPanel.add(nameTextField);
 		
 		nameErrorLabel.setForeground(Color.RED);
-		validateText(eventNameField.getText(), nameErrorLabel);
+		validateText(nameTextField.getText(), nameErrorLabel);
 		
-		NamePane.add(eventNameField);
-		NamePane.add(nameErrorLabel);
+		nameLabelPanel.add(nameTextField);
+		nameLabelPanel.add(nameErrorLabel);
 		
 		JPanel DateandTimeLabelPane = new JPanel();
 		add(DateandTimeLabelPane);
@@ -190,43 +185,34 @@ public class AddEventDisplay extends JPanel
 		this.dateAndTimePickerPane = new JPanel();
 		FlowLayout flowLayout_5 = (FlowLayout) dateAndTimePickerPane.getLayout();
 		flowLayout_5.setAlignment(FlowLayout.LEFT);
-		add(DatePickerPanel);
-		endTimePicker = new DatePicker(true, null);
-		startTimePicker = new DatePicker(true, endTimePicker);
-		startTimePicker.addChangeListener(new DatePickerListener() {
+		this.add(dateAndTimePickerPane);
+		startTimeDatePicker.addChangeListener(new DatePickerListener() {
 			
 			@Override
 			public void datePickerUpdate(DateTime mDateTime) {
-				dateErrorLabel.setVisible(!validateDate(mDateTime, endTimePicker.getDate(), dateErrorLabel));
-				saveEventButton.setEnabled(isSaveable());
+				dateErrorLabel.setVisible(!validateDate(mDateTime, endTimeDatePicker.getDate(), dateErrorLabel));
+				saveButton.setEnabled(isSaveable());
 			}
 		});
 		
-		endTimePicker.addChangeListener(new DatePickerListener() {
+		endTimeDatePicker.addChangeListener(new DatePickerListener() {
 			@Override
 			public void datePickerUpdate(DateTime mDateTime) {
-				dateErrorLabel.setVisible(!validateDate(startTimePicker.getDate(), mDateTime, dateErrorLabel));
-				saveEventButton.setEnabled(isSaveable());
+				dateErrorLabel.setVisible(!validateDate(startTimeDatePicker.getDate(), mDateTime, dateErrorLabel));
+				saveButton.setEnabled(isSaveable());
 			}
 		});
 
-		DatePickerPanel.add(new JLabel("From "));
-		DatePickerPanel.add(startTimePicker);
-		DatePickerPanel.add(new JLabel(" to "));
-		DatePickerPanel.add(endTimePicker);
+		dateAndTimePickerPane.add(new JLabel("From "));
+		dateAndTimePickerPane.add(startTimeDatePicker);
+		dateAndTimePickerPane.add(new JLabel(" to "));
+		dateAndTimePickerPane.add(endTimeDatePicker);
 		JCheckBox chckbxAllDayEvent = new JCheckBox("All Day Event");
-		DatePickerPanel.add(chckbxAllDayEvent);
+		dateAndTimePickerPane.add(chckbxAllDayEvent);
 		dateErrorLabel = new JLabel();
 		dateErrorLabel.setForeground(Color.RED);
-		DatePickerPanel.add(dateErrorLabel);
+		dateAndTimePickerPane.add(dateErrorLabel);
 		
-		// Picker
-		this.endTime = new DatePicker(true, null);
-		this.startTime = new DatePicker(true, endTime);
-		dateAndTimePickerPane.add(new JLabel("From "));
-		dateAndTimePickerPane.add(startTime);
-		dateAndTimePickerPane.add(new JLabel(" To "));
-		dateAndTimePickerPane.add(endTime);
 		
 		//JCheckBox chckbxAllDayEvent = new JCheckBox("All Day Event");
 		//DatePickerPanel.add(chckbxAllDayEvent);
@@ -348,26 +334,24 @@ public class AddEventDisplay extends JPanel
 		// Save Button
 		
 		saveButton.addActionListener(new ActionListener(){
-		saveEventButton = new JButton("Save");
-		saveEventButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				try
 				{
-					startTime.getDate();
-					endTime.getDate();
+					startTimeDatePicker.getDate();
+					endTimeDatePicker.getDate();
 					errorText.setVisible(true);
 					
 					if (nameTextField.getText() == null || nameTextField.getText().trim().length() == 0)
 					{
 						errorText.setText("* Please enter an event title");
 					}
-					else if (!(startTime.getDate().getDayOfYear() == endTime.getDate().getDayOfYear() &&
-						startTime.getDate().getYear() == endTime.getDate().getYear()))
+					else if (!(startTimeDatePicker.getDate().getDayOfYear() == endTimeDatePicker.getDate().getDayOfYear() &&
+						startTimeDatePicker.getDate().getYear() == endTimeDatePicker.getDate().getYear()))
 					{
 						errorText.setText("* Event must start and end on the same date");
 					}
-					else if (startTime.getDate().isAfter(endTime.getDate())) {
+					else if (startTimeDatePicker.getDate().isAfter(endTimeDatePicker.getDate())) {
 						errorText.setText("* Event start date must be before end date");
 					}
 					else
@@ -376,8 +360,8 @@ public class AddEventDisplay extends JPanel
 						Event e = new Event();
 						e.setName(nameTextField.getText().trim());
 						e.setDescription(descriptionTextArea.getText());
-						e.setStart(startTime.getDate());
-						e.setEnd(endTime.getDate());
+						e.setStart(startTimeDatePicker.getDate());
+						e.setEnd(endTimeDatePicker.getDate());
 						e.setProjectEvent(teamProjectCheckBox.isSelected());
 						e.setParticipants(participantsTextField.getText().trim());
 						
@@ -399,44 +383,24 @@ public class AddEventDisplay extends JPanel
 					errorText.setText("* Invalid Date/Time");
 					errorText.setVisible(true);
 				}
-				Event e = new Event();
-				MainPanel mMainPanel = MainPanel.getInstance();
-				e.setName(eventNameField.getText().trim());
-				e.setDescription(Description.getText());
-				e.setStart(startTimePicker.getDate());
-				e.setEnd(endTimePicker.getDate());
-				e.setProjectEvent(chckbxProjectEvent.isSelected());
-				mMainPanel.addEvent(e);
-				saveEventButton.setEnabled(false);
-				saveEventButton.setText("Saved!");
-				mMainPanel.closeTab(tabid);
-				mMainPanel.refreshView();
 			}
 		});
 		
 		// Cancel Button
 		
 		cancelButton.addActionListener(new ActionListener(){
-		saveEventButton.setHorizontalAlignment(SwingConstants.LEFT);
-		SubmitPanel.add(saveEventButton);
-		
-		JButton btnCancel = new JButton("Cancel");
-		btnCancel.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				MainPanel.getInstance().closeTab(tabid);
 			}
 		});
-		SubmitPanel.add(btnCancel);
-		SubmitPanel.add(chckbxProjectEvent);
-		SubmitPanel.add(errorText);
 		
 		//this should be called in updateSaveable() and thus isnt necessary here
 		//but error msg didn't start visible unless I called it directly
-		validateDate(startTimePicker.getDate(), endTimePicker.getDate(), dateErrorLabel);
+		validateDate(startTimeDatePicker.getDate(), endTimeDatePicker.getDate(), dateErrorLabel);
 		
-		saveEventButton.setEnabled(isSaveable());
+		saveButton.setEnabled(isSaveable());
 	}
 	
 	/**
@@ -488,7 +452,7 @@ public class AddEventDisplay extends JPanel
 		{
 			mErrorLabel.setText("* Multi-day events not supported");
 		}//error if the start time is after the end time
-		else if (mEndTime.isBefore(mStartTime)) {
+		else if (!mEndTime.isAfter(mStartTime)) {
 			mErrorLabel.setText("* Event has invalid duration");
 		}else
 		{
@@ -506,19 +470,19 @@ public class AddEventDisplay extends JPanel
 	 */
 	public boolean isSaveable()
 	{
-		return validateText(eventNameField.getText(), nameErrorLabel) && 
-				validateDate(startTimePicker.getDate(), endTimePicker.getDate(), dateErrorLabel);
+		return validateText(nameTextField.getText(), nameErrorLabel) && 
+				validateDate(startTimeDatePicker.getDate(), endTimeDatePicker.getDate(), dateErrorLabel);
 	}
 
 	public JTextField getEventNameField() {
-		return eventNameField;
+		return nameTextField;
 	}
 
 	public DatePicker getStartTimePicker() {
-		return startTimePicker;
+		return startTimeDatePicker;
 	}
 
 	public DatePicker getEndTimePicker() {
-		return endTimePicker;
+		return endTimeDatePicker;
 	}
 }
