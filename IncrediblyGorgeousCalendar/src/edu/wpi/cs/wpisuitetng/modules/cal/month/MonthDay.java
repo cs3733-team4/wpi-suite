@@ -17,6 +17,7 @@ import org.joda.time.DateTime;
 import edu.wpi.cs.wpisuitetng.modules.cal.DayStyle;
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
 
@@ -111,62 +112,41 @@ public class MonthDay extends JPanel
 	{
 		int total = this.getHeight();
 		int hidden = 0;
-		int chidden = 0;
 		removeAll();
 		add(header);
 		total -= header.getHeight();
-		if (items!=null){
-			for (Event elt : this.items)
+		
+		ArrayList<Displayable> allitems = new ArrayList<>(items.size() + commitments.size());
+		allitems.addAll(items);
+		allitems.addAll(commitments);
+		
+		for (Displayable elt : allitems)
+		{
+			if (hidden > 0)
 			{
-				if (hidden > 0)
+				hidden++;
+			}
+			else
+			{
+				total -= 24; //TODO: don't use constant. getHeight fails when slow resizing to min though...
+				if (total <= 10)
 				{
-					hidden++;
+					hidden = 1;
 				}
 				else
 				{
-					total -= 24; //TODO: don't use constant. getHeight fails when slow resizing to min though...
-					if (total <= 10)
-					{
-						hidden = 1;
-					}
-					else
-					{
-						this.add(MonthItem.generateFrom(elt));
-					}
+					this.add(MonthItem.generateFrom(elt));
 				}
 			}
 		}
+		
 		if (hidden == 1) // silly, add it anyway
 		{
-			this.add(MonthItem.generateFrom(this.items.get(this.items.size() - 1)));
-			
-			
+			this.add(MonthItem.generateFrom(allitems.get(allitems.size() - 1)));
 		}
 		else if (hidden > 1)
 		{
 			this.add(new CollapsedMonthItem(hidden));
-		}
-		
-		if (commitments != null){
-			for (Commitment elt : this.commitments)
-			{
-				if (chidden > 0)
-				{
-					chidden++;
-				}
-				else
-				{
-					total -= 24; //TODO: don't use constant. getHeight fails when slow resizing to min though...
-					if (total <= 10)
-					{
-						chidden = 1;
-					}
-					else
-					{
-						this.add(MonthItem.generateFrom(elt));
-					}
-				}
-			}
 		}
 		super.doLayout();
 	}
