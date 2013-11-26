@@ -105,6 +105,11 @@ public class Category extends AbstractModel
 		this.owner = user;
 	}
 	
+	/**
+	 * Gets the owner of the current category
+	 * @return owner the owner of the current module
+	 */
+	
 	public User getOwner() {
 		return this.owner;
 	}
