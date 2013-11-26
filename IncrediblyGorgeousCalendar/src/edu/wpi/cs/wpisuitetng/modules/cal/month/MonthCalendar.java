@@ -3,20 +3,16 @@ package edu.wpi.cs.wpisuitetng.modules.cal.month;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import org.joda.time.*;
+import org.joda.time.DateTime;
+import org.joda.time.MutableDateTime;
+import org.joda.time.ReadableDateTime;
 
 import com.lowagie.text.Font;
 
@@ -25,6 +21,8 @@ import edu.wpi.cs.wpisuitetng.modules.cal.DayStyle;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Months;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 
@@ -43,10 +41,12 @@ public class MonthCalendar extends AbstractCalendar
 	private HashMap<Integer, MonthDay> days = new HashMap<Integer, MonthDay>();
 
 	private EventModel eventModel;
+	private CommitmentModel commitmentModel;
 
-	public MonthCalendar(DateTime on, EventModel emodel)
+	public MonthCalendar(DateTime on, EventModel emodel, CommitmentModel cmodel)
 	{
 		this.eventModel = emodel;
+		this.commitmentModel = cmodel;
 		this.mainPanel = MainPanel.getInstance();
 		this.time = on;
 
@@ -113,6 +113,15 @@ public class MonthCalendar extends AbstractCalendar
 			this.addEvent(e);
 		}
 	}
+	
+	void setCommitments(List<Commitment> commitments)
+	{
+		clearCommitments();
+		for (Commitment c : commitments)
+		{
+			this.addCommitment(c);
+		}
+	}
 
 	/**
 	 * Add an event
@@ -123,6 +132,16 @@ public class MonthCalendar extends AbstractCalendar
 	{
 		MonthDay md = this.days.get(e.getStart().getDayOfYear());
 		md.addEvent(e);
+	}
+	
+	/**
+	 * Add a commitment
+	 * @param c
+	 */
+	void addCommitment(Commitment c)
+	{
+		MonthDay md = this.days.get(c.getDate().getDayOfYear());
+		md.addCommitment(c);
 	}
 
 	/**
@@ -136,11 +155,25 @@ public class MonthCalendar extends AbstractCalendar
 		md.removeEvent(e);
 	}
 	
+	void removeCommitment(Commitment c)
+	{
+		MonthDay md = this.days.get(c.getDate().getDayOfYear());
+		md.removeCommitment(c);
+	}
+	
 	void clearEvents()
 	{
 		for (Component i : inside.getComponents())
 		{
 			((MonthDay)i).clear();
+		}
+	}
+	
+	void clearCommitments()
+	{
+		for (Component i : inside.getComponents())
+		{
+			((MonthDay)i).clearComms();
 		}
 	}
 
@@ -209,6 +242,7 @@ public class MonthCalendar extends AbstractCalendar
 		referenceDay.addDays(-1);// go back one to counteract last add one
 		
 		setEvents(getVisibleEvents(from, referenceDay.toDateTime()));
+		setCommitments(getVisibleCommitments(from, referenceDay.toDateTime()));
 
 		monthLabel.setText(this.getTime().toString(Months.monthLblFormat));
 
@@ -223,6 +257,11 @@ public class MonthCalendar extends AbstractCalendar
 	{
 		// TODO: this is where filtering should go
 		return eventModel.getEvents(from, to);
+	}
+	
+	private List<Commitment> getVisibleCommitments(DateTime from, DateTime to)
+	{
+		return commitmentModel.getCommitments(from, to);
 	}
 
 	/**

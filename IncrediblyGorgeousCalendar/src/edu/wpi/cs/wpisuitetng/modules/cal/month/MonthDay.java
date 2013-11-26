@@ -6,15 +6,21 @@ package edu.wpi.cs.wpisuitetng.modules.cal.month;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
 import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.DayStyle;
+import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
 
@@ -23,6 +29,7 @@ public class MonthDay extends JPanel
 	private boolean borderTop;
 	JLabel header = new JLabel();
 	private List<Event> items = new ArrayList<Event>();
+	private List<Commitment> commitments = new ArrayList<Commitment>();
 
 	public MonthDay(DateTime day, DayStyle style)
 	{
@@ -59,12 +66,45 @@ public class MonthDay extends JPanel
 		header.setMaximumSize(new java.awt.Dimension(10000, 17));
 		header.setOpaque(true);
 		add(header);
+		
+		addMouseListener(new MouseListener() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				MainPanel.getInstance().clearSelected();
+				
+			}
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 	}
 
 	public void reBorder(boolean top, boolean left, boolean bottom)
 	{
 		setBorder(javax.swing.BorderFactory.createMatteBorder((top || borderTop) ? 1 : 0, left ? 1 : 0, bottom ? 1 : 0, 1, Colors.BORDER));
 	}
+	
 	/**
 	 * Add an event to a given day of the month
 	 * @param e
@@ -72,6 +112,16 @@ public class MonthDay extends JPanel
 	public void addEvent(Event e)
 	{
 		this.items.add(e);
+		revalidate();
+	}
+	
+	/**
+	 * Add a commitment to a given day of the month.
+	 * @param c
+	 */
+	public void addCommitment(Commitment c)
+	{
+		this.commitments.add(c);
 		revalidate();
 	}
 	
@@ -85,6 +135,12 @@ public class MonthDay extends JPanel
 		revalidate();
 	}
 	
+	public void removeCommitment(Commitment c)
+	{
+		this.commitments.remove(c);
+		revalidate();
+	}
+	
 	// call revalidate, not this method directly, it is an override
 	@Override
 	public void doLayout()
@@ -94,30 +150,34 @@ public class MonthDay extends JPanel
 		removeAll();
 		add(header);
 		total -= header.getHeight();
-		if (items!=null){
-			for (Event elt : this.items)
+		
+		ArrayList<Displayable> allitems = new ArrayList<>(items.size() + commitments.size());
+		allitems.addAll(items);
+		allitems.addAll(commitments);
+		
+		for (Displayable elt : allitems)
+		{
+			if (hidden > 0)
 			{
-				if (hidden > 0)
+				hidden++;
+			}
+			else
+			{
+				total -= 24; //TODO: don't use constant. getHeight fails when slow resizing to min though...
+				if (total <= 10)
 				{
-					hidden++;
+					hidden = 1;
 				}
 				else
 				{
-					total -= 24; //TODO: don't use constant. getHeight fails when slow resizing to min though...
-					if (total <= 10)
-					{
-						hidden = 1;
-					}
-					else
-					{
-						this.add(MonthItem.generateFrom(elt));
-					}
+					this.add(MonthItem.generateFrom(elt));
 				}
 			}
 		}
+		
 		if (hidden == 1) // silly, add it anyway
 		{
-			this.add(MonthItem.generateFrom(this.items.get(this.items.size() - 1)));
+			this.add(MonthItem.generateFrom(allitems.get(allitems.size() - 1)));
 		}
 		else if (hidden > 1)
 		{
@@ -135,6 +195,12 @@ public class MonthDay extends JPanel
 	public void clear()
 	{
 		items.clear();
+		revalidate();
+	}
+	
+	public void clearComms()
+	{
+		commitments.clear();
 		revalidate();
 	}
 }

@@ -9,7 +9,6 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.models;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,13 +51,12 @@ public class EventEntityManager implements EntityManager<Event> {
 	}
 
 	/**
-	 * Saves a Event when it is received from a client
+	 * Saves an Event when it is received from a client
 	 * 
 	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#makeEntity(edu.wpi.cs.wpisuitetng.Session, java.lang.String)
 	 */
 	@Override
 	public Event makeEntity(Session s, String content) throws WPISuiteException {
-		System.out.println(content+ " was just sent!");
 		final Event newEvent = Event.fromJson(content);
 		newEvent.setOwner(s.getUser());
 		newEvent.setProject(s.getProject());
@@ -76,20 +74,17 @@ public class EventEntityManager implements EntityManager<Event> {
 	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#getEntity(Session, String) */
 	@Override
 	public Event[] getEntity(Session s, String data) throws NotFoundException {
-		System.out.println(data+ " was just sent!");
 		String[] args = data.split(",");
 		
-		Event[] retrievedEvents = null;
 		
 		switch (args[0]) {
 			case "filter-events-by-range":
 				return getEventsByRange(s, args[1], args[2]);
 			default:
-				System.out.println("Error: " + args[0] + " not a valid method");
+				throw new NotFoundException("Error: " + args[0] + " not a valid method");
 		}
 
 	
-		return retrievedEvents;
 	}
 	
 	/**
@@ -145,11 +140,7 @@ public class EventEntityManager implements EntityManager<Event> {
 	/**
 	 * Deletes a event from the database
 	 * @param s the session
-	 * @param id the id of the event to delete
-	
-	
-	
-	
+	 * @param id the id of the event to delete	
 	 * @return true if the deletion was successful * @throws WPISuiteException * @throws WPISuiteException * @throws WPISuiteException
 	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#deleteEntity(Session, String) */
 	@Override
@@ -160,8 +151,6 @@ public class EventEntityManager implements EntityManager<Event> {
 	/**
 	 * Deletes all events from the database
 	 * @param s the session
-	
-	
 	 * @throws WPISuiteException * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#deleteAll(Session) * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#deleteAll(Session)
 	 */
 	@Override
@@ -171,10 +160,6 @@ public class EventEntityManager implements EntityManager<Event> {
 	
 	/**
 	 * Returns the number of events in the database
-	
-	
-	
-	
 	 * @return number of events stored * @throws WPISuiteException * @throws WPISuiteException * @throws WPISuiteException
 	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#Count() */
 	@Override
@@ -186,9 +171,6 @@ public class EventEntityManager implements EntityManager<Event> {
 	 * Method update.
 	 * @param session Session
 	 * @param content String
-	
-	
-	
 	 * @return Event * @throws WPISuiteException * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#update(Session, String) * @throws WPISuiteException
 	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#update(Session, String)
 	 */
@@ -207,15 +189,15 @@ public class EventEntityManager implements EntityManager<Event> {
 		}
 				
 		Event existingEvent = (Event)oldEvents.get(0);		
-
-		// copy values to old event and fill in our changeset appropriately
-		// TODO: existingEvent.copyFrom(updatedEvent);
 		
-		if(!db.save(existingEvent, session.getProject())) {
+		db.delete(existingEvent);
+		
+		if(!db.save(updatedEvent, session.getProject())) {
 			throw new WPISuiteException();
 		}
 		
 		return existingEvent;
+		
 	}
 
 	/**

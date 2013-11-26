@@ -28,6 +28,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarHostIface;
 @SuppressWarnings("serial")
 public class DatePicker extends JPanel implements MiniCalendarHostIface {
 	DateTimeFormatter dateFmt;
+	DateTimeFormatter timeFmt;
 	DateTimeFormatter dateTimeFmt;
 	JComboBox<String> AMPM;
 	JFormattedTextField date;
@@ -40,6 +41,7 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 		linked = mLinked;
 		
 		dateFmt = DateTimeFormat.forPattern("MM/dd/yy");
+		timeFmt = DateTimeFormat.forPattern("hh:mm");
 		dateTimeFmt = DateTimeFormat.forPattern("MM/dd/yy hh:mm aa");
 		final MiniCalendarHostIface me = this;
 		try {
@@ -143,6 +145,15 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 				});
 				this.add(AMPM);
 			}
+			else
+			{
+				MaskFormatter mask = new MaskFormatter("##:##");
+				time = new JFormattedTextField(mask);
+				time.setText("12:00");
+				AMPM = new JComboBox<>();
+				AMPM.addItem("PM");
+				AMPM.setSelectedIndex(0);
+			}
 			
 			date.addMouseListener(new MouseListener() {
 
@@ -189,11 +200,28 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 	public DateTime getDate() {
 		try
 		{
+			
 			return dateTimeFmt.parseDateTime(date.getText()+" "+time.getText()+" "+AMPM.getSelectedItem());
 		}catch(IllegalArgumentException e)
 		{
 			return null;
 		}
+	}
+	
+	
+	/**
+	 * Sets date and time of DatePicker to specified value
+	 * @param previous the DateTime object from which to obtain values
+	 */
+	public void setDateTime(DateTime previous) {
+			this.date.setText(previous.toString(dateFmt));
+			this.time.setText(previous.toString(timeFmt));
+			if (previous.getHourOfDay() > 12){
+				this.AMPM.setSelectedIndex(1);
+			}
+			else{
+				this.AMPM.setSelectedIndex(0);
+			}
 	}
 	
 	public void addChangeListener(DatePickerListener newListener)
