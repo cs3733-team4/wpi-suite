@@ -2,6 +2,8 @@ package edu.wpi.cs.wpisuitetng.modules.cal.eventui;
 
 import javax.swing.Box.Filler;
 import javax.swing.border.BevelBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.JPanel;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
@@ -11,6 +13,8 @@ import javax.swing.JTextArea;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.SwingConstants;
+
+import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
@@ -32,7 +36,9 @@ public class AddCommitmentDisplay extends JPanel
 	private int tabid;
 	private UUID existingID;//the old ID of the commitment, might be unused if it is a new commitment
 	private boolean editingCommitment;
-	
+	private DatePicker commitTime1;
+	private JLabel dateErrorLabel;
+	private JLabel nameErrorLabel;
 	public AddCommitmentDisplay()
 	{
 		editingCommitment=false;
@@ -47,7 +53,7 @@ public class AddCommitmentDisplay extends JPanel
 	private void init(Commitment oldCommitment)
 	{
 
-		
+		//TODO: Clean this whole thing up!!
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		JPanel NameLabelPanel = new JPanel();
 		FlowLayout flowLayout_2 = (FlowLayout) NameLabelPanel.getLayout();
@@ -58,12 +64,18 @@ public class AddCommitmentDisplay extends JPanel
 		lblName.setVerticalAlignment(SwingConstants.BOTTOM);
 		lblName.setHorizontalAlignment(SwingConstants.LEFT);
 		NameLabelPanel.add(lblName);
-		
 		JPanel NamePane = new JPanel();
 		FlowLayout fl_NamePane = (FlowLayout) NamePane.getLayout();
 		fl_NamePane.setAlignment(FlowLayout.LEFT);
+		
 		add(NamePane);
 		
+
+		nameErrorLabel = new JLabel();
+
+		nameErrorLabel.setForeground(Color.RED);
+
+		NameLabelPanel.add(nameErrorLabel);
 		nameTextField = new JTextField();
 		NamePane.add(nameTextField);
 		nameTextField.setBorder( new BevelBorder(BevelBorder.LOWERED));
@@ -87,7 +99,7 @@ public class AddCommitmentDisplay extends JPanel
 		add(CommitDatePickerPanel);
 
 		//final CommitmentDatePicker commitTime1 = new CommitmentDatePicker(true, null);
-		final DatePicker commitTime1 = new DatePicker(false, null);
+		commitTime1 = new DatePicker(false, null);
 		if (editingCommitment)
 			commitTime1.display(oldCommitment.getDate());
 		
@@ -158,8 +170,8 @@ public class AddCommitmentDisplay extends JPanel
 		errorText.setForeground(Color.RED);
 		errorText.setFont(new java.awt.Font("Tahoma", Font.PLAIN, 13));
 		
-		final JButton btnSave = new JButton("Save");
-		btnSave.addActionListener(new ActionListener(){
+		final JButton saveButton = new JButton("Save");
+		saveButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				try
@@ -185,8 +197,8 @@ public class AddCommitmentDisplay extends JPanel
 							MainPanel.getInstance().updateCommitment(e);
 						else
 							MainPanel.getInstance().addCommitment(e);
-						btnSave.setEnabled(false);
-						btnSave.setText("Saved!");
+						saveButton.setEnabled(false);
+						saveButton.setText("Saved!");
 						MainPanel.getInstance().closeTab(tabid);
 						MainPanel.getInstance().refreshView();
 					}
@@ -198,8 +210,8 @@ public class AddCommitmentDisplay extends JPanel
 				}
 			}
 		});
-		btnSave.setHorizontalAlignment(SwingConstants.LEFT);
-		SubmitPanel.add(btnSave);
+		saveButton.setHorizontalAlignment(SwingConstants.LEFT);
+		SubmitPanel.add(saveButton);
 		
 		JButton btnCancel = new JButton("Cancel");
 		btnCancel.addActionListener(new ActionListener(){
@@ -211,6 +223,88 @@ public class AddCommitmentDisplay extends JPanel
 		});
 		SubmitPanel.add(btnCancel);
 		SubmitPanel.add(errorText);
+
+		dateErrorLabel = new JLabel();
+		dateErrorLabel.setForeground(Color.RED);
+		CommitDatePickerPanel.add(dateErrorLabel);
+		
+		nameTextField.getDocument().addDocumentListener(new DocumentListener() {
+			
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				nameErrorLabel.setVisible(!validateText(nameTextField.getText(), nameErrorLabel));
+				saveButton.setEnabled(isSaveable());
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				nameErrorLabel.setVisible(!validateText(nameTextField.getText(), nameErrorLabel));
+				saveButton.setEnabled(isSaveable());
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				//Not triggered by plaintext fields
+			}
+		});
+		commitTime1.addChangeListener(new DatePickerListener() {
+			
+			@Override
+			public void datePickerUpdate(DateTime mDateTime) {
+				dateErrorLabel.setVisible(!validateDate(commitTime1.getDate(), dateErrorLabel));
+				saveButton.setEnabled(isSaveable());
+			}
+		});
+		validateDate(commitTime1.getDate(), dateErrorLabel);
+		validateText(nameTextField.getText(), nameErrorLabel);
+		
+	}
+	public boolean isSaveable()
+	{
+		return validateText(nameTextField.getText(), nameErrorLabel) && 
+				validateDate(commitTime1.getDate(), dateErrorLabel);
+	}
+	
+	/**
+	 * 
+	 * @param dueDate first DatePicker to validate and compare
+	 * @param mEndTime second DatePicker to validate and compare
+	 * @param mErrorLabel text field to be updated with any error message
+	 * @return true if all validation checks pass, else returns false
+	 */
+	private boolean validateDate(DateTime dueDate, JLabel mErrorLabel)
+	{
+		if(dueDate == null)//Make sure that a date has been selected
+		{
+			mErrorLabel.setText("* Commitment must have a due date");
+			return false;
+		}
+		
+		//no errors found
+		return true;
+		
+		
+	}
+	/**
+	 * 
+	 * @param mText text to be validated
+	 * @param mErrorLabel JLabel to display resulting error message
+	 * @return true if all pass, else return true
+	 */
+	private boolean validateText(String mText, JLabel mErrorLabel)
+	{
+		if(mText==null || mText.trim().length()==0)
+		{
+			mErrorLabel.setText("* Required Field");
+			return false;
+		/*will be handled when parsed
+		}else if(mText.matches("^.*[^a-zA-Z0-9.,()$ ].*$"))
+		{
+			
+			mErrorLabel.setText("* Invalid Name/Characters");
+		*/
+		}
+		return true;
 	}
 	
 	public void setTabId(int id)
