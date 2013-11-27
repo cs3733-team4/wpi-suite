@@ -7,7 +7,7 @@ package edu.wpi.cs.wpisuitetng.modules.cal;
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors: Team Rolling Thunder
+ * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
 
 import java.lang.reflect.InvocationTargetException;

@@ -2,10 +2,10 @@ package edu.wpi.cs.wpisuitetng.modules.cal.models;
 
 import static org.junit.Assert.*;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 
 import org.junit.Test;
-
 import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.Session;
@@ -102,7 +102,7 @@ public class CommitmentEntityManagerTest {
         }
         
         @Test
-        public void testGetEventsByRangeAll() throws WPISuiteException {
+        public void testGetEventsByRangeAll() throws WPISuiteException, Exception {
         	CommitmentEntityManager eem = new CommitmentEntityManager(db);
                 eem.makeEntity(ses1, eString);
                 eem.makeEntity(ses1, eeString);
@@ -110,7 +110,8 @@ public class CommitmentEntityManagerTest {
                 
                 String before="19500101T010100.050Z";
                 String after ="20500102T010100.050Z";
-                Commitment[] eList=eem.getCommitmentsByRange(ses1,before,after);
+                Commitment[] eList = (Commitment[])eem.getClass().getMethod("getCommitmentsByRange", ses1.getClass(),before.getClass(),after.getClass()).invoke(eem, ses1, before, after);
+			
                 boolean hasFirst=false, hasSecond=false, hasThird=false;
                 
                 if(eList[0].getName().equals("First")||eList[1].getName().equals("First")||eList[2].getName().equals("First"))
@@ -127,7 +128,7 @@ public class CommitmentEntityManagerTest {
         }
         
         @Test
-        public void testGetEventsByRangeSome() throws WPISuiteException {
+        public void testGetEventsByRangeSome() throws WPISuiteException, Exception {
         	CommitmentEntityManager eem = new CommitmentEntityManager(db);
                 // adding events to the database
                 eem.makeEntity(ses1, eString);
@@ -141,7 +142,8 @@ public class CommitmentEntityManagerTest {
                 
                 String before="20000101T010100.000Z"; // DateTime string at 1/1/2000, 1:00am; ie datetime one in basicDateTime string format
                 String after ="20000102T010100.000Z"; // DateTime string at 1/2/2000, 2:00am; ie datetime two in basicDateTime string format
-                Commitment[] eList=eem.getCommitmentsByRange(ses1,before,after);
+                Commitment[] eList = (Commitment[])eem.getClass().getMethod("getCommitmentsByRange", ses1.getClass(),before.getClass(),after.getClass()).invoke(eem, ses1, before, after);
+    			
                 boolean hasEvent=false;
                 
                 if(eList[0].getName().equals("First"))
@@ -149,7 +151,8 @@ public class CommitmentEntityManagerTest {
                 assertTrue("GetEventsByRange, if given a time range that only one event is within, will return only that event",hasEvent);
                 
                 after="20000103T010100.000Z"; // DateTime string at 1/3/2000, 2:00am; ie datetime three in basicDateTime string format
-                eList=eem.getCommitmentsByRange(ses1,before,after);
+                eList = (Commitment[])eem.getClass().getMethod("getCommitmentsByRange", ses1.getClass(),before.getClass(),after.getClass()).invoke(eem, ses1, before, after);
+    			
                 Boolean hasFirst=false, hasSecond=false;
                 if(eList[0].getName().equals("First")||eList[1].getName().equals("First"))
                     hasFirst=true;
@@ -158,7 +161,8 @@ public class CommitmentEntityManagerTest {
                 assertTrue("GetEventsByRange, if given a time range that some events are within, will return only those events in a random order",hasFirst);
                 assertTrue("GetEventsByRange, if given a time range that some events are within, will return only those events in a random order",hasSecond);
                 
-                eList=eem.getCommitmentsByRange(ses1, before, before);
+               eList = (Commitment[])eem.getClass().getMethod("getCommitmentsByRange", ses1.getClass(),before.getClass(),after.getClass()).invoke(eem, ses1, before, after);
+    			
                 assertTrue("GetEventsByRange, if given a time range that no events are within, will return an empty Event[]",eList.length==0);
                 
         }

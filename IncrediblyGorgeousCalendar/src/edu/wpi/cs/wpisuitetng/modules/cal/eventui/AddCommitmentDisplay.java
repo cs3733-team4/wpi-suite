@@ -297,12 +297,7 @@ public class AddCommitmentDisplay extends JPanel
 		{
 			mErrorLabel.setText("* Required Field");
 			return false;
-		/*will be handled when parsed
-		}else if(mText.matches("^.*[^a-zA-Z0-9.,()$ ].*$"))
-		{
-			
-			mErrorLabel.setText("* Invalid Name/Characters");
-		*/
+		
 		}
 		return true;
 	}

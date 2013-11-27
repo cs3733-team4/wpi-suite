@@ -54,9 +54,8 @@ public class MonthItem extends JPanel
         		time.setIcon(new ImageIcon(img));
         		
         	}
-        	catch (Exception ex)
-        	{
-        		time.setText("C");
+        	catch (Exception ex){
+        		time.setText("!");
         	}
         }
         else
