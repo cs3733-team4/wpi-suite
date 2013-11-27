@@ -4,6 +4,7 @@
  */
 package edu.wpi.cs.wpisuitetng.modules.cal.month;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Image;
@@ -29,7 +30,7 @@ public class MonthItem extends JPanel
 	private static final long serialVersionUID = 6475224766889058195L;
 	
 	JLabel time = new JLabel(), desc = new JLabel();
-	private Displayable mEvent;
+	private Displayable mDisplayable;
 	/**
 	 * MonthItem Constructor
 	 * @param when
@@ -42,11 +43,10 @@ public class MonthItem extends JPanel
         setMinimumSize(new java.awt.Dimension(0, 0));
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.X_AXIS));
 
-        this.mEvent = ndisp;
+        this.mDisplayable = ndisp;
         
         time.setFont(new java.awt.Font("DejaVu Sans", Font.BOLD, 12));
-        
-        if (ndisp.getClass()==Commitment.class)
+        if (ndisp instanceof Commitment)
         {
         	try{
         		Image img = ImageIO.read(getClass().getResource("redmark.png"));
@@ -61,12 +61,12 @@ public class MonthItem extends JPanel
         }
         else
         {
-        	time.setText(simpleTime(mEvent.getDate()));
+        	time.setText(simpleTime(mDisplayable.getDate()));
         }
         time.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 3));
         add(time);
 
-        desc.setText(mEvent.getName());
+        desc.setText(mDisplayable.getName());
         desc.setFont(new java.awt.Font("DejaVu Sans", Font.PLAIN, 12));
         desc.setMinimumSize(new java.awt.Dimension(10, 15));
         add(desc);
@@ -82,7 +82,12 @@ public class MonthItem extends JPanel
 			
 			@Override
 			public void mousePressed(MouseEvent e) {
-				MainPanel.getInstance().updateSelectedDisplayable(MonthItem.this.mEvent);
+				if (e.getClickCount() > 1){
+					MainPanel.getInstance().editSelectedDisplayable(MonthItem.this);
+				} else {
+					MainPanel.getInstance().updateSelectedDisplayable(MonthItem.this);
+				}
+				
 			}
 			
 			@Override
@@ -138,5 +143,13 @@ public class MonthItem extends JPanel
 
 	public static Component generateFrom(Displayable elt) {
 		return new MonthItem(elt);
+	}
+	
+	/**
+	 * Get current displayable
+	 * @return the selected displayable
+	 */
+	public Displayable getDisplayable(){
+		return this.mDisplayable;
 	}
 }

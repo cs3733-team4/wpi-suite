@@ -57,7 +57,6 @@ public class EventEntityManager implements EntityManager<Event> {
 	 */
 	@Override
 	public Event makeEntity(Session s, String content) throws WPISuiteException {
-		System.out.println(content+ " was just sent!");
 		final Event newEvent = Event.fromJson(content);
 		newEvent.setOwner(s.getUser());
 		newEvent.setProject(s.getProject());
@@ -75,20 +74,17 @@ public class EventEntityManager implements EntityManager<Event> {
 	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#getEntity(Session, String) */
 	@Override
 	public Event[] getEntity(Session s, String data) throws NotFoundException {
-		System.out.println(data+ " was just sent!");
 		String[] args = data.split(",");
 		
-		Event[] retrievedEvents = null;
 		
 		switch (args[0]) {
 			case "filter-events-by-range":
 				return getEventsByRange(s, args[1], args[2]);
 			default:
-				System.out.println("Error: " + args[0] + " not a valid method");
+				throw new NotFoundException("Error: " + args[0] + " not a valid method");
 		}
 
 	
-		return retrievedEvents;
 	}
 	
 	/**

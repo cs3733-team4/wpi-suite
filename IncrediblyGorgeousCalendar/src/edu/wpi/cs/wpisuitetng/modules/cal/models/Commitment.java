@@ -95,7 +95,13 @@ public class Commitment extends AbstractModel implements Displayable
 	@Override
 	public Boolean identify(Object o)
 	{
-		return null;
+		if (o instanceof String)
+			return getCommitmentID().toString().equals((String)(o));
+		else if (o instanceof UUID)
+			return getCommitmentID().equals((UUID)(o));
+		else if (o instanceof Commitment)
+			return getCommitmentID().equals(((Commitment)(o)).getCommitmentID());
+		return false;
 	}
 
 	/**
@@ -200,7 +206,5 @@ public class Commitment extends AbstractModel implements Displayable
 	{
 		this.owner = owner;
 	}
-
-	// Accessor and Mutator Methods:
 
 }

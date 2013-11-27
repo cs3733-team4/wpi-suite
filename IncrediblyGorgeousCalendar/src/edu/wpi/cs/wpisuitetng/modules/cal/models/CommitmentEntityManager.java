@@ -5,7 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors: Team Rolling Thunder
+ * Contributors: Team YOCO
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.models;
 
@@ -26,11 +26,11 @@ import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 /**
- * This is the entity manager for the Event in the
- * EventManager module.
+ * This is the entity manager for the Commitment in the
+ * CommitmentManager module.
  *
  * @version $Revision: 1.0 $
- * @author NileshP
+ * @author BKMcLeod
  */
 public class CommitmentEntityManager implements EntityManager<Commitment> {
 
@@ -57,7 +57,6 @@ public class CommitmentEntityManager implements EntityManager<Commitment> {
 	 */
 	@Override
 	public Commitment makeEntity(Session s, String content) throws WPISuiteException {
-		System.out.println(content+ " was just sent!");
 		final Commitment newCommitment = Commitment.fromJson(content);
 		newCommitment.setOwner(s.getUser());
 		newCommitment.setProject(s.getProject());
@@ -75,22 +74,15 @@ public class CommitmentEntityManager implements EntityManager<Commitment> {
 	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#getEntity(Session, String) */
 	@Override
 	public Commitment[] getEntity(Session s, String data) throws NotFoundException {
-		System.out.println(data+ " was just sent!");
-		String[] args = data.split(",");
-		
-		Commitment[] retrievedCommitments = null;
-		
+		String[] args = data.split(",");		
 		switch (args[0]) {
 			case "filter-commitments-by-range":
 				return getCommitmentsByRange(s, args[1], args[2]);
 			case "get-all-commitments":
 				return getAll(s);
 			default:
-				System.out.println("Error: " + args[0] + " not a valid method");
+				throw new NotFoundException("Error: " + args[0] + " not a valid method");
 		}
-
-	
-		return retrievedCommitments;
 	}
 	
 	/**
@@ -126,7 +118,6 @@ public class CommitmentEntityManager implements EntityManager<Commitment> {
 	 */
 	@Override
 	public Commitment[] getAll(Session s) {
-		System.out.println("GET ALL COMMITMENTS!");
 		return db.retrieveAll(new Commitment(), s.getProject()).toArray(new Commitment[0]);
 	}
 
@@ -140,7 +131,6 @@ public class CommitmentEntityManager implements EntityManager<Commitment> {
 		
 		db.save(model);
 
-		System.out.println("Commitment saved...?");
 	}
 	
 

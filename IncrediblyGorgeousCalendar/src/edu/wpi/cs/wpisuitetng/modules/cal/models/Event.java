@@ -8,7 +8,6 @@ import org.joda.time.DateTime;
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
-
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
@@ -119,7 +118,13 @@ public class Event extends AbstractModel implements Displayable
 	@Override
 	public Boolean identify(Object o)
 	{
-		return null;
+		if (o instanceof String)
+			return getEventID().toString().equals((String)(o));
+		else if (o instanceof UUID)
+			return getEventID().equals((UUID)(o));
+		else if (o instanceof Event)
+			return getEventID().equals(((Event)(o)).getEventID());
+		return false;
 	}
 
 	/**

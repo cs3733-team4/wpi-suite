@@ -6,6 +6,8 @@ package edu.wpi.cs.wpisuitetng.modules.cal.month;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,8 +17,10 @@ import javax.swing.JPanel;
 import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.DayStyle;
+import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
 
@@ -62,6 +66,38 @@ public class MonthDay extends JPanel
 		header.setMaximumSize(new java.awt.Dimension(10000, 17));
 		header.setOpaque(true);
 		add(header);
+		
+		addMouseListener(new MouseListener() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				MainPanel.getInstance().clearSelected();
+				
+			}
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 	}
 
 	public void reBorder(boolean top, boolean left, boolean bottom)
@@ -111,62 +147,37 @@ public class MonthDay extends JPanel
 	{
 		int total = this.getHeight();
 		int hidden = 0;
-		int added =0;
 		removeAll();
 		add(header);
 		total -= header.getHeight();
-		if (items!=null){
-			for (Event elt : this.items)
+		
+		ArrayList<Displayable> allitems = new ArrayList<>(items.size() + commitments.size());
+		allitems.addAll(items);
+		allitems.addAll(commitments);
+		
+		for (Displayable elt : allitems)
+		{
+			if (hidden > 0)
 			{
-				if (hidden > 0)
+				hidden++;
+			}
+			else
+			{
+				total -= 24; //TODO: don't use constant. getHeight fails when slow resizing to min though...
+				if (total <= 10)
 				{
-					hidden++;
+					hidden = 1;
 				}
 				else
 				{
-					total -= 24; //TODO: don't use constant. getHeight fails when slow resizing to min though...
-					if (total <= 10)
-					{
-						hidden = 1;
-					}
-					else
-					{
-						added++;
-						this.add(MonthItem.generateFrom(elt));
-					}
+					this.add(MonthItem.generateFrom(elt));
 				}
 			}
 		}
-		if (commitments != null){
-			for (Commitment elt : this.commitments)
-			{
-				if (hidden > 0)
-				{
-					hidden++;
-				}
-				else
-				{
-					total -= 24; //TODO: don't use constant. getHeight fails when slow resizing to min though...
-					if (total <= 10)
-					{
-						hidden = 1;
-					}
-					else
-					{
-						this.add(MonthItem.generateFrom(elt));
-}
-				}
-			}
-		}
-
+		
 		if (hidden == 1) // silly, add it anyway
 		{
-			if (added>=items.size())
-				this.add(MonthItem.generateFrom(this.commitments.get(this.commitments.size() - 1)));
-			else
-				this.add(MonthItem.generateFrom(this.items.get(this.items.size() - 1)));
-			
-			
+			this.add(MonthItem.generateFrom(allitems.get(allitems.size() - 1)));
 		}
 		else if (hidden > 1)
 		{

@@ -85,8 +85,9 @@ public class AddCommitmentDisplay extends JPanel
 		FlowLayout flowLayout_51 = (FlowLayout) CommitDatePickerPanel.getLayout();
 		flowLayout_51.setAlignment(FlowLayout.LEFT);
 		add(CommitDatePickerPanel);
-		
-		final CommitmentDatePicker commitTime1 = new CommitmentDatePicker(true, null);
+
+		//final CommitmentDatePicker commitTime1 = new CommitmentDatePicker(true, null);
+		final DatePicker commitTime1 = new DatePicker(false, null);
 		if (editingCommitment)
 			commitTime1.display(oldCommitment.getDate());
 		

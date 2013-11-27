@@ -41,7 +41,7 @@ public class AddEventDisplay extends JPanel
 	private JPanel submissionPanel;
 	private JLabel nameLabel;
 	private JLabel dateAndTimeLabel;
-	private JLabel partiipantsLabel;
+	private JLabel participantsLabel;
 	private JLabel descriptionLabel;
 	private JPanel nameTextFieldPanel;
 	private JTextField nameTextField = new JTextField();
@@ -213,10 +213,6 @@ public class AddEventDisplay extends JPanel
 		dateErrorLabel.setForeground(Color.RED);
 		dateAndTimePickerPane.add(dateErrorLabel);
 		
-		
-		//JCheckBox chckbxAllDayEvent = new JCheckBox("All Day Event");
-		//DatePickerPanel.add(chckbxAllDayEvent);
-		
 		// Add panel to UI
 		this.add(dateAndTimePickerPane);
 		
@@ -228,9 +224,9 @@ public class AddEventDisplay extends JPanel
 		flowLayout_1.setAlignment(FlowLayout.LEFT);
 		
 		// Label
-		this.partiipantsLabel = new JLabel("Participants:");
-		partiipantsLabel.setVerticalAlignment(SwingConstants.BOTTOM);
-		participantsLabelPanel.add(partiipantsLabel);
+		this.participantsLabel = new JLabel("Participants:");
+		participantsLabel.setVerticalAlignment(SwingConstants.BOTTOM);
+		participantsLabelPanel.add(participantsLabel);
 		
 		// Add panel to UI
 		this.add(participantsLabelPanel);
