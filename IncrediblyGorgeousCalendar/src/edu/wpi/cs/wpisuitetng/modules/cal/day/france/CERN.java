@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * Copyright (c) 2013 WPI-Suite
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors: Team YOCO (You Only Compile Once)
+ ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.day.france;
 
 import java.util.ArrayList;
@@ -9,29 +18,35 @@ import java.util.List;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
 /**
- * Takes events, converts them to particles and then COLLIDES them.
- * @author NileshP
- *
+ * Takes events, which are made of two particles colliding, and smashes them together so fast
+ * they turn back time to the renaissance
  */
-
-// Lead Particles => ColliderItems
-// TimeTravellers => RankedEvents
-// Rational => Rational
-// VanGoghPanels => EventPanels
-// DayGrid => Louvre
-
-public class CERN {
-	public static List<VanGoghPainting> createEventsReallyNicely(List<Event> events){
+public class CERN
+{
+	/**
+	 * Do everything, spin back time, steal paintings
+	 * @param events Events to display on day calender
+	 * @return paintings
+	 */
+	public static List<VanGoghPainting> createEventsReallyNicely(List<Event> events)
+	{
 		LeadParticle[] particles = eventsToParticles(events);
 		List<TimeTraveller> travellers = tevatrize(particles); // shoot at speed of light to go back in time
 		disperse(particles);
-		Collections.sort(travellers); // Currently travelling backwards, trying to sort things out.
+		Collections.sort(travellers); // Currently traveling backwards, trying to sort things out.
 		return timeWarp(travellers);
 	}
 	
-	private static LeadParticle[] eventsToParticles(List<Event> events){
+	/**
+	 * Split collision events into constuient particles that collide
+	 * @param events List of events to split
+	 * @return Array of lead particles, two for each event (start and end)
+	 */
+	private static LeadParticle[] eventsToParticles(List<Event> events)
+	{
 		LeadParticle re[] = new LeadParticle[events.size()*2];
-		for(int i = 0; i < events.size(); i++){
+		for(int i = 0; i < events.size(); i++)
+		{
 			re[i*2] = new LeadParticle(events.get(i), false);
 			re[i*2 + 1] = new LeadParticle(events.get(i), true);
 		}
@@ -39,20 +54,35 @@ public class CERN {
 		return re;
 	}
 	
-	private static List<TimeTraveller> tevatrize(LeadParticle[] particles){
+	/**
+	 * Smash particles together in the particle accelerator. Note that the LHC is current
+	 * undergoing maintenance, so we are contracting this out to the Fermilab Tevatron.
+	 * @param particles Particles to accelerate
+	 * @return A bunch of time travelers, one for each collision. 
+	 */
+	private static List<TimeTraveller> tevatrize(LeadParticle[] particles)
+	{
 		int counter = -1;
 		List<TimeTraveller> out = new ArrayList<TimeTraveller>(particles.length/2);
 		HashMap<Event, TimeTraveller> active = new HashMap<Event, TimeTraveller>();
 		
-		for(LeadParticle c : particles)
+		for(LeadParticle c : particles) // c = speed of light
 		{
 			if(!c.isEnd())
 			{
-				active.put(c.getEvent(), c.setResult(new TimeTraveller(c.getEvent())));
+				TimeTraveller t = new TimeTraveller(c.getEvent());
+				active.put(c.getEvent(), c.setResult(t));
 				counter++;
 				// max active
-				for (TimeTraveller who : active.values()) {
+				for (TimeTraveller who : active.values())
+				{
+					// count the number of hits we register
 					who.setCollisions(Math.max(who.getCollisions(), counter));
+					if (t != who)
+					{
+						who.addOverlappedEvent(t);
+						t.addOverlappedEvent(who);
+					}
 				}
 			}
 			else
@@ -64,12 +94,15 @@ public class CERN {
 			}
 		}
 		return out;
-		// TODO Sort?
 	}
 	
+	/**
+	 * Disperses the particles from a collision and sorts by x position where they can fit in 
+	 * the detectors.
+	 * @param particles The particles to disperse, sorted by time
+	 */
 	private static void disperse(LeadParticle[] particles)
 	{
-		// TODO: particles must be sorted by start time
 		ArrayList<Boolean> state = new ArrayList<>();
 		for (LeadParticle x : particles)
 		{
@@ -100,9 +133,9 @@ public class CERN {
 	}
 	
 	/**
-	 * Let the time travellers steal painting from past
+	 * Let the time travelers steal painting from past
 	 * @param travellers
-	 * @return
+	 * @return Stolen Van Gogh Paintings for each time traveler
 	 */
 	private static List<VanGoghPainting> timeWarp(List<TimeTraveller> travellers)
 	{
