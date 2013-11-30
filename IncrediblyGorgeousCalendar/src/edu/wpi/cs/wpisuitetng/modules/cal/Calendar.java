@@ -5,7 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors: Team Rolling Thunder
+ * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal;
 
@@ -17,27 +17,29 @@ import javax.swing.ImageIcon;
 import edu.wpi.cs.wpisuitetng.janeway.modules.IJanewayModule;
 import edu.wpi.cs.wpisuitetng.janeway.modules.JanewayTabModel;
 
-
-public class Calendar implements IJanewayModule {
-
-
-	/** The tabs used by this module */
+/**
+ * Calendar class. This is the main Jainway entry point for our calendar.
+ */
+public class Calendar implements IJanewayModule
+{
+	/** The tabs used by this module. We only have one */
 	private ArrayList<JanewayTabModel> tabs;
-	
+
 	/**
 	 * Construct a new Calendar Tab Module
 	 */
 	public Calendar()
 	{
 		MainPanel mMainPanel = new MainPanel();
-		
+
 		// Setup button panel
 		RibbonToolbar buttonPanel = new RibbonToolbar(mMainPanel, true);
 		buttonPanel.setFloatable(false);
-				
+
 		tabs = new ArrayList<JanewayTabModel>();
-		JanewayTabModel tab = new JanewayTabModel(getName(), new ImageIcon(), buttonPanel, mMainPanel);
-		
+		JanewayTabModel tab = new JanewayTabModel(getName(), new ImageIcon(),
+				buttonPanel, mMainPanel);
+
 		tabs.add(tab);
 	}
 
@@ -45,7 +47,8 @@ public class Calendar implements IJanewayModule {
 	 * @see edu.wpi.cs.wpisuitetng.janeway.modules.IJanewayModule#getName()
 	 */
 	@Override
-	public String getName() {
+	public String getName()
+	{
 		return "Calendar";
 	}
 
@@ -53,10 +56,10 @@ public class Calendar implements IJanewayModule {
 	 * @see edu.wpi.cs.wpisuitetng.janeway.modules.IJanewayModule#getTabs()
 	 */
 	@Override
-	public List<JanewayTabModel> getTabs() {
+	public List<JanewayTabModel> getTabs()
+	{
 		return tabs;
-		
+
 	}
 
 }
-

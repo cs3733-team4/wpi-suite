@@ -7,15 +7,18 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.cal.navigation;
+package edu.wpi.cs.wpisuitetng.modules.cal.eventui;
+
+import org.joda.time.DateTime;
 
 /**
- * What calendar is in the main view
+ * Event listener used when the DatePicker changes.
  */
-public enum ViewSize
+public interface DatePickerListener
 {
-	Year,
-	Month,
-	Week,
-	Day
+	/**
+	 * Called whenever a DatePicker changes. Null dateTime means invalid date.
+	 * @param mDateTime parsed DateTime or null if not parsable.
+	 */
+	public void datePickerUpdate(DateTime dateTime);
 }

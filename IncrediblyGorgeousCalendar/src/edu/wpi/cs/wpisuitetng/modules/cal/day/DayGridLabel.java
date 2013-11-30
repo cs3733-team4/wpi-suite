@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * Copyright (c) 2013 WPI-Suite
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors: Team YOCO (You Only Compile Once)
+ ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.day;
 
 import java.awt.GridLayout;
@@ -10,7 +19,16 @@ import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
 
 public class DayGridLabel extends JPanel{
 	
-	public DayGridLabel()
+	private static DayGridLabel instance;
+	
+	public static DayGridLabel getInstance()
+	{
+		if(instance == null)
+			instance = new DayGridLabel();
+		return instance;
+	}
+	
+	private DayGridLabel()
 	{
 		this.setLayout(new GridLayout(24, 1));
 		this.setBackground(Colors.TABLE_BACKGROUND);

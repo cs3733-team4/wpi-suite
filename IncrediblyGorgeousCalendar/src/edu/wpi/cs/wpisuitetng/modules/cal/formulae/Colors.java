@@ -1,9 +1,21 @@
+/*******************************************************************************
+ * Copyright (c) 2013 WPI-Suite
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors: Team YOCO (You Only Compile Once)
+ ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.formulae;
 
 import java.awt.Color;
 
 import javax.swing.UIManager;
 
+/**
+ * Place for consistent UI colors. Compensates for platform issues. Supports all LAF's
+ */
 public class Colors
 {
 	public static final Color TABLE_BACKGROUND = UIManager.getDefaults().getColor("Table.background"),
@@ -15,7 +27,9 @@ public class Colors
 	
 	public static final Color TABLE_GRAY_HEADER = getTableGrayHeader();
 	
-	
+	/**
+	 * Computes the proper color for the gray header. Annoying on Mac OS X native & Nimbus LAF.
+	 */
 	private static Color getTableGrayHeader()
 	{
 		Color grayit = UIManager.getDefaults().getColor("Table.focusCellBackground");

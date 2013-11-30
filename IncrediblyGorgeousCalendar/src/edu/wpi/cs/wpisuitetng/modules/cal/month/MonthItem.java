@@ -1,49 +1,98 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+/*******************************************************************************
+ * Copyright (c) 2013 WPI-Suite
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors: Team YOCO (You Only Compile Once)
+ ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.month;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
 import org.joda.time.DateTime;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 
-
+/**
+ * UI for displaying individual events/commitments in MonthDays. These are collapsed
+ * into CollapsedMonthItem's when there is not enough space
+ */
 public class MonthItem extends JPanel
-{
-	private static final long serialVersionUID = 6475224766889058195L;
-	
+{	
 	JLabel time = new JLabel(), desc = new JLabel();
-	private DateTime when;
+	private Displayable mDisplayable;
 	/**
 	 * MonthItem Constructor
 	 * @param when
 	 * @param descr
 	 */
-	public MonthItem(DateTime when, String descr)
+	public MonthItem(Displayable ndisp)
 	{
         setBackground(Colors.TABLE_BACKGROUND);
         setMaximumSize(new java.awt.Dimension(32767, 24));
         setMinimumSize(new java.awt.Dimension(0, 0));
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.X_AXIS));
 
+        this.mDisplayable = ndisp;
+        
         time.setFont(new java.awt.Font("DejaVu Sans", Font.BOLD, 12));
-        time.setText(simpleTime(when));
+        time.setText(simpleTime(mDisplayable.getDate()));
         time.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 3));
         add(time);
 
-        desc.setText(descr);
+        desc.setText(mDisplayable.getName());
         desc.setFont(new java.awt.Font("DejaVu Sans", Font.PLAIN, 12));
         desc.setMinimumSize(new java.awt.Dimension(10, 15));
         add(desc);
 
-		setWhen(when);
+		
+		addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				if (e.getClickCount() > 1){
+					MainPanel.getInstance().editSelectedDisplayable(MonthItem.this);
+				} else {
+					MainPanel.getInstance().updateSelectedDisplayable(MonthItem.this);
+				}
+				
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 	}
 
 	/**
@@ -76,17 +125,16 @@ public class MonthItem extends JPanel
 		return ret;
 	}
 
-	public DateTime getWhen()
-	{
-		return when;
-	}
 
-	public void setWhen(DateTime when)
-	{
-		this.when = when;
+	public static Component generateFrom(Displayable elt) {
+		return new MonthItem(elt);
 	}
-
-	public static Component generateFrom(Event elt) {
-		return new MonthItem(elt.getStart(), elt.getName());
+	
+	/**
+	 * Get current displayable
+	 * @return the selected displayable
+	 */
+	public Displayable getDisplayable(){
+		return this.mDisplayable;
 	}
 }
