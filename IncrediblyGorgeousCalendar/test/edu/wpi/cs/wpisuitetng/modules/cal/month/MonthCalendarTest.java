@@ -2,13 +2,18 @@ package edu.wpi.cs.wpisuitetng.modules.cal.month;
 
 import static org.junit.Assert.*;
 
+import java.util.HashSet;
+
 import org.joda.time.DateTime;
 import org.junit.Test;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.MockData;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.month.MonthCalendar;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
+import edu.wpi.cs.wpisuitetng.network.Network;
+import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
 
 /**
  * Tests for MonthsTest class
@@ -19,6 +24,10 @@ public class MonthCalendarTest{
 
 	private EventModel dummyModel=new EventModel();
 	
+	MockData db = new MockData(new HashSet<Object>());
+	final NetworkConfiguration config = new NetworkConfiguration("http://localhost:8080");
+	//Network.getInstance().setDefaultNetworkConfiguration(config);
+	
 	private DateTime time =  new DateTime();
 	private DateTime timeDecember = new DateTime(2012,12,1,1,1);
 	private DateTime timeJanuary = new DateTime(2013,01,1,1,1);
@@ -27,7 +36,11 @@ public class MonthCalendarTest{
 	private DateTime timeOneHourThirtyMinutesBeforeDSTPlusOneMonth = new DateTime(2013, 12, 3, 0, 30);
 	
 	
-	// Testing is currently broken: 
+	// Testing is currently broken: Network configuration must not be null.
+	// When initializing a new monthCalendar, it tries to generate days to display by requesting
+	// from the currently uninitialized network. I tried initializing networkConfiguration like
+	// another team did in edu.wpi.cs.wpisuitetng.janeway.network.requestExample, but the commented
+	// out line of code above doesn't work and I'm stuck.
 	
 	
 	

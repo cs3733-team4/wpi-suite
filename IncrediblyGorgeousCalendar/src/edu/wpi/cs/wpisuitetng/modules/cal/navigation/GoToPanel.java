@@ -98,7 +98,7 @@ public class GoToPanel extends JPanel {
 	 * syntax errors
 	 * @param text string to parse
 	 */
-	private void parseGoto(String text) {
+	void parseGoto(String text) {
 		
 		DateTime dt;
 		boolean isValidYear = true;
@@ -145,5 +145,13 @@ public class GoToPanel extends JPanel {
 		gotoDateField.setText(mDateTime.toString(gotoExampleField));
 	}
 
+	// Added for testing purposes
+	public DateTime getDate() {
+		return this.currentDate;
+	}
+	public String getError() {
+		return this.gotoErrorText.getText();
+	}
 }
+
 

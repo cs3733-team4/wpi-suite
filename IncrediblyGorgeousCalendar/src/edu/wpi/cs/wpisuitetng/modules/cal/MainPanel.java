@@ -232,12 +232,6 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 			return tabInfoClose.ID;
 		}
 	}
-
-	// Added for testing purposes
-	public void setMOCA(AbstractCalendar newMOCA) {
-		mCalendar=newMOCA;
-	}
-	
 	
 	public AbstractCalendar getMOCA()
 	{

@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import javax.swing.JButton;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.month.MonthCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.year.YearCalendarHolder;
@@ -121,7 +122,7 @@ public class YearCalendarHolderTest {
                 
                 YearCalendarHolder YCH3=new YearCalendarHolder(now, MainPanel.getInstance());
                 YCH3.parseGoto("31/12/2000");
-                assertEquals("WE do not accept the English version of dd/m/yyyy, regardless of how amazingly logical it is", YCH3.getError(), "* Invalid format, use: mm/dd/yyyy");
+                assertEquals("We do not accept the English version of dd/m/yyyy, regardless of how amazingly logical it is", YCH3.getError(), "* Invalid format, use: mm/dd/yyyy");
         }
 
 }
