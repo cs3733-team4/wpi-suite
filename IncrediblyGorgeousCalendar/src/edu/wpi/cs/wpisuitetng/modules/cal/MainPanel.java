@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * Copyright (c) 2013 WPI-Suite
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors: Team YOCO (You Only Compile Once)
+ ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal;
 
 import java.awt.BorderLayout;
@@ -43,6 +52,10 @@ import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.ViewSize;
 import edu.wpi.cs.wpisuitetng.modules.cal.year.YearCalendar;
 
+/**
+ * The main UI of the Calendar module. This singleton is basically the controller for everything
+ * in the calendar module. It manages most resources.
+ */
 public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	
 	private JTabbedPane mTabbedPane;

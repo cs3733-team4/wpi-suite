@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * Copyright (c) 2013 WPI-Suite
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors: Team YOCO (You Only Compile Once)
+ ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.formulae;
 
 import java.awt.Dimension;
@@ -13,10 +22,13 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.plaf.basic.BasicLabelUI;
 
+/**
+ * Used for the Year view to turn the month names on their sides.
+ */
 public class VerticalLabelUI extends BasicLabelUI
 {
-	
-	static {
+	static
+	{
 		labelUI = new VerticalLabelUI(false);
 	}
 	

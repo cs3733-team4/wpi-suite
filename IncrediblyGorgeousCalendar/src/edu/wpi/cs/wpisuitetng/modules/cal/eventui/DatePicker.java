@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * Copyright (c) 2013 WPI-Suite
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors: Team YOCO (You Only Compile Once)
+ ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.eventui;
 
 import java.awt.Font;
@@ -25,7 +34,9 @@ import org.joda.time.format.DateTimeFormatter;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarHostIface;
 
-@SuppressWarnings("serial")
+/**
+ * This is the DateTime picker that enables picking dates, and datetimes. Has awesome drop-down mini-month 
+ */
 public class DatePicker extends JPanel implements MiniCalendarHostIface {
 	DateTimeFormatter dateFmt;
 	DateTimeFormatter timeFmt;
