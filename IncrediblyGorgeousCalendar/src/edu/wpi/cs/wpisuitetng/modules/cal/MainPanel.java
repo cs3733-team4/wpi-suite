@@ -1,7 +1,6 @@
 package edu.wpi.cs.wpisuitetng.modules.cal;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
@@ -118,7 +117,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		this.centerPanelTop = new JPanel(); // Container for navigation and calendar selector
 		this.centerPanelBottom = new JPanel(); // Container for calendar itself
 		
-		//Dont move this for init purposes
+		// mMiniCalendarPanel must be initialized before monthCal and dayCal because they call miniMove() in their constructors
 		this.mMiniCalendarPanel = new MiniCalendarPanel(DateTime.now(), this); // Mini calendar
 		
 		// Components of center panel

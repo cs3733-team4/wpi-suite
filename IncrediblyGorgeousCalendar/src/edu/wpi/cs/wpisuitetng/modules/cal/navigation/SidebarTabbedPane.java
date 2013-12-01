@@ -1,72 +1,143 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.navigation;
 
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JLabel;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextPane;
-import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
+import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.eventui.AddCommitmentDisplay;
+import edu.wpi.cs.wpisuitetng.modules.cal.eventui.AddEventDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
 public class SidebarTabbedPane extends JTabbedPane{
 	
-	private JTextArea detailTab;
+	private JPanel detailTab;
+	private JTextArea detailTextArea;
+	private JScrollPane detailScrollPane;
+	private JPanel detailButtonPane;
+	private JButton detailEditButton;
+	private JButton detailCancelButton;
 	private JTextArea commitmentTab;
 	private DateTimeFormatter timeFormatter = DateTimeFormat.forPattern("hh:mm aa");
 	private DateTimeFormatter dateFormatter = DateTimeFormat.forPattern("MM/dd/yy");
+	private Displayable currentDisplayable;
+	
 	public SidebarTabbedPane() {
 		this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		
-		detailTab = new JTextArea();
-		detailTab.setEditable(false);
-		detailTab.setLineWrap(true);
-		detailTab.setCursor(null);  
-		detailTab.setOpaque(false);  
-		detailTab.setFocusable(false);
-	    detailTab.setWrapStyleWord(true);
-	    detailTab.setFont(new Font("Tahoma", Font.PLAIN, 13));
-	    detailTab.putClientProperty("html.disable", true);
-	    
-	    JScrollPane detailsScrollPane = new JScrollPane(detailTab);
-	    detailsScrollPane.setBorder( new EmptyBorder(5,5,5,5));
+		setupDetailTab();
 	    
 		commitmentTab = new JTextArea();
-		//detailTab.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		
-		this.addTab("Details", detailsScrollPane);
+		this.addTab("Details", detailScrollPane);
 		this.addTab("Commitments", commitmentTab);
+	}
+	
+	private void setupDetailTab()
+	{
+		// setup container panel
+		detailTab = new JPanel();
+		detailTab.setLayout(new BorderLayout());
+		
+		// setup text area
+		detailTextArea = new JTextArea();
+		detailTextArea.setEditable(false);
+		detailTextArea.setLineWrap(true);
+		detailTextArea.setCursor(null);  
+		detailTextArea.setOpaque(false);  
+		detailTextArea.setFocusable(false);
+	    detailTextArea.setWrapStyleWord(true);
+	    detailTextArea.setFont(new Font("Tahoma", Font.PLAIN, 13));
+	    detailTextArea.putClientProperty("html.disable", true);
+	    
+	    // setup buttons and listeners
+	    detailEditButton = new JButton("Edit");
+	    detailEditButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				MainPanel instance = MainPanel.getInstance();
+				
+				if (currentDisplayable instanceof Event) {
+					AddEventDisplay mAddEventDisplay = new AddEventDisplay((Event) currentDisplayable);
+					mAddEventDisplay.setTabId(instance.addTopLevelTab(mAddEventDisplay, "Edit Event", true));
+				}
+				else if (currentDisplayable instanceof Commitment) {
+					AddCommitmentDisplay mAddCommitmentDisplay = new AddCommitmentDisplay((Commitment) currentDisplayable);
+					mAddCommitmentDisplay.setTabId(instance.addTopLevelTab(mAddCommitmentDisplay, "Edit Commitment", true));
+				}				
+			}
+		});
+	    
+	    detailCancelButton = new JButton("Cancel");
+	    detailCancelButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+
+	    // buttons disabled by default
+	    setButtonsEnabled(false);
+	    
+	    // add buttons to button container
+	    detailButtonPane = new JPanel();
+	    detailButtonPane.setLayout(new FlowLayout());
+	    detailButtonPane.add(detailEditButton);
+	    detailButtonPane.add(detailCancelButton);
+	    
+	    // add text area and button container to detail tab
+	    detailTab.add(detailTextArea, BorderLayout.CENTER);
+	    detailTab.add(detailButtonPane, BorderLayout.SOUTH);
+	    
+	    // put entire tab into a scroll pane
+	    detailScrollPane = new JScrollPane(detailTab);
+	    detailScrollPane.setBorder( new EmptyBorder(5,5,5,5));
+	}
+	
+	private void setButtonsEnabled(boolean enabled) {
+		detailEditButton.setEnabled(enabled);
+		detailCancelButton.setEnabled(enabled);
 	}
 	
 	public void showDetails(Displayable mDisplayable)
 	{
+		currentDisplayable = mDisplayable;
+		
 		if (mDisplayable instanceof Event)
 		{
-			detailTab.setText(mDisplayable.getName() + "\n" + 
+			detailTextArea.setText(mDisplayable.getName() + "\n" + 
 					((Event) mDisplayable).getStart().toString(timeFormatter) + " - " +
 					((Event) mDisplayable).getEnd().toString(timeFormatter) + "\n" + 
 					mDisplayable.getDescription());
+			setButtonsEnabled(true);
 		}else if (mDisplayable instanceof Commitment)
 		{
-			detailTab.setText(mDisplayable.getName() + "\n" + 
+			detailTextArea.setText(mDisplayable.getName() + "\n" + 
 					((Commitment) mDisplayable).getDate().toString(dateFormatter) + "\n" +
 					mDisplayable.getDescription());
+			setButtonsEnabled(true);
 		}
 	}
 
 	public void clearDetails() {
-		detailTab.setText("");		
+		detailTextArea.setText("");
+		setButtonsEnabled(false);
 	}
 }
