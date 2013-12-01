@@ -19,11 +19,10 @@ public class EventEntityManagerTest {
 
         MockData db = new MockData(new HashSet<Object>());
            
-        DateTime one=new DateTime(2000,1,1,1,1);
-        
-        DateTime two=new DateTime(2000,1,2,2,1);
-        DateTime three=new DateTime(2000,1,3,3,1);
-        DateTime four=new DateTime(2000,1,4,4,1);
+        DateTime one=new DateTime(2000,1,1,1,30);   // Datetime at Jan 1st, 2000: 1:30
+        DateTime two=new DateTime(2000,1,2,2,30);   // Datetime at Jan 2nd, 2000: 2:30
+        DateTime three=new DateTime(2000,1,3,3,30); // Datetime at Jan 3rd, 2000: 3:30
+        DateTime four=new DateTime(2000,1,4,4,30);  // Datetime at Jan 4th, 2000: 4:30
         
         
         
@@ -60,11 +59,11 @@ public class EventEntityManagerTest {
         public void testMakeEntity() throws WPISuiteException {
                 EventEntityManager eem = new EventEntityManager(db);
                 assertNotNull("An Event Entity Manager will return an event upon sucessfully sending an Event into the database", eem.makeEntity(ses1, eString));
-                assertEquals("After making events, Count() will return the updated # of events", 1,eem.Count());
+                assertEquals("After making events, Count() will return the updated # of events", 1, eem.Count());
                 assertNotNull("An Event Entity Manager will return an event upon sucessfully sending an Event into the database", eem.makeEntity(ses1, eeString));
-                assertEquals("After making events, Count() will return the updated # of events", 2,eem.Count());
+                assertEquals("After making events, Count() will return the updated # of events", 2, eem.Count());
                 assertNotNull("An Event Entity Manager will return an event upon sucessfully sending an Event into the database", eem.makeEntity(ses1, eeeString));
-                assertEquals("After making events, Count() will return the updated # of events", 3,eem.Count());
+                assertEquals("After making events, Count() will return the updated # of events", 3, eem.Count());
                 //Testing that each individual event is saved in the database correctly is tested in the Get* tests
         }
            
@@ -73,9 +72,9 @@ public class EventEntityManagerTest {
                 EventEntityManager eem = new EventEntityManager(db);
                 eem.makeEntity(ses1, eString);
                 
-                assertEquals("GetAll will return event event in the database in Event[] form; in the cae of only 1 event being stored, it will return that event", e.getName(), eem.getAll(ses1)[0].getName());
-                assertEquals("GetAll will return event event in the database in Event[] form; in the cae of only 1 event being stored, it will return that event", e.getStart(), eem.getAll(ses1)[0].getStart());
-                assertEquals("GetAll will return event event in the database in Event[] form; in the cae of only 1 event being stored, it will return that event", e.getEnd(), eem.getAll(ses1)[0].getEnd());
+                assertEquals("GetAll will return event event in the database in Event[] form; in the case of only 1 event being stored, it will return that event", e.getName(), eem.getAll(ses1)[0].getName());
+                assertEquals("GetAll will return event event in the database in Event[] form; in the case of only 1 event being stored, it will return that event", e.getStart(), eem.getAll(ses1)[0].getStart());
+                assertEquals("GetAll will return event event in the database in Event[] form; in the case of only 1 event being stored, it will return that event", e.getEnd(), eem.getAll(ses1)[0].getEnd());
         }
         
         
@@ -109,8 +108,8 @@ public class EventEntityManagerTest {
                 eem.makeEntity(ses1, eeString);
                 eem.makeEntity(ses1, eeeString);
                 
-                String before="19500101T010100.050Z";
-                String after ="20500102T010100.050Z";
+                String before="19500101T010100.050Z"; // String representing a DateTime at Jan 1, 1950
+                String after ="20500102T010100.050Z"; // String representing a DateTime at Jan 1, 2050
                 Event[] eList=eem.getEventsByRange(ses1,before,after);
                 boolean hasFirst=false, hasSecond=false, hasThird=false;
                 
@@ -140,8 +139,8 @@ public class EventEntityManagerTest {
                 // will return nothing; you'll have to check from the day it starts to the next day. This also means the hours / minutes of the input don't matter
                 
                 
-                String before="20000101T010100.000Z"; // DateTime string at 1/1/2000, 1:00am; ie datetime one in basicDateTime string format
-                String after ="20000102T010100.000Z"; // DateTime string at 1/2/2000, 2:00am; ie datetime two in basicDateTime string format
+                String before="20000101T010000.000Z"; // DateTime string at 1/1/2000, 1:00; ie a little before datetime one in basicDateTime string format
+                String after ="20000102T020000.000Z"; // DateTime string at 1/2/2000, 2:00; ie a little before datetime two in basicDateTime string format
                 Event[] eList=eem.getEventsByRange(ses1,before,after);
                 boolean hasEvent=false;
                 
@@ -149,8 +148,11 @@ public class EventEntityManagerTest {
                         hasEvent=true;
                 assertTrue("GetEventsByRange, if given a time range that only one event is within, will return only that event",hasEvent);
                 
-                after="20000103T010100.000Z"; // DateTime string at 1/3/2000, 2:00am; ie datetime three in basicDateTime string format
+                after="20000103T020000.000Z"; // DateTime string at 1/3/2000, 2:00am; ie a little before datetime three in basicDateTime string format
                 eList=eem.getEventsByRange(ses1,before,after);
+                
+                assertEquals("GetEventsByRange, if given a time range that some events are within, will return only those events in a random order", 2, eList.length);
+                
                 Boolean hasFirst=false, hasSecond=false;
                 if(eList[0].getName().equals("First")||eList[1].getName().equals("First"))
                     hasFirst=true;
@@ -160,19 +162,94 @@ public class EventEntityManagerTest {
                 assertTrue("GetEventsByRange, if given a time range that some events are within, will return only those events in a random order",hasSecond);
                 
                 eList=eem.getEventsByRange(ses1, before, before);
-                assertTrue("GetEventsByRange, if given a time range that no events are within, will return an empty Event[]",eList.length==0);
+                assertEquals("GetEventsByRange, if given a time range that no events are within, will return an empty Event[]", 0, eList.length);
                 
+        }
+        
+        @Test
+        public void testGetEventsByRangeByHour() throws WPISuiteException {
+                EventEntityManager eem = new EventEntityManager(db);
+                // adding events to the database
+                eem.makeEntity(ses1, eString);
+                eem.makeEntity(ses1, eeString);
+                eem.makeEntity(ses1, eeeString);
+                
+                // tests to prove the aforementioned lack of hour recognition
+                // Possibly intentional; remove this test if it is
+                
+                String before="20000101T010000.000Z"; // DateTime string at 1/1/2000, 1:00am; ie a little before datetime one in basicDateTime string format
+                String after ="20000101T060000.000Z"; // DateTime string at 1/1/2000, 6:00am; ie a little past datetime one in basicDateTime string format
+                Event[] eList=eem.getEventsByRange(ses1,before,after);
+                boolean hasEvent=false;
+                
+                assertEquals("GetEventsByRange, if given a time range that only one event is within, *should* return only that event", 1, eList.length);
+                
+                if(eList[0].getName().equals("First"))
+                        hasEvent=true;
+                assertTrue("GetEventsByRange, if given a time range that only one event is within, will return only that event",hasEvent);
         }
         
         
         @Test
         public void testGetEntity() throws WPISuiteException {
                 EventEntityManager eem = new EventEntityManager(db);
-                assertNotNull("An Event Entity Manager will return an event upon sucessfully sending an Event into the database", eem.makeEntity(ses1, eString));
-                assertNotNull("An Event Entity Manager will return an event upon sucessfully sending an Event into the database", eem.makeEntity(ses1, eeString));
-                assertNotNull("An Event Entity Manager will return an event upon sucessfully sending an Event into the database", eem.makeEntity(ses1, eeeString));
-                //assertNotNull(eem.getEntity(ses1,"????"));
-                // What string goes in the second argument? Code suggests 2 dateTime strings that represent start / end times?
+                eem.makeEntity(ses1, eString);
+                eem.makeEntity(ses1, eeString);
+                eem.makeEntity(ses1, eeeString);
+                
+                // The huge string being used as input is "filter-events-by-range," + string form of starting dateTime + "," + string form of ending dateTime
+                // This method is really just another way of calling getEventsByRange with new inputs; as such, it has the same limitations and only needs basic testing
+                
+                assertEquals("getEntity will return an event in the database if it was stored there before",e.getName(),eem.getEntity(ses1,"filter-events-by-range,20000101T010000.000Z,20000102T030000.000Z")[0].getName());
+                assertEquals("getEntity will return an event in the database if it was stored there before",eee.getName(),eem.getEntity(ses1,"filter-events-by-range,20000104T030000.000Z,20000104T070100.000Z")[0].getName());
+                assertEquals("getEntity will return an empty array if no events are within the given range", 0 ,eem.getEntity(ses1,"filter-events-by-range,20500101T010100.000Z,20500101T010100.000Z").length);
+        }
+        
+        @Test(expected=NullPointerException.class)
+        public void testGetEntityWrongInput() throws WPISuiteException {
+                EventEntityManager eem = new EventEntityManager(db);
+                eem.makeEntity(ses1, eString);
+                eem.makeEntity(ses1, eeString);
+                eem.makeEntity(ses1, eeeString);
+                
+                assertEquals("getEntity return null if anything but filter-events-by-range is the first string argument", null, eem.getEntity(ses1,"filter-events-by-time,20000101T000000.000Z,20000102T010000.000Z")[0].getName());
+        }
+        
+        @Test
+        public void testDeleteEntity() throws WPISuiteException {
+                EventEntityManager eem = new EventEntityManager(db);
+                eem.makeEntity(ses1, eString);
+                eem.makeEntity(ses1, eeString);
+                assertEquals("At this point, there should be 2 events in the database", 2, eem.Count());											// Events from 1/1/2000 1:00 - 1/2/2000 1:00
+                assertEquals("The deleteEntity method will return true if the deletion was successful", true, eem.deleteEntity(ses1, "filter-events-by-range,20000101T000000.000Z,20000102T010000.000Z"));
+                assertEquals("At this point, there should be only one event in the database", 1, eem.Count());
+                assertEquals("At this point, only the second event should still be in the database", "Second", eem.getAll(ses1)[0].getName());
+                
+        }
+        
+        @Test
+        public void testDeleteEntityOverLap() throws WPISuiteException {
+                EventEntityManager eem = new EventEntityManager(db);
+                
+                // Pointing out that the function will continue if more than one event is within the ID field; if this will never happen in a real run, delete this test
+                
+                eem.makeEntity(ses1, eString);
+                eem.makeEntity(ses1, eeString);
+                assertEquals("At this point, there should be 2 events in the database", 2, eem.Count());											// Events from 1/1/2000 1:00 - 1/3/2000 1:00 
+                assertEquals("The deleteEntity method will return true if the deletion was successful", true, eem.deleteEntity(ses1, "filter-events-by-range,20000101T000000.000Z,20000103T010000.000Z"));
+                assertEquals("At this point, there should be only one event in the database", 1, eem.Count());
+                // This will randomly delete one of the events within that timeframe; either event "First" or "Second" can still be in the database
+        }
+        
+        @Test
+        public void testDeleteAll() throws WPISuiteException {
+                EventEntityManager eem = new EventEntityManager(db);
+                eem.makeEntity(ses1, eString);
+                eem.makeEntity(ses1, eeString);
+                eem.makeEntity(ses1, eeeString);
+                assertEquals("At this point, there should be 3 events in the database", 3, eem.Count());											
+                eem.deleteAll(ses1);
+                assertEquals("At this point, there should be no events for session 1 in the database", 0, eem.Count());
         }
         
 }
