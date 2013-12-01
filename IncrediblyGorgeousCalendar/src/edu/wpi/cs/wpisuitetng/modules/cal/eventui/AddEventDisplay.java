@@ -332,53 +332,25 @@ public class AddEventDisplay extends JPanel
 		saveButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				try
-				{
-					startTimeDatePicker.getDate();
-					endTimeDatePicker.getDate();
-					errorText.setVisible(true);
-					
-					if (nameTextField.getText() == null || nameTextField.getText().trim().length() == 0)
-					{
-						errorText.setText("* Please enter an event title");
-					}
-					else if (!(startTimeDatePicker.getDate().getDayOfYear() == endTimeDatePicker.getDate().getDayOfYear() &&
-						startTimeDatePicker.getDate().getYear() == endTimeDatePicker.getDate().getYear()))
-					{
-						errorText.setText("* Event must start and end on the same date");
-					}
-					else if (startTimeDatePicker.getDate().isAfter(endTimeDatePicker.getDate())) {
-						errorText.setText("* Event start date must be before end date");
-					}
-					else
-					{
-						errorText.setVisible(false);
-						Event e = new Event();
-						e.setName(nameTextField.getText().trim());
-						e.setDescription(descriptionTextArea.getText());
-						e.setStart(startTimeDatePicker.getDate());
-						e.setEnd(endTimeDatePicker.getDate());
-						e.setProjectEvent(teamProjectCheckBox.isSelected());
-						e.setParticipants(participantsTextField.getText().trim());
-						
-						if (editEvent){
-							e.setEventID(existingEventID);
-							MainPanel.getInstance().updateEvent(e);
-						} else {
-							MainPanel.getInstance().addEvent(e);
-						}
-						
-						saveButton.setEnabled(false);
-						saveButton.setText("Saved!");
-						MainPanel.getInstance().closeTab(tabid);
-						MainPanel.getInstance().refreshView();
-					}
+				Event e = new Event();
+				e.setName(nameTextField.getText().trim());
+				e.setDescription(descriptionTextArea.getText());
+				e.setStart(startTimeDatePicker.getDate());
+				e.setEnd(endTimeDatePicker.getDate());
+				e.setProjectEvent(teamProjectCheckBox.isSelected());
+				e.setParticipants(participantsTextField.getText().trim());
+				
+				if (editEvent){
+					e.setEventID(existingEventID);
+					MainPanel.getInstance().updateEvent(e);
+				} else {
+					MainPanel.getInstance().addEvent(e);
 				}
-				catch (IllegalArgumentException exception)
-				{
-					errorText.setText("* Invalid Date/Time");
-					errorText.setVisible(true);
-				}
+				
+				saveButton.setEnabled(false);
+				saveButton.setText("Saved!");
+				MainPanel.getInstance().closeTab(tabid);
+				MainPanel.getInstance().refreshView();
 			}
 		});
 		

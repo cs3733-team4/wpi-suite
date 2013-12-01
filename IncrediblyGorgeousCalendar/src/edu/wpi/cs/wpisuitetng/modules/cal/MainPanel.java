@@ -40,6 +40,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.navigation.GoToPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MainCalendarNavigation;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarHostIface;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.navigation.SidebarTabbedPane;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.ViewSize;
 import edu.wpi.cs.wpisuitetng.modules.cal.year.YearCalendar;
 
@@ -52,6 +53,8 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	private JPanel centerPanelTop;
 	private JPanel centerPanelBottom;
 	private JPanel sidePanel;
+	private JPanel sidePanelTop;
+	private SidebarTabbedPane sideTabbedPanel;
 	private MainCalendarNavigation mainCalendarNavigationPanel;
 	private GoToPanel mGoToPanel;
 	private AbstractCalendar mCalendar, monthCal, dayCal, yearCal;
@@ -109,13 +112,16 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		events = new EventModel(); // used for accessing events
 		commitments= new CommitmentModel();
 		this.mainPaneContainer = new JPanel(); // Container for the navigation and calendars
-		this.sidePanel = new JPanel(); // Panel to hold the mini calendar and the goto date
+		this.sidePanel = new JPanel(); // Container to hold the top and bottom side sub-panels
+		this.sidePanelTop = new JPanel(); // Panel to hold the mini calendar and the goto date
 		this.centerPanel = new JPanel(); // Container for top and bottom sub-panels
 		this.centerPanelTop = new JPanel(); // Container for navigation and calendar selector
 		this.centerPanelBottom = new JPanel(); // Container for calendar itself
 		
-		// Components of center panel
+		//Dont move this for init purposes
 		this.mMiniCalendarPanel = new MiniCalendarPanel(DateTime.now(), this); // Mini calendar
+		
+		// Components of center panel
 		this.mCalendar = monthCal = new MonthCalendar(DateTime.now(), events, commitments); // Monthly calendar
 		this.dayCal = new DayCalendar(DateTime.now(), events); // Day calendar (hidden)
 		this.yearCal = new YearCalendar(DateTime.now(), events); // Year calendar (hidden)
@@ -133,8 +139,15 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		sidePanel.setPreferredSize(new Dimension(200, 1024));
 		sidePanel.setLayout(new BorderLayout());
 		sidePanel.setBorder(new EmptyBorder(5, 5, 0, 0));
-		sidePanel.add(mMiniCalendarPanel, BorderLayout.NORTH);
-		sidePanel.add(mGoToPanel, BorderLayout.CENTER);
+		
+		sidePanelTop.setLayout(new BorderLayout());
+		sidePanelTop.add(mMiniCalendarPanel, BorderLayout.NORTH);
+		sidePanelTop.add(mGoToPanel, BorderLayout.CENTER);
+		
+		sideTabbedPanel = new SidebarTabbedPane();
+		
+		sidePanel.add(sidePanelTop, BorderLayout.NORTH);
+		sidePanel.add(sideTabbedPanel, BorderLayout.CENTER);
 		
 		// Set up center panel elements
 		centerPanelTop.setLayout(new BorderLayout());
@@ -194,7 +207,6 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	 * @param name the name of the tab
 	 * @param closeable whether the tab can be closed
 	 */
-	
 	public int addTopLevelTab(JComponent component, String name, boolean closeable)
 	{
 		
@@ -293,6 +305,8 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	 * @param updateEvent event to update
 	 */
 	public void updateEvent(Event updateEvent){
+		if((currentDisplayable instanceof Event) && updateEvent.getEventID().equals(((Event) currentDisplayable).getEventID()))
+			clearSelected();
 		events.updateEvent(updateEvent);
 	}
 	
@@ -396,6 +410,9 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	public void updateSelectedDisplayable(MonthItem Item){
 		
 		this.currentSelected = Item;
+		this.currentDisplayable = Item.getDisplayable();
+		
+		sideTabbedPanel.showDetails(currentDisplayable);
 		
 		if (previouslySelected != null)
 			previouslySelected.setBackground(Colors.TABLE_BACKGROUND);
@@ -433,6 +450,9 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	 */
 	public void clearSelected(){
 		if (previouslySelected != null)
+		{
 			previouslySelected.setBackground(Colors.TABLE_BACKGROUND);
+		}
+		sideTabbedPanel.clearDetails();
 	}
 }
