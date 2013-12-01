@@ -36,17 +36,26 @@ public class SidebarTabbedPane extends JTabbedPane{
 	private DateTimeFormatter dateFormatter = DateTimeFormat.forPattern("MM/dd/yy");
 	private Displayable currentDisplayable;
 	
+	/**
+	 * Tabbed panel in the navigation sidebar to hold additional details of selected items
+	 */
 	public SidebarTabbedPane() {
+		
+		//setup tab policy
 		this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		
 		setupDetailTab();
 	    
 		commitmentTab = new JTextArea();
 		
+		//add tabs
 		this.addTab("Details", detailScrollPane);
 		this.addTab("Commitments", commitmentTab);
 	}
 	
+	/**
+	 * initializes all the components of the details tab
+	 */
 	private void setupDetailTab()
 	{
 		// setup container panel
@@ -111,11 +120,19 @@ public class SidebarTabbedPane extends JTabbedPane{
 	    detailScrollPane.setBorder( new EmptyBorder(5,5,5,5));
 	}
 	
+	/**
+	 * Sets the enabled status of the edit and cancel buttons
+	 * @param enabled flag to set enabled status
+	 */
 	private void setButtonsEnabled(boolean enabled) {
 		detailEditButton.setEnabled(enabled);
 		detailCancelButton.setEnabled(enabled);
 	}
 	
+	/**
+	 * Updates the text area to display information about a displayable
+	 * @param mDisplayable the displayable to show
+	 */
 	public void showDetails(Displayable mDisplayable)
 	{
 		currentDisplayable = mDisplayable;
@@ -136,6 +153,9 @@ public class SidebarTabbedPane extends JTabbedPane{
 		}
 	}
 
+	/**
+	 * clears the text area of any details
+	 */
 	public void clearDetails() {
 		detailTextArea.setText("");
 		setButtonsEnabled(false);
