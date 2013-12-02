@@ -298,10 +298,7 @@ public class YearCalendar extends AbstractCalendar
 	@Override
 	public void next()
 	{
-		this.events.clear();
-		this.drawCalendar(this.calendarStart.copy());
-		this.revalidate();
-		this.repaint();
+		this.display(this.calendarStart.toDateTime());
 	}
 
 
@@ -310,12 +307,9 @@ public class YearCalendar extends AbstractCalendar
 	@Override
 	public void previous()
 	{
-		this.events.clear();
 		MutableDateTime mdt = new MutableDateTime(this.calendarStart);
 		mdt.addYears(-2);
-		this.drawCalendar(mdt.copy());
-		this.revalidate();
-		this.repaint();
+		this.display(mdt.toDateTime());
 	}
 
 
@@ -325,6 +319,7 @@ public class YearCalendar extends AbstractCalendar
 	public void display(DateTime newTime) {
 		this.events.clear();
 		this.drawCalendar(new MutableDateTime(newTime));
+		MainPanel.getInstance().miniMove(newTime);
 		this.revalidate();
 		this.repaint();
 	}
