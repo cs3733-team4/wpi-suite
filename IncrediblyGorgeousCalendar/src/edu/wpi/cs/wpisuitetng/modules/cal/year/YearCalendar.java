@@ -25,7 +25,6 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
@@ -287,6 +286,8 @@ public class YearCalendar extends AbstractCalendar
 				int dotX = this.getWidth()/2-3;
 				int dotY = this.getHeight()-10;
 				g.fillOval(dotX, dotY, 6, 6);
+				g.setColor(defaultBackground.darker().darker());
+				g.drawOval(dotX, dotY, 6, 6);
 			}
 		}
 	}

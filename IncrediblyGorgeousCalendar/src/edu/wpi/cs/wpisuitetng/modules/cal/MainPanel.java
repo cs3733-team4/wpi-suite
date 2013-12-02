@@ -10,7 +10,6 @@
 package edu.wpi.cs.wpisuitetng.modules.cal;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
@@ -253,8 +252,8 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 				public void actionPerformed(ActionEvent e)
 				{
 					int ID = ((Title)e.getSource()).ID;
-					System.out.println(ID);
 					mTabbedPane.remove(tabs.get(ID));
+					tabs.remove(ID);
 				}
 			};
 			
@@ -433,7 +432,26 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		
 		if (currentDisplayable instanceof Event) {
 			AddEventDisplay mAddEventDisplay = new AddEventDisplay((Event) currentDisplayable);
-			mAddEventDisplay.setTabId(instance.addTopLevelTab(mAddEventDisplay, "Edit Event", true));
+			boolean openNewTab = true;
+			JComponent tabToOpen = null;
+			
+			for(JComponent c : tabs.values())
+			{
+				if (openNewTab && c instanceof AddEventDisplay)
+				{
+					openNewTab = !((AddEventDisplay) c).matchingEvent(mAddEventDisplay);
+					tabToOpen = c;
+				}
+			}
+			if (openNewTab)
+			{
+				mAddEventDisplay.setTabId(instance.addTopLevelTab(mAddEventDisplay, "Edit Event", true));
+			}
+			else if (tabToOpen != null)
+			{
+				this.mTabbedPane.setSelectedComponent(tabToOpen);
+			}
+			
 		}
 		else if (currentDisplayable instanceof Commitment) {
 			AddCommitmentDisplay mAddCommitmentDisplay = new AddCommitmentDisplay((Commitment) currentDisplayable);

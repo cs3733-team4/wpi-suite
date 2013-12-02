@@ -196,25 +196,30 @@ public class ManagerLayer {
 			m = map.get(args[0]+args[1]).getEntity(s,args[2]);
 		}
 		
-        //return (m == null) ? "null" : gson.toJson(m, m.getClass());
-		
-		String response = "null";
-		
 		if(m != null)
-		{
-			response = "[";
-			for(Model n : m)
+		{	
+			StringBuilder responseBuilder = new StringBuilder("[");
+			for(int i = 0; i < m.length; i++)
 			{
-				response = response.concat(n.toJSON()+",");
+				if (m[i] == null)
+				{
+					throw new WPISuiteException("there was a null model");
+				}
+				
+				responseBuilder.append(m[i].toJSON());
+				
+				if (i < m.length-1)
+				{
+					responseBuilder.append(",");
+				}
 			}
-			if(m.length > 0)
-			{
-				response = response.substring(0, response.length() - 1); // remove trailing comma
-			}
-			response = response.concat("]");
+			
+			return responseBuilder.append("]").toString();
 		}
-		
-		return response;
+		else
+		{
+			return "null";
+		}
 	}
 	
 	/**create()

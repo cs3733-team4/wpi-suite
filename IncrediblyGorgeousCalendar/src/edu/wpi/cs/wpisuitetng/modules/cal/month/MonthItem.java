@@ -9,7 +9,6 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.month;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
@@ -32,6 +31,7 @@ public class MonthItem extends JPanel
 {	
 	JLabel time = new JLabel(), desc = new JLabel();
 	private Displayable mDisplayable;
+	
 	/**
 	 * MonthItem Constructor
 	 * @param when

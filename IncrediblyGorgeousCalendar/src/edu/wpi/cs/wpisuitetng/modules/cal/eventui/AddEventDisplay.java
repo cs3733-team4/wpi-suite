@@ -490,4 +490,9 @@ public class AddEventDisplay extends JPanel
 	public DatePicker getEndTimePicker() {
 		return endTimeDatePicker;
 	}
+	
+	public boolean matchingEvent(AddEventDisplay other)
+	{
+		return this.eventToEdit != null && this.eventToEdit.equals(other.eventToEdit);
+	}
 }
