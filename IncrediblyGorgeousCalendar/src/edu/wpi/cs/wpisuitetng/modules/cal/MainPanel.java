@@ -28,6 +28,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import org.joda.time.DateTime;
@@ -362,15 +363,16 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	
 	/**
 	 * Updates calendar in view and sets navigation panel to act on the active view
-	 * @param monthCal2
+	 * @param absCalendar
 	 */
-	private void refreshView(AbstractCalendar monthCal2)
+	private void refreshView(final AbstractCalendar absCalendar)
 	{
 		centerPanelBottom.remove(mCalendar);
-		mCalendar = monthCal2;
+		mCalendar = absCalendar;
 		mainCalendarNavigationPanel.updateCalendar(mCalendar);
 		centerPanelBottom.add(mCalendar, BorderLayout.CENTER);
 		mCalendar.display(lastTime);
+		
 		revalidate();
 		repaint();
 	}

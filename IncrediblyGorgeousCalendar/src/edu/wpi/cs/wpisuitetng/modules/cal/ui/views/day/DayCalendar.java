@@ -10,6 +10,7 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day;
 
 import java.awt.BorderLayout;
+import java.awt.Graphics;
 import java.util.List;
 
 import javax.swing.JLabel;
@@ -76,14 +77,6 @@ public class DayCalendar extends AbstractCalendar
 
 		this.holder.add(DayGridLabel.getInstance(), BorderLayout.WEST);
 		this.holder.add(this.current, BorderLayout.CENTER);
-		SwingUtilities.invokeLater(new Runnable() {
-			
-			@Override
-			public void run() {
-				holder.revalidate();
-				holder.repaint();
-			}
-		});
 		// notify mini-calendar to change
 		mainPanel.miniMove(time);
 	}
@@ -119,6 +112,11 @@ public class DayCalendar extends AbstractCalendar
 	{
 		this.time = newTime;
 		this.generateDay();
+
+		this.current.repaint();
+		
+		mainPanel.revalidate();
+		mainPanel.repaint();
 	}
 
 	@Override

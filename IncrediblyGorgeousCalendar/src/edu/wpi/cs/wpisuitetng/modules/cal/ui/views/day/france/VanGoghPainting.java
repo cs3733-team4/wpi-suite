@@ -89,10 +89,10 @@ public class VanGoghPainting extends JPanel
 	}
 	
 	@Override
-	public void paint(Graphics g)
+	public void paintComponent(Graphics g)
 	{
 		this.doLayout();
-		super.paint(g);
+		super.paintComponent(g);
 	}
 	
 	@Override
@@ -122,14 +122,6 @@ public class VanGoghPainting extends JPanel
 	
 	private boolean recalcBounds(int parentWidth, int parentHeight)
 	{
-		if (parentWidth != lastWidth)
-		{
-			lastWidth = parentWidth;
-		}
-		else
-		{
-			return false;
-		}
 		lblStarryNightdutch.setMaximumSize(new Dimension(Width.toInt(parentWidth), height-20));
 		int outWidth = Width.toInt(parentWidth);
 		this.setBounds(X.toInt(parentWidth), (int) map(event.getStart().getMillisOfDay(), parentHeight), outWidth, height);
