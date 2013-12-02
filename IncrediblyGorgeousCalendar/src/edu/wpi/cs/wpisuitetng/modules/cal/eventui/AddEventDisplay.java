@@ -381,7 +381,7 @@ public class AddEventDisplay extends JPanel
 	}
 	
 	/**
-	 * 
+	 * Validates text has been entered (used for event name)
 	 * @param mText text to be validated
 	 * @param mErrorLabel JLabel to display resulting error message
 	 * @return true if all pass, else return true
@@ -392,20 +392,14 @@ public class AddEventDisplay extends JPanel
 		{
 			mErrorLabel.setText("* Required Field");
 			return false;
-		/*will be handled when parsed
-		}else if(mText.matches("^.*[^a-zA-Z0-9.,()$ ].*$"))
-		{
-			
-			mErrorLabel.setText("* Invalid Name/Characters");
-		*/
 		}
 		return true;
 	}
 	
 	/**
-	 * 
-	 * @param mStartTime first DatePicker to validate and compare
-	 * @param mEndTime second DatePicker to validate and compare
+	 * Validates that an event has valid start and end dates and times
+	 * @param mStartTime starting DateTime to validate and compare
+	 * @param mEndTime ending DateTime to validate and compare
 	 * @param mErrorLabel text field to be updated with any error message
 	 * @return true if all validation checks pass, else returns false
 	 */
