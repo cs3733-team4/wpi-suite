@@ -41,18 +41,23 @@ public class SidebarTabbedPane extends JTabbedPane{
 	 */
 	public SidebarTabbedPane() {
 		
-		//setup tab policy
+		//setup
 		this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		
 		setupDetailTab();
-	    
-		commitmentTab = new JTextArea();
+		setupCommitementTab();
 		
 		//add tabs
 		this.addTab("Details", detailScrollPane);
 		this.addTab("Commitments", commitmentTab);
 	}
-	
+	/**
+	 * initializes all the components of the commitment tab
+	 */
+	private void setupCommitementTab() {
+		commitmentTab = new JTextArea();
+	}
+
 	/**
 	 * initializes all the components of the details tab
 	 */
