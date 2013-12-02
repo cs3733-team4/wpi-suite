@@ -43,7 +43,6 @@ import javax.swing.SwingConstants;
 public class VanGoghPainting extends JPanel
 {
 	private final long millisInDay = 86400000;
-	private int lastWidth = 0;
 	private Rational Width;
 	private Rational X;
 	Event event;
