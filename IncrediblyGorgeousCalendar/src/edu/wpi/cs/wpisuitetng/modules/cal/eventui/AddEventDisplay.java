@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * Copyright (c) 2013 WPI-Suite
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors: Team YOCO (You Only Compile Once)
+ ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.eventui;
 
 import javax.swing.Box.Filler;
@@ -480,5 +489,10 @@ public class AddEventDisplay extends JPanel
 
 	public DatePicker getEndTimePicker() {
 		return endTimeDatePicker;
+	}
+	
+	public boolean matchingEvent(AddEventDisplay other)
+	{
+		return this.eventToEdit != null && this.eventToEdit.equals(other.eventToEdit);
 	}
 }

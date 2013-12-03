@@ -1,10 +1,14 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+/*******************************************************************************
+ * Copyright (c) 2013 WPI-Suite
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors: Team YOCO (You Only Compile Once)
+ ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.month;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Image;
@@ -24,13 +28,15 @@ import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 
-
+/**
+ * UI for displaying individual events/commitments in MonthDays. These are collapsed
+ * into CollapsedMonthItem's when there is not enough space
+ */
 public class MonthItem extends JPanel
-{
-	private static final long serialVersionUID = 6475224766889058195L;
-	
+{	
 	JLabel time = new JLabel(), desc = new JLabel();
 	private Displayable mDisplayable;
+	
 	/**
 	 * MonthItem Constructor
 	 * @param when

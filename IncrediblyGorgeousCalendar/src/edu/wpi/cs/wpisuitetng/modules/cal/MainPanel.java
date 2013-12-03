@@ -1,7 +1,15 @@
+/*******************************************************************************
+ * Copyright (c) 2013 WPI-Suite
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors: Team YOCO (You Only Compile Once)
+ ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
@@ -41,7 +49,12 @@ import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MainCalendarNavigation;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarHostIface;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.ViewSize;
+import edu.wpi.cs.wpisuitetng.modules.cal.year.YearCalendar;
 
+/**
+ * The main UI of the Calendar module. This singleton is basically the controller for everything
+ * in the calendar module. It manages most resources.
+ */
 public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	
 	private JTabbedPane mTabbedPane;
@@ -53,7 +66,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	private JPanel sidePanel;
 	private MainCalendarNavigation mainCalendarNavigationPanel;
 	private GoToPanel mGoToPanel;
-	private AbstractCalendar mCalendar, monthCal, dayCal;
+	private AbstractCalendar mCalendar, monthCal, dayCal, yearCal;
 	private DateTime lastTime = DateTime.now();
 	private CalendarSelector mCalendarSelector;
 	private JPopupMenu popup = new JPopupMenu();
@@ -116,7 +129,9 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		// Components of center panel
 		this.mMiniCalendarPanel = new MiniCalendarPanel(DateTime.now(), this); // Mini calendar
 		this.mCalendar = monthCal = new MonthCalendar(DateTime.now(), events, commitments); // Monthly calendar
-		dayCal = new DayCalendar(DateTime.now(), events); // Day calendar (hidden)
+		this.dayCal = new DayCalendar(DateTime.now(), events); // Day calendar (hidden)
+		this.yearCal = new YearCalendar(DateTime.now(), events); // Year calendar (hidden)
+		
 		this.mainCalendarNavigationPanel = new MainCalendarNavigation(this, mCalendar); // Navigation bar 
 		
 		// Components of side panel
@@ -237,8 +252,8 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 				public void actionPerformed(ActionEvent e)
 				{
 					int ID = ((Title)e.getSource()).ID;
-					System.out.println(ID);
 					mTabbedPane.remove(tabs.get(ID));
+					tabs.remove(ID);
 				}
 			};
 			
@@ -339,6 +354,12 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		refreshView(dayCal);
 	}
 	
+	public void viewYear()
+	{
+		view = ViewSize.Month;
+		refreshView(yearCal);
+	}
+	
 	/**
 	 * Updates calendar in view and sets navigation panel to act on the active view
 	 * @param monthCal2
@@ -411,7 +432,26 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		
 		if (currentDisplayable instanceof Event) {
 			AddEventDisplay mAddEventDisplay = new AddEventDisplay((Event) currentDisplayable);
-			mAddEventDisplay.setTabId(instance.addTopLevelTab(mAddEventDisplay, "Edit Event", true));
+			boolean openNewTab = true;
+			JComponent tabToOpen = null;
+			
+			for(JComponent c : tabs.values())
+			{
+				if (openNewTab && c instanceof AddEventDisplay)
+				{
+					openNewTab = !((AddEventDisplay) c).matchingEvent(mAddEventDisplay);
+					tabToOpen = c;
+				}
+			}
+			if (openNewTab)
+			{
+				mAddEventDisplay.setTabId(instance.addTopLevelTab(mAddEventDisplay, "Edit Event", true));
+			}
+			else if (tabToOpen != null)
+			{
+				this.mTabbedPane.setSelectedComponent(tabToOpen);
+			}
+			
 		}
 		else if (currentDisplayable instanceof Commitment) {
 			AddCommitmentDisplay mAddCommitmentDisplay = new AddCommitmentDisplay((Commitment) currentDisplayable);
