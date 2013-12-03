@@ -13,7 +13,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
@@ -21,15 +20,14 @@ import javax.swing.text.DefaultCaret;
 import javax.swing.text.Document;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
 
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
-import edu.wpi.cs.wpisuitetng.modules.cal.eventui.AddCommitmentDisplay;
-import edu.wpi.cs.wpisuitetng.modules.cal.eventui.AddEventDisplay;
-import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddCommitmentDisplay;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddEventDisplay;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
@@ -37,7 +35,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 public class SidebarTabbedPane extends JTabbedPane{
 	
 	private JPanel detailTab;
-	private JTextArea detailTextArea;
+	private JTextPane detailTextPane;
 	private Document detailTextDoc;
 	private SimpleAttributeSet normalTextStyle;
 	private SimpleAttributeSet boldBlueTextStyle;
@@ -48,7 +46,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 	private JPanel detailButtonPane;
 	private JButton detailEditButton;
 	private JButton detailDeleteButton;
-	private JTextArea commitmentTab;
+	private JTextPane commitmentTab;
 	private DateTimeFormatter timeFormatter = DateTimeFormat.forPattern("h:mm aa");
 	private DateTimeFormatter dateFormatter = DateTimeFormat.forPattern("MM/dd/yy");
 	private Displayable currentDisplayable;
@@ -93,7 +91,15 @@ public class SidebarTabbedPane extends JTabbedPane{
 	 * initializes all the components of the commitment tab
 	 */
 	private void setupCommitementTab() {
-		commitmentTab = new JTextArea();
+		commitmentTab = new JTextPane();
+		commitmentTab.setEditable(false);
+		commitmentTab.setCursor(null);
+		commitmentTab.setFocusable(false);
+		commitmentTab.setOpaque(false);
+		commitmentTab.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		commitmentTab.putClientProperty("html.disable", true); //prevents html parsing
+		DefaultCaret caret = (DefaultCaret) commitmentTab.getCaret(); //prevents scrollpane from autoscrolling to bottom
+		caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
 	}
 
 	/**
@@ -106,19 +112,17 @@ public class SidebarTabbedPane extends JTabbedPane{
 		detailTab.setLayout(new BorderLayout());
 		
 		// setup text area
-		detailTextArea = new JTextArea();
-		detailTextArea.setWrapStyleWord(true);
-		detailTextArea.setLineWrap(true);
-		detailTextArea.setEditable(false);
-		detailTextArea.setCursor(null);
-		detailTextArea.setFocusable(false);
-		detailTextArea.setOpaque(false);
-		detailTextArea.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		detailTextArea.putClientProperty("html.disable", true); //prevents html parsing
-		DefaultCaret caret = (DefaultCaret) detailTextArea.getCaret(); //prevents scrollpane from autoscrolling to bottom
+		detailTextPane = new JTextPane();
+		detailTextPane.setEditable(false);
+		detailTextPane.setCursor(null);
+		detailTextPane.setFocusable(false);
+		detailTextPane.setOpaque(false);
+		detailTextPane.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		detailTextPane.putClientProperty("html.disable", true); //prevents html parsing
+		DefaultCaret caret = (DefaultCaret) detailTextPane.getCaret(); //prevents scrollpane from autoscrolling to bottom
 		caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
 
-	    detailTextDoc = detailTextArea.getDocument();
+	    detailTextDoc = detailTextPane.getDocument();
 
 	   	//setup title label
 		detailTitleLabel = new JLabel();
@@ -130,7 +134,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 		//setup text title container
 	    detailTitleContainer = new JPanel();
 		detailTitleContainer.setOpaque(true);
-		detailTitleContainer.setPreferredSize(detailTextArea.getPreferredSize());
+		detailTitleContainer.setPreferredSize(detailTextPane.getPreferredSize());
 		detailTitleContainer.setLayout(new BorderLayout());
 		detailTitleContainer.add(detailTitleLabel, BorderLayout.CENTER);
 		
@@ -172,16 +176,14 @@ public class SidebarTabbedPane extends JTabbedPane{
 	    detailButtonPane.add(detailEditButton);
 	    detailButtonPane.add(detailDeleteButton);
 	    
-	    // setup size of detail text pane
-	    detailTextArea.setPreferredSize(detailTab.getPreferredSize());
-
 	    // add text area and button container to detail tab
 	    detailTab.add(detailTitleContainer, BorderLayout.NORTH);
-	    detailTab.add(detailTextArea, BorderLayout.CENTER);
+	    detailTab.add(detailTextPane, BorderLayout.CENTER);
 	    detailTab.add(detailButtonPane, BorderLayout.SOUTH);
 	    
 	    // put entire tab into a scroll pane
 	    detailScrollPane = new JScrollPane(detailTab);
+	    detailScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 	    detailScrollPane.setBorder( new EmptyBorder(5,5,5,5));
 	}
 	
@@ -229,7 +231,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 				detailTitleContainer.setBackground(Color.ORANGE);
 				detailTitleLabel.setText(mDisplayable.getName());
 				
-	        	detailTextDoc.insertString(detailTextDoc.getLength(), ((Commitment) mDisplayable).getDate().toString(timeFormatter) + "\n", normalTextStyle);
+	        	detailTextDoc.insertString(detailTextDoc.getLength(), ((Commitment) mDisplayable).getDate().toString(dateFormatter) + "\n", normalTextStyle);
 	        	detailTextDoc.insertString(detailTextDoc.getLength(), mDisplayable.getDescription() + "\n", normalTextStyle);
 	        }catch(Exception e)
 	        {
@@ -246,7 +248,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 	public void clearDetails() {
 		detailTitleContainer.setOpaque(false);
 		detailTitleLabel.setText("");
-		detailTextArea.setText("");
+		detailTextPane.setText("");
 		setButtonsEnabled(false);
 	}
 }
