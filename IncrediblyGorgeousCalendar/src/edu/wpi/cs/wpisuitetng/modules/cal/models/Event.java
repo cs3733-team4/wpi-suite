@@ -303,19 +303,18 @@ public class Event extends AbstractModel implements Displayable
 	
 	public Color getColor()
 	{
+		Color fallbackColor = isProjectEvent ? new Color(125,157,227) : new Color(227,125,147);
 		Category cat = CategoryModel.getInstance().getCategoryByUUID(category);
 		if (cat == null)
 		{
-			System.out.println("the category for this event was not found");
-			return isProjectEvent ? new Color(125,157,227) : new Color(227,125,147);
+			return fallbackColor;
 		}
 		Color eventColor = cat.getColor();
 		if (eventColor != null)
 		{
 			return eventColor;
 		}
-		System.out.println("the category was found, but it's color was null");
-		return isProjectEvent ? new Color(125,157,227) : new Color(227,125,147);
+		return fallbackColor;
 	}
 	
 	@Override
