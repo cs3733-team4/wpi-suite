@@ -51,7 +51,8 @@ public class MonthCalendar extends AbstractCalendar
 	private JLabel monthLabel = new JLabel();
 	private DateTime time;
 	private MainPanel mainPanel;
-
+	private DateTime firstOnMonth;
+	private DateTime lastOnMonth;
 	private HashMap<Integer, MonthDay> days = new HashMap<Integer, MonthDay>();
 
 	private EventModel eventModel;
@@ -146,22 +147,29 @@ public class MonthCalendar extends AbstractCalendar
 	{
 		
 		MonthDay md;
-		MutableDateTime newDay;
-		for (int i=0; i<(Days.daysBetween(e.getStart(), e.getEnd()).getDays() + 1); i++)
-		{
-			newDay = new MutableDateTime(e.getStart());
-			newDay.addDays(i);
+		MutableDateTime startDay = new MutableDateTime(e.getStart());
+		MutableDateTime endDay = new MutableDateTime(e.getEnd());
+		endDay.setMillisOfDay(0);
+		startDay.setMillisOfDay(0);
+		
+		if (startDay.isBefore(firstOnMonth))
+			startDay=new MutableDateTime(firstOnMonth);
+		if (endDay.isAfter(lastOnMonth))
+			endDay= new MutableDateTime(lastOnMonth);
 			
-			md = this.days.get(newDay.getDayOfYear());
+		while (!endDay.isBefore(startDay))
+		{
+			md = this.days.get(startDay.getDayOfYear());
 			try{
 				md.addEvent(e);
 			}
 			catch(NullPointerException ex)
 			{
-				System.err.println("Error when i=" + i + " and Event: " + e.toJSON());
+				System.err.println("Error when adding Event: " + e.toJSON());
 			}
-		}
+			startDay.addDays(1);
 		
+		}
 	}
 	
 	/**
@@ -253,6 +261,8 @@ public class MonthCalendar extends AbstractCalendar
 		inside.setLayout(new java.awt.GridLayout(weeks, 7));
 		referenceDay.addDays(-first);
 
+		firstOnMonth = new DateTime(referenceDay);
+		
 		// remove all old days
 		inside.removeAll();
 		
@@ -270,7 +280,7 @@ public class MonthCalendar extends AbstractCalendar
 		}
 		
 		referenceDay.addDays(-1);// go back one to counteract last add one
-		
+		lastOnMonth = new DateTime(referenceDay);
 		setEvents(getVisibleEvents(from, referenceDay.toDateTime()));
 		setCommitments(getVisibleCommitments(from, referenceDay.toDateTime()));
 
