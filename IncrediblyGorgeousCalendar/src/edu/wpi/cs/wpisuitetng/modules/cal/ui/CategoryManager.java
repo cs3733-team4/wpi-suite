@@ -66,14 +66,17 @@ public class CategoryManager extends JPanel {
 	private JPanel bottomEditPanel;
 	private List<Category> allCategories;
 	private JLabel errorText;
-	private boolean editCategory = true;
+	private boolean editCategory = false;
 	private UUID selectedCategoryUUID;
+	private Category noCategory = new Category();
 	private Category selectedCategory;
 	//TODO Note: When clicking off of a category on list, selectedCategory must be set to null
 	// to avoid deleting unwanted categories
 	
 	public CategoryManager() {
 		allCategories = MainPanel.getInstance().getCategoryModel().getAllCategories();
+		
+		noCategory.setName("No categories created");
 		
 		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		leftCategoryList = new JPanel();
@@ -100,8 +103,8 @@ public class CategoryManager extends JPanel {
 		// Text Field
 		categoryName = new JTextField();
 		categoryName.setColumns(25);
-		categoryName.setPreferredSize(new Dimension(300, 20));
-		categoryName.setMaximumSize(new Dimension(300, 20));
+		categoryName.setPreferredSize(new Dimension(200, 30));
+		categoryName.setMaximumSize(new Dimension(200, 30));
 		
 		categoryName.getDocument().addDocumentListener(new DocumentListener() {
 			
@@ -211,14 +214,12 @@ public class CategoryManager extends JPanel {
 			}
 		});
 		
-		// TODO FIX THIS FIRST IF
 		if (allCategories.size() == 0){
-			System.out.println("A&V : Called");
-			Category test = new Category();
-			test.setName("No categories created");
-			JListModel.addElement(test);
+			JListModel.addElement(noCategory);
 		} else {
-			//JListModel.removeElement(noCategoryLabel);
+			if (JListModel.contains(noCategory))
+				JListModel.removeElement(noCategory);
+			
 			for (int i = 0; i < allCategories.size(); i++) {
 				Category temp = allCategories.get(i);
 				JListModel.addElement(temp);
@@ -294,7 +295,7 @@ public class CategoryManager extends JPanel {
 						errorText.setVisible(false);
 						Category c = new Category();
 						c.setName(categoryName.getText().trim());
-						c.setColor(colorPicker.getCurrentColorState()); // Get color from color picker
+						//c.setColor(colorPicker.getCurrentColorState()); // Get color from color picker
 
 						if (editCategory){
 							c.setCategoryID(selectedCategoryUUID);
