@@ -28,6 +28,7 @@ public class EventToolbarGroup extends ToolbarGroupView {
 	
 	private final JPanel eventContentPanel = new JPanel();
 	private final JButton addEventButton, removeEventButton, addCommitmentButton, editCategory;
+
 	
 	public EventToolbarGroup(final MainPanel mMainPanel) {
 		super("Events");
