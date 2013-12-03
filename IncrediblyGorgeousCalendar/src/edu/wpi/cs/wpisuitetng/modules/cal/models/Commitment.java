@@ -17,23 +17,20 @@ import org.joda.time.DateTime;
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
+
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
- * Basic event class that contains the information required to represent an
- * event on a calendar.
+ * Basic Commitment class that contains the information required to represent a
+ * Commitment on a calendar.
  * 
  */
-public class Event extends AbstractModel implements Displayable
+public class Commitment extends AbstractModel implements Displayable
 {
-	private UUID eventID = UUID.randomUUID();
+	private UUID commitmentID = UUID.randomUUID();
 	private String name;
 	private String description;
-	private Date start;
-	private Date end;
-	private boolean isProjectEvent;
-	private boolean isAllDay;
-	private UUID category;
+	private Date duedate;
 	private String participants;
 	private User owner;
 
@@ -42,7 +39,7 @@ public class Event extends AbstractModel implements Displayable
 	 * @param name the name of the event
 	 * @return this event after having it's name set
 	 */
-	public Event addName(String name)
+	public Commitment addName(String name)
 	{
 		setName(name);
 		return this;
@@ -53,7 +50,7 @@ public class Event extends AbstractModel implements Displayable
 	 * @param description the event's description
 	 * @return this event after having it's description set
 	 */
-	public Event addDescription(String description)
+	public Commitment addDescription(String description)
 	{
 		setDescription(description);
 		return this;
@@ -64,47 +61,27 @@ public class Event extends AbstractModel implements Displayable
 	 * @param date the starting time
 	 * @return this event after having its start date set
 	 */
-	public Event addStartTime(DateTime date)
+	public Commitment addStartTime(DateTime date)
 	{
-		setStart(date);
+		setDate(date);
 		return this;
 	}
 	
-	/**
-	 * 
-	 * @param date the end time of this event
-	 * @return this event after having it's end time set
-	 */
-	public Event addEndTime(DateTime date)
-	{
-		setEnd(date);
-		return this;
-	}
 	
-	/**
-	 * 
-	 * @param pe whether this is a project event
-	 * @return this event after having it's project flag set
-	 */
-	public Event addIsProjectEvent(boolean pe)
-	{
-		setProjectEvent(pe);
-		return this;
-	}
 	
 	
 	/**
 	 * Create an event with the default characteristics.
 	 */
-	public Event()
+	public Commitment()
 	{
 		super();
 	}
 
-	public static Event fromJson(String json)
+	public static Commitment fromJson(String json)
 	{
 		final Gson parser = new Gson();
-		return parser.fromJson(json, Event.class);
+		return parser.fromJson(json, Commitment.class);
 	}
 
 	@Override
@@ -121,36 +98,36 @@ public class Event extends AbstractModel implements Displayable
 
 	public String toJSON()
 	{
-		return new Gson().toJson(this, Event.class);
+		return new Gson().toJson(this, Commitment.class);
 	}
 
 	@Override
 	public Boolean identify(Object o)
 	{
 		if (o instanceof String)
-			return getEventID().toString().equals((String)(o));
+			return getCommitmentID().toString().equals((String)(o));
 		else if (o instanceof UUID)
-			return getEventID().equals((UUID)(o));
-		else if (o instanceof Event)
-			return getEventID().equals(((Event)(o)).getEventID());
+			return getCommitmentID().equals((UUID)(o));
+		else if (o instanceof Commitment)
+			return getCommitmentID().equals(((Commitment)(o)).getCommitmentID());
 		return false;
 	}
 
 	/**
 	 * @return the eventID
 	 */
-	public UUID getEventID()
+	public UUID getCommitmentID()
 	{
-		return eventID;
+		return commitmentID;
 	}
 
 	/**
 	 * @param eventID
 	 *            the eventID to set
 	 */
-	public void setEventID(UUID eventID)
+	public void setCommitmentID(UUID commitmentID)
 	{
-		this.eventID = eventID;
+		this.commitmentID = commitmentID;
 	}
 
 	/**
@@ -190,71 +167,20 @@ public class Event extends AbstractModel implements Displayable
 	/**
 	 * @return the start
 	 */
-	public DateTime getStart()
+	public DateTime getDate()
 	{
-		return new DateTime(start);
+		return new DateTime(duedate);
 	}
 
 	/**
 	 * @param start
 	 *            the start to set
 	 */
-	public void setStart(DateTime start)
+	public void setDate(DateTime start)
 	{
-		this.start = start.toDate();
+		this.duedate = start.toDate();
 	}
-
-	/**
-	 * @return the end
-	 */
-	public DateTime getEnd()
-	{
-		return new DateTime(end);
-	}
-
-	/**
-	 * @param end
-	 *            the end to set
-	 */
-	public void setEnd(DateTime end)
-	{
-		this.end = end.toDate();
-	}
-
-	/**
-	 * @return the isProjectEvent
-	 */
-	public boolean isProjectEvent()
-	{
-		return isProjectEvent;
-	}
-
-	/**
-	 * @param isProjectEvent
-	 *            the isProjectEvent to set
-	 */
-	public void setProjectEvent(boolean isProjectEvent)
-	{
-		this.isProjectEvent = isProjectEvent;
-	}
-
-	/**
-	 * @return the category
-	 */
-	public UUID getCategory()
-	{
-		return category;
-	}
-
-	/**
-	 * @param category
-	 *            the category to set
-	 */
-	public void setCategory(UUID category)
-	{
-		this.category = category;
-	}
-
+	
 	/**
 	 * @return the participants
 	 */
@@ -272,15 +198,7 @@ public class Event extends AbstractModel implements Displayable
 		this.participants = participants;
 	}
 
-	boolean isAllDay()
-	{
-		return isAllDay;
-	}
 
-	void setAllDay(boolean isAllDay)
-	{
-		this.isAllDay = isAllDay;
-	}
 	 
 	/**
 	 * @return the owner
@@ -298,8 +216,4 @@ public class Event extends AbstractModel implements Displayable
 		this.owner = owner;
 	}
 
-	@Override
-	public DateTime getDate() {
-		return this.getStart();
-	}
 }

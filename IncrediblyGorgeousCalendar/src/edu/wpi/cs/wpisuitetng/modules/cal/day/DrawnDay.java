@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * Copyright (c) 2013 WPI-Suite
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors: Team YOCO (You Only Compile Once)
+ ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.day;
 
 import java.awt.Color;
@@ -71,7 +80,7 @@ public class DrawnDay extends JPanel{
 				int contentToDisplay = 0;
 				boolean wordWrap = 84*this.largestCollision-1 > this.getWidth();
 				
-				String[] description = e.getDescription().split("@");
+				String[] description = e.getDescription().split(" ");
 				int descriptionCounter = 0;
 
 				if (halfHour < 47)//need a check for short events like: && e.getEnd().getMinuteOfDay()/30-halfHour>1)
@@ -172,7 +181,9 @@ public class DrawnDay extends JPanel{
 
 			@Override
 			public int compare(Event arg0, Event arg1) {
-				return arg0.getStart().compareTo(arg1.getStart());
+				return arg0.isProjectEvent() && !arg1.isProjectEvent() ? 1
+						: !arg0.isProjectEvent() && arg1.isProjectEvent() ? -1
+								: arg0.getStart().compareTo(arg1.getStart());
 			}
 			
 		});
@@ -339,7 +350,9 @@ public class DrawnDay extends JPanel{
 			@Override
 			public int compare(Event e, Event e2)
 			{
-				return e.getStart().compareTo(e2.getStart());
+				return e.isProjectEvent() && !e2.isProjectEvent() ? 1
+						: !e.isProjectEvent() && e2.isProjectEvent() ? -1
+								: e.getStart().compareTo(e2.getStart());
 			}
 		});
 		

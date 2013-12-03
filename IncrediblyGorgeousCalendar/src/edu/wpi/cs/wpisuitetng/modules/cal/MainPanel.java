@@ -1,6 +1,16 @@
+/*******************************************************************************
+ * Copyright (c) 2013 WPI-Suite
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors: Team YOCO (You Only Compile Once)
+ ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
@@ -24,16 +34,28 @@ import javax.swing.border.EmptyBorder;
 import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.day.DayCalendar;
+import edu.wpi.cs.wpisuitetng.modules.cal.eventui.AddCommitmentDisplay;
+import edu.wpi.cs.wpisuitetng.modules.cal.eventui.AddEventDisplay;
+import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.month.MonthCalendar;
+import edu.wpi.cs.wpisuitetng.modules.cal.month.MonthItem;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.CalendarSelector;
-import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MainCalendarNavigation;
-import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.GoToPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MainCalendarNavigation;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarHostIface;
+import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.ViewSize;
+import edu.wpi.cs.wpisuitetng.modules.cal.year.YearCalendar;
 
+/**
+ * The main UI of the Calendar module. This singleton is basically the controller for everything
+ * in the calendar module. It manages most resources.
+ */
 public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	
 	private JTabbedPane mTabbedPane;
@@ -45,7 +67,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	private JPanel sidePanel;
 	private MainCalendarNavigation mainCalendarNavigationPanel;
 	private GoToPanel mGoToPanel;
-	private AbstractCalendar mCalendar, monthCal, dayCal;
+	private AbstractCalendar mCalendar, monthCal, dayCal, yearCal;
 	private DateTime lastTime = DateTime.now();
 	private CalendarSelector mCalendarSelector;
 	private JPopupMenu popup = new JPopupMenu();
@@ -54,8 +76,12 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	private final HashMap<Integer, JComponent> tabs = new HashMap<Integer, JComponent>();
 	private int tab_id = 0;
 	private EventModel events;
+	private CommitmentModel commitments;
 	private ViewSize view = ViewSize.Month;
 	private static MainPanel instance;
+	private MonthItem currentSelected;
+	private MonthItem previouslySelected;
+	private Displayable currentDisplayable;
 	
 	//TODO: "make this better" -Patrick
 	public boolean showPersonal = true;
@@ -94,7 +120,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		
 		events = new EventModel(); // used for accessing events
-		
+		commitments= new CommitmentModel();
 		this.mainPaneContainer = new JPanel(); // Container for the navigation and calendars
 		this.sidePanel = new JPanel(); // Panel to hold the mini calendar and the goto date
 		this.centerPanel = new JPanel(); // Container for top and bottom sub-panels
@@ -103,8 +129,10 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		
 		// Components of center panel
 		this.mMiniCalendarPanel = new MiniCalendarPanel(DateTime.now(), this); // Mini calendar
-		this.mCalendar = monthCal = new MonthCalendar(DateTime.now(), events); // Monthly calendar
-		dayCal = new DayCalendar(DateTime.now(), events); // Day calendar (hidden)
+		this.mCalendar = monthCal = new MonthCalendar(DateTime.now(), events, commitments); // Monthly calendar
+		this.dayCal = new DayCalendar(DateTime.now(), events); // Day calendar (hidden)
+		this.yearCal = new YearCalendar(DateTime.now(), events); // Year calendar (hidden)
+		
 		this.mainCalendarNavigationPanel = new MainCalendarNavigation(this, mCalendar); // Navigation bar 
 		
 		// Components of side panel
@@ -143,7 +171,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		
 		// Add default tabs to main panel
 		addTopLevelTab(mainPaneContainer, "Calendar", false);
-		
+	
 		// add context menu
 		this.addMouseListener(new MouseAdapter()
 		{
@@ -159,13 +187,16 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				//remove all but calender
+				//remove all but calendar
 				while (getTabCount() > 1)
 				{
 					removeTabAt(1);
 				}
 			}
 		});
+		
+		
+		
 	}
 	
 	
@@ -268,6 +299,31 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		events.putEvent(newEvent);
 		mCalendar.updateEvents(newEvent, true);
 	}
+	
+	/**
+	 * Updates an event as long as it retains its ID
+	 * @param updateEvent event to update
+	 */
+	public void updateEvent(Event updateEvent){
+		events.updateEvent(updateEvent);
+	}
+	
+	/**
+	 * Adds a new commitment to the database and refreshes the UI
+	 * @param newCommitment The commitment to add
+	 */
+	public void addCommitment(Commitment newCommitment)
+	{
+		commitments.putCommitment(newCommitment);
+	}
+	/**
+	 * Updates a commitment as long both commitments have the same ID
+	 * @param updateCommitment
+	 */
+	public void updateCommitment(Commitment updateCommitment)
+	{
+		commitments.updateCommitment(updateCommitment);
+	}
 
 	/**
 	 * Gets the singleton instance of this panel to avoid passing it everywhere
@@ -280,18 +336,34 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		return instance;
 	}
 
+	/**
+	 * Toggle monthly calendar view
+	 */
 	public void viewMonth()
 	{
 		view = ViewSize.Month;
 		refreshView(monthCal);
 	}
 	
+	/**
+	 * Toggle daily calendar view
+	 */
 	public void viewDay()
 	{
 		view = ViewSize.Day;
 		refreshView(dayCal);
 	}
 	
+	public void viewYear()
+	{
+		view = ViewSize.Month;
+		refreshView(yearCal);
+	}
+	
+	/**
+	 * Updates calendar in view and sets navigation panel to act on the active view
+	 * @param monthCal2
+	 */
 	private void refreshView(AbstractCalendar monthCal2)
 	{
 		centerPanelBottom.remove(mCalendar);
@@ -303,6 +375,9 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		repaint();
 	}
 	
+	/**
+	 * Refresh the view to properly show additions and navigation
+	 */
 	public void refreshView()
 	{
 		mCalendar.display(lastTime);
@@ -310,12 +385,66 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		repaint();
 	}
 
+	/**
+	 * @return current view
+	 */
 	public ViewSize getView()
 	{
 		return view;
 	}
 	
+	/**
+	 * Close specified tab
+	 * @param id
+	 */
 	public void closeTab(int id){
 		mTabbedPane.remove(tabs.get(id));
+	}
+	
+	/**
+	 * Highlights the  selected monthItem on the calendar
+	 * @param Item the month item to highlight
+	 */
+	public void updateSelectedDisplayable(MonthItem Item){
+		
+		this.currentSelected = Item;
+		
+		if (previouslySelected != null)
+			previouslySelected.setBackground(Colors.TABLE_BACKGROUND);
+		
+		currentSelected.setBackground(Colors.SELECTED_BACKGROUND);
+		previouslySelected = currentSelected;
+		
+	}
+	
+	/**
+	 * Edits the selected displayable
+	 * @param Item the month item containing the displayable to edit
+	 */
+	public void editSelectedDisplayable(MonthItem Item){
+		
+		this.currentSelected = Item;
+		this.currentDisplayable = Item.getDisplayable();
+		
+		
+		currentSelected.setBackground(Colors.TABLE_BACKGROUND);
+		previouslySelected = currentSelected;
+		
+		if (currentDisplayable instanceof Event) {
+			AddEventDisplay mAddEventDisplay = new AddEventDisplay((Event) currentDisplayable);
+			mAddEventDisplay.setTabId(instance.addTopLevelTab(mAddEventDisplay, "Edit Event", true));
+		}
+		else if (currentDisplayable instanceof Commitment) {
+			AddCommitmentDisplay mAddCommitmentDisplay = new AddCommitmentDisplay((Commitment) currentDisplayable);
+			mAddCommitmentDisplay.setTabId(instance.addTopLevelTab(mAddCommitmentDisplay, "Edit Commitment", true));
+		}
+	}
+	
+	/**
+	 * Clears selected MonthItem from calendar
+	 */
+	public void clearSelected(){
+		if (previouslySelected != null)
+			previouslySelected.setBackground(Colors.TABLE_BACKGROUND);
 	}
 }

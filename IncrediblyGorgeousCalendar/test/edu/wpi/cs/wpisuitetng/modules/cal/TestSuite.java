@@ -9,7 +9,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.month.MonthDayTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.month.MonthItemTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.MonthsTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.CalendarNavigationModuleTest;
-import edu.wpi.cs.wpisuitetng.modules.cal.year.YearCalendarHolderTest;
+import edu.wpi.cs.wpisuitetng.modules.cal.year.YearCalendarTest;
 
 
 /**
@@ -19,7 +19,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.year.YearCalendarHolderTest;
 
 
 @RunWith(Suite.class)
-@SuiteClasses({CalendarNavigationModuleTest.class, MonthItemTest.class, MonthCalendarTest.class, YearCalendarHolderTest.class, MonthDayTest.class, MonthsTest.class})
+@SuiteClasses({CalendarNavigationModuleTest.class, MonthItemTest.class, MonthCalendarTest.class, YearCalendarTest.class, MonthDayTest.class, MonthsTest.class})
 
 public class TestSuite {
 

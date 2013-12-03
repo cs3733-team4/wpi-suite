@@ -7,15 +7,23 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.cal.navigation;
+package edu.wpi.cs.wpisuitetng.modules.cal.models;
+
+import org.joda.time.DateTime;
 
 /**
- * What calendar is in the main view
+ * Any object that is displayable on the calendar with a date and time, such as events and commitments.
  */
-public enum ViewSize
+public interface Displayable
 {
-	Year,
-	Month,
-	Week,
-	Day
+	public String getName();
+
+	public String getDescription();
+
+	public String getParticipants();
+
+	/**
+	 * The date to display. If there are more than one, the default date (start)
+	 */
+	public DateTime getDate();
 }
