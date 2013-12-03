@@ -304,6 +304,8 @@ public class CategoryManager extends JPanel {
 							JListModel.addElement(c);
 						} else {
 							MainPanel.getInstance().addCategory(c);
+							if (JListModel.contains(noCategory))
+								JListModel.removeElement(noCategory);
 							JListModel.addElement(c);
 						}
 						
