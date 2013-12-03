@@ -79,7 +79,6 @@ public class AddEventDisplay extends JPanel
 	public AddEventDisplay(Event mEvent)
 	{
 		this.eventCategoryPicker = new JComboBox<Category>();
-		if (this.eventCategoryPicker == null)System.out.println("WHAT THE FUCK");
 		this.eventToEdit = mEvent;
 		this.editEvent = true;
 		this.existingEventID = eventToEdit.getEventID();
@@ -353,11 +352,6 @@ public class AddEventDisplay extends JPanel
 		if (this.eventCategoryPicker != null)
 		{
 			comboBoxHolder.add(this.eventCategoryPicker);
-		}
-		else
-		{
-			System.out.println(this.eventCategoryPicker);
-			System.out.println("fucking hell");
 		}
 		
 	}
