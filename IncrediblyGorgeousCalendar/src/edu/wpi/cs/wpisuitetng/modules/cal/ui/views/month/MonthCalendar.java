@@ -147,7 +147,6 @@ public class MonthCalendar extends AbstractCalendar
 		
 		MonthDay md;
 		MutableDateTime newDay;
-		//for (int i=0; i<(e.getEnd().getDayOfYear()-e.getStart().getDayOfYear() + 1); i++)
 		for (int i=0; i<(Days.daysBetween(e.getStart(), e.getEnd()).getDays() + 1); i++)
 		{
 			newDay = new MutableDateTime(e.getStart());
@@ -156,7 +155,6 @@ public class MonthCalendar extends AbstractCalendar
 			md = this.days.get(newDay.getDayOfYear());
 			try{
 				md.addEvent(e);
-				System.out.println("Added: " + e.toJSON());
 			}
 			catch(NullPointerException ex)
 			{
