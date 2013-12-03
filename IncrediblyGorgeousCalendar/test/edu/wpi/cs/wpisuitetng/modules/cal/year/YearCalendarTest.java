@@ -1,8 +1,8 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.year;
 
 import static org.junit.Assert.*;
-import edu.wpi.cs.wpisuitetng.modules.cal.year.YearCalendar;
-import edu.wpi.cs.wpisuitetng.modules.cal.month.MonthItem;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.year.YearCalendar;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthItem;
 
 import org.joda.time.DateTime;
 import org.junit.Test;

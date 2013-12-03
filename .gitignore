@@ -48,7 +48,7 @@ RequirementManager/bin
 
 bin/
 *.project
-
+WPISuite_TNG_local
 
 #We have some workspace issues to fix, until then, ignore this dir.
 Servers/

@@ -26,7 +26,7 @@ import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
-import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 
 /**
  * Sidebar sidekick month view to enable quick navigation to other months/days/weeks.
