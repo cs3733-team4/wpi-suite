@@ -33,7 +33,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
-import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Months;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
 
 public class MiniCalendarPanel extends JPanel
 {

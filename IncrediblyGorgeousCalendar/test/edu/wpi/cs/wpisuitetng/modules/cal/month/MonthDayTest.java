@@ -2,7 +2,7 @@ package edu.wpi.cs.wpisuitetng.modules.cal.month;
 
 import static org.junit.Assert.*;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
-import edu.wpi.cs.wpisuitetng.modules.cal.month.MonthDay;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthDay;
 import edu.wpi.cs.wpisuitetng.modules.cal.DayStyle;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 

@@ -7,7 +7,7 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.cal.eventui;
+package edu.wpi.cs.wpisuitetng.modules.cal.ui;
 
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -18,9 +18,9 @@ import javax.swing.JFrame;
 
 import org.joda.time.DateTime;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarHostIface;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 
 /**
  * MiniMonth-based popup calendar used for DatePicker.

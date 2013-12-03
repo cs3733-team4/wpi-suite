@@ -7,7 +7,7 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.cal.eventui;
+package edu.wpi.cs.wpisuitetng.modules.cal.ui;
 
 import java.awt.Font;
 import java.awt.Point;

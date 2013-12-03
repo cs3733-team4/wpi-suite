@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Months;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
 
 public class MonthsTest {
 

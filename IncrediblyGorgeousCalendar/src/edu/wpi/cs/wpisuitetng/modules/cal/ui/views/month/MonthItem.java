@@ -7,7 +7,7 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.cal.month;
+package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month;
 
 import java.awt.Component;
 import java.awt.Font;
@@ -24,9 +24,9 @@ import javax.swing.JPanel;
 import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
-import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 
 /**
  * UI for displaying individual events/commitments in MonthDays. These are collapsed

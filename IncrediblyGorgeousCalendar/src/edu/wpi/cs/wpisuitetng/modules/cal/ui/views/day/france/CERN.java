@@ -7,7 +7,7 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.cal.day.france;
+package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.france;
 
 import java.util.ArrayList;
 import java.util.Arrays;

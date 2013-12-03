@@ -7,7 +7,7 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.cal.day.france;
+package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.france;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -16,8 +16,8 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 
 /**
  * All the VanGoghPaintings are visible in the LouvreTour you saw in the day

@@ -7,7 +7,7 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.cal.formulae;
+package edu.wpi.cs.wpisuitetng.modules.cal.utils;
 
 import java.awt.Dimension;
 import java.awt.FontMetrics;

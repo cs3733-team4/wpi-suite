@@ -7,7 +7,7 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.cal.month;
+package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -23,10 +23,10 @@ import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.DayStyle;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
-import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 
 /**
  * UI for showing events on a day in a month view. This is the entire day block.

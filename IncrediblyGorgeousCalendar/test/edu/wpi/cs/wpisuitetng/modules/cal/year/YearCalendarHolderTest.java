@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 import javax.swing.JButton;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
-import edu.wpi.cs.wpisuitetng.modules.cal.month.MonthCalendar;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthCalendar;
 
 import org.joda.time.DateTime;
 import org.junit.BeforeClass;

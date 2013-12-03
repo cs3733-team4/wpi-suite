@@ -7,7 +7,7 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.cal.day.france;
+package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.france;
 
 /**
  * Used for scalable fractions in day panel. Non-simplifying

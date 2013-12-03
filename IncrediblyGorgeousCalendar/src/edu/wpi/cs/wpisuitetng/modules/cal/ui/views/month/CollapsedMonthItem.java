@@ -7,13 +7,13 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.cal.month;
+package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month;
 
 import java.awt.Font;
 
 import javax.swing.JLabel;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 
 /**
  * UI for x more.. when there  is not enough space for them to display on the month view

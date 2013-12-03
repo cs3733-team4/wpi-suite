@@ -32,24 +32,24 @@ import javax.swing.border.EmptyBorder;
 
 import org.joda.time.DateTime;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.day.DayCalendar;
-import edu.wpi.cs.wpisuitetng.modules.cal.eventui.AddCommitmentDisplay;
-import edu.wpi.cs.wpisuitetng.modules.cal.eventui.AddEventDisplay;
-import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
-import edu.wpi.cs.wpisuitetng.modules.cal.month.MonthCalendar;
-import edu.wpi.cs.wpisuitetng.modules.cal.month.MonthItem;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.CalendarSelector;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.GoToPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MainCalendarNavigation;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarHostIface;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.ViewSize;
-import edu.wpi.cs.wpisuitetng.modules.cal.year.YearCalendar;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddCommitmentDisplay;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddEventDisplay;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.DayCalendar;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthCalendar;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthItem;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.year.YearCalendar;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 
 /**
  * The main UI of the Calendar module. This singleton is basically the controller for everything

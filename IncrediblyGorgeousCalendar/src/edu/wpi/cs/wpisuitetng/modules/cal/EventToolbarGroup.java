@@ -20,8 +20,8 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar.ToolbarGroupView;
-import edu.wpi.cs.wpisuitetng.modules.cal.eventui.AddCommitmentDisplay;
-import edu.wpi.cs.wpisuitetng.modules.cal.eventui.AddEventDisplay;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddCommitmentDisplay;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddEventDisplay;
 
 public class EventToolbarGroup extends ToolbarGroupView {
 	

@@ -7,7 +7,7 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.cal.day;
+package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day;
 
 import java.awt.BorderLayout;
 import java.util.List;
@@ -24,11 +24,11 @@ import org.joda.time.format.DateTimeFormatter;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
-import edu.wpi.cs.wpisuitetng.modules.cal.day.france.LouvreTour;
-import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
-import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Months;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.france.LouvreTour;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
 
 public class DayCalendar extends AbstractCalendar
 {

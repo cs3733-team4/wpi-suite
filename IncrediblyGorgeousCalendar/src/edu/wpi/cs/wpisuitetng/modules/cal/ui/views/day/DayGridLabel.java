@@ -7,7 +7,7 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.cal.day;
+package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day;
 
 import java.awt.GridLayout;
 
@@ -15,7 +15,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 
 public class DayGridLabel extends JPanel{
 	

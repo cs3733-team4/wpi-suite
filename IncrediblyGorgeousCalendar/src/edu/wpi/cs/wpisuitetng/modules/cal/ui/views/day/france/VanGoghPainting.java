@@ -7,7 +7,7 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.cal.day.france;
+package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.france;
 
 import javax.swing.JPanel;
 
@@ -22,8 +22,8 @@ import javax.swing.border.LineBorder;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 
 import javax.swing.JLabel;
 import javax.swing.BoxLayout;

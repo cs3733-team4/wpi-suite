@@ -8,7 +8,8 @@ import javax.swing.JCheckBox;
 
 import org.junit.Test;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.eventui.DatePicker;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddEventDisplay;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.DatePicker;
 
 public class EventUIValidationTest {
 private AddEventDisplay mEventDisplay = new AddEventDisplay();

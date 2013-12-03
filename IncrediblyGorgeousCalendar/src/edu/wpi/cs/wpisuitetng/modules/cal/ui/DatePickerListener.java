@@ -7,7 +7,7 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.cal.eventui;
+package edu.wpi.cs.wpisuitetng.modules.cal.ui;
 
 import org.joda.time.DateTime;
 

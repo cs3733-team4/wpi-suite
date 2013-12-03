@@ -7,7 +7,7 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.cal.month;
+package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -28,12 +28,12 @@ import com.lowagie.text.Font;
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.DayStyle;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
-import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
-import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Months;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
 
 /**
  * Main Month view.

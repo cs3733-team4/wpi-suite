@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthItem;
 
 /**
  * Tests for MonthItem class

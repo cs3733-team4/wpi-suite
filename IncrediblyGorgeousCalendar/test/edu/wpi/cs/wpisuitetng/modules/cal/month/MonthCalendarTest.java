@@ -8,7 +8,7 @@ import org.junit.Test;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
-import edu.wpi.cs.wpisuitetng.modules.cal.month.MonthCalendar;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthCalendar;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 
 /**
