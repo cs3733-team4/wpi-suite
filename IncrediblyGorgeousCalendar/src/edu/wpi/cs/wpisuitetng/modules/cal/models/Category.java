@@ -16,14 +16,15 @@ public class Category extends AbstractModel
         private User owner;
         private boolean isProjectCategory;
         
-        public static final Category DEFUALT_CATEGORY = new Category(0);
+        public static final Category DEFUALT_CATEGORY = new Category("Uncategorized");
+        public static final Category DEFUALT_DISPLAY_CATEGORY = new Category("No Categories");
         
-        private Category(int i)
+        private Category(String s)
         {
-        	name = "Uncategorized";
+        	name = s;
         	color = null;
         	owner = null;
-        	categoryID = new UUID(i,i);
+        	categoryID = new UUID(0,0);
         }
         
         public Category(){}

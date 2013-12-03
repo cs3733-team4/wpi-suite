@@ -59,7 +59,6 @@ public class CategoryManager extends JPanel {
 	private JLabel errorText;
 	private boolean editCategory = false;
 	private UUID selectedCategoryUUID;
-	private Category noCategory = new Category();
 	private Category selectedCategory;
 	//TODO Note: When clicking off of a category on list, selectedCategory must be set to null
 	// to avoid deleting unwanted categories
@@ -204,10 +203,10 @@ public class CategoryManager extends JPanel {
 		});
 		
 		if (allCategories.size() == 0){
-			JListModel.addElement(noCategory);
+			JListModel.addElement(Category.DEFUALT_DISPLAY_CATEGORY);
 		} else {
-			if (JListModel.contains(noCategory))
-				JListModel.removeElement(noCategory);
+			if (JListModel.contains(Category.DEFUALT_DISPLAY_CATEGORY))
+				JListModel.removeElement(Category.DEFUALT_DISPLAY_CATEGORY);
 			
 			for (int i = 0; i < allCategories.size(); i++) {
 				Category temp = allCategories.get(i);
@@ -301,8 +300,8 @@ public class CategoryManager extends JPanel {
 							JListModel.addElement(c);
 						} else {
 							MainPanel.getInstance().addCategory(c);
-							if (JListModel.contains(noCategory))
-								JListModel.removeElement(noCategory);
+							if (JListModel.contains(Category.DEFUALT_DISPLAY_CATEGORY))
+								JListModel.removeElement(Category.DEFUALT_DISPLAY_CATEGORY);
 							JListModel.addElement(c);
 						}
 						
