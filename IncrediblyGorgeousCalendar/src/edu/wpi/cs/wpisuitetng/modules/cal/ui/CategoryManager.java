@@ -17,6 +17,8 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 
 import javax.swing.BoxLayout;
@@ -31,10 +33,10 @@ import javax.swing.ListCellRenderer;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.PastelColorPicker;
 
 /**
@@ -157,16 +159,44 @@ public class CategoryManager extends JPanel {
 		JListModel = new DefaultListModel<Category>();
 		
 		categoriesList = new JList<Category>(JListModel);
+		
+		categoriesList.addMouseListener(new MouseAdapter() {
+		    public void mouseClicked(MouseEvent evt) {
+		    	
+		    	// Get index of selected cell
+		        JList list = (JList)evt.getSource();
+		        int index = list.locationToIndex(evt.getPoint());
+		    	
+		        // Get category object
+		    	categoriesList.setSelectedIndex(index);
+		    	Category selected = (Category) categoriesList.getSelectedValue();
+		    	
+		    	// Display data from selected category object
+		    	categoryName.setText(selected.getName());
+		    	
+		    }
+		});
+		
 		categoriesList.setCellRenderer(new ListCellRenderer<Category>() {
 
 			@Override
 			public Component getListCellRendererComponent(
 					JList<? extends Category> list, Category value, int index,
 					boolean isSelected, boolean cellHasFocus) {
-				return new JLabel(value.getName());
+				
+					JLabel display = new JLabel(value.getName());
+					display.setOpaque(true);
+					display.setBackground(Colors.TABLE_BACKGROUND);
+					
+					if (isSelected)
+						display.setBackground(Colors.SELECTED_BACKGROUND);
+					
+					return display;
+					
 			}
 		});
 		
+		// TODO FIX THIS FIRST IF
 		if (allCategories.size() == 0){
 			System.out.println("A&V : Called");
 			Category test = new Category();
@@ -182,6 +212,7 @@ public class CategoryManager extends JPanel {
 				JListModel.addElement(temp);
 			}
 		}
+		
 		
 		leftCategoryList.add(categoriesList);
 		
@@ -284,6 +315,8 @@ public class CategoryManager extends JPanel {
 		//but error msg didn't start visible unless I called it directly
 		
 		updateList.setEnabled(isSaveable());
+		
+
 	}
 
 }
