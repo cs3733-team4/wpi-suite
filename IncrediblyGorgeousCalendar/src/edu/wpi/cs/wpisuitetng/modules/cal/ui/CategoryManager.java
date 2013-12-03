@@ -64,7 +64,7 @@ public class CategoryManager extends JPanel {
 	protected boolean editCategory;
 	
 	public CategoryManager() {
-		categories = new CategoryModel();
+		categories = CategoryModel.getInstance();
 		allCategories = categories.getAllCategories();
 		
 		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));

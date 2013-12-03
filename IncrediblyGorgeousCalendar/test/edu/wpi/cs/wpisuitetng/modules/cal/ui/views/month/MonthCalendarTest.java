@@ -18,7 +18,7 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 
 public class MonthCalendarTest{
 
-	private EventModel dummyModel = new EventModel();
+	private EventModel dummyModel = EventModel.getInstance();
 	private CommitmentModel dummyModel2 = new CommitmentModel();
 	
 	private DateTime time =  new DateTime();

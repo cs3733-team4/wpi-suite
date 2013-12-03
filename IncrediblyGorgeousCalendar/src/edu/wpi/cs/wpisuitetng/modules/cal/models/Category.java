@@ -16,6 +16,18 @@ public class Category extends AbstractModel
         private User owner;
         private boolean isProjectCategory;
         
+        public static final Category DEFUALT_CATEGORY = new Category(0);
+        
+        private Category(int i)
+        {
+        	name = "Uncategorized";
+        	color = null;
+        	owner = null;
+        	categoryID = new UUID(i,i);
+        }
+        
+        public Category(){}
+        
         /**
          * Sets the name of the category
          * @param name the name to set to the category        
@@ -56,8 +68,7 @@ public class Category extends AbstractModel
          * Gets the UUID of the given category
          * @return categoryID the UUID of the given category
          */
-        
-        public UUID getUUID()
+        public UUID getCategoryID()
         {
                 return categoryID;
         }
@@ -126,13 +137,10 @@ public class Category extends AbstractModel
         public boolean isProjectCategory() {
                 return isProjectCategory;
         }
-
-        /**
-         * sets the category ID for each category
-         * @return categoryID the UUID for the category
-         */
         
-        public Object getCategoryID() {
-                return this.categoryID;
+        @Override
+        public String toString()
+        {
+        	return this.getName();
         }
 }

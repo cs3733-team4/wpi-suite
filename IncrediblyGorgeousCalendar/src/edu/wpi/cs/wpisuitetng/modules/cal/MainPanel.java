@@ -121,8 +121,8 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		mTabbedPane = this;
 		this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		
-		categories=new CategoryModel();
-		events = new EventModel(); // used for accessing events
+		categories = CategoryModel.getInstance();
+		events = EventModel.getInstance(); // used for accessing events
 		commitments= new CommitmentModel();
 		this.mainPaneContainer = new JPanel(); // Container for the navigation and calendars
 		this.sidePanel = new JPanel(); // Panel to hold the mini calendar and the goto date

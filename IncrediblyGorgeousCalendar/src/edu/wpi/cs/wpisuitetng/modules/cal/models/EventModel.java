@@ -20,8 +20,21 @@ import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 
 public class EventModel {
 
+	private static EventModel instance;
 	public static final DateTimeFormatter serializer = ISODateTimeFormat.basicDateTime();
 
+	
+	private EventModel()
+	{}
+	
+	public static EventModel getInstance()
+	{
+		if (instance == null)
+		{
+			instance = new EventModel();
+		}
+		return instance;
+	}
 
 	public List<Event> getEvents(DateTime from, DateTime to) {
 		final List<Event> events = ServerManager.get("cal/events/", Event[].class, "filter-events-by-range", from.toString(serializer),

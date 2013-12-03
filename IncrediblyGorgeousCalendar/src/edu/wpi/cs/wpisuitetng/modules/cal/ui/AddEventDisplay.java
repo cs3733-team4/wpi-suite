@@ -12,6 +12,7 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui;
 import javax.swing.Box.Filler;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
@@ -22,9 +23,12 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
+
 import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
 import java.awt.Color;
@@ -34,6 +38,7 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 import java.util.UUID;
 
 public class AddEventDisplay extends JPanel
@@ -67,47 +72,60 @@ public class AddEventDisplay extends JPanel
 	private Event eventToEdit;
 	private boolean editEvent;
 	private UUID existingEventID; // UUID of event being edited
+	private JComboBox<Category> eventCategoryPicker;
 	
 	
 	// Constructor for edit event.
-	public AddEventDisplay(Event mEvent){
-		
+	public AddEventDisplay(Event mEvent)
+	{
+		this.eventCategoryPicker = new JComboBox<Category>();
+		if (this.eventCategoryPicker == null)System.out.println("WHAT THE FUCK");
 		this.eventToEdit = mEvent;
 		this.editEvent = true;
 		this.existingEventID = eventToEdit.getEventID();
 		setUpUI();
 		populateEventFields(eventToEdit);
 		setUpListeners();
+		
 	}
 	
 	// Constructor for create new event.
 	public AddEventDisplay()
 	{
+		this.eventCategoryPicker = new JComboBox<Category>();
 		this.editEvent = false;
 		setUpUI();
 		setUpListeners();
-		
 	}
 	
 	/**
 	 * Populates the events field if the class was invoked with an existing event.
 	 * Allows for the edition of events 
 	 */
-	private void populateEventFields(Event eventToEdit){
-		
+	private void populateEventFields(Event eventToEdit)
+	{
 		this.participantsTextField.setText(eventToEdit.getParticipants());
 		this.nameTextField.setText(eventToEdit.getName());
 		this.descriptionTextArea.setText(eventToEdit.getDescription());
 		this.teamProjectCheckBox.setSelected(eventToEdit.isProjectEvent());
 		this.startTimeDatePicker.setDateTime(eventToEdit.getStart());
 		this.endTimeDatePicker.setDateTime(eventToEdit.getEnd());
-		
+		this.eventCategoryPicker.setSelectedItem(CategoryModel.getInstance().getCategoryByUUID(eventToEdit.getCategory()));
 	}
 	
 	/**
 	 * Set up the UI layout for AddEventDisplay
 	 */
-	private void setUpUI(){
+	private void setUpUI()
+	{
+		
+		// set up the combobox
+		this.eventCategoryPicker.addItem(Category.DEFUALT_CATEGORY);
+		for(Category c : CategoryModel.getInstance().getAllCategories())
+		{
+			this.eventCategoryPicker.addItem(c);
+		}
+		
 		
 		// Basic Layout
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -329,6 +347,19 @@ public class AddEventDisplay extends JPanel
 		this.add(submissionPanel);
 		
 		
+		//add the combobox for category
+		JPanel comboBoxHolder = new JPanel();
+		this.add(comboBoxHolder);
+		if (this.eventCategoryPicker != null)
+		{
+			comboBoxHolder.add(this.eventCategoryPicker);
+		}
+		else
+		{
+			System.out.println(this.eventCategoryPicker);
+			System.out.println("fucking hell");
+		}
+		
 	}
 	
 	/**
@@ -369,6 +400,8 @@ public class AddEventDisplay extends JPanel
 						e.setEnd(endTimeDatePicker.getDate());
 						e.setProjectEvent(teamProjectCheckBox.isSelected());
 						e.setParticipants(participantsTextField.getText().trim());
+						e.setCategory(((Category)eventCategoryPicker.getSelectedItem()).getCategoryID());
+						
 						
 						if (editEvent){
 							e.setEventID(existingEventID);
