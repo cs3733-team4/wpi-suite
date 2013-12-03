@@ -11,9 +11,13 @@ package edu.wpi.cs.wpisuitetng.modules.cal.month;
 
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -21,6 +25,7 @@ import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 
 /**
@@ -47,7 +52,22 @@ public class MonthItem extends JPanel
         this.mDisplayable = ndisp;
         
         time.setFont(new java.awt.Font("DejaVu Sans", Font.BOLD, 12));
-        time.setText(simpleTime(mDisplayable.getDate()));
+        if (ndisp instanceof Commitment)
+        {
+        	try{
+        		Image img = ImageIO.read(getClass().getResource("redmark.png"));
+        		
+        		time.setIcon(new ImageIcon(img));
+        		
+        	}
+        	catch (Exception ex){
+        		time.setText("!");
+        	}
+        }
+        else
+        {
+        	time.setText(simpleTime(mDisplayable.getDate()));
+        }
         time.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 3));
         add(time);
 

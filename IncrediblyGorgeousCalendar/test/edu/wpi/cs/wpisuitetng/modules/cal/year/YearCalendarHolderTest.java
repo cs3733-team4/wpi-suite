@@ -8,9 +8,11 @@ import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.month.MonthCalendar;
 
 import org.joda.time.DateTime;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class YearCalendarHolderTest {
+
 
 	MainPanel dummyPanel=MainPanel.getInstance();
 	DateTime now =new DateTime(2000, 6, 1, 0, 0);

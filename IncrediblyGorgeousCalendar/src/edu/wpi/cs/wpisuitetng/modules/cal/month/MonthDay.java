@@ -190,6 +190,7 @@ public class MonthDay extends JPanel
 		{
 			this.add(new CollapsedMonthItem(hidden));
 		}
+		
 		super.doLayout();
 	}
 	

@@ -211,10 +211,10 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 	public DateTime getDate() {
 		try
 		{
-			
 			return dateTimeFmt.parseDateTime(date.getText()+" "+time.getText()+" "+AMPM.getSelectedItem());
 		}catch(IllegalArgumentException e)
 		{
+			System.out.println("Error: " + e.getMessage());
 			return null;
 		}
 	}

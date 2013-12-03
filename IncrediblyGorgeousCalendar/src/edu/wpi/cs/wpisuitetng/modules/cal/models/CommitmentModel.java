@@ -37,6 +37,10 @@ public class CommitmentModel {
 	{
 		return ServerManager.post("cal/commitments", toUpdate.toJSON());
 	}
+	public boolean deleteCommitment(Commitment toDelete)
+	{
+		return ServerManager.delete("cal/commitments", toDelete.toJSON());
+	}
 	
 	
 

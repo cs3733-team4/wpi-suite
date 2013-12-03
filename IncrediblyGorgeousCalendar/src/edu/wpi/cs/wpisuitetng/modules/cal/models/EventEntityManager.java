@@ -93,7 +93,7 @@ public class EventEntityManager implements EntityManager<Event> {
 	 * @param sto date to, DateTime formatted as String
 	 * @return retrieved events with overlapping range
 	 */
-	private Event[] getEventsByRange(Session ses, String sfrom, String sto) {
+	Event[] getEventsByRange(Session ses, String sfrom, String sto) {
 		DateTime from = serializer.parseDateTime(sfrom);
 		DateTime to = serializer.parseDateTime(sto);
 		List<Event> retrievedEvents = new ArrayList<>();
