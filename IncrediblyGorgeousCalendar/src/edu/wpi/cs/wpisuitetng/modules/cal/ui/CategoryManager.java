@@ -18,7 +18,9 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.UUID;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -35,6 +37,7 @@ import javax.swing.event.DocumentListener;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.PastelColorPicker;
 
 /**
@@ -59,19 +62,23 @@ public class CategoryManager extends JPanel {
 	private JList<Category> categoriesList;
 	private JPanel bottomEditPanel;
 	private List<Category> allCategories;
-	private CategoryModel categories;
 	private JLabel errorText;
-	protected boolean editCategory;
+	private boolean editCategory = false;
+	private UUID selectedCategoryUUID;
+	private Category noCategory = new Category();
+	private Category selectedCategory;
+	//TODO Note: When clicking off of a category on list, selectedCategory must be set to null
+	// to avoid deleting unwanted categories
 	
 	public CategoryManager() {
-		categories = CategoryModel.getInstance();
-		allCategories = categories.getAllCategories();
+		allCategories = CategoryModel.getInstance().getAllCategories();
 		
 		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		leftCategoryList = new JPanel();
 		leftCategoryList.setLayout(new GridLayout(1,1));
 		leftCategoryList.setPreferredSize(new Dimension(350, 900));
 		leftCategoryList.setMinimumSize(new Dimension(350, 900));
+		leftCategoryList.setMaximumSize(new Dimension(350, 900));
 		
 		rightCategoryEdit = new JPanel();
 		rightCategoryEdit.setLayout(new BoxLayout(rightCategoryEdit, BoxLayout.Y_AXIS));
@@ -91,8 +98,8 @@ public class CategoryManager extends JPanel {
 		// Text Field
 		categoryName = new JTextField();
 		categoryName.setColumns(25);
-		categoryName.setPreferredSize(new Dimension(300, 20));
-		categoryName.setMaximumSize(new Dimension(300, 20));
+		categoryName.setPreferredSize(new Dimension(200, 30));
+		categoryName.setMaximumSize(new Dimension(200, 30));
 		
 		categoryName.getDocument().addDocumentListener(new DocumentListener() {
 			
@@ -127,9 +134,11 @@ public class CategoryManager extends JPanel {
 		
 		// Panel
 		colorPicker = new PastelColorPicker();
-		colorPicker.setPreferredSize(new Dimension(360, 50));
+		colorPicker.setPreferredSize(new Dimension(32767, 53));
+		colorPicker.setMaximumSize(new Dimension(32767, 53));
 		
 		// Add to UI
+		rightCategoryEdit.add(Box.createRigidArea(new Dimension (0, 6)));
 		rightCategoryEdit.add(colorPicker);
 		
 		/** Buttons */
@@ -148,40 +157,70 @@ public class CategoryManager extends JPanel {
 
 		// Add to Panel
 		bottomEditPanel.add(updateList);
-		bottomEditPanel.add(deleteCategory);
+		//bottomEditPanel.add(deleteCategory);
 		bottomEditPanel.add(errorText);
 		
 		// Add to UI
 		rightCategoryEdit.add(bottomEditPanel);
 		
+		
+		/** List model for the category display */
+		
 		JListModel = new DefaultListModel<Category>();
 		
 		categoriesList = new JList<Category>(JListModel);
+		
+		/* Add click listener
+		categoriesList.addMouseListener(new MouseAdapter() {
+		    public void mouseClicked(MouseEvent evt) {
+		    	
+		    	// Get index of selected cell
+		        JList list = (JList)evt.getSource();
+		        int index = list.locationToIndex(evt.getPoint());
+		    	
+		        // Get category object
+		    	categoriesList.setSelectedIndex(index);
+		    	selectedCategory = (Category) categoriesList.getSelectedValue();
+		    	
+		    	// Display data from selected category object
+		    	selectedCategoryUUID = selectedCategory.getUUID();
+		    	categoryName.setText(selectedCategory.getName());
+		    	
+		    }
+		}); */
+		
+		// Set up cell renderer
 		categoriesList.setCellRenderer(new ListCellRenderer<Category>() {
 
 			@Override
 			public Component getListCellRendererComponent(
 					JList<? extends Category> list, Category value, int index,
 					boolean isSelected, boolean cellHasFocus) {
-				return new JLabel(value.getName());
+				
+					JLabel display = new JLabel(value.getName());
+					display.setOpaque(true);
+					display.setBackground(Colors.TABLE_BACKGROUND);
+					
+					if (isSelected)
+						display.setBackground(Colors.SELECTED_BACKGROUND);
+					
+					return display;
+					
 			}
 		});
 		
 		if (allCategories.size() == 0){
-			System.out.println("A&V : Called");
-			Category test = new Category();
-			test.setName("whee");
-			JListModel.addElement(test);
-			test = new Category();
-			test.setName("wyayayae");
-			JListModel.addElement(test);
+			JListModel.addElement(noCategory);
 		} else {
-			//JListModel.removeElement(noCategoryLabel);
+			if (JListModel.contains(noCategory))
+				JListModel.removeElement(noCategory);
+			
 			for (int i = 0; i < allCategories.size(); i++) {
 				Category temp = allCategories.get(i);
 				JListModel.addElement(temp);
 			}
 		}
+		
 		
 		leftCategoryList.add(categoriesList);
 		
@@ -251,25 +290,25 @@ public class CategoryManager extends JPanel {
 						errorText.setVisible(false);
 						Category c = new Category();
 						c.setName(categoryName.getText().trim());
-						//c.setColor(colorPicker.); // Get color from color picker
+						c.setColor(colorPicker.getCurrentColorState()); // Get color from color picker
 
-						System.out.println("I made it here! Woo!");
-						
-						categories.putCategory(c);
-						
-						/* Need to figure out how to distinguish between editing an event or adding
 						if (editCategory){
-							e.setEventID(existingEventID);
-							MainPanel.getInstance().updateEvent(e);
+							c.setCategoryID(selectedCategoryUUID);
+							MainPanel.getInstance().updateCategory(c);
+							JListModel.removeElement(selectedCategory);
+							JListModel.addElement(c);
 						} else {
-							MainPanel.getInstance().addEvent(e);
+							MainPanel.getInstance().addCategory(c);
+							if (JListModel.contains(noCategory))
+								JListModel.removeElement(noCategory);
+							JListModel.addElement(c);
 						}
-						*/
+						
+						categoryName.setText(""); // Clear category name text field upon addition
+						selectedCategory = null; // Clear selection
 						
 						updateList.setEnabled(false);
-						updateList.setText("Saved!");
-						MainPanel.getInstance().closeTab(tabid);
-						MainPanel.getInstance().refreshView();
+
 					}
 				}
 				catch (IllegalArgumentException exception)
@@ -284,6 +323,8 @@ public class CategoryManager extends JPanel {
 		//but error msg didn't start visible unless I called it directly
 		
 		updateList.setEnabled(isSaveable());
+		
+
 	}
 
 }

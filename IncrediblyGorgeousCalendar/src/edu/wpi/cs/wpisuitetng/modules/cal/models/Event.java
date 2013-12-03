@@ -306,6 +306,7 @@ public class Event extends AbstractModel implements Displayable
 		Category cat = CategoryModel.getInstance().getCategoryByUUID(category);
 		if (cat == null)
 		{
+			System.out.println("the category for this event was not found");
 			return isProjectEvent ? new Color(125,157,227) : new Color(227,125,147);
 		}
 		Color eventColor = cat.getColor();
@@ -313,6 +314,7 @@ public class Event extends AbstractModel implements Displayable
 		{
 			return eventColor;
 		}
+		System.out.println("the category was found, but it's color was null");
 		return isProjectEvent ? new Color(125,157,227) : new Color(227,125,147);
 	}
 	

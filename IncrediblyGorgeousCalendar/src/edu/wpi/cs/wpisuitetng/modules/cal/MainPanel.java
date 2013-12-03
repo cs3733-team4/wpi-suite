@@ -330,6 +330,33 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	}
 
 	/**
+	 * Adds a new category to the database and refreshes the UI
+	 * @param newCategory The category to add
+	 */
+	public void addCategory(Category newCategory)
+	{
+		categories.putCategory(newCategory);
+	}
+	
+	/**
+	 * Updates a category as long both categories have the same ID
+	 * @param updateCategory
+	 */
+	public void updateCategory(Category updateCategory)
+	{
+		categories.updateCategory(updateCategory);
+	}
+	
+	
+	/**
+	 * Returns the category model of the main panel
+	 * @return category model of the main panel instance
+	 */
+	public CategoryModel getCategoryModel(){
+		return this.categories;
+	}
+	
+	/**
 	 * Gets the singleton instance of this panel to avoid passing it everywhere
 	 * @return the instance
 	 */

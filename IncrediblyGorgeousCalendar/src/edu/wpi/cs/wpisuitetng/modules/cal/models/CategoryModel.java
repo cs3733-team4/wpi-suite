@@ -84,8 +84,24 @@ public class CategoryModel {
 		return result;
 	}
 	
+	/**
+	 * 
+	 * @param categoryID the ID of the category
+	 * @return the category with this ID
+	 */
 	public Category getCategoryByUUID(UUID categoryID)
 	{
 		return this.categoryMap.get(categoryID);
 	}
+	
+	/**
+	* @param toUpdate
+	* @return boolean if the post request was succesful
+	*/
+	public boolean updateCategory(Category toUpdate)
+    {
+		boolean result = ServerManager.put("cal/categories", toUpdate.toJSON());
+		updateCache();
+		return result;
+    }
 }
