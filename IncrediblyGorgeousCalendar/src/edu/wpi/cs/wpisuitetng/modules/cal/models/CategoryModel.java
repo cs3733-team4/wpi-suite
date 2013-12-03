@@ -9,7 +9,7 @@ public class CategoryModel {
         /**
          * @return filteredCategories List of all categories from the database
          */
-        public List<Category> getAllCategory() {
+        public List<Category> getAllCategories() {
                 final List<Category> categories = ServerManager.get("cal/categories/", Category[].class, "get-all-categories");
                 
                 List<Category> filteredCategories = new ArrayList<Category>();

@@ -11,15 +11,30 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.ui;
 
-import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.util.List;
 
+import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JComboBox;
 import javax.swing.JTextField;
+import javax.swing.ListCellRenderer;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryModel;
+
+/**
+ * Victor: Left pretty, left default (no categories), left clickable (populate right fields), save/update
+ * Alex: Right pretty, delete
+ *
+ * Add new ribbon bar group
+ */
 public class CategoryManager extends JPanel {
 	
 	private int tabid;
@@ -29,41 +44,76 @@ public class CategoryManager extends JPanel {
 	private JPanel colorPicker;
 	private JButton updateList;
 	private JCheckBox deleteCategory;
-	private JScrollPane categoryList;
+	private DefaultListModel<Category> JListModel;
+	private JList<Category> categoriesList;
 	private JPanel bottomEditPanel;
+	private List<Category> allCategories;
+	private CategoryModel categories;
 	
 	public CategoryManager() {
-		this.setLayout(new BorderLayout());
+				
+		categories = new CategoryModel();
+		allCategories = categories.getAllCategories();
+		
+		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		leftCategoryList = new JPanel();
-		leftCategoryList.setLayout(new BorderLayout());
+		leftCategoryList.setLayout(new GridLayout(1,1));
+		leftCategoryList.setPreferredSize(new Dimension(350, 900));
+		leftCategoryList.setMinimumSize(new Dimension(350, 900));
 		rightCategoryEdit = new JPanel();
-		rightCategoryEdit.setLayout(new BorderLayout());
+		rightCategoryEdit.setLayout(new BoxLayout(rightCategoryEdit, BoxLayout.Y_AXIS));
 		
 		categoryName = new JTextField();
-		rightCategoryEdit.add(categoryName, BorderLayout.NORTH);
+		categoryName.setPreferredSize(new Dimension(Integer.MAX_VALUE, 100));
+		rightCategoryEdit.add(categoryName);
 		
 		colorPicker = new JPanel();
-		rightCategoryEdit.add(colorPicker, BorderLayout.CENTER);
+		rightCategoryEdit.add(colorPicker);
 		
 		bottomEditPanel = new JPanel();
 		updateList = new JButton("Update List");
-		bottomEditPanel.add(updateList, BorderLayout.WEST);
+		bottomEditPanel.add(updateList);
 		deleteCategory = new JCheckBox("Delete selected");
-		bottomEditPanel.add(deleteCategory, BorderLayout.EAST);
+		bottomEditPanel.add(deleteCategory);
+		rightCategoryEdit.add(bottomEditPanel);
 		
-		rightCategoryEdit.add(bottomEditPanel, BorderLayout.SOUTH);
+		JListModel = new DefaultListModel<Category>();
 		
-		categoryList = new JScrollPane();
-		categoryList.setBorder(null);
+		categoriesList = new JList<Category>(JListModel);
+		categoriesList.setCellRenderer(new ListCellRenderer<Category>() {
+
+			@Override
+			public Component getListCellRendererComponent(
+					JList<? extends Category> list, Category value, int index,
+					boolean isSelected, boolean cellHasFocus) {
+				return new JLabel(value.getName());
+			}
+		});
 		
-		leftCategoryList.add(categoryList, BorderLayout.NORTH);
+		if (allCategories.size() == 0){
+			System.out.println("A&V : Called");
+			Category test = new Category();
+			test.setName("whee");
+			JListModel.addElement(test);
+			test = new Category();
+			test.setName("wyayayae");
+			JListModel.addElement(test);
+		} else {
+			//JListModel.removeElement(noCategoryLabel);
+			for (int i = 0; i < allCategories.size(); i++) {
+				Category temp = allCategories.get(i);
+				JListModel.addElement(temp);
+			}
+		}
 		
-		this.add(leftCategoryList, BorderLayout.WEST);
-		this.add(rightCategoryEdit, BorderLayout.EAST);
+		leftCategoryList.add(categoriesList);
+		
+		this.add(leftCategoryList);
+		this.add(rightCategoryEdit);
 	}
 	
 	/**
-	 * Set tab id for the created event view
+	 * Set tab id for the edit category view
 	 * @param id value to set id to
 	 */
 	public void setTabId(int id)

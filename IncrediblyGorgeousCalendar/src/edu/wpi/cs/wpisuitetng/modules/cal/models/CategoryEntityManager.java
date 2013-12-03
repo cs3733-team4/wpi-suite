@@ -54,7 +54,6 @@ public class CategoryEntityManager implements EntityManager<Category> {
          * @param s, current users cookies
          * @param id, content will determine
          * @return retrievedCategories, array of categories matching the entity specifications
-         * @author sarahsawatzki, Etienne
          */
         
         @Override
