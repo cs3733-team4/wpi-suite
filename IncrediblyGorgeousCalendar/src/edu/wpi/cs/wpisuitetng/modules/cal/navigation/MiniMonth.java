@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * Copyright (c) 2013 WPI-Suite
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors: Team YOCO (You Only Compile Once)
+ ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.navigation;
 
 import java.awt.Color;
@@ -17,14 +26,14 @@ import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
-import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 
+/**
+ * Sidebar sidekick month view to enable quick navigation to other months/days/weeks.
+ * Scrolls independely of main view
+ */
 public class MiniMonth extends JPanel
 {
-	/**
-	 * space for holding all the days
-	 */
-
 	public MiniMonth(DateTime time, final MiniCalendarHostIface mc) {
 		this.setLayout(new GridLayout(7, 7));
 		MutableDateTime prevMonth = new MutableDateTime(time);

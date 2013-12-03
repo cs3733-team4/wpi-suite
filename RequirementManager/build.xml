@@ -75,7 +75,7 @@
 
 	<!-- compile dependency is necessary since Core needs jars to run tests... hacky -->
 	<target name="test" depends="compile-test, compile">
-		<junit printsummary="yes" haltonfailure="no">
+		<!--<junit printsummary="yes" haltonfailure="no">
 			<classpath refid="test-classpath"/>
 			<formatter type="xml"/>
 			<batchtest fork="yes" todir="${test-results}">
@@ -83,7 +83,7 @@
 					<include name="**/*Test*.java"/>
 				</fileset>
 			</batchtest>
-		</junit>
+		</junit>-->
 	</target>
 	
 	<target name="dist" depends="compile">

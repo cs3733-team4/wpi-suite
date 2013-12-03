@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * Copyright (c) 2013 WPI-Suite
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors: Team YOCO (You Only Compile Once)
+ ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal;
 
 import java.awt.BorderLayout;
@@ -23,17 +32,11 @@ import javax.swing.border.EmptyBorder;
 
 import org.joda.time.DateTime;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.day.DayCalendar;
-import edu.wpi.cs.wpisuitetng.modules.cal.eventui.AddCommitmentDisplay;
-import edu.wpi.cs.wpisuitetng.modules.cal.eventui.AddEventDisplay;
-import edu.wpi.cs.wpisuitetng.modules.cal.formulae.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
-import edu.wpi.cs.wpisuitetng.modules.cal.month.MonthCalendar;
-import edu.wpi.cs.wpisuitetng.modules.cal.month.MonthItem;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.CalendarSelector;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.GoToPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MainCalendarNavigation;
@@ -41,8 +44,18 @@ import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarHostIface;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.SidebarTabbedPane;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.ViewSize;
-import edu.wpi.cs.wpisuitetng.modules.cal.year.YearCalendar;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddCommitmentDisplay;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddEventDisplay;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.DayCalendar;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthCalendar;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthItem;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.year.YearCalendar;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 
+/**
+ * The main UI of the Calendar module. This singleton is basically the controller for everything
+ * in the calendar module. It manages most resources.
+ */
 public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	
 	private JTabbedPane mTabbedPane;
@@ -251,8 +264,8 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 				public void actionPerformed(ActionEvent e)
 				{
 					int ID = ((Title)e.getSource()).ID;
-					System.out.println(ID);
 					mTabbedPane.remove(tabs.get(ID));
+					tabs.remove(ID);
 				}
 			};
 			
@@ -436,7 +449,26 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		
 		if (currentDisplayable instanceof Event) {
 			AddEventDisplay mAddEventDisplay = new AddEventDisplay((Event) currentDisplayable);
-			mAddEventDisplay.setTabId(instance.addTopLevelTab(mAddEventDisplay, "Edit Event", true));
+			boolean openNewTab = true;
+			JComponent tabToOpen = null;
+			
+			for(JComponent c : tabs.values())
+			{
+				if (openNewTab && c instanceof AddEventDisplay)
+				{
+					openNewTab = !((AddEventDisplay) c).matchingEvent(mAddEventDisplay);
+					tabToOpen = c;
+				}
+			}
+			if (openNewTab)
+			{
+				mAddEventDisplay.setTabId(instance.addTopLevelTab(mAddEventDisplay, "Edit Event", true));
+			}
+			else if (tabToOpen != null)
+			{
+				this.mTabbedPane.setSelectedComponent(tabToOpen);
+			}
+			
 		}
 		else if (currentDisplayable instanceof Commitment) {
 			AddCommitmentDisplay mAddCommitmentDisplay = new AddCommitmentDisplay((Commitment) currentDisplayable);

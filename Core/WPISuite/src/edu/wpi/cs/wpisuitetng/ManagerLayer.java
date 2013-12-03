@@ -27,6 +27,7 @@ import edu.wpi.cs.wpisuitetng.exceptions.UnauthorizedException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.Model;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryEntityManager;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentEntityManager;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventEntityManager;
 import edu.wpi.cs.wpisuitetng.modules.core.entitymanagers.ProjectManager;
@@ -79,6 +80,7 @@ public class ManagerLayer {
 		map.put("requirementmanager" + "iteration", new IterationEntityManager(data));
 		map.put("calevents", new EventEntityManager(data));
 		map.put("calcommitments", new CommitmentEntityManager(data));
+		map.put("calcategories", new CategoryEntityManager(data));
 
 		//add just your module to this list
 		String[] fullModuleList = {"core","defecttracker","postboard","requirementmanager","cal"};
@@ -196,25 +198,30 @@ public class ManagerLayer {
 			m = map.get(args[0]+args[1]).getEntity(s,args[2]);
 		}
 		
-        //return (m == null) ? "null" : gson.toJson(m, m.getClass());
-		
-		String response = "null";
-		
 		if(m != null)
-		{
-			response = "[";
-			for(Model n : m)
+		{	
+			StringBuilder responseBuilder = new StringBuilder("[");
+			for(int i = 0; i < m.length; i++)
 			{
-				response = response.concat(n.toJSON()+",");
+				if (m[i] == null)
+				{
+					throw new WPISuiteException("there was a null model");
+				}
+				
+				responseBuilder.append(m[i].toJSON());
+				
+				if (i < m.length-1)
+				{
+					responseBuilder.append(",");
+				}
 			}
-			if(m.length > 0)
-			{
-				response = response.substring(0, response.length() - 1); // remove trailing comma
-			}
-			response = response.concat("]");
+			
+			return responseBuilder.append("]").toString();
 		}
-		
-		return response;
+		else
+		{
+			return "null";
+		}
 	}
 	
 	/**create()

@@ -5,7 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors: Team Rolling Thunder
+ * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.models;
 
@@ -93,7 +93,7 @@ public class EventEntityManager implements EntityManager<Event> {
 	 * @param sto date to, DateTime formatted as String
 	 * @return retrieved events with overlapping range
 	 */
-	private Event[] getEventsByRange(Session ses, String sfrom, String sto) {
+	Event[] getEventsByRange(Session ses, String sfrom, String sto) {
 		DateTime from = serializer.parseDateTime(sfrom);
 		DateTime to = serializer.parseDateTime(sto);
 		List<Event> retrievedEvents = new ArrayList<>();
