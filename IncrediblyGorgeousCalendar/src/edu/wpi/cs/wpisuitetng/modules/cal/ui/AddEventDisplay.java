@@ -478,18 +478,6 @@ public class AddEventDisplay extends JPanel
 		return validateText(nameTextField.getText(), nameErrorLabel) && 
 				validateDate(startTimeDatePicker.getDate(), endTimeDatePicker.getDate(), dateErrorLabel);
 	}
-
-	public JTextField getEventNameField() {
-		return nameTextField;
-	}
-
-	public DatePicker getStartTimePicker() {
-		return startTimeDatePicker;
-	}
-
-	public DatePicker getEndTimePicker() {
-		return endTimeDatePicker;
-	}
 	
 	public boolean matchingEvent(AddEventDisplay other)
 	{
