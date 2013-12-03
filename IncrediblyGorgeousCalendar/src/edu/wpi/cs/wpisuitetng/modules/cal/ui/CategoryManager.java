@@ -156,10 +156,14 @@ public class CategoryManager extends JPanel {
 		// Add to UI
 		rightCategoryEdit.add(bottomEditPanel);
 		
+		
+		/** List model for the category display */
+		
 		JListModel = new DefaultListModel<Category>();
 		
 		categoriesList = new JList<Category>(JListModel);
 		
+		// Add click listener
 		categoriesList.addMouseListener(new MouseAdapter() {
 		    public void mouseClicked(MouseEvent evt) {
 		    	
@@ -177,6 +181,7 @@ public class CategoryManager extends JPanel {
 		    }
 		});
 		
+		// Set up cell renderer
 		categoriesList.setCellRenderer(new ListCellRenderer<Category>() {
 
 			@Override
@@ -282,7 +287,7 @@ public class CategoryManager extends JPanel {
 						errorText.setVisible(false);
 						Category c = new Category();
 						c.setName(categoryName.getText().trim());
-						//c.setColor(colorPicker.); // Get color from color picker
+						c.setColor(colorPicker.getCurrentColorState()); // Get color from color picker
 
 						System.out.println("I made it here! Woo!");
 						
