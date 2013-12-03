@@ -2,8 +2,8 @@ package edu.wpi.cs.wpisuitetng.modules.cal; // Change this to be the same packag
 
 import static org.junit.Assert.*;	// You'll need to import that function as well
 
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.BeforeClass;
 
 public class TestingTemplate {
 
@@ -11,7 +11,7 @@ public class TestingTemplate {
 	int sixsixsix;
 	String hello;
 	
-	@BeforeClass
+	@Before
 	public void setup() {
 		//Construct your global variables you need here
 		sixsixsix=333;

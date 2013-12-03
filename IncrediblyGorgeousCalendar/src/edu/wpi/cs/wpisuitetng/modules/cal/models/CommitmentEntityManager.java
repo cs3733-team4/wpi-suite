@@ -91,7 +91,7 @@ public class CommitmentEntityManager implements EntityManager<Commitment> {
 	 * @param sto date to, DateTime formatted as String
 	 * @return retrieved events with overlapping range
 	 */
-	private Commitment[] getCommitmentsByRange(Session ses, String sfrom, String sto) {
+	Commitment[] getCommitmentsByRange(Session ses, String sfrom, String sto) {
 		DateTime from = serializer.parseDateTime(sfrom);
 		DateTime to = serializer.parseDateTime(sto);
 		List<Commitment> retrievedCommitments = new ArrayList<>();

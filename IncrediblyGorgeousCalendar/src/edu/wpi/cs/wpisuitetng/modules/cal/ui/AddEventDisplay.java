@@ -341,53 +341,25 @@ public class AddEventDisplay extends JPanel
 		saveButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				try
-				{
-					startTimeDatePicker.getDate();
-					endTimeDatePicker.getDate();
-					errorText.setVisible(true);
-					
-					if (nameTextField.getText() == null || nameTextField.getText().trim().length() == 0)
-					{
-						errorText.setText("* Please enter an event title");
-					}
-					else if (!(startTimeDatePicker.getDate().getDayOfYear() == endTimeDatePicker.getDate().getDayOfYear() &&
-						startTimeDatePicker.getDate().getYear() == endTimeDatePicker.getDate().getYear()))
-					{
-						errorText.setText("* Event must start and end on the same date");
-					}
-					else if (startTimeDatePicker.getDate().isAfter(endTimeDatePicker.getDate())) {
-						errorText.setText("* Event start date must be before end date");
-					}
-					else
-					{
-						errorText.setVisible(false);
-						Event e = new Event();
-						e.setName(nameTextField.getText().trim());
-						e.setDescription(descriptionTextArea.getText());
-						e.setStart(startTimeDatePicker.getDate());
-						e.setEnd(endTimeDatePicker.getDate());
-						e.setProjectEvent(teamProjectCheckBox.isSelected());
-						e.setParticipants(participantsTextField.getText().trim());
-						
-						if (editEvent){
-							e.setEventID(existingEventID);
-							MainPanel.getInstance().updateEvent(e);
-						} else {
-							MainPanel.getInstance().addEvent(e);
-						}
-						
-						saveButton.setEnabled(false);
-						saveButton.setText("Saved!");
-						MainPanel.getInstance().closeTab(tabid);
-						MainPanel.getInstance().refreshView();
-					}
+				Event e = new Event();
+				e.setName(nameTextField.getText().trim());
+				e.setDescription(descriptionTextArea.getText());
+				e.setStart(startTimeDatePicker.getDate());
+				e.setEnd(endTimeDatePicker.getDate());
+				e.setProjectEvent(teamProjectCheckBox.isSelected());
+				e.setParticipants(participantsTextField.getText().trim());
+				
+				if (editEvent){
+					e.setEventID(existingEventID);
+					MainPanel.getInstance().updateEvent(e);
+				} else {
+					MainPanel.getInstance().addEvent(e);
 				}
-				catch (IllegalArgumentException exception)
-				{
-					errorText.setText("* Invalid Date/Time");
-					errorText.setVisible(true);
-				}
+				
+				saveButton.setEnabled(false);
+				saveButton.setText("Saved!");
+				MainPanel.getInstance().closeTab(tabid);
+				MainPanel.getInstance().refreshView();
 			}
 		});
 		
@@ -418,7 +390,7 @@ public class AddEventDisplay extends JPanel
 	}
 	
 	/**
-	 * 
+	 * Validates text has been entered (used for event name)
 	 * @param mText text to be validated
 	 * @param mErrorLabel JLabel to display resulting error message
 	 * @return true if all pass, else return true
@@ -429,20 +401,14 @@ public class AddEventDisplay extends JPanel
 		{
 			mErrorLabel.setText("* Required Field");
 			return false;
-		/*will be handled when parsed
-		}else if(mText.matches("^.*[^a-zA-Z0-9.,()$ ].*$"))
-		{
-			
-			mErrorLabel.setText("* Invalid Name/Characters");
-		*/
 		}
 		return true;
 	}
 	
 	/**
-	 * 
-	 * @param mStartTime first DatePicker to validate and compare
-	 * @param mEndTime second DatePicker to validate and compare
+	 * Validates that an event has valid start and end dates and times
+	 * @param mStartTime starting DateTime to validate and compare
+	 * @param mEndTime ending DateTime to validate and compare
 	 * @param mErrorLabel text field to be updated with any error message
 	 * @return true if all validation checks pass, else returns false
 	 */
@@ -479,18 +445,6 @@ public class AddEventDisplay extends JPanel
 				validateDate(startTimeDatePicker.getDate(), endTimeDatePicker.getDate(), dateErrorLabel);
 	}
 
-	public JTextField getEventNameField() {
-		return nameTextField;
-	}
-
-	public DatePicker getStartTimePicker() {
-		return startTimeDatePicker;
-	}
-
-	public DatePicker getEndTimePicker() {
-		return endTimeDatePicker;
-	}
-	
 	public boolean matchingEvent(AddEventDisplay other)
 	{
 		return this.eventToEdit != null && this.eventToEdit.equals(other.eventToEdit);

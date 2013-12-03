@@ -1,6 +1,9 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.navigation;
 
 import static org.junit.Assert.*;
+
+import java.lang.reflect.Field;
+
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.CalendarNavigationModule;
 
 import org.joda.time.DateTime;
@@ -19,28 +22,37 @@ public class CalendarNavigationModuleTest {
 	
 	
 	@Test
-	public void testGetPrevious() {
+	public void testGetPrevious() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		CalendarNavigationModule mCalYearModuleTimeOne = new CalendarNavigationModule(timeOne, null);
 		CalendarNavigationModule mCalYearModuleTimeTwo = new CalendarNavigationModule(timeTwo, null);
-		
-		assertEquals("Previous should return timeOne", mCalYearModuleTimeOne.getTime(), mCalYearModuleTimeTwo.getPrevious().getTime());
+		CalendarNavigationModule Result = mCalYearModuleTimeTwo.getPrevious();
+		Field f= mCalYearModuleTimeOne.getClass().getDeclaredField("time");
+		f.setAccessible(true);
+		assertEquals("Previous should return timeOne",f.get(mCalYearModuleTimeOne), f.get(Result));
 	}
 	
 	@Test
-	public void testGetFollowing() {
+	public void testGetFollowing() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		CalendarNavigationModule mCalYearModuleTimeThree = new CalendarNavigationModule(timeThree, null);
 		CalendarNavigationModule mCalYearModuleTimeTwo = new CalendarNavigationModule(timeTwo, null);
+		CalendarNavigationModule Result = mCalYearModuleTimeTwo.getFollowing();
 		
-		assertEquals("Following should return timeThree", mCalYearModuleTimeThree.getTime(), mCalYearModuleTimeTwo.getFollowing().getTime());
+		Field f= mCalYearModuleTimeTwo.getClass().getDeclaredField("time");
+		f.setAccessible(true);
+		
+		assertEquals("Following should return timeThree", f.get(mCalYearModuleTimeThree), f.get(Result));
 	}
 	
 	@Test
-	public void testGetFollowingThenGetPreviousTwice() {
+	public void testGetFollowingThenGetPreviousTwice() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		CalendarNavigationModule mCalYearModuleTimeOne = new CalendarNavigationModule(timeOne, null);
 		CalendarNavigationModule mCalYearModuleTimeTwo = new CalendarNavigationModule(timeTwo, null);
+		CalendarNavigationModule Result = mCalYearModuleTimeTwo.getFollowing().getPrevious().getPrevious();
 		
-		assertEquals("Following should return timeOne", mCalYearModuleTimeOne.getTime(), 
-				mCalYearModuleTimeTwo.getFollowing().getPrevious().getPrevious().getTime());
+		Field f= mCalYearModuleTimeOne.getClass().getDeclaredField("time");
+		f.setAccessible(true);
+		
+		assertEquals("Following should return timeOne", f.get(mCalYearModuleTimeOne), f.get(Result));
 	}
 
 }
