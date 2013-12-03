@@ -38,12 +38,12 @@ public class SidebarTabbedPaneTest {
         	sidebarEditButtonField.setAccessible(true);
         	JButton sidebarEditButton = ((JButton)sidebarEditButtonField.get(sidebar));
         	
-        	Field sidebarCancelButtonField = sidebarClass.getDeclaredField("detailCancelButton");
-        	sidebarCancelButtonField.setAccessible(true);
-        	JButton sidebarCancelButton = ((JButton)sidebarCancelButtonField.get(sidebar));
+        	Field sidebarDeleteButtonField = sidebarClass.getDeclaredField("detailDeleteButton");
+        	sidebarDeleteButtonField.setAccessible(true);
+        	JButton sidebarDeleteButton = ((JButton)sidebarDeleteButtonField.get(sidebar));
         	
         	assertFalse(sidebarEditButton.isEnabled());
-        	assertFalse(sidebarCancelButton.isEnabled());
+        	assertFalse(sidebarDeleteButton.isEnabled());
         }catch(Exception e)
         {
         	e.printStackTrace();
@@ -60,17 +60,17 @@ public class SidebarTabbedPaneTest {
         	sidebarEditButtonField.setAccessible(true);
         	JButton sidebarEditButton = ((JButton) sidebarEditButtonField.get(sidebar));
         	
-        	Field sidebarCancelButtonField = sidebarClass.getDeclaredField("detailCancelButton");
-        	sidebarCancelButtonField.setAccessible(true);
-        	JButton sidebarCancelButton = ((JButton) sidebarCancelButtonField.get(sidebar));
+        	Field sidebarDeleteButtonField = sidebarClass.getDeclaredField("detailDeleteButton");
+        	sidebarDeleteButtonField.setAccessible(true);
+        	JButton sidebarDeleteButton = ((JButton) sidebarDeleteButtonField.get(sidebar));
         	
         	assertFalse(sidebarEditButton.isEnabled());
-        	assertFalse(sidebarCancelButton.isEnabled());
+        	assertFalse(sidebarDeleteButton.isEnabled());
         
         	sidebar.showDetails(new Event());
         
         	assertTrue(sidebarEditButton.isEnabled());
-        	assertTrue(sidebarCancelButton.isEnabled());
+        	assertTrue(sidebarDeleteButton.isEnabled());
     	
         }catch(Exception e)
         {
@@ -88,17 +88,17 @@ public class SidebarTabbedPaneTest {
         	sidebarEditButtonField.setAccessible(true);
         	JButton sidebarEditButton = ((JButton) sidebarEditButtonField.get(sidebar));
         	
-        	Field sidebarCancelButtonField = sidebarClass.getDeclaredField("detailCancelButton");
-        	sidebarCancelButtonField.setAccessible(true);
-        	JButton sidebarCancelButton = ((JButton) sidebarCancelButtonField.get(sidebar));
+        	Field sidebarDeleteButtonField = sidebarClass.getDeclaredField("detailDeleteButton");
+        	sidebarDeleteButtonField.setAccessible(true);
+        	JButton sidebarDeleteButton = ((JButton) sidebarDeleteButtonField.get(sidebar));
         	
         	assertFalse(sidebarEditButton.isEnabled());
-        	assertFalse(sidebarCancelButton.isEnabled());
+        	assertFalse(sidebarDeleteButton.isEnabled());
         
-        	sidebar.showDetails(new Event());
+        	sidebar.showDetails(new Commitment());
         
         	assertTrue(sidebarEditButton.isEnabled());
-        	assertTrue(sidebarCancelButton.isEnabled());
+        	assertTrue(sidebarDeleteButton.isEnabled());
     	
         }catch(Exception e)
         {
@@ -116,22 +116,22 @@ public class SidebarTabbedPaneTest {
         	sidebarEditButtonField.setAccessible(true);
         	JButton sidebarEditButton = ((JButton) sidebarEditButtonField.get(sidebar));
         	
-        	Field sidebarCancelButtonField = sidebarClass.getDeclaredField("detailCancelButton");
-        	sidebarCancelButtonField.setAccessible(true);
-        	JButton sidebarCancelButton = ((JButton) sidebarCancelButtonField.get(sidebar));
+        	Field sidebarDeleteButtonField = sidebarClass.getDeclaredField("detailDeleteButton");
+        	sidebarDeleteButtonField.setAccessible(true);
+        	JButton sidebarDeleteButton = ((JButton) sidebarDeleteButtonField.get(sidebar));
         	
         	assertFalse(sidebarEditButton.isEnabled());
-        	assertFalse(sidebarCancelButton.isEnabled());
+        	assertFalse(sidebarDeleteButton.isEnabled());
         
         	sidebar.showDetails(new Event());
         
         	assertTrue(sidebarEditButton.isEnabled());
-        	assertTrue(sidebarCancelButton.isEnabled());
+        	assertTrue(sidebarDeleteButton.isEnabled());
         	
         	sidebar.clearDetails();
         	
         	assertFalse(sidebarEditButton.isEnabled());
-        	assertFalse(sidebarCancelButton.isEnabled());
+        	assertFalse(sidebarDeleteButton.isEnabled());
     	
         }catch(Exception e)
         {
