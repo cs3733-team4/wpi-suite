@@ -251,8 +251,11 @@ public class CategoryManager extends JPanel {
 						errorText.setVisible(false);
 						Category c = new Category();
 						c.setName(categoryName.getText().trim());
-						System.out.println("I made it here! Woo!");
 						//c.setColor(colorPicker.); // Get color from color picker
+
+						System.out.println("I made it here! Woo!");
+						
+						categories.putCategory(c);
 						
 						/* Need to figure out how to distinguish between editing an event or adding
 						if (editCategory){
