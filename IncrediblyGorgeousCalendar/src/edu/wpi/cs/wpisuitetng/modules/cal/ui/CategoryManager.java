@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -139,6 +140,7 @@ public class CategoryManager extends JPanel {
 		colorPicker.setMaximumSize(new Dimension(32767, 53));
 		
 		// Add to UI
+		rightCategoryEdit.add(Box.createRigidArea(new Dimension (0, 6)));
 		rightCategoryEdit.add(colorPicker);
 		
 		/** Buttons */
@@ -170,7 +172,7 @@ public class CategoryManager extends JPanel {
 		
 		categoriesList = new JList<Category>(JListModel);
 		
-		// Add click listener
+		/* Add click listener
 		categoriesList.addMouseListener(new MouseAdapter() {
 		    public void mouseClicked(MouseEvent evt) {
 		    	
@@ -187,7 +189,7 @@ public class CategoryManager extends JPanel {
 		    	categoryName.setText(selectedCategory.getName());
 		    	
 		    }
-		});
+		}); */
 		
 		// Set up cell renderer
 		categoriesList.setCellRenderer(new ListCellRenderer<Category>() {
@@ -213,10 +215,7 @@ public class CategoryManager extends JPanel {
 		if (allCategories.size() == 0){
 			System.out.println("A&V : Called");
 			Category test = new Category();
-			test.setName("whee");
-			JListModel.addElement(test);
-			test = new Category();
-			test.setName("wyayayae");
+			test.setName("No categories created");
 			JListModel.addElement(test);
 		} else {
 			//JListModel.removeElement(noCategoryLabel);
@@ -301,12 +300,14 @@ public class CategoryManager extends JPanel {
 							c.setCategoryID(selectedCategoryUUID);
 							MainPanel.getInstance().updateCategory(c);
 							JListModel.removeElement(selectedCategory);
-							selectedCategory = null; // Category was removed
 							JListModel.addElement(c);
 						} else {
 							MainPanel.getInstance().addCategory(c);
 							JListModel.addElement(c);
 						}
+						
+						categoryName.setText(""); // Clear category name text field upon addition
+						selectedCategory = null; // Clear selection
 						
 						updateList.setEnabled(false);
 
