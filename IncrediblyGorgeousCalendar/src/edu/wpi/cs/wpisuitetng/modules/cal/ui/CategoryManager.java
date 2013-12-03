@@ -41,6 +41,8 @@ public class CategoryManager extends JPanel {
 	private JPanel leftCategoryList;
 	private JPanel rightCategoryEdit;
 	private JTextField categoryName;
+	private JPanel categoryNamePanel;
+	private JLabel categoryNameLabel;
 	private JPanel colorPicker;
 	private JButton updateList;
 	private JCheckBox deleteCategory;
@@ -63,9 +65,19 @@ public class CategoryManager extends JPanel {
 		rightCategoryEdit = new JPanel();
 		rightCategoryEdit.setLayout(new BoxLayout(rightCategoryEdit, BoxLayout.Y_AXIS));
 		
+		
+		categoryNamePanel = new JPanel();
+		categoryNamePanel.setLayout(new BoxLayout(categoryNamePanel, BoxLayout.X_AXIS));
+		
+		categoryNameLabel = new JLabel("Name: ");
+		categoryNamePanel.add(categoryNameLabel);
+		
 		categoryName = new JTextField();
-		categoryName.setPreferredSize(new Dimension(Integer.MAX_VALUE, 100));
-		rightCategoryEdit.add(categoryName);
+		categoryName.setPreferredSize(new Dimension(Integer.MAX_VALUE, 20));
+		categoryName.setMaximumSize(new Dimension(Integer.MAX_VALUE, 20));
+		categoryNamePanel.add(categoryName);
+		
+		rightCategoryEdit.add(categoryNamePanel);
 		
 		colorPicker = new JPanel();
 		rightCategoryEdit.add(colorPicker);
