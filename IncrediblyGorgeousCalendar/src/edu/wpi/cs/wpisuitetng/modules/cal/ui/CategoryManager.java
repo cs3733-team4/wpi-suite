@@ -35,7 +35,7 @@ import javax.swing.event.DocumentListener;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryModel;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.PastelColorPicker;
 
 /**
  * Victor: Left pretty, left default (no categories), left clickable (populate right fields), save/update
@@ -52,7 +52,7 @@ public class CategoryManager extends JPanel {
 	private JPanel categoryNamePanel;
 	private JLabel categoryNameLabel;
 	private JLabel categoryErrorLabel;
-	private JPanel colorPicker;
+	private PastelColorPicker colorPicker;
 	private JButton updateList;
 	private JCheckBox deleteCategory;
 	private DefaultListModel<Category> JListModel;
@@ -64,7 +64,6 @@ public class CategoryManager extends JPanel {
 	protected boolean editCategory;
 	
 	public CategoryManager() {
-				
 		categories = new CategoryModel();
 		allCategories = categories.getAllCategories();
 		
@@ -127,7 +126,8 @@ public class CategoryManager extends JPanel {
 		/** Color Picker */
 		
 		// Panel
-		colorPicker = new JPanel();
+		colorPicker = new PastelColorPicker();
+		colorPicker.setPreferredSize(new Dimension(360, 50));
 		
 		// Add to UI
 		rightCategoryEdit.add(colorPicker);

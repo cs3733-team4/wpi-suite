@@ -31,6 +31,7 @@ public class EventToolbarGroup extends ToolbarGroupView {
 	
 	public EventToolbarGroup(final MainPanel mMainPanel) {
 		super("Events");
+		setPreferredWidth(500);
 		
 		//this.eventContentPanel.setLayout(new BoxLayout(eventContentPanel, BoxLayout.X_AXIS));
 		

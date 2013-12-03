@@ -220,7 +220,7 @@ public class VanGoghPainting extends JPanel
 		int emax = (int)Math.floor(erowsInter);
 		int rows = (int)Math.ceil(erowsInter);
 		System.out.println("we are " + traveller + " and have " + emax + ", " + rows + ", " + zero + "  x " + headerHeight + ", " + lineheightp);
-		ArrayList<Rational> ratpack = new ArrayList<>(rows);
+		ArrayList<Rational> ratpack = new ArrayList<>(rows<0?0:rows);
 		for (int i = 0; i <= rows; i++) // <= for extra buffer row
 		{
 			ratpack.add(new Rational(1, 1));
