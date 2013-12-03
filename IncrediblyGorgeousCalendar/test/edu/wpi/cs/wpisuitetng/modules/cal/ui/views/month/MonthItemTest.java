@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.modules.cal.month;
+package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month;
 
 import static org.junit.Assert.assertEquals;
 

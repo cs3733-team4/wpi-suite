@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.modules.cal.eventui;
+package edu.wpi.cs.wpisuitetng.modules.cal.ui;
 
 import static org.junit.Assert.*;
 

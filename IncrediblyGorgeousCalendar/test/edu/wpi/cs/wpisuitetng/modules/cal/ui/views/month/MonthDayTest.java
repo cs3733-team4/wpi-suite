@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.modules.cal.month;
+package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month;
 
 import static org.junit.Assert.*;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
