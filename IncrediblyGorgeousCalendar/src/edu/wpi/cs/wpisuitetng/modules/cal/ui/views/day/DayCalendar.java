@@ -62,7 +62,6 @@ public class DayCalendar extends AbstractCalendar
 
 	private void generateDay()
 	{
-		if (this.getWidth() > 0)this.setSizeW(this.getWidth());
 		this.holder.removeAll();
 		this.removeAll();
 		this.add(scroll, BorderLayout.CENTER);
