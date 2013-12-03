@@ -40,12 +40,6 @@ import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.PastelColorPicker;
 
-/**
- * Victor: Left pretty, left default (no categories), left clickable (populate right fields), save/update
- * Alex: Right pretty, delete
- *
- * Add new ribbon bar group
- */
 public class CategoryManager extends JPanel {
 	
 	private int tabid;
@@ -280,6 +274,14 @@ public class CategoryManager extends JPanel {
 				try
 				{
 					errorText.setVisible(true);
+					
+					for (Category cat : allCategories){
+						if (cat.getName().equals(categoryName.getText())){
+							errorText.setText("* Category name already exists");
+							return;
+						}
+					}
+					
 					
 					if (categoryName.getText() == null || categoryName.getText().trim().length() == 0)
 					{
