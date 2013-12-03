@@ -11,6 +11,7 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.ui;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -26,6 +27,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryModel;
@@ -44,6 +47,7 @@ public class CategoryManager extends JPanel {
 	private JTextField categoryName;
 	private JPanel categoryNamePanel;
 	private JLabel categoryNameLabel;
+	private JLabel categoryErrorLabel;
 	private JPanel colorPicker;
 	private JButton updateList;
 	private JCheckBox deleteCategory;
@@ -77,12 +81,39 @@ public class CategoryManager extends JPanel {
 		// Label
 		categoryNameLabel = new JLabel("Name: ");
 		categoryNamePanel.add(categoryNameLabel);
+		categoryErrorLabel = new JLabel();
 		
 		// Text Field
 		categoryName = new JTextField();
-		categoryName.setPreferredSize(new Dimension(Integer.MAX_VALUE, 20));
-		categoryName.setMaximumSize(new Dimension(Integer.MAX_VALUE, 20));
+		categoryName.setColumns(25);
+		categoryName.setPreferredSize(new Dimension(300, 20));
+		categoryName.setMaximumSize(new Dimension(300, 20));
+		
+		categoryName.getDocument().addDocumentListener(new DocumentListener() {
+			
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				categoryErrorLabel.setVisible(!validateText(categoryName.getText(), categoryErrorLabel));
+				updateList.setEnabled(isSaveable());
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				categoryErrorLabel.setVisible(!validateText(categoryName.getText(), categoryErrorLabel));
+				updateList.setEnabled(isSaveable());
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				//Not triggered by plaintext fields
+			}
+		});
+		
+		categoryErrorLabel.setForeground(Color.RED);
+		validateText(categoryName.getText(), categoryErrorLabel);
+
 		categoryNamePanel.add(categoryName);
+		categoryNamePanel.add(categoryErrorLabel);
 		
 		// Add to UI
 		rightCategoryEdit.add(categoryNamePanel);
@@ -103,6 +134,7 @@ public class CategoryManager extends JPanel {
 		// Buttons
 		updateList = new JButton("Update List");
 		deleteCategory = new JCheckBox("Delete selected");
+		deleteCategory.setSelected(false);
 
 		// Add to Panel
 		bottomEditPanel.add(updateList);
@@ -146,6 +178,33 @@ public class CategoryManager extends JPanel {
 		this.add(rightCategoryEdit);
 	}
 	
+	/**
+	 * 
+	 * @param mText text to be validated
+	 * @param mErrorLabel JLabel to display resulting error message
+	 * @return true if all pass, else return true
+	 */
+	private boolean validateText(String mText, JLabel mErrorLabel)
+	{
+		if(mText==null || mText.trim().length()==0)
+		{
+			mErrorLabel.setText("* Required Field");
+			return false;
+		/*will be handled when parsed
+		}else if(mText.matches("^.*[^a-zA-Z0-9.,()$ ].*$"))
+		{
+			
+			mErrorLabel.setText("* Invalid Name/Characters");
+		*/
+		}
+		return true;
+	}
+
+	public boolean isSaveable()
+	{
+		return validateText(categoryName.getText(), categoryErrorLabel);
+	}
+
 	/**
 	 * Set tab id for the edit category view
 	 * @param id value to set id to
