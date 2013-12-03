@@ -25,6 +25,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
+import javax.swing.border.EmptyBorder;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryModel;
@@ -62,31 +63,52 @@ public class CategoryManager extends JPanel {
 		leftCategoryList.setLayout(new GridLayout(1,1));
 		leftCategoryList.setPreferredSize(new Dimension(350, 900));
 		leftCategoryList.setMinimumSize(new Dimension(350, 900));
+		
 		rightCategoryEdit = new JPanel();
 		rightCategoryEdit.setLayout(new BoxLayout(rightCategoryEdit, BoxLayout.Y_AXIS));
+		rightCategoryEdit.setBorder(new EmptyBorder(10, 10, 10, 10));
 		
+		/** Name Panel */
 		
+		// Panel
 		categoryNamePanel = new JPanel();
 		categoryNamePanel.setLayout(new BoxLayout(categoryNamePanel, BoxLayout.X_AXIS));
 		
+		// Label
 		categoryNameLabel = new JLabel("Name: ");
 		categoryNamePanel.add(categoryNameLabel);
 		
+		// Text Field
 		categoryName = new JTextField();
 		categoryName.setPreferredSize(new Dimension(Integer.MAX_VALUE, 20));
 		categoryName.setMaximumSize(new Dimension(Integer.MAX_VALUE, 20));
 		categoryNamePanel.add(categoryName);
 		
+		// Add to UI
 		rightCategoryEdit.add(categoryNamePanel);
 		
+		/** Color Picker */
+		
+		// Panel
 		colorPicker = new JPanel();
+		
+		// Add to UI
 		rightCategoryEdit.add(colorPicker);
 		
+		/** Buttons */
+		
+		// Panel
 		bottomEditPanel = new JPanel();
+		
+		// Buttons
 		updateList = new JButton("Update List");
-		bottomEditPanel.add(updateList);
 		deleteCategory = new JCheckBox("Delete selected");
+
+		// Add to Panel
+		bottomEditPanel.add(updateList);
 		bottomEditPanel.add(deleteCategory);
+		
+		// Add to UI
 		rightCategoryEdit.add(bottomEditPanel);
 		
 		JListModel = new DefaultListModel<Category>();
