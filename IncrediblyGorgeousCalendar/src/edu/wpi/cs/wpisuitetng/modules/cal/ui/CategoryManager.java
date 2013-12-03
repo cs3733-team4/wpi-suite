@@ -19,7 +19,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
@@ -33,6 +35,7 @@ import javax.swing.ListCellRenderer;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryModel;
@@ -61,19 +64,22 @@ public class CategoryManager extends JPanel {
 	private JList<Category> categoriesList;
 	private JPanel bottomEditPanel;
 	private List<Category> allCategories;
-	private CategoryModel categories;
 	private JLabel errorText;
-	protected boolean editCategory;
+	private boolean editCategory = true;
+	private UUID selectedCategoryUUID;
+	private Category selectedCategory;
+	//TODO Note: When clicking off of a category on list, selectedCategory must be set to null
+	// to avoid deleting unwanted categories
 	
 	public CategoryManager() {
-		categories = new CategoryModel();
-		allCategories = categories.getAllCategories();
+		allCategories = MainPanel.getInstance().getCategoryModel().getAllCategories();
 		
 		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		leftCategoryList = new JPanel();
 		leftCategoryList.setLayout(new GridLayout(1,1));
 		leftCategoryList.setPreferredSize(new Dimension(350, 900));
 		leftCategoryList.setMinimumSize(new Dimension(350, 900));
+		leftCategoryList.setMaximumSize(new Dimension(350, 900));
 		
 		rightCategoryEdit = new JPanel();
 		rightCategoryEdit.setLayout(new BoxLayout(rightCategoryEdit, BoxLayout.Y_AXIS));
@@ -129,7 +135,8 @@ public class CategoryManager extends JPanel {
 		
 		// Panel
 		colorPicker = new PastelColorPicker();
-		colorPicker.setPreferredSize(new Dimension(360, 50));
+		colorPicker.setPreferredSize(new Dimension(32767, 53));
+		colorPicker.setMaximumSize(new Dimension(32767, 53));
 		
 		// Add to UI
 		rightCategoryEdit.add(colorPicker);
@@ -150,7 +157,7 @@ public class CategoryManager extends JPanel {
 
 		// Add to Panel
 		bottomEditPanel.add(updateList);
-		bottomEditPanel.add(deleteCategory);
+		//bottomEditPanel.add(deleteCategory);
 		bottomEditPanel.add(errorText);
 		
 		// Add to UI
@@ -173,10 +180,11 @@ public class CategoryManager extends JPanel {
 		    	
 		        // Get category object
 		    	categoriesList.setSelectedIndex(index);
-		    	Category selected = (Category) categoriesList.getSelectedValue();
+		    	selectedCategory = (Category) categoriesList.getSelectedValue();
 		    	
 		    	// Display data from selected category object
-		    	categoryName.setText(selected.getName());
+		    	selectedCategoryUUID = selectedCategory.getUUID();
+		    	categoryName.setText(selectedCategory.getName());
 		    	
 		    }
 		});
@@ -289,23 +297,19 @@ public class CategoryManager extends JPanel {
 						c.setName(categoryName.getText().trim());
 						c.setColor(colorPicker.getCurrentColorState()); // Get color from color picker
 
-						System.out.println("I made it here! Woo!");
-						
-						categories.putCategory(c);
-						
-						/* Need to figure out how to distinguish between editing an event or adding
 						if (editCategory){
-							e.setEventID(existingEventID);
-							MainPanel.getInstance().updateEvent(e);
+							c.setCategoryID(selectedCategoryUUID);
+							MainPanel.getInstance().updateCategory(c);
+							JListModel.removeElement(selectedCategory);
+							selectedCategory = null; // Category was removed
+							JListModel.addElement(c);
 						} else {
-							MainPanel.getInstance().addEvent(e);
+							MainPanel.getInstance().addCategory(c);
+							JListModel.addElement(c);
 						}
-						*/
 						
 						updateList.setEnabled(false);
-						updateList.setText("Saved!");
-						MainPanel.getInstance().closeTab(tabid);
-						MainPanel.getInstance().refreshView();
+
 					}
 				}
 				catch (IllegalArgumentException exception)

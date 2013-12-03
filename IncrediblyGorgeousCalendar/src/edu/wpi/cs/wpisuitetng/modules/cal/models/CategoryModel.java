@@ -2,6 +2,7 @@ package edu.wpi.cs.wpisuitetng.modules.cal.models;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 
 public class CategoryModel {
@@ -35,4 +36,13 @@ public class CategoryModel {
         public boolean putCategory(Category toAdd){
                 return ServerManager.put("cal/categories", toAdd.toJSON());
         }
+        
+        /**
+         * @param toUpdate
+         * @return boolean if the post request was succesful
+         */
+    	public boolean updateCategory(Category toUpdate)
+    	{
+    		return ServerManager.post("cal/categories", toUpdate.toJSON());
+    	}
 }

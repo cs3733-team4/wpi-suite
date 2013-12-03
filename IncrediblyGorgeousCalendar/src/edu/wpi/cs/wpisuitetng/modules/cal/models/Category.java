@@ -135,4 +135,13 @@ public class Category extends AbstractModel
         public Object getCategoryID() {
                 return this.categoryID;
         }
+        
+    	/**
+    	 * @param categoryID
+    	 *            the categoryID to set
+    	 */
+    	public void setCategoryID(UUID categoryID)
+    	{
+    		this.categoryID = categoryID;
+    	}
 }

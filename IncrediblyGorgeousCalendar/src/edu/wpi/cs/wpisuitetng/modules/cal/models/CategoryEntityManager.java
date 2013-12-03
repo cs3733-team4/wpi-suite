@@ -225,14 +225,14 @@ public class CategoryEntityManager implements EntityManager<Category> {
                                 
                 Category existingCategory = (Category)oldCategories.get(0);                
 
-                // Copy values to old event and fill in our changeset appropriately
-                // TODO: existingCategory.copyFrom(updatedCategory);
                 
-                if(!db.save(existingCategory, session.getProject())) {
+                db.delete(existingCategory);
+                
+                if(!db.save(updatedCategory, session.getProject())) {
                         throw new WPISuiteException();
                 }
                 
-                return existingCategory;
+                return updatedCategory;
         }
 
         @Override
