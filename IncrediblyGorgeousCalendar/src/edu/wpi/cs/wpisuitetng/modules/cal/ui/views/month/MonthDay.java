@@ -193,12 +193,6 @@ public class MonthDay extends JPanel
 		
 		super.doLayout();
 	}
-	
-	// Added for testing purposes
-	boolean hasEvent(Event e)
-	{
-		return items.contains(e);
-	}
 
 	public void clear()
 	{
