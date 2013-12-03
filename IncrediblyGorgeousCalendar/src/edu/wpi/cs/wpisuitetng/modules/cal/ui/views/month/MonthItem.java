@@ -31,7 +31,8 @@ import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
  */
 public class MonthItem extends JPanel
 {	
-	JLabel time = new JLabel(), desc = new JLabel();
+	JLabel time = new JLabel(), desc = new JLabel(), lastArrow = new JLabel();
+	
 	private Displayable mDisplayable;
 	
 	
@@ -83,22 +84,41 @@ public class MonthItem extends JPanel
         else if (ndisp instanceof Event)
         {
 
+        	lastArrow.setFont(new java.awt.Font("DejaVu Sans", Font.BOLD, 12));
             time.setFont(new java.awt.Font("DejaVu Sans", Font.BOLD, 12));
         	if (isStartBeforeCurrent(day, ((Event)ndisp).getStart()) && isEndAfterCurrent(day, ((Event)ndisp).getEnd()))
-            	time.setText("\u2194");//the event goes before and after
+        	{
+        		time.setText("\u2190");//the event goes before and after
+        		lastArrow.setText(" \u2192");
+        	}
         	else if (isStartBeforeCurrent(day, ((Event)ndisp).getStart()))
+        	{
+        		lastArrow.setText(null);
         		time.setText("\u2190");
-        	else
+        	}
+        	else if(isEndAfterCurrent(day, ((Event)ndisp).getEnd()))
+        	{
         		time.setText(simpleTime(mDisplayable.getDate()));
+        		lastArrow.setText(" \u2192");
+        	}
+        	else
+        	{
+        		lastArrow.setText(null);
+        		time.setText(simpleTime(mDisplayable.getDate()));
+        	}
         }
+        lastArrow.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 3));
         time.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 3));
         add(time);
 
-        desc.setText(mDisplayable.getName());
+		desc.setText(mDisplayable.getName());
+       
         desc.setFont(new java.awt.Font("DejaVu Sans", Font.PLAIN, 12));
         desc.setMinimumSize(new java.awt.Dimension(10, 15));
         add(desc);
-
+        
+        if (lastArrow.getText()!=null)
+        	add(lastArrow);
 		
 		addMouseListener(new MouseListener() {
 			
