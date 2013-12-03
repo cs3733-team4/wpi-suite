@@ -28,6 +28,12 @@ public class YearCalendarTest {
 	}
 	
 	@Test
+	public void testCorrectDate() {
+		YearCalendar YC = new YearCalendar(time2000,events);
+		assertNotNull("A Year calendar will display the year it was given on initialization", YC);
+	}
+	
+	@Test
 	public void testNext() {
 		YearCalendar YC = new YearCalendar(time2000,events);
 	}
