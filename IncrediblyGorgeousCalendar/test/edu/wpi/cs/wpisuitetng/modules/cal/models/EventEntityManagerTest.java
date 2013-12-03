@@ -10,6 +10,7 @@ import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
+import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
 import edu.wpi.cs.wpisuitetng.modules.cal.MockData;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventEntityManager;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
@@ -205,14 +206,14 @@ public class EventEntityManagerTest {
                 assertEquals("getEntity will return an empty array if no events are within the given range", 0 ,eem.getEntity(ses1,"filter-events-by-range,20500101T010100.000Z,20500101T010100.000Z").length);
         }
         
-        @Test(expected=NullPointerException.class)
+        @Test(expected=NotFoundException.class)
         public void testGetEntityWrongInput() throws WPISuiteException {
                 EventEntityManager eem = new EventEntityManager(db);
                 eem.makeEntity(ses1, eString);
                 eem.makeEntity(ses1, eeString);
                 eem.makeEntity(ses1, eeeString);
                 
-                assertEquals("getEntity return null if anything but filter-events-by-range is the first string argument", null, eem.getEntity(ses1,"filter-events-by-time,20000101T000000.000Z,20000102T010000.000Z")[0].getName());
+                assertEquals("getEntity return an error if anything but filter-events-by-range is the first string argument", null, eem.getEntity(ses1,"filter-events-by-time,20000101T000000.000Z,20000102T010000.000Z")[0].getName());
         }
         
         @Test

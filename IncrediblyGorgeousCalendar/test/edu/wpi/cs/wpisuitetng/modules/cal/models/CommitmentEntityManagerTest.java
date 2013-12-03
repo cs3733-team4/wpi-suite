@@ -223,7 +223,7 @@ public class CommitmentEntityManagerTest {
                 // This method is really just another way of calling getCommitmentsByRange with new inputs; as such, it has the same limitations and only needs basic testing
                 
                 assertEquals("getEntity will return a commitment in the database if it was stored there before",e.getName(),cem.getEntity(ses1,"filter-commitments-by-range,20000101T010000.000Z,20000102T030000.000Z")[0].getName());
-                assertEquals("getEntity will return a commitment in the database if it was stored there before",eee.getName(),cem.getEntity(ses1,"filter-commitments-by-range,20000104T030000.000Z,20000104T070100.000Z")[0].getName());
+                assertEquals("getEntity will return a commitment in the database if it was stored there before",eee.getName(),cem.getEntity(ses1,"filter-commitments-by-range,20000103T030000.000Z,20000104T070100.000Z")[0].getName());
                 assertEquals("getEntity will return an empty array if no commitments are within the given range", 0 ,cem.getEntity(ses1,"filter-commitments-by-range,20500101T010100.000Z,20500101T010100.000Z").length);
         }
         
