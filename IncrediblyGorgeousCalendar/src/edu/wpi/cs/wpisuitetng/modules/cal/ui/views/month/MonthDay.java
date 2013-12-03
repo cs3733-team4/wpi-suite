@@ -14,6 +14,8 @@ import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.swing.JLabel;
@@ -161,9 +163,34 @@ public class MonthDay extends JPanel
 		add(header);
 		total -= header.getHeight();
 		
+	
+		
 		ArrayList<Displayable> allitems = new ArrayList<>(events.size() + commitments.size());
 		allitems.addAll(events);
 		allitems.addAll(commitments);
+		
+		Collections.sort(allitems, new Comparator<Displayable>() {
+
+			@Override
+			public int compare(Displayable o1, Displayable o2) {
+				if ((o1 instanceof Event) && (o2 instanceof Commitment))
+					return -1;
+				else if ((o1 instanceof Commitment) && (o2 instanceof Event))
+					return 1;
+				else if ((o1 instanceof Event) && (o2 instanceof Event))//both events so check multiday event
+				{
+					if (((Event)o1).isMultiDayEvent() && !((Event)o2).isMultiDayEvent())
+						return -1;
+					else if (!((Event)o1).isMultiDayEvent() && ((Event)o2).isMultiDayEvent())
+						return 1;
+				}
+				//if it gets to this poing then they are both commitments, or both multi day events, or both single day events
+				if (o1.getDate().isBefore(o2.getDate()))
+					return -1;
+				else//will default to 1, no need to check if they start at the same time....
+					return 1;
+			}
+		});
 		
 		for (Displayable elt : allitems)
 		{
