@@ -77,19 +77,22 @@ public class ServerManager {
 	}
 	public static boolean put(String path, String json)
 	{
-		final Request request = Network.getInstance().makeRequest(path,
-				HttpMethod.PUT);
-		return sendData(request, path, json);
+		return sendData(HttpMethod.PUT, path, json);
 	}
 	
 	public static boolean post(String path, String json)
 	{
-		final Request request = Network.getInstance().makeRequest(path,
-				HttpMethod.POST);
-		return sendData(request, path, json);
+		return sendData(HttpMethod.POST, path, json);
+	}
+	public static boolean delete(String path, String json)
+	{
+		return sendData(HttpMethod.DELETE, path, json);
 	}
 	
-	public static boolean sendData(final Request request, String path, String json) {
+	public static boolean sendData(HttpMethod method, String path, String json) {
+
+		final Request request = Network.getInstance().makeRequest(path,
+				method);
 		final Semaphore sem = new Semaphore(1);
 		try {
 			sem.acquire();
@@ -115,7 +118,7 @@ public class ServerManager {
 				System.err.println("The request to add data errored:");
 				System.err.println(iReq.getResponse().getBody());
 				sem.release();
-
+ 
 			}
 
 			@Override
@@ -141,7 +144,7 @@ public class ServerManager {
 	/**
 	 * "glues" together arguments and separates them with commas.
 	 * @param args
-	 * @return
+	 * @return 
 	 */
 	public static String glue(String[] args) {
 		StringBuilder sb = new StringBuilder();

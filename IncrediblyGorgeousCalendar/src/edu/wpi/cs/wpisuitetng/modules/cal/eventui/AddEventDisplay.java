@@ -164,9 +164,9 @@ public class AddEventDisplay extends JPanel
 		
 		nameErrorLabel.setForeground(Color.RED);
 		validateText(nameTextField.getText(), nameErrorLabel);
-		
-		nameLabelPanel.add(nameTextField);
+
 		nameLabelPanel.add(nameErrorLabel);
+		nameLabelPanel.add(nameTextField);
 		
 		JPanel DateandTimeLabelPane = new JPanel();
 		add(DateandTimeLabelPane);
