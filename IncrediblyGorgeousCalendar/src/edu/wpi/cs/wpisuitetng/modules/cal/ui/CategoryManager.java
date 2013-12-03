@@ -15,6 +15,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.BoxLayout;
@@ -30,8 +32,10 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
 /**
  * Victor: Left pretty, left default (no categories), left clickable (populate right fields), save/update
@@ -56,6 +60,8 @@ public class CategoryManager extends JPanel {
 	private JPanel bottomEditPanel;
 	private List<Category> allCategories;
 	private CategoryModel categories;
+	private JLabel errorText;
+	protected boolean editCategory;
 	
 	public CategoryManager() {
 				
@@ -135,10 +141,15 @@ public class CategoryManager extends JPanel {
 		updateList = new JButton("Update List");
 		deleteCategory = new JCheckBox("Delete selected");
 		deleteCategory.setSelected(false);
+		
+		// Error label
+		this.errorText = new JLabel();
+		errorText.setForeground(Color.RED);
 
 		// Add to Panel
 		bottomEditPanel.add(updateList);
 		bottomEditPanel.add(deleteCategory);
+		bottomEditPanel.add(errorText);
 		
 		// Add to UI
 		rightCategoryEdit.add(bottomEditPanel);
@@ -176,6 +187,8 @@ public class CategoryManager extends JPanel {
 		
 		this.add(leftCategoryList);
 		this.add(rightCategoryEdit);
+		
+		setUpListeners();
 	}
 	
 	/**
@@ -200,6 +213,10 @@ public class CategoryManager extends JPanel {
 		return true;
 	}
 
+	/**
+	 * checks if all validation tests pass
+	 * @return true if all pass, else return false
+	 */
 	public boolean isSaveable()
 	{
 		return validateText(categoryName.getText(), categoryErrorLabel);
@@ -212,6 +229,58 @@ public class CategoryManager extends JPanel {
 	public void setTabId(int id)
 	{
 		tabid = id;
+	}
+	
+	private void setUpListeners(){
+		
+		// Update List Button
+		
+		updateList.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				try
+				{
+					errorText.setVisible(true);
+					
+					if (categoryName.getText() == null || categoryName.getText().trim().length() == 0)
+					{
+						errorText.setText("* Please enter a category title");
+					}
+					else
+					{
+						errorText.setVisible(false);
+						Category c = new Category();
+						c.setName(categoryName.getText().trim());
+						System.out.println("I made it here! Woo!");
+						//c.setColor(colorPicker.); // Get color from color picker
+						
+						/* Need to figure out how to distinguish between editing an event or adding
+						if (editCategory){
+							e.setEventID(existingEventID);
+							MainPanel.getInstance().updateEvent(e);
+						} else {
+							MainPanel.getInstance().addEvent(e);
+						}
+						*/
+						
+						updateList.setEnabled(false);
+						updateList.setText("Saved!");
+						MainPanel.getInstance().closeTab(tabid);
+						MainPanel.getInstance().refreshView();
+					}
+				}
+				catch (IllegalArgumentException exception)
+				{
+					errorText.setText("* Invalid Date/Time");
+					errorText.setVisible(true);
+				}
+			}
+		});
+		
+		//this should be called in updateSaveable() and thus isnt necessary here
+		//but error msg didn't start visible unless I called it directly
+		
+		updateList.setEnabled(isSaveable());
 	}
 
 }
