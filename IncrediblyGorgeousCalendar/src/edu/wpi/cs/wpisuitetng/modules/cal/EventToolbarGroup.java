@@ -25,7 +25,6 @@ import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddEventDisplay;
 
 public class EventToolbarGroup extends ToolbarGroupView {
 	
-	private final JPanel eventContentPanel = new JPanel();
 	private final JButton addEventButton, removeEventButton, addCommitmentButton;
 	
 	public EventToolbarGroup(final MainPanel mMainPanel) {
@@ -81,12 +80,5 @@ public class EventToolbarGroup extends ToolbarGroupView {
 	
 	public void disableRemoveEventButton(){
 		removeEventButton.setEnabled(false);
-	}
-
-	/**
-	 * @return the eventContentPanel
-	 */
-	public JPanel getEventContentPanel() {
-		return eventContentPanel;
 	}
 }
