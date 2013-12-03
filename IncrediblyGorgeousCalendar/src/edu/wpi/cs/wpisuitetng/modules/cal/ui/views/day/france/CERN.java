@@ -15,6 +15,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import org.joda.time.DateTime;
+
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
 /**
@@ -25,12 +27,12 @@ public class CERN
 {
 	/**
 	 * Do everything, spin back time, steal paintings
-	 * @param events Events to display on day calender
+	 * @param events Events to display on day calendar
 	 * @return paintings
 	 */
-	public static List<VanGoghPainting> createEventsReallyNicely(List<Event> events)
+	public static List<VanGoghPainting> createEventsReallyNicely(List<Event> events, DateTime displayedDay)
 	{
-		LeadParticle[] particles = eventsToParticles(events);
+		LeadParticle[] particles = eventsToParticles(events, displayedDay);
 		List<TimeTraveller> travellers = tevatrize(particles); // shoot at speed of light to go back in time
 		disperse(particles);
 		Collections.sort(travellers); // Currently traveling backwards, trying to sort things out.
@@ -38,17 +40,17 @@ public class CERN
 	}
 	
 	/**
-	 * Split collision events into constuient particles that collide
+	 * Split collision events into constituent particles that collide
 	 * @param events List of events to split
 	 * @return Array of lead particles, two for each event (start and end)
 	 */
-	private static LeadParticle[] eventsToParticles(List<Event> events)
+	private static LeadParticle[] eventsToParticles(List<Event> events, DateTime displayedDay)
 	{
 		LeadParticle re[] = new LeadParticle[events.size()*2];
 		for(int i = 0; i < events.size(); i++)
 		{
-			re[i*2] = new LeadParticle(events.get(i), false);
-			re[i*2 + 1] = new LeadParticle(events.get(i), true);
+			re[i*2] = new LeadParticle(events.get(i), false, displayedDay);
+			re[i*2 + 1] = new LeadParticle(events.get(i), true, displayedDay);
 		}
 		Arrays.sort(re);
 		return re;

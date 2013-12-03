@@ -72,7 +72,7 @@ public class DayCalendar extends AbstractCalendar
 		this.add(new JLabel(time.toString(titleFmt)), BorderLayout.NORTH);
 
 		this.current = new LouvreTour();
-		this.current.setEvents(getVisibleEvents());
+		this.current.setEvents(getVisibleEvents(), time);
 
 		this.holder.add(DayGridLabel.getInstance(), BorderLayout.WEST);
 		this.holder.add(this.current, BorderLayout.CENTER);

@@ -23,10 +23,14 @@ public class LeadParticle implements Comparable<LeadParticle>
 	private boolean isEnd; //is this the start of an event or the end of an event
 	private TimeTraveller result;
 	
-	public LeadParticle(Event event, boolean isEnd)
+	public LeadParticle(Event event, boolean isEnd, DateTime displayedDay)
 	{
 		this.event = event;
 		this.isEnd = isEnd;
+		if (isEnd)
+		{
+			
+		}
 		this.time = isEnd ? event.getEnd() : event.getStart();
 	}
 	
