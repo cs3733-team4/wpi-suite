@@ -22,11 +22,12 @@ import javax.swing.JPanel;
 import edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar.ToolbarGroupView;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddCommitmentDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddEventDisplay;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.CategoryManager;
 
 public class EventToolbarGroup extends ToolbarGroupView {
 	
 	private final JPanel eventContentPanel = new JPanel();
-	private final JButton addEventButton, removeEventButton, addCommitmentButton;
+	private final JButton addEventButton, removeEventButton, addCommitmentButton, editCategory;
 	
 	public EventToolbarGroup(final MainPanel mMainPanel) {
 		super("Events");
@@ -63,6 +64,17 @@ public class EventToolbarGroup extends ToolbarGroupView {
 			}
 		});
 		
+		editCategory = new JButton("<html>Manage<br/>Categories</html>");
+		editCategory.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				CategoryManager cat = new CategoryManager();
+				cat.setTabId(mMainPanel.addTopLevelTab(cat, "Manage Categories", true));
+				
+				//TODO: use selected times. ned.display(DateTime.now());
+			}
+		});
+		
 		
 		try {
 		    Image img = ImageIO.read(getClass().getResource("add_event.png"));
@@ -77,6 +89,7 @@ public class EventToolbarGroup extends ToolbarGroupView {
 		//eventContentPanel.add(removeEventButton);
 		this.getContent().add(addEventButton);
 		this.getContent().add(addCommitmentButton);
+		this.getContent().add(editCategory);
 	}
 	
 	public void disableRemoveEventButton(){
