@@ -64,7 +64,7 @@ public class DayCalendar extends AbstractCalendar
 
 	private void generateDay()
 	{
-		if (this.getWidth() > 0)this.sizeW = this.getWidth();
+		if (this.getWidth() > 0)this.setSizeW(this.getWidth());
 		this.holder.removeAll();
 		this.removeAll();
 		this.add(scroll, BorderLayout.CENTER);
@@ -122,5 +122,19 @@ public class DayCalendar extends AbstractCalendar
 	{
 		// at the moment, we don't care, and just re-pull from the DB. TODO: this should change
 		this.generateDay();
+	}
+
+	/**
+	 * @return the sizeW
+	 */
+	public int getSizeW() {
+		return sizeW;
+	}
+
+	/**
+	 * @param sizeW the sizeW to set
+	 */
+	public void setSizeW(int sizeW) {
+		this.sizeW = sizeW;
 	}
 }

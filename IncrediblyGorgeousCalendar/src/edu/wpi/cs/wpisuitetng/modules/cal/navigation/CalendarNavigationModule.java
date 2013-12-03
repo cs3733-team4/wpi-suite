@@ -14,7 +14,6 @@ import javax.swing.JComponent;
 import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 
 /**
  * This is the controller? for the entire side panel

@@ -82,4 +82,11 @@ public class EventToolbarGroup extends ToolbarGroupView {
 	public void disableRemoveEventButton(){
 		removeEventButton.setEnabled(false);
 	}
+
+	/**
+	 * @return the eventContentPanel
+	 */
+	public JPanel getEventContentPanel() {
+		return eventContentPanel;
+	}
 }
