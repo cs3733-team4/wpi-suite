@@ -328,6 +328,7 @@ public class AddEventDisplay extends JPanel
 		// Add panel to UI
 		this.add(submissionPanel);
 		
+		saveButton.setEnabled(isSaveable());
 		
 	}
 	
@@ -346,21 +347,7 @@ public class AddEventDisplay extends JPanel
 					startTimeDatePicker.getDate();
 					endTimeDatePicker.getDate();
 					errorText.setVisible(true);
-					
-					if (nameTextField.getText() == null || nameTextField.getText().trim().length() == 0)
-					{
-						errorText.setText("* Please enter an event title");
-					}
-					else if (!(startTimeDatePicker.getDate().getDayOfYear() == endTimeDatePicker.getDate().getDayOfYear() &&
-						startTimeDatePicker.getDate().getYear() == endTimeDatePicker.getDate().getYear()))
-					{
-						errorText.setText("* Event must start and end on the same date");
-					}
-					else if (startTimeDatePicker.getDate().isAfter(endTimeDatePicker.getDate())) {
-						errorText.setText("* Event start date must be before end date");
-					}
-					else
-					{
+				
 						errorText.setVisible(false);
 						Event e = new Event();
 						e.setName(nameTextField.getText().trim());
@@ -381,7 +368,7 @@ public class AddEventDisplay extends JPanel
 						saveButton.setText("Saved!");
 						MainPanel.getInstance().closeTab(tabid);
 						MainPanel.getInstance().refreshView();
-					}
+					
 				}
 				catch (IllegalArgumentException exception)
 				{
@@ -429,12 +416,6 @@ public class AddEventDisplay extends JPanel
 		{
 			mErrorLabel.setText("* Required Field");
 			return false;
-		/*will be handled when parsed
-		}else if(mText.matches("^.*[^a-zA-Z0-9.,()$ ].*$"))
-		{
-			
-			mErrorLabel.setText("* Invalid Name/Characters");
-		*/
 		}
 		return true;
 	}
@@ -452,11 +433,7 @@ public class AddEventDisplay extends JPanel
 		{
 			mErrorLabel.setText("* Invalid Date/Time");
 		}//if properly formatted, error if startDate is a different day than the endDate
-		else if (!(mStartTime.getDayOfYear() == mEndTime.getDayOfYear() &&
-			mStartTime.getYear() == mEndTime.getYear()))
-		{
-			mErrorLabel.setText("* Multi-day events not supported");
-		}//error if the start time is after the end time
+		//error if the start time is after the end time
 		else if (!mEndTime.isAfter(mStartTime)) {
 			mErrorLabel.setText("* Event has invalid duration");
 		}else

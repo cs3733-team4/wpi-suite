@@ -20,6 +20,8 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.Duration;
 import org.joda.time.MutableDateTime;
 import org.joda.time.ReadableDateTime;
 
@@ -142,8 +144,26 @@ public class MonthCalendar extends AbstractCalendar
 	 */
 	void addEvent(Event e)
 	{
-		MonthDay md = this.days.get(e.getStart().getDayOfYear());
-		md.addEvent(e);
+		
+		MonthDay md;
+		MutableDateTime newDay;
+		//for (int i=0; i<(e.getEnd().getDayOfYear()-e.getStart().getDayOfYear() + 1); i++)
+		for (int i=0; i<(Days.daysBetween(e.getStart(), e.getEnd()).getDays() + 1); i++)
+		{
+			newDay = new MutableDateTime(e.getStart());
+			newDay.addDays(i);
+			
+			md = this.days.get(newDay.getDayOfYear());
+			try{
+				md.addEvent(e);
+				System.out.println("Added: " + e.toJSON());
+			}
+			catch(NullPointerException ex)
+			{
+				System.err.println("Error when i=" + i + " and Event: " + e.toJSON());
+			}
+		}
+		
 	}
 	
 	/**

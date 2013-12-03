@@ -299,14 +299,16 @@ public class Event extends AbstractModel implements Displayable
 		this.owner = owner;
 	}
 
-	// custom "getters"
-	
 	public Color getColor()
 	{
 		// TODO: if category, get category color
 		return isProjectEvent ? new Color(125,157,227) : new Color(227,125,147);
 	}
-	
+	public boolean isMultiDayEvent()
+	{
+		return (getEnd().getYear()!=getStart().getYear() || getEnd().getDayOfYear()!=getStart().getDayOfYear());
+			
+	}
 	@Override
 	public DateTime getDate()
 	{

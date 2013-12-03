@@ -23,6 +23,7 @@ public class Colors
 			SELECTED_TEXT = UIManager.getDefaults().getColor("textHighlightText"),
 			BORDER = UIManager.getDefaults().getColor("Separator.foreground"),
 			TABLE_GRAY_TEXT = UIManager.getDefaults().getColor("Table.focusCellForeground"),
+			COMMITMENT_NOTIFICATION = Color.RED,
 			TABLE_TEXT = UIManager.getDefaults().getColor("Label.foreground");
 	
 	public static final Color TABLE_GRAY_HEADER = getTableGrayHeader();

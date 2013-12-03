@@ -198,7 +198,6 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 			});
 
 		} catch (java.text.ParseException e) {
-			System.err.println(e.toString());
 		}
 	}
 
@@ -214,7 +213,6 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 			return dateTimeFmt.parseDateTime(date.getText()+" "+time.getText()+" "+AMPM.getSelectedItem());
 		}catch(IllegalArgumentException e)
 		{
-			System.out.println("Error: " + e.getMessage());
 			return null;
 		}
 	}
