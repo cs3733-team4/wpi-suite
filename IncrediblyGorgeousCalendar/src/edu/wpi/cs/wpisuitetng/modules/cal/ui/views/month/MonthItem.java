@@ -81,36 +81,28 @@ public class MonthItem extends JPanel
 			
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
 			}
 			
 			@Override
 			public void mousePressed(MouseEvent e) {
 				if (e.getClickCount() > 1){
-					MainPanel.getInstance().editSelectedDisplayable(MonthItem.this);
+					MainPanel.getInstance().editSelectedDisplayable(mDisplayable);
 				} else {
-					MainPanel.getInstance().updateSelectedDisplayable(MonthItem.this);
+					MainPanel.getInstance().updateSelectedDisplayable(mDisplayable);
 				}
 				
 			}
 			
 			@Override
 			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
 			}
 			
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
 			}
 			
 			@Override
-			public void mouseClicked(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
+			public void mouseClicked(MouseEvent e) {				
 			}
 		});
 	}
@@ -157,4 +149,12 @@ public class MonthItem extends JPanel
 	public Displayable getDisplayable(){
 		return this.mDisplayable;
 	}
+	
+	public void setSelected(boolean select){
+		if(select){
+			this.setBackground(Colors.SELECTED_BACKGROUND);
+		}
+		else this.setBackground(Colors.TABLE_BACKGROUND);
+	}
 }
+

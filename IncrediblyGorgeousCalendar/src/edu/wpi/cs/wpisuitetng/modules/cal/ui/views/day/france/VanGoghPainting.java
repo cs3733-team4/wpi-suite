@@ -22,7 +22,9 @@ import javax.swing.border.LineBorder;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthItem;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 
 import javax.swing.JLabel;
@@ -30,6 +32,8 @@ import javax.swing.BoxLayout;
 
 import java.awt.Font;
 import java.awt.FontMetrics;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -80,6 +84,44 @@ public class VanGoghPainting extends JPanel
 		lblStarryNightdutch.setBackground(bg);
 		lblStarryNightdutch.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblStarryNightdutch.setMinimumSize(new Dimension(0,0));
+		
+		addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				if (e.getClickCount() > 1){
+					MainPanel.getInstance().editSelectedDisplayable(event);
+				} else {
+					MainPanel.getInstance().updateSelectedDisplayable(event);
+				}
+				
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
 		Width = new Rational(((traveller.getCollisions() > 1) ? 2 : 1), 1 + traveller.getCollisions());
 		X = traveller.getXpos();
 		description = Arrays.asList(traveller.getEvent().getDescription().split(" "));
@@ -257,6 +299,11 @@ public class VanGoghPainting extends JPanel
 		System.out.println("ratpack end");
 		
 		return ratpack;
+	}
+
+	// Set text color to white to indicate selected event
+	public void setSelected(boolean b) {
+		lblEventTitle.setForeground(Color.WHITE);		
 	}
 	
 }

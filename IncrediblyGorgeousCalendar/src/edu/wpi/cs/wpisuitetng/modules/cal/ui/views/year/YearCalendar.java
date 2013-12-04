@@ -33,6 +33,7 @@ import org.joda.time.MutableDateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
@@ -372,5 +373,10 @@ public class YearCalendar extends AbstractCalendar
 		{
 			this.updateEvents(e, true);
 		}
+	}
+
+	@Override
+	public void select(Displayable item) {
+		
 	}
 }

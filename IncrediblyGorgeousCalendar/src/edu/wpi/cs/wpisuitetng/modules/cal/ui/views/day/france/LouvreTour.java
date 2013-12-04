@@ -16,6 +16,7 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 
@@ -72,6 +73,16 @@ public class LouvreTour extends JPanel
 			currentPosition += distanceBetweenBorders;
 		}
 		
+		
+	}
+
+	public void select(Displayable item) {
+		if(item instanceof Event){
+			VanGoghPainting mona = guides.get(item);
+			if(mona != null){
+				mona.setSelected(true);
+			}
+		}
 		
 	}
 	

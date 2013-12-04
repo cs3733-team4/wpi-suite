@@ -78,8 +78,8 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	private CommitmentModel commitments;
 	private ViewSize view = ViewSize.Month;
 	private static MainPanel instance;
-	private MonthItem currentSelected;
-	private MonthItem previouslySelected;
+	private Displayable currentSelected;
+	private Displayable previouslySelected;
 	private Displayable currentDisplayable;
 	
 	//TODO: "make this better" -Patrick
@@ -405,14 +405,13 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	 * Highlights the  selected monthItem on the calendar
 	 * @param Item the month item to highlight
 	 */
-	public void updateSelectedDisplayable(MonthItem Item){
+	public void updateSelectedDisplayable(Displayable Item){
 		
 		this.currentSelected = Item;
 		
 		if (previouslySelected != null)
-			previouslySelected.setBackground(Colors.TABLE_BACKGROUND);
+			
 		
-		currentSelected.setBackground(Colors.SELECTED_BACKGROUND);
 		previouslySelected = currentSelected;
 		
 	}
@@ -421,7 +420,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	 * Edits the selected displayable
 	 * @param Item the month item containing the displayable to edit
 	 */
-	public void editSelectedDisplayable(MonthItem Item){
+	public void editSelectedDisplayable(Displayable Item){
 		
 		this.currentSelected = Item;
 		this.currentDisplayable = Item.getDisplayable();

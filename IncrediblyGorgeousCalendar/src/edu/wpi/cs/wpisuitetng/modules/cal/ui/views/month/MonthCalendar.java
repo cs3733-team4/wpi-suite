@@ -30,6 +30,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.DayStyle;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
@@ -301,5 +302,14 @@ public class MonthCalendar extends AbstractCalendar
 	public void updateEvents(Event events, boolean addOrRemove)
 	{
 		// TODO Auto-generated method stub
+	}
+
+	
+	@Override
+	public void select(Displayable item) {
+		MonthDay day = days.get(item.getDate().getDayOfYear());
+		if(day != null){
+			day.select(item);
+		}
 	}
 }

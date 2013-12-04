@@ -10,6 +10,7 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -210,5 +211,13 @@ public class MonthDay extends JPanel
 	{
 		commitments.clear();
 		revalidate();
+	}
+	
+	public void select(Displayable item){
+		for(Component c:getComponents()){
+			if(c instanceof MonthItem && ((MonthItem)c).getDisplayable() == item){
+				((MonthItem)c).setSelected(true);
+			}
+		}
 	}
 }
