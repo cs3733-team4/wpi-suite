@@ -70,9 +70,11 @@ public class VanGoghPainting extends JPanel
 		setBorder(new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new LineBorder(bg.darker()), new EmptyBorder(6, 6, 6, 6))));
 		setBackground(bg);
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		lblEventTitle = new JLabel(event.getName());
+		lblEventTitle = new JLabel();
 		add(lblEventTitle);
 		lblEventTitle.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblEventTitle.putClientProperty("html.disable", true); //prevents html parsing
+		lblEventTitle.setText(event.getName());
 		
 		if (event.isMultiDayEvent())
 		{
@@ -96,6 +98,7 @@ public class VanGoghPainting extends JPanel
 		lblStarryNightdutch.setVerticalAlignment(SwingConstants.TOP);
 		lblStarryNightdutch.setBackground(bg);
 		lblStarryNightdutch.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblStarryNightdutch.putClientProperty("html.disable", true); //prevents html parsing
 		lblStarryNightdutch.setMinimumSize(new Dimension(0,0));
 		
 		addMouseListener(new MouseListener() {
