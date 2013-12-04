@@ -491,7 +491,25 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		}
 		else if (item instanceof Commitment) {
 			AddCommitmentDisplay mAddCommitmentDisplay = new AddCommitmentDisplay((Commitment) item);
-			mAddCommitmentDisplay.setTabId(instance.addTopLevelTab(mAddCommitmentDisplay, "Edit Commitment", true));
+			boolean openNewTab = true;
+			JComponent tabToOpen = null;
+			
+			for(JComponent c : tabs.values())
+			{
+				if (openNewTab && c instanceof AddCommitmentDisplay)
+				{
+					openNewTab = !((AddCommitmentDisplay) c).matchingCommitment(mAddCommitmentDisplay);
+					tabToOpen = c;
+				}
+			}
+			if (openNewTab)
+			{
+				mAddCommitmentDisplay.setTabId(instance.addTopLevelTab(mAddCommitmentDisplay, "Edit Commitment", true));
+			}
+			else if (tabToOpen != null)
+			{
+				setSelectedTab(tabToOpen);
+			}
 		}
 	}
 	
