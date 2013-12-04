@@ -85,7 +85,6 @@ public class AddCommitmentDisplay extends JPanel
 		NameLabelPanel.add(nameErrorLabel);
 		nameTextField = new JTextField();
 		NamePane.add(nameTextField);
-		nameTextField.setBorder( new BevelBorder(BevelBorder.LOWERED));
 		nameTextField.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		nameTextField.setColumns(25);
 		if (editingCommitment)
@@ -128,7 +127,6 @@ public class AddCommitmentDisplay extends JPanel
 		add(ParticipantsPanel);
 		
 		participantsTextField = new JTextField();
-		participantsTextField.setBorder( new BevelBorder(BevelBorder.LOWERED));
 		ParticipantsPanel.add(participantsTextField);
 		participantsTextField.setColumns(30);
 		if (editingCommitment)
@@ -157,7 +155,6 @@ public class AddCommitmentDisplay extends JPanel
         add(filler1);
 		
         final JTextArea descriptionTextArea = new JTextArea(5,35);
-        descriptionTextArea.setBorder( new BevelBorder(BevelBorder.LOWERED));
 		descriptionTextArea.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		descriptionTextArea.setLineWrap(true);
 		descriptionTextArea.setWrapStyleWord(true);

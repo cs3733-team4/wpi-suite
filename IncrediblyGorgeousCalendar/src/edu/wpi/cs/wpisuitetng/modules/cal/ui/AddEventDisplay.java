@@ -179,14 +179,13 @@ public class AddEventDisplay extends JPanel
 		// Text Field
 		nameTextField.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		nameTextField.setColumns(25);
-		nameTextField.setBorder( new BevelBorder(BevelBorder.LOWERED));
 		nameTextFieldPanel.add(nameTextField);
 		
 		nameErrorLabel.setForeground(Color.RED);
 		validateText(nameTextField.getText(), nameErrorLabel);
 
-		nameLabelPanel.add(nameErrorLabel);
 		nameLabelPanel.add(nameTextField);
+		nameLabelPanel.add(nameErrorLabel);
 		
 		JPanel DateandTimeLabelPane = new JPanel();
 		add(DateandTimeLabelPane);
@@ -269,18 +268,37 @@ public class AddEventDisplay extends JPanel
 		
 		// Text Field
 		participantsTextFieldPanel.add(participantsTextField);
-		participantsTextField.setBorder( new BevelBorder(BevelBorder.LOWERED));
 		participantsTextField.setColumns(30);
 		
 		// Add panel to UI
 		this.add(participantsTextFieldPanel);
+		
+		/** Categories ui */
+		
+		JPanel comboHolder = new JPanel();
+		FlowLayout fl_DescriptionLabelPane = (FlowLayout) comboHolder.getLayout();
+		fl_DescriptionLabelPane.setAlignment(FlowLayout.LEFT);
+		
+		JLabel ljtest = new JLabel("Category:");
+		ljtest.setVerticalAlignment(SwingConstants.BOTTOM);
+		ljtest.setAlignmentX(Component.CENTER_ALIGNMENT);
+		ljtest.setHorizontalAlignment(SwingConstants.LEFT);
+		comboHolder.add(ljtest);
+		add(comboHolder);
+		
+		//add the combobox for category
+		comboHolder = new JPanel();
+		fl_DescriptionLabelPane = (FlowLayout) comboHolder.getLayout();
+		fl_DescriptionLabelPane.setAlignment(FlowLayout.LEFT);
+		comboHolder.add(eventCategoryPicker);
+		add(comboHolder);
 		
 		/** Description Panel */
 		
 		// Panel
 		
 		this.descriptionLabelPanel = new JPanel();
-		FlowLayout fl_DescriptionLabelPane = (FlowLayout) descriptionLabelPanel.getLayout();
+		fl_DescriptionLabelPane = (FlowLayout) descriptionLabelPanel.getLayout();
 		fl_DescriptionLabelPane.setAlignment(FlowLayout.LEFT);
 		
 		// Label
@@ -303,7 +321,6 @@ public class AddEventDisplay extends JPanel
 		
 		// Text Area
 		descriptionTextArea.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		descriptionTextArea.setBorder( new BevelBorder(BevelBorder.LOWERED));
 		descriptionTextArea.setLineWrap(true);
 		descriptionTextArea.setWrapStyleWord(true);
 		
