@@ -16,6 +16,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.DefaultCaret;
@@ -65,7 +66,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 		setupCommitementTab();
 		
 		//add tabs
-		this.addTab("Details", detailScrollPane);
+		this.addTab("Details", detailTab);
 		//this.addTab("Commitments", commitmentTab);
 	}
 	
@@ -116,8 +117,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 		detailTextPane = new JTextArea();
 		detailTextPane.setWrapStyleWord(true);
 		detailTextPane.setLineWrap(true);
-		detailTextPane.setMaximumSize(new Dimension(180, this.getHeight()));
-		detailTextPane.setPreferredSize(new Dimension(180, this.getHeight()));
+		detailTextPane.setMaximumSize(new Dimension(180, Short.MAX_VALUE));
 		detailTextPane.setEditable(false);
 		detailTextPane.setCursor(null);
 		detailTextPane.setFocusable(false);
@@ -177,15 +177,16 @@ public class SidebarTabbedPane extends JTabbedPane{
 	    //for a later user story
 	    //detailButtonPane.add(detailDeleteButton);
 	    
+	    // put entire tab into a scroll pane
+	    detailScrollPane = new JScrollPane(detailTextPane);
+	    detailScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+	    detailScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+	    detailScrollPane.setBorder( new EmptyBorder(5,5,5,5));
+	    
 	    // add text area and button container to detail tab
 	    detailTab.add(detailTitleLabel, BorderLayout.NORTH);
-	    detailTab.add(detailTextPane, BorderLayout.CENTER);
+	    detailTab.add(detailScrollPane, BorderLayout.CENTER);
 	    detailTab.add(detailButtonPane, BorderLayout.SOUTH);
-	    
-	    // put entire tab into a scroll pane
-	    detailScrollPane = new JScrollPane(detailTab);
-	    detailScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-	    detailScrollPane.setBorder( new EmptyBorder(5,5,5,5));
 	}
 	
 	/**
