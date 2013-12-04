@@ -109,7 +109,10 @@ public class AddEventDisplay extends JPanel
 		this.teamProjectCheckBox.setSelected(eventToEdit.isProjectEvent());
 		this.startTimeDatePicker.setDateTime(eventToEdit.getStart());
 		this.endTimeDatePicker.setDateTime(eventToEdit.getEnd());
-		this.eventCategoryPicker.setSelectedItem(CategoryModel.getInstance().getCategoryByUUID(eventToEdit.getCategory()));
+		if (eventToEdit.getAssociatedCategory()!=null)
+			this.eventCategoryPicker.setSelectedItem(eventToEdit.getAssociatedCategory());
+		else
+			this.eventCategoryPicker.setSelectedItem(Category.DEFUALT_CATEGORY);
 	}
 	
 	/**
