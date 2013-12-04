@@ -76,10 +76,17 @@ public class LouvreTour extends JPanel
 		
 	}
 
-	public void select(Displayable item) {
-		if(item instanceof Event){
+	public void select(Displayable item)
+	{
+		for (VanGoghPainting v : guides.values())
+		{
+			v.setSelected(false);
+		}
+		if (item instanceof Event)
+		{
 			VanGoghPainting mona = guides.get(item);
-			if(mona != null){
+			if(mona != null)
+			{
 				mona.setSelected(true);
 			}
 		}

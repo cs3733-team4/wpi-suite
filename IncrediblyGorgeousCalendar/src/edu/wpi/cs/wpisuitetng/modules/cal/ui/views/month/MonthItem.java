@@ -138,8 +138,10 @@ public class MonthItem extends JPanel
 	}
 
 
-	public static Component generateFrom(Displayable elt) {
-		return new MonthItem(elt);
+	public static Component generateFrom(Displayable elt, Displayable selected) {
+		MonthItem mi = new MonthItem(elt);
+		mi.setSelected(selected == elt);
+		return mi;
 	}
 	
 	/**

@@ -130,7 +130,8 @@ public class DayCalendar extends AbstractCalendar
 	}
 
 	@Override
-	public void select(Displayable item) {
+	public void select(Displayable item)
+	{
 		current.select(item);		
 	}
 }

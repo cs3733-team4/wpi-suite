@@ -42,14 +42,13 @@ import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
 public class MonthCalendar extends AbstractCalendar
 {
 
-	private JPanel inside = new JPanel(),
-			top = new JPanel(),
-			mainCalendarView = new JPanel(),
-			calendarTitlePanel = new JPanel();
-	
+	private JPanel inside = new JPanel(), top = new JPanel(),
+			mainCalendarView = new JPanel(), calendarTitlePanel = new JPanel();
+
 	private JLabel monthLabel = new JLabel();
 	private DateTime time;
 	private MainPanel mainPanel;
+	private Displayable lastSelection;
 
 	private HashMap<Integer, MonthDay> days = new HashMap<Integer, MonthDay>();
 
@@ -126,7 +125,7 @@ public class MonthCalendar extends AbstractCalendar
 			this.addEvent(e);
 		}
 	}
-	
+
 	void setCommitments(List<Commitment> commitments)
 	{
 		clearCommitments();
@@ -146,9 +145,10 @@ public class MonthCalendar extends AbstractCalendar
 		MonthDay md = this.days.get(e.getStart().getDayOfYear());
 		md.addEvent(e);
 	}
-	
+
 	/**
 	 * Add a commitment
+	 * 
 	 * @param c
 	 */
 	void addCommitment(Commitment c)
@@ -167,13 +167,13 @@ public class MonthCalendar extends AbstractCalendar
 		MonthDay md = this.days.get(e.getStart().getDayOfYear());
 		md.removeEvent(e);
 	}
-	
+
 	void removeCommitment(Commitment c)
 	{
 		MonthDay md = this.days.get(c.getDate().getDayOfYear());
 		md.removeCommitment(c);
 	}
-	
+
 	void clearEvents()
 	{
 		for (Component i : inside.getComponents())
@@ -181,7 +181,7 @@ public class MonthCalendar extends AbstractCalendar
 			((MonthDay)i).clear();
 		}
 	}
-	
+
 	void clearCommitments()
 	{
 		for (Component i : inside.getComponents())
@@ -238,7 +238,7 @@ public class MonthCalendar extends AbstractCalendar
 
 		// remove all old days
 		inside.removeAll();
-		
+
 		DateTime from = referenceDay.toDateTime();
 
 		// generate days, weeks*7 covers all possible months, so we just loop
@@ -247,13 +247,13 @@ public class MonthCalendar extends AbstractCalendar
 		{
 			MonthDay md = new MonthDay(referenceDay.toDateTime(), getMarker(referenceDay));
 			inside.add(md);
-			md.reBorder(i < 7, (i % 7) == 0, i >= (weeks-1) * 7);
+			md.reBorder(i < 7, (i % 7) == 0, i >= (weeks - 1) * 7);
 			this.days.put(referenceDay.getDayOfYear(), md);
 			referenceDay.addDays(1); // go to next day
 		}
-		
+
 		referenceDay.addDays(-1);// go back one to counteract last add one
-		
+
 		setEvents(getVisibleEvents(from, referenceDay.toDateTime()));
 		setCommitments(getVisibleCommitments(from, referenceDay.toDateTime()));
 
@@ -271,7 +271,7 @@ public class MonthCalendar extends AbstractCalendar
 		// TODO: this is where filtering should go
 		return eventModel.getEvents(from, to);
 	}
-	
+
 	private List<Commitment> getVisibleCommitments(DateTime from, DateTime to)
 	{
 		return commitmentModel.getCommitments(from, to);
@@ -304,12 +304,30 @@ public class MonthCalendar extends AbstractCalendar
 		// TODO Auto-generated method stub
 	}
 
-	
 	@Override
-	public void select(Displayable item) {
-		MonthDay day = days.get(item.getDate().getDayOfYear());
-		if(day != null){
+	public void select(Displayable item)
+	{
+		Displayable oitem = item;
+		MonthDay day;
+		if (item == null)
+		{
+			if (lastSelection != null)
+				oitem = lastSelection;
+			else return;
+		}
+		else if (lastSelection != null)
+		{
+			day = days.get(lastSelection.getDate().getDayOfYear());
+			if (day != null)
+			{
+				day.select(null);
+			}
+		}
+		day = days.get(oitem.getDate().getDayOfYear());
+		if (day != null)
+		{
 			day.select(item);
 		}
+		lastSelection = item;
 	}
 }

@@ -302,8 +302,9 @@ public class VanGoghPainting extends JPanel
 	}
 
 	// Set text color to white to indicate selected event
-	public void setSelected(boolean b) {
-		lblEventTitle.setForeground(Color.WHITE);		
+	public void setSelected(boolean b)
+	{
+		lblEventTitle.setForeground(b?Color.WHITE:Color.BLACK);		
 	}
 	
 }

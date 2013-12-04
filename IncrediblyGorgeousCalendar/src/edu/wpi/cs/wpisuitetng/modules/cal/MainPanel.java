@@ -79,8 +79,6 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	private ViewSize view = ViewSize.Month;
 	private static MainPanel instance;
 	private Displayable currentSelected;
-	private Displayable previouslySelected;
-	private Displayable currentDisplayable;
 	
 	//TODO: "make this better" -Patrick
 	public boolean showPersonal = true;
@@ -397,7 +395,8 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	 * Close specified tab
 	 * @param id
 	 */
-	public void closeTab(int id){
+	public void closeTab(int id)
+	{
 		mTabbedPane.remove(tabs.get(id));
 	}
 	
@@ -405,32 +404,22 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	 * Highlights the  selected monthItem on the calendar
 	 * @param Item the month item to highlight
 	 */
-	public void updateSelectedDisplayable(Displayable Item){
-		
-		this.currentSelected = Item;
-		
-		if (previouslySelected != null)
-			
-		
-		previouslySelected = currentSelected;
-		
+	public void updateSelectedDisplayable(Displayable item)
+	{
+		mCalendar.select(item);
+		this.currentSelected = item;	
 	}
 	
 	/**
 	 * Edits the selected displayable
 	 * @param Item the month item containing the displayable to edit
 	 */
-	public void editSelectedDisplayable(Displayable Item){
+	public void editSelectedDisplayable(Displayable item)
+	{
+		updateSelectedDisplayable(item);
 		
-		this.currentSelected = Item;
-		this.currentDisplayable = Item.getDisplayable();
-		
-		
-		currentSelected.setBackground(Colors.TABLE_BACKGROUND);
-		previouslySelected = currentSelected;
-		
-		if (currentDisplayable instanceof Event) {
-			AddEventDisplay mAddEventDisplay = new AddEventDisplay((Event) currentDisplayable);
+		if (item instanceof Event) {
+			AddEventDisplay mAddEventDisplay = new AddEventDisplay((Event) item);
 			boolean openNewTab = true;
 			JComponent tabToOpen = null;
 			
@@ -452,8 +441,8 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 			}
 			
 		}
-		else if (currentDisplayable instanceof Commitment) {
-			AddCommitmentDisplay mAddCommitmentDisplay = new AddCommitmentDisplay((Commitment) currentDisplayable);
+		else if (item instanceof Commitment) {
+			AddCommitmentDisplay mAddCommitmentDisplay = new AddCommitmentDisplay((Commitment) item);
 			mAddCommitmentDisplay.setTabId(instance.addTopLevelTab(mAddCommitmentDisplay, "Edit Commitment", true));
 		}
 	}
@@ -461,8 +450,8 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	/**
 	 * Clears selected MonthItem from calendar
 	 */
-	public void clearSelected(){
-		if (previouslySelected != null)
-			previouslySelected.setBackground(Colors.TABLE_BACKGROUND);
+	public void clearSelected()
+	{
+		updateSelectedDisplayable(null);
 	}
 }

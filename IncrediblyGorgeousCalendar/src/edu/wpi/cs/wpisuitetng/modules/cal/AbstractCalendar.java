@@ -51,5 +51,9 @@ public abstract class AbstractCalendar extends JComponent
 	 */
 	public abstract void updateEvents(Event event, boolean added);
 	
+	/**
+	 * Select the given displayable via UI changes
+	 * @param item the event to select
+	 */
 	public abstract void select(Displayable item);
 }
