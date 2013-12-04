@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 
 public class PastelColorPicker extends JPanel implements MouseListener, MouseMotionListener{
 	
-	private int lastMousePosition = -1;
+	private int lastMousePosition = -9000;
 	private Color currentColor = null;
 	
 	/**
@@ -37,15 +37,23 @@ public class PastelColorPicker extends JPanel implements MouseListener, MouseMot
 		
 		if (this.lastMousePosition > 0)
 		{
+			if(lastMousePosition > this.getWidth())
+				lastMousePosition = this.getWidth();
+			float colorAtMouse = 360f * (((float)this.lastMousePosition) / ((float)this.getWidth()));
+			
+			this.currentColor = new HSLColor(colorAtMouse, 64f, 82f).getRGB();
+		}else if(lastMousePosition == -9000) //TODO: make this initial case better
+		{
+			lastMousePosition = this.getWidth()/2;
 			float colorAtMouse = 360f * (((float)this.lastMousePosition) / ((float)this.getWidth()));
 			this.currentColor = new HSLColor(colorAtMouse, 64f, 82f).getRGB();
-			
-			g.setColor(Color.BLACK);
-			g.fillRect(lastMousePosition-20, 12, 40, this.getHeight()-24);
-			g.setColor(this.currentColor);
-			g.fillRect(lastMousePosition-18, 14, 36, this.getHeight()-28);
-			
-		}
+		}else
+			lastMousePosition = 0;
+		
+		g.setColor(Color.BLACK);
+		g.fillRect(lastMousePosition-20, 12, 40, this.getHeight()-24);
+		g.setColor(this.currentColor);
+		g.fillRect(lastMousePosition-18, 14, 36, this.getHeight()-28);
 	}
 	
 	/**
