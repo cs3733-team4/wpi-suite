@@ -76,11 +76,11 @@ public class VanGoghPainting extends JPanel
 		if (event.isMultiDayEvent())
 		{
 			if (event.getStart().compareTo(event.getStartTimeOnDay(displayedDay))==0)//if their the same time, its the first day
-				lblTimeInfo = new JLabel(formatTime(event.getStart()) + " - \u2192");
+				lblTimeInfo = new JLabel(formatTime(event.getStart()) + " \u2192");
 			else if (event.getEnd().compareTo(event.getEndTimeOnDay(displayedDay))==0)
-				lblTimeInfo = new JLabel("\u2190 - " + formatTime(event.getEnd()));
+				lblTimeInfo = new JLabel("\u2190 " + formatTime(event.getEnd()));
 			else
-				lblTimeInfo = new JLabel("\u2190 - \u2192");
+				lblTimeInfo = new JLabel("\u2190 \u2192");
 				
 		}
 		else
@@ -88,7 +88,7 @@ public class VanGoghPainting extends JPanel
 		
 		lblTimeInfo.setBorder(new EmptyBorder(0,0,3,0));
 		lblTimeInfo.setMaximumSize(new Dimension(32767, 20));
-		lblTimeInfo.setFont(new Font("Tahoma", Font.ITALIC, 14));
+		lblTimeInfo.setFont(new Font("DejaVu Sans", Font.ITALIC, 14));
 		add(lblTimeInfo);
 		lblStarryNightdutch = new JLabel();
 		add(lblStarryNightdutch);
@@ -117,6 +117,7 @@ public class VanGoghPainting extends JPanel
 		if(firstDraw)
 		{
 			height = (int) map(new Interval(event.getStartTimeOnDay(displayedDay), event.getEndTimeOnDay(displayedDay)).toDurationMillis(), this.getParent().getHeight());
+			height = Math.max(height, 45);
 			recalcBounds(getParent().getWidth(), getParent().getHeight());
 			FontMetrics descriptionMetrics = getGraphics().getFontMetrics(lblStarryNightdutch.getFont());
 			for(String word : description)
