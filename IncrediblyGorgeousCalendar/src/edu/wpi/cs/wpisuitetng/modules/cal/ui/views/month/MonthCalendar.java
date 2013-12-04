@@ -338,25 +338,65 @@ public class MonthCalendar extends AbstractCalendar
 	{
 		Displayable oitem = item;
 		MonthDay day;
+		if (item == null && lastSelection == null)
+			return;
 		if (item == null)
+			oitem = lastSelection;
+		
+		if (lastSelection != null)
 		{
-			if (lastSelection != null)
-				oitem = lastSelection;
-			else return;
-		}
-		else if (lastSelection != null)
-		{
-			day = days.get(lastSelection.getDate().getDayOfYear());
-			if (day != null)
+			if (lastSelection instanceof Event)
+				selectEvents((Event)lastSelection, null);
+			else
 			{
-				day.select(null);
+				day = days.get(lastSelection.getDate().getDayOfYear());
+				if (day != null)
+				{
+					day.select(null);
+				}
 			}
 		}
-		day = days.get(oitem.getDate().getDayOfYear());
-		if (day != null)
+
+		if (item != null && item instanceof Event)
+			selectEvents((Event)item, item);
+		else
 		{
-			day.select(item);
+			day = days.get(oitem.getDate().getDayOfYear());
+			if (day != null)
+			{
+				day.select(item);
+			}
 		}
 		lastSelection = item;
+	}
+
+	private void selectEvents(Event on, Displayable setTo)
+	{
+		// TODO: refactor this pattern
+		MonthDay md;
+		MutableDateTime startDay = new MutableDateTime(on.getStart());
+		MutableDateTime endDay = new MutableDateTime(on.getEnd());
+		endDay.setMillisOfDay(0);
+		startDay.setMillisOfDay(0);
+		
+		if (startDay.isBefore(firstOnMonth))
+			startDay=new MutableDateTime(firstOnMonth);
+		if (endDay.isAfter(lastOnMonth))
+			endDay= new MutableDateTime(lastOnMonth);
+			
+		while (!endDay.isBefore(startDay))
+		{
+			md = this.days.get(startDay.getDayOfYear());
+			try
+			{
+				md.select(setTo);
+			}
+			catch(NullPointerException ex)
+			{
+				// silently ignore
+			}
+			startDay.addDays(1);
+		
+		}
 	}
 }
