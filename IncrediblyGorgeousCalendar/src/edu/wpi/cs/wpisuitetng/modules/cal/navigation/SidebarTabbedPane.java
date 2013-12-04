@@ -145,15 +145,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				MainPanel instance = MainPanel.getInstance();
-				
-				if (currentDisplayable instanceof Event) {
-					AddEventDisplay mAddEventDisplay = new AddEventDisplay((Event) currentDisplayable);
-					mAddEventDisplay.setTabId(instance.addTopLevelTab(mAddEventDisplay, "Edit Event", true));
-				}
-				else if (currentDisplayable instanceof Commitment) {
-					AddCommitmentDisplay mAddCommitmentDisplay = new AddCommitmentDisplay((Commitment) currentDisplayable);
-					mAddCommitmentDisplay.setTabId(instance.addTopLevelTab(mAddCommitmentDisplay, "Edit Commitment", true));
-				}				
+				instance.editSelectedDisplayable(currentDisplayable)	;
 			}
 		});
 	    
