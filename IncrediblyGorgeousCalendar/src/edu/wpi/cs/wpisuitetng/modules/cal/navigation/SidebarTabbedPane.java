@@ -112,6 +112,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 		// setup container panel
 		detailTab = new JPanel();
 		detailTab.setLayout(new BorderLayout());
+		detailTab.setBorder(BorderFactory.createEmptyBorder(3, 0, 0, 0));
 		
 		// setup text area
 		detailTextPane = new JTextArea();
