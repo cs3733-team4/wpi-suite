@@ -17,9 +17,11 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar.ToolbarGroupView;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddEventDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.CategoryManager;
 
 public class CategoryToolbarGroup extends ToolbarGroupView {
@@ -34,8 +36,17 @@ public class CategoryToolbarGroup extends ToolbarGroupView {
 		editCategory.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e){
-				CategoryManager cat = new CategoryManager();
-				cat.setTabId(mMainPanel.addTopLevelTab(cat, "Manage Categories", true));
+				CategoryManager cat = MainPanel.getInstance().getCategoryManagerTab();
+				
+				if(cat==null)
+				{
+					cat = new CategoryManager();
+					cat.setTabId(mMainPanel.addTopLevelTab(cat, "Manage Categories", true));
+				}else
+				{
+					MainPanel.getInstance().setSelectedTab(cat);
+				}
+				
 				
 				//TODO: use selected times. ned.display(DateTime.now());
 			}

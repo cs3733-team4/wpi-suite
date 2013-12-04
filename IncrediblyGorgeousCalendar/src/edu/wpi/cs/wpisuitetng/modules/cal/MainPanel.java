@@ -48,6 +48,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.navigation.SidebarTabbedPane;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.ViewSize;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddCommitmentDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddEventDisplay;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.CategoryManager;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.DayCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthItem;
@@ -498,7 +499,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 			}
 			else if (tabToOpen != null)
 			{
-				this.mTabbedPane.setSelectedComponent(tabToOpen);
+				setSelectedTab(tabToOpen);
 			}
 			
 		}
@@ -517,5 +518,28 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 			previouslySelected.setBackground(Colors.TABLE_BACKGROUND);
 		}
 		sideTabbedPanel.clearDetails();
+	}
+	
+	public CategoryManager getCategoryManagerTab()
+	{
+		for(JComponent c : tabs.values())
+		{
+			if (c instanceof CategoryManager)
+			{
+				return (CategoryManager) c;
+			}
+		}
+		return null;
+	}
+	
+	public void setSelectedTab(JComponent tabToFocus)
+	{
+		try
+		{
+			this.mTabbedPane.setSelectedComponent(tabToFocus);
+		}catch(IllegalArgumentException e)
+		{
+			e.printStackTrace(); //tab not found
+		}
 	}
 }
