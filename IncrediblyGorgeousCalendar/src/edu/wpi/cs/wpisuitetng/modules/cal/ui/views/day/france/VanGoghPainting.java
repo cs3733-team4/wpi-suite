@@ -19,8 +19,10 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
+import org.jfree.util.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
+
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
@@ -70,9 +72,11 @@ public class VanGoghPainting extends JPanel
 		setBorder(new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new LineBorder(bg.darker()), new EmptyBorder(6, 6, 6, 6))));
 		setBackground(bg);
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		lblEventTitle = new JLabel(event.getName());
+		lblEventTitle = new JLabel();
 		add(lblEventTitle);
 		lblEventTitle.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblEventTitle.putClientProperty("html.disable", true); //prevents html parsing
+		lblEventTitle.setText(event.getName());
 		
 		if (event.isMultiDayEvent())
 		{
@@ -202,9 +206,13 @@ public class VanGoghPainting extends JPanel
 		int line = 0;
 		int lengthRemaining = lineLengths.size() > 0 ? lineLengths.get(0).toInt(myWidth) : 0;
 		String formattedDescription = "<html>";
-		for(String word : description)
+		for(String tword : description)
 		{
-			if(wordLengths.get(word).intValue() < lengthRemaining)
+			String word = tword.replaceAll("&", "&amp;");
+			word = word.replaceAll("\"", "&quot;");
+			word = word.replaceAll("<", "&lt;");
+			word = word.replaceAll("<", "&gt;");
+			if(wordLengths.get(tword).intValue() < lengthRemaining)
 				formattedDescription += word;
 			else
 			{
@@ -217,7 +225,7 @@ public class VanGoghPainting extends JPanel
 				lengthRemaining = lineLengths.get(line).toInt(myWidth);
 				//System.out.println("New line! rat wtih" + lineLengths.get(line).toString() + lengthRemaining);
 			}
-			lengthRemaining -= wordLengths.get(word).intValue() + spaceLength;
+			lengthRemaining -= wordLengths.get(tword).intValue() + spaceLength;
 			formattedDescription += " ";
 			
 		}
