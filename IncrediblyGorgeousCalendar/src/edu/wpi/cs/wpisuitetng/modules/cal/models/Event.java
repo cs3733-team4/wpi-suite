@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.UUID;
 
 import org.joda.time.DateTime;
+import org.joda.time.MutableDateTime;
 
 import com.google.gson.Gson;
 
@@ -298,18 +299,56 @@ public class Event extends AbstractModel implements Displayable
 	{
 		this.owner = owner;
 	}
-
-	// custom "getters"
-	
+	public Category getAssociatedCategory()
+	{
+		return CategoryModel.getInstance().getCategoryByUUID(category);
+	}
 	public Color getColor()
 	{
-		// TODO: if category, get category color
-		return isProjectEvent ? new Color(125,157,227) : new Color(227,125,147);
+		Color fallbackColor = isProjectEvent ? new Color(125,157,227) : new Color(227,125,147);
+		Category cat = CategoryModel.getInstance().getCategoryByUUID(category);
+		if (cat == null)
+		{
+			return fallbackColor;
+		}
+		Color eventColor = cat.getColor();
+		if (eventColor != null)
+		{
+			return eventColor;
+		}
+		return fallbackColor;
 	}
-	
+	public boolean isMultiDayEvent()
+	{
+		return (getEnd().getYear()!=getStart().getYear() || getEnd().getDayOfYear()!=getStart().getDayOfYear());
+			
+	}
 	@Override
 	public DateTime getDate()
 	{
 		return this.getStart();
+	}
+	public DateTime getStartTimeOnDay(DateTime givenDay)
+	{
+		MutableDateTime mDisplayedDay = new MutableDateTime(givenDay);
+		mDisplayedDay.setMillisOfDay(1);
+		//if it starts before the beginning of the day then its a multi day event, or all day event
+		if (this.getStart().isBefore(mDisplayedDay)){
+			mDisplayedDay.setMillisOfDay(0);
+			return(mDisplayedDay.toDateTime());
+		}
+		else
+			return this.getStart();
+	}
+	public DateTime getEndTimeOnDay(DateTime givenDay)
+	{
+		MutableDateTime mDisplayedDay = new MutableDateTime(givenDay);;
+		mDisplayedDay.setMillisOfDay(86400000-2);
+		if (this.getEnd().isAfter(mDisplayedDay))
+		{
+			return mDisplayedDay.toDateTime();
+		}
+		else
+			return this.getEnd();
 	}
 }

@@ -17,6 +17,9 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
+
+import org.joda.time.DateTime;
+
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 
@@ -33,9 +36,9 @@ public class LouvreTour extends JPanel
 		setBackground(Colors.TABLE_BACKGROUND);
 	}
 	
-	public void setEvents(List<Event> events)
+	public void setEvents(List<Event> events, DateTime displayedDay)
 	{
-		List<VanGoghPainting> gallery = CERN.createEventsReallyNicely(events);
+		List<VanGoghPainting> gallery = CERN.createEventsReallyNicely(events, displayedDay);
 		removeAll();
 		guides.clear();
 		for (VanGoghPainting vanGoghPainting : gallery)

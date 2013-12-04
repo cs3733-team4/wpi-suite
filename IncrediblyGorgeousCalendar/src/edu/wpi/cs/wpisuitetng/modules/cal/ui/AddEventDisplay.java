@@ -12,6 +12,7 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui;
 import javax.swing.Box.Filler;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
@@ -22,9 +23,12 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
+
 import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
 import java.awt.Color;
@@ -34,6 +38,7 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 import java.util.UUID;
 
 public class AddEventDisplay extends JPanel
@@ -67,47 +72,62 @@ public class AddEventDisplay extends JPanel
 	private Event eventToEdit;
 	private boolean editEvent;
 	private UUID existingEventID; // UUID of event being edited
+	private JComboBox<Category> eventCategoryPicker;
 	
 	
 	// Constructor for edit event.
-	public AddEventDisplay(Event mEvent){
-		
+	public AddEventDisplay(Event mEvent)
+	{
+		this.eventCategoryPicker = new JComboBox<Category>();
 		this.eventToEdit = mEvent;
 		this.editEvent = true;
 		this.existingEventID = eventToEdit.getEventID();
 		setUpUI();
 		populateEventFields(eventToEdit);
 		setUpListeners();
+		
 	}
 	
 	// Constructor for create new event.
 	public AddEventDisplay()
 	{
+		this.eventCategoryPicker = new JComboBox<Category>();
 		this.editEvent = false;
 		setUpUI();
 		setUpListeners();
-		
 	}
 	
 	/**
 	 * Populates the events field if the class was invoked with an existing event.
 	 * Allows for the edition of events 
 	 */
-	private void populateEventFields(Event eventToEdit){
-		
+	private void populateEventFields(Event eventToEdit)
+	{
 		this.participantsTextField.setText(eventToEdit.getParticipants());
 		this.nameTextField.setText(eventToEdit.getName());
 		this.descriptionTextArea.setText(eventToEdit.getDescription());
 		this.teamProjectCheckBox.setSelected(eventToEdit.isProjectEvent());
 		this.startTimeDatePicker.setDateTime(eventToEdit.getStart());
 		this.endTimeDatePicker.setDateTime(eventToEdit.getEnd());
-		
+		if (eventToEdit.getAssociatedCategory()!=null)
+			this.eventCategoryPicker.setSelectedItem(eventToEdit.getAssociatedCategory());
+		else
+			this.eventCategoryPicker.setSelectedItem(Category.DEFUALT_CATEGORY);
 	}
 	
 	/**
 	 * Set up the UI layout for AddEventDisplay
 	 */
-	private void setUpUI(){
+	private void setUpUI()
+	{
+		
+		// set up the combobox
+		this.eventCategoryPicker.addItem(Category.DEFUALT_CATEGORY);
+		for(Category c : CategoryModel.getInstance().getAllCategories())
+		{
+			this.eventCategoryPicker.addItem(c);
+		}
+		
 		
 		// Basic Layout
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -159,14 +179,13 @@ public class AddEventDisplay extends JPanel
 		// Text Field
 		nameTextField.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		nameTextField.setColumns(25);
-		nameTextField.setBorder( new BevelBorder(BevelBorder.LOWERED));
 		nameTextFieldPanel.add(nameTextField);
 		
 		nameErrorLabel.setForeground(Color.RED);
 		validateText(nameTextField.getText(), nameErrorLabel);
 
-		nameLabelPanel.add(nameErrorLabel);
 		nameLabelPanel.add(nameTextField);
+		nameLabelPanel.add(nameErrorLabel);
 		
 		JPanel DateandTimeLabelPane = new JPanel();
 		add(DateandTimeLabelPane);
@@ -249,18 +268,37 @@ public class AddEventDisplay extends JPanel
 		
 		// Text Field
 		participantsTextFieldPanel.add(participantsTextField);
-		participantsTextField.setBorder( new BevelBorder(BevelBorder.LOWERED));
 		participantsTextField.setColumns(30);
 		
 		// Add panel to UI
 		this.add(participantsTextFieldPanel);
+		
+		/** Categories ui */
+		
+		JPanel comboHolder = new JPanel();
+		FlowLayout fl_DescriptionLabelPane = (FlowLayout) comboHolder.getLayout();
+		fl_DescriptionLabelPane.setAlignment(FlowLayout.LEFT);
+		
+		JLabel ljtest = new JLabel("Category:");
+		ljtest.setVerticalAlignment(SwingConstants.BOTTOM);
+		ljtest.setAlignmentX(Component.CENTER_ALIGNMENT);
+		ljtest.setHorizontalAlignment(SwingConstants.LEFT);
+		comboHolder.add(ljtest);
+		add(comboHolder);
+		
+		//add the combobox for category
+		comboHolder = new JPanel();
+		fl_DescriptionLabelPane = (FlowLayout) comboHolder.getLayout();
+		fl_DescriptionLabelPane.setAlignment(FlowLayout.LEFT);
+		comboHolder.add(eventCategoryPicker);
+		add(comboHolder);
 		
 		/** Description Panel */
 		
 		// Panel
 		
 		this.descriptionLabelPanel = new JPanel();
-		FlowLayout fl_DescriptionLabelPane = (FlowLayout) descriptionLabelPanel.getLayout();
+		fl_DescriptionLabelPane = (FlowLayout) descriptionLabelPanel.getLayout();
 		fl_DescriptionLabelPane.setAlignment(FlowLayout.LEFT);
 		
 		// Label
@@ -283,7 +321,6 @@ public class AddEventDisplay extends JPanel
 		
 		// Text Area
 		descriptionTextArea.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		descriptionTextArea.setBorder( new BevelBorder(BevelBorder.LOWERED));
 		descriptionTextArea.setLineWrap(true);
 		descriptionTextArea.setWrapStyleWord(true);
 		
@@ -328,6 +365,15 @@ public class AddEventDisplay extends JPanel
 		// Add panel to UI
 		this.add(submissionPanel);
 		
+		saveButton.setEnabled(isSaveable());
+		
+		//add the combobox for category
+		JPanel comboBoxHolder = new JPanel();
+		this.add(comboBoxHolder);
+		if (this.eventCategoryPicker != null)
+		{
+			comboBoxHolder.add(this.eventCategoryPicker);
+		}
 		
 	}
 	
@@ -346,21 +392,7 @@ public class AddEventDisplay extends JPanel
 					startTimeDatePicker.getDate();
 					endTimeDatePicker.getDate();
 					errorText.setVisible(true);
-					
-					if (nameTextField.getText() == null || nameTextField.getText().trim().length() == 0)
-					{
-						errorText.setText("* Please enter an event title");
-					}
-					else if (!(startTimeDatePicker.getDate().getDayOfYear() == endTimeDatePicker.getDate().getDayOfYear() &&
-						startTimeDatePicker.getDate().getYear() == endTimeDatePicker.getDate().getYear()))
-					{
-						errorText.setText("* Event must start and end on the same date");
-					}
-					else if (startTimeDatePicker.getDate().isAfter(endTimeDatePicker.getDate())) {
-						errorText.setText("* Event start date must be before end date");
-					}
-					else
-					{
+				
 						errorText.setVisible(false);
 						Event e = new Event();
 						e.setName(nameTextField.getText().trim());
@@ -369,6 +401,8 @@ public class AddEventDisplay extends JPanel
 						e.setEnd(endTimeDatePicker.getDate());
 						e.setProjectEvent(teamProjectCheckBox.isSelected());
 						e.setParticipants(participantsTextField.getText().trim());
+						e.setCategory(((Category)eventCategoryPicker.getSelectedItem()).getCategoryID());
+						
 						
 						if (editEvent){
 							e.setEventID(existingEventID);
@@ -381,13 +415,18 @@ public class AddEventDisplay extends JPanel
 						saveButton.setText("Saved!");
 						MainPanel.getInstance().closeTab(tabid);
 						MainPanel.getInstance().refreshView();
-					}
+					
 				}
 				catch (IllegalArgumentException exception)
 				{
 					errorText.setText("* Invalid Date/Time");
 					errorText.setVisible(true);
 				}
+				
+				saveButton.setEnabled(false);
+				saveButton.setText("Saved!");
+				MainPanel.getInstance().closeTab(tabid);
+				MainPanel.getInstance().refreshView();
 			}
 		});
 		
@@ -418,7 +457,7 @@ public class AddEventDisplay extends JPanel
 	}
 	
 	/**
-	 * 
+	 * Validates text has been entered (used for event name)
 	 * @param mText text to be validated
 	 * @param mErrorLabel JLabel to display resulting error message
 	 * @return true if all pass, else return true
@@ -429,20 +468,14 @@ public class AddEventDisplay extends JPanel
 		{
 			mErrorLabel.setText("* Required Field");
 			return false;
-		/*will be handled when parsed
-		}else if(mText.matches("^.*[^a-zA-Z0-9.,()$ ].*$"))
-		{
-			
-			mErrorLabel.setText("* Invalid Name/Characters");
-		*/
 		}
 		return true;
 	}
 	
 	/**
-	 * 
-	 * @param mStartTime first DatePicker to validate and compare
-	 * @param mEndTime second DatePicker to validate and compare
+	 * Validates that an event has valid start and end dates and times
+	 * @param mStartTime starting DateTime to validate and compare
+	 * @param mEndTime ending DateTime to validate and compare
 	 * @param mErrorLabel text field to be updated with any error message
 	 * @return true if all validation checks pass, else returns false
 	 */
@@ -452,11 +485,7 @@ public class AddEventDisplay extends JPanel
 		{
 			mErrorLabel.setText("* Invalid Date/Time");
 		}//if properly formatted, error if startDate is a different day than the endDate
-		else if (!(mStartTime.getDayOfYear() == mEndTime.getDayOfYear() &&
-			mStartTime.getYear() == mEndTime.getYear()))
-		{
-			mErrorLabel.setText("* Multi-day events not supported");
-		}//error if the start time is after the end time
+		//error if the start time is after the end time
 		else if (!mEndTime.isAfter(mStartTime)) {
 			mErrorLabel.setText("* Event has invalid duration");
 		}else

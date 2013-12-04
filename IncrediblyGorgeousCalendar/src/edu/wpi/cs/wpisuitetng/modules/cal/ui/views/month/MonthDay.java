@@ -15,6 +15,8 @@ import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.swing.JLabel;
@@ -37,11 +39,14 @@ public class MonthDay extends JPanel
 	private boolean borderTop;
 	JLabel header = new JLabel();
 	private Displayable selected;
-	private List<Event> items = new ArrayList<Event>();
+	private List<Event> events = new ArrayList<Event>();
 	private List<Commitment> commitments = new ArrayList<Commitment>();
+	private DateTime day;
 
+	
 	public MonthDay(DateTime day, DayStyle style)
 	{
+		this.day=day;
 		Color grayit, textit = Colors.TABLE_TEXT, bg = Colors.TABLE_BACKGROUND;
 		switch (style)
 		{
@@ -123,7 +128,7 @@ public class MonthDay extends JPanel
 	 */
 	public void addEvent(Event e)
 	{
-		this.items.add(e);
+		this.events.add(e);
 		revalidate();
 	}
 
@@ -145,7 +150,7 @@ public class MonthDay extends JPanel
 	 */
 	public void removeEvent(Event e)
 	{
-		this.items.remove(e);
+		this.events.remove(e);
 		revalidate();
 	}
 
@@ -164,10 +169,33 @@ public class MonthDay extends JPanel
 		removeAll();
 		add(header);
 		total -= header.getHeight();
-
-		ArrayList<Displayable> allitems = new ArrayList<>(items.size()	+ commitments.size());
-		allitems.addAll(items);
+		
+		ArrayList<Displayable> allitems = new ArrayList<>(events.size() + commitments.size());
+		allitems.addAll(events);
 		allitems.addAll(commitments);
+		
+		Collections.sort(allitems, new Comparator<Displayable>() {
+
+			@Override
+			public int compare(Displayable o1, Displayable o2) {
+				if ((o1 instanceof Event) && (o2 instanceof Commitment))
+					return -1;
+				else if ((o1 instanceof Commitment) && (o2 instanceof Event))
+					return 1;
+				else if ((o1 instanceof Event) && (o2 instanceof Event))//both events so check multiday event
+				{
+					if (((Event)o1).isMultiDayEvent() && !((Event)o2).isMultiDayEvent())
+						return -1;
+					else if (!((Event)o1).isMultiDayEvent() && ((Event)o2).isMultiDayEvent())
+						return 1;
+				}
+				//if it gets to this poing then they are both commitments, or both multi day events, or both single day events
+				if (o1.getDate().isBefore(o2.getDate()))
+					return -1;
+				else//will default to 1, no need to check if they start at the same time....
+					return 1;
+			}
+		});
 
 		for (Displayable elt : allitems)
 		{
@@ -185,14 +213,14 @@ public class MonthDay extends JPanel
 				}
 				else
 				{
-					this.add(MonthItem.generateFrom(elt, selected));
+					this.add(MonthItem.generateFrom(elt, selected, day));
 				}
 			}
 		}
 
 		if (hidden == 1) // silly, add it anyway
 		{
-			this.add(MonthItem.generateFrom(allitems.get(allitems.size() - 1), selected));
+			this.add(MonthItem.generateFrom(allitems.get(allitems.size() - 1), selected, day));
 		}
 		else if (hidden > 1)
 		{
@@ -205,12 +233,12 @@ public class MonthDay extends JPanel
 	// Added for testing purposes
 	boolean hasEvent(Event e)
 	{
-		return items.contains(e);
+		return events.contains(e);
 	}
 
 	public void clear()
 	{
-		items.clear();
+		events.clear();
 		revalidate();
 	}
 

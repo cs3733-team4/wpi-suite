@@ -20,6 +20,8 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.Duration;
 import org.joda.time.MutableDateTime;
 import org.joda.time.ReadableDateTime;
 
@@ -49,7 +51,8 @@ public class MonthCalendar extends AbstractCalendar
 	private DateTime time;
 	private MainPanel mainPanel;
 	private Displayable lastSelection;
-
+	private DateTime firstOnMonth;
+	private DateTime lastOnMonth;
 	private HashMap<Integer, MonthDay> days = new HashMap<Integer, MonthDay>();
 
 	private EventModel eventModel;
@@ -142,8 +145,31 @@ public class MonthCalendar extends AbstractCalendar
 	 */
 	void addEvent(Event e)
 	{
-		MonthDay md = this.days.get(e.getStart().getDayOfYear());
-		md.addEvent(e);
+		
+		MonthDay md;
+		MutableDateTime startDay = new MutableDateTime(e.getStart());
+		MutableDateTime endDay = new MutableDateTime(e.getEnd());
+		endDay.setMillisOfDay(0);
+		startDay.setMillisOfDay(0);
+		
+		if (startDay.isBefore(firstOnMonth))
+			startDay=new MutableDateTime(firstOnMonth);
+		if (endDay.isAfter(lastOnMonth))
+			endDay= new MutableDateTime(lastOnMonth);
+			
+		while (!endDay.isBefore(startDay))
+		{
+			md = this.days.get(startDay.getDayOfYear());
+			try{
+				md.addEvent(e);
+			}
+			catch(NullPointerException ex)
+			{
+				System.err.println("Error when adding Event: " + e.toJSON());
+			}
+			startDay.addDays(1);
+		
+		}
 	}
 
 	/**
@@ -236,6 +262,8 @@ public class MonthCalendar extends AbstractCalendar
 		inside.setLayout(new java.awt.GridLayout(weeks, 7));
 		referenceDay.addDays(-first);
 
+		firstOnMonth = new DateTime(referenceDay);
+		
 		// remove all old days
 		inside.removeAll();
 
@@ -253,7 +281,8 @@ public class MonthCalendar extends AbstractCalendar
 		}
 
 		referenceDay.addDays(-1);// go back one to counteract last add one
-
+		
+		lastOnMonth = new DateTime(referenceDay);
 		setEvents(getVisibleEvents(from, referenceDay.toDateTime()));
 		setCommitments(getVisibleCommitments(from, referenceDay.toDateTime()));
 

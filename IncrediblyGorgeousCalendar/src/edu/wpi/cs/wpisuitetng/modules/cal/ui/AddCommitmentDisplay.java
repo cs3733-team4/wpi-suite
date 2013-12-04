@@ -20,14 +20,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextArea;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.SwingConstants;
 
 import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -87,7 +85,6 @@ public class AddCommitmentDisplay extends JPanel
 		NameLabelPanel.add(nameErrorLabel);
 		nameTextField = new JTextField();
 		NamePane.add(nameTextField);
-		nameTextField.setBorder( new BevelBorder(BevelBorder.LOWERED));
 		nameTextField.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		nameTextField.setColumns(25);
 		if (editingCommitment)
@@ -130,7 +127,6 @@ public class AddCommitmentDisplay extends JPanel
 		add(ParticipantsPanel);
 		
 		participantsTextField = new JTextField();
-		participantsTextField.setBorder( new BevelBorder(BevelBorder.LOWERED));
 		ParticipantsPanel.add(participantsTextField);
 		participantsTextField.setColumns(30);
 		if (editingCommitment)
@@ -159,7 +155,6 @@ public class AddCommitmentDisplay extends JPanel
         add(filler1);
 		
         final JTextArea descriptionTextArea = new JTextArea(5,35);
-        descriptionTextArea.setBorder( new BevelBorder(BevelBorder.LOWERED));
 		descriptionTextArea.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		descriptionTextArea.setLineWrap(true);
 		descriptionTextArea.setWrapStyleWord(true);
