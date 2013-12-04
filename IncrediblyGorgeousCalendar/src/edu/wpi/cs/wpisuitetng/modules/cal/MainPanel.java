@@ -48,6 +48,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.navigation.SidebarTabbedPane;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.ViewSize;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddCommitmentDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddEventDisplay;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.CategoryManager;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.DayCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthItem;
@@ -84,9 +85,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	private CommitmentModel commitments;
 	private ViewSize view = ViewSize.Month;
 	private static MainPanel instance;
-	private MonthItem currentSelected;
-	private MonthItem previouslySelected;
-	private Displayable currentDisplayable;
+	private Displayable currentSelected;
 	
 	//TODO: "make this better" -Patrick
 	public boolean showPersonal = true;
@@ -321,7 +320,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	 * @param updateEvent event to update
 	 */
 	public void updateEvent(Event updateEvent){
-		if((currentDisplayable instanceof Event) && updateEvent.getEventID().equals(((Event) currentDisplayable).getEventID()))
+		if((currentSelected instanceof Event) && updateEvent.getEventID().equals(((Event) currentSelected).getEventID()))
 			clearSelected();
 		events.updateEvent(updateEvent);
 	}
@@ -411,6 +410,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	 */
 	private void refreshView(final AbstractCalendar absCalendar)
 	{
+		clearSelected();
 		centerPanelBottom.remove(mCalendar);
 		mCalendar = absCalendar;
 		mainCalendarNavigationPanel.updateCalendar(mCalendar);
@@ -443,44 +443,33 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	 * Close specified tab
 	 * @param id
 	 */
-	public void closeTab(int id){
+	public void closeTab(int id)
+	{
 		mTabbedPane.remove(tabs.get(id));
+		tabs.remove(id);
 	}
 	
 	/**
 	 * Highlights the  selected monthItem on the calendar
 	 * @param Item the month item to highlight
 	 */
-	public void updateSelectedDisplayable(MonthItem Item){
-		
-		this.currentSelected = Item;
-		this.currentDisplayable = Item.getDisplayable();
-		
-		sideTabbedPanel.showDetails(currentDisplayable);
-		
-		if (previouslySelected != null)
-			previouslySelected.setBackground(Colors.TABLE_BACKGROUND);
-		
-		currentSelected.setBackground(Colors.SELECTED_BACKGROUND);
-		previouslySelected = currentSelected;
-		
+	public void updateSelectedDisplayable(Displayable item)
+	{
+		mCalendar.select(item);
+		this.currentSelected = item;	
+		sideTabbedPanel.showDetails(item);
 	}
 	
 	/**
 	 * Edits the selected displayable
 	 * @param Item the month item containing the displayable to edit
 	 */
-	public void editSelectedDisplayable(MonthItem Item){
+	public void editSelectedDisplayable(Displayable item)
+	{
+		updateSelectedDisplayable(item);
 		
-		this.currentSelected = Item;
-		this.currentDisplayable = Item.getDisplayable();
-		
-		
-		currentSelected.setBackground(Colors.TABLE_BACKGROUND);
-		previouslySelected = currentSelected;
-		
-		if (currentDisplayable instanceof Event) {
-			AddEventDisplay mAddEventDisplay = new AddEventDisplay((Event) currentDisplayable);
+		if (item instanceof Event) {
+			AddEventDisplay mAddEventDisplay = new AddEventDisplay((Event) item);
 			boolean openNewTab = true;
 			JComponent tabToOpen = null;
 			
@@ -498,24 +487,63 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 			}
 			else if (tabToOpen != null)
 			{
-				this.mTabbedPane.setSelectedComponent(tabToOpen);
+				setSelectedTab(tabToOpen);
 			}
 			
 		}
-		else if (currentDisplayable instanceof Commitment) {
-			AddCommitmentDisplay mAddCommitmentDisplay = new AddCommitmentDisplay((Commitment) currentDisplayable);
-			mAddCommitmentDisplay.setTabId(instance.addTopLevelTab(mAddCommitmentDisplay, "Edit Commitment", true));
+		else if (item instanceof Commitment) {
+			AddCommitmentDisplay mAddCommitmentDisplay = new AddCommitmentDisplay((Commitment) item);
+			boolean openNewTab = true;
+			JComponent tabToOpen = null;
+			
+			for(JComponent c : tabs.values())
+			{
+				if (openNewTab && c instanceof AddCommitmentDisplay)
+				{
+					openNewTab = !((AddCommitmentDisplay) c).matchingCommitment(mAddCommitmentDisplay);
+					tabToOpen = c;
+				}
+			}
+			if (openNewTab)
+			{
+				mAddCommitmentDisplay.setTabId(instance.addTopLevelTab(mAddCommitmentDisplay, "Edit Commitment", true));
+			}
+			else if (tabToOpen != null)
+			{
+				setSelectedTab(tabToOpen);
+			}
 		}
 	}
 	
 	/**
 	 * Clears selected MonthItem from calendar
 	 */
-	public void clearSelected(){
-		if (previouslySelected != null)
-		{
-			previouslySelected.setBackground(Colors.TABLE_BACKGROUND);
-		}
+	public void clearSelected()
+	{
+		updateSelectedDisplayable(null);
 		sideTabbedPanel.clearDetails();
+	}
+	
+	public CategoryManager getCategoryManagerTab()
+	{
+		for(JComponent c : tabs.values())
+		{
+			if (c instanceof CategoryManager)
+			{
+				return (CategoryManager) c;
+			}
+		}
+		return null;
+	}
+	
+	public void setSelectedTab(JComponent tabToFocus)
+	{
+		try
+		{
+			this.mTabbedPane.setSelectedComponent(tabToFocus);
+		}catch(IllegalArgumentException e)
+		{
+			e.printStackTrace(); //tab not found
+		}
 	}
 }

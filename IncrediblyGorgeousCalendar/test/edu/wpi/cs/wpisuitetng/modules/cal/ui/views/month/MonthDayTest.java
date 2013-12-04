@@ -34,7 +34,7 @@ public class MonthDayTest {
 									
 		MD.addEvent(eatIcecream);
 		
-		Field f= MD.getClass().getDeclaredField("items");
+		Field f= MD.getClass().getDeclaredField("events");
 		f.setAccessible(true);
 		
 		assertTrue("New events can be added to a MonthDay", ((List<Event>) f.get(MD)).contains(eatIcecream));
@@ -57,7 +57,7 @@ public class MonthDayTest {
 				
 		MD.addEvent(eatIcecream);
 		
-		Field f= MD.getClass().getDeclaredField("items");
+		Field f= MD.getClass().getDeclaredField("events");
 		f.setAccessible(true);
 
 		assertTrue("Events can be added,", ((List<Event>) f.get(MD)).contains(eatIcecream));
@@ -85,7 +85,7 @@ public class MonthDayTest {
 		
 		MD.removeEvent(throwUpIcecream);
 		
-		Field f= MD.getClass().getDeclaredField("items");
+		Field f= MD.getClass().getDeclaredField("events");
 		f.setAccessible(true);
 		
 		assertFalse("Events can be removed from a MonthDay", ((List<Event>) f.get(MD)).contains(throwUpIcecream));

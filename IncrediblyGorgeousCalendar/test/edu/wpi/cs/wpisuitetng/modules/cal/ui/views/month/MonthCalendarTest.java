@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.util.HashSet;
 
 import org.joda.time.DateTime;
+import org.junit.Before;
 import org.junit.Test;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MockData;
@@ -12,7 +13,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthCalendar;
-import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
+import edu.wpi.cs.wpisuitetng.modules.cal.MockNetwork;
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
 
@@ -22,13 +23,24 @@ import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
  */
 
 public class MonthCalendarTest{
-
+	
 	private EventModel dummyModel = EventModel.getInstance();
 	private CommitmentModel dummyModel2 = new CommitmentModel();
 	
-	MockData db = new MockData(new HashSet<Object>());
-	final NetworkConfiguration config = new NetworkConfiguration("http://localhost:8080");
-	//Network.getInstance().setDefaultNetworkConfiguration(config);
+	@Before
+	public void setUp() throws Exception {
+		// Mock network
+		Network.initNetwork(new MockNetwork());
+		final NetworkConfiguration config = new NetworkConfiguration("http://localhost:8080");
+		Network.getInstance().setDefaultNetworkConfiguration(config);
+		
+	//	EventModel dummyModel = EventModel.getInstance();
+		//CommitmentModel dummyModel2 = new CommitmentModel();
+		
+		//MockData db = new MockData(new HashSet<Object>());
+		//final NetworkConfiguration config = new NetworkConfiguration("http://localhost:8080");
+		//Network.getInstance().setDefaultNetworkConfiguration(config);
+	}
 	
 	private DateTime time =  new DateTime();
 	private DateTime timeDecember = new DateTime(2012,12,1,1,1);

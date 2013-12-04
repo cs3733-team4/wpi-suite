@@ -15,14 +15,18 @@ import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.SwingConstants;
 
 import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import com.lowagie.text.Font;
+
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.france.LouvreTour;
@@ -65,10 +69,14 @@ public class DayCalendar extends AbstractCalendar
 		this.holder.removeAll();
 		this.removeAll();
 		this.add(scroll, BorderLayout.CENTER);
-		this.add(new JLabel(time.toString(titleFmt)), BorderLayout.NORTH);
+		
+		JLabel dayTitle = new JLabel(time.toString(titleFmt));
+		dayTitle.setFont(new java.awt.Font("DejaVu Sans", Font.BOLD, 25));
+		dayTitle.setHorizontalAlignment(SwingConstants.CENTER);
+		this.add(dayTitle, BorderLayout.NORTH);
 
 		this.current = new LouvreTour();
-		this.current.setEvents(getVisibleEvents());
+		this.current.setEvents(getVisibleEvents(), time);
 
 		this.holder.add(DayGridLabel.getInstance(), BorderLayout.WEST);
 		this.holder.add(this.current, BorderLayout.CENTER);
@@ -119,5 +127,11 @@ public class DayCalendar extends AbstractCalendar
 	{
 		// at the moment, we don't care, and just re-pull from the DB. TODO: this should change
 		this.generateDay();
+	}
+
+	@Override
+	public void select(Displayable item)
+	{
+		current.select(item);		
 	}
 }

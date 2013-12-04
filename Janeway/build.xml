@@ -14,6 +14,7 @@
 			<include name="iText-2.1.5.jar"/>
 			<include name="miglayout-4.0-swing.jar"/>
 			<include name="swingx-all-1.6.4.jar"/>
+			<include name="joda-time-2.3.jar"/>
 		</fileset>
 	</path>
 	<path id="test-classpath">
@@ -64,6 +65,7 @@
             <zipfileset src="./lib/gnujaxp.jar"/>
             <zipfileset src="./lib/jcommon-1.0.17.jar"/>
             <zipfileset src="./lib/jfreechart-1.0.14.jar"/>
+            <zipfileset src="./lib/joda-time-2.3.jar"/>
 			<zipfileset src="${core-lib}/gson-2.2.2.jar" />
 			<zipfileset src="${core-lib}/commons-codec-1.7.jar" />
 		</jar>

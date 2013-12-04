@@ -14,12 +14,14 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.UUID;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
@@ -28,8 +30,10 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -72,16 +76,18 @@ public class CategoryManager extends JPanel {
 		leftCategoryList.setPreferredSize(new Dimension(350, 900));
 		leftCategoryList.setMinimumSize(new Dimension(350, 900));
 		leftCategoryList.setMaximumSize(new Dimension(350, 900));
+		leftCategoryList.setBorder(BorderFactory.createEmptyBorder(6, 6, 6, 0));
 		
 		rightCategoryEdit = new JPanel();
 		rightCategoryEdit.setLayout(new BoxLayout(rightCategoryEdit, BoxLayout.Y_AXIS));
-		rightCategoryEdit.setBorder(new EmptyBorder(10, 10, 10, 10));
+		rightCategoryEdit.setBorder(new EmptyBorder(6, 6, 6, 6));
 		
 		/** Name Panel */
 		
 		// Panel
 		categoryNamePanel = new JPanel();
 		categoryNamePanel.setLayout(new BoxLayout(categoryNamePanel, BoxLayout.X_AXIS));
+		categoryNamePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		
 		// Label
 		categoryNameLabel = new JLabel("Name: ");
@@ -127,8 +133,9 @@ public class CategoryManager extends JPanel {
 		
 		// Panel
 		colorPicker = new PastelColorPicker();
-		colorPicker.setPreferredSize(new Dimension(32767, 53));
-		colorPicker.setMaximumSize(new Dimension(32767, 53));
+		colorPicker.setPreferredSize(new Dimension(450, 53));
+		colorPicker.setMaximumSize(new Dimension(450, 53));
+		colorPicker.setAlignmentX(Component.LEFT_ALIGNMENT);
 		
 		// Add to UI
 		rightCategoryEdit.add(Box.createRigidArea(new Dimension (0, 6)));
@@ -138,6 +145,9 @@ public class CategoryManager extends JPanel {
 		
 		// Panel
 		bottomEditPanel = new JPanel();
+		FlowLayout fl_DescriptionLabelPane = (FlowLayout) bottomEditPanel.getLayout();
+		fl_DescriptionLabelPane.setAlignment(FlowLayout.LEFT);
+		bottomEditPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		
 		// Buttons
 		updateList = new JButton("Update List");
@@ -152,6 +162,7 @@ public class CategoryManager extends JPanel {
 		bottomEditPanel.add(updateList);
 		//bottomEditPanel.add(deleteCategory);
 		bottomEditPanel.add(errorText);
+		bottomEditPanel.add(Box.createHorizontalGlue());
 		
 		// Add to UI
 		rightCategoryEdit.add(bottomEditPanel);
@@ -189,16 +200,26 @@ public class CategoryManager extends JPanel {
 			public Component getListCellRendererComponent(
 					JList<? extends Category> list, Category value, int index,
 					boolean isSelected, boolean cellHasFocus) {
+				JPanel bg = new JPanel();
+				bg.setLayout(new BoxLayout(bg, BoxLayout.X_AXIS));
+				JPanel colorBlast = new JPanel();
+				colorBlast.setPreferredSize(new Dimension(12, 12));
+				colorBlast.setMaximumSize(new Dimension(12, 12));
+				colorBlast.setBackground(value.getColor());
+				colorBlast.setBorder(BorderFactory.createLineBorder(Color.black, 1));
+				bg.add(colorBlast);
+				bg.add(Box.createHorizontalStrut(3));
 				
-					JLabel display = new JLabel(value.getName());
-					display.setOpaque(true);
-					display.setBackground(Colors.TABLE_BACKGROUND);
-					
-					if (isSelected)
-						display.setBackground(Colors.SELECTED_BACKGROUND);
-					
-					return display;
-					
+				JLabel display = new JLabel(value.getName());
+				bg.add(display);
+				bg.add(Box.createHorizontalGlue());
+				bg.setOpaque(true);
+				bg.setBackground(Colors.TABLE_BACKGROUND);
+				
+				if (isSelected)
+					bg.setBackground(Colors.SELECTED_BACKGROUND);
+				
+				return bg;
 			}
 		});
 		
@@ -214,8 +235,10 @@ public class CategoryManager extends JPanel {
 			}
 		}
 		
-		
-		leftCategoryList.add(categoriesList);
+		JScrollPane categoriesListScrollPane = new JScrollPane(categoriesList);
+		categoriesListScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		categoriesListScrollPane.setBorder(BorderFactory.createLineBorder(Colors.BORDER));
+		leftCategoryList.add(categoriesListScrollPane);
 		
 		this.add(leftCategoryList);
 		this.add(rightCategoryEdit);
@@ -233,14 +256,8 @@ public class CategoryManager extends JPanel {
 	{
 		if(mText==null || mText.trim().length()==0)
 		{
-			mErrorLabel.setText("* Required Field");
+			mErrorLabel.setText(" * Required Field");
 			return false;
-		/*will be handled when parsed
-		}else if(mText.matches("^.*[^a-zA-Z0-9.,()$ ].*$"))
-		{
-			
-			mErrorLabel.setText("* Invalid Name/Characters");
-		*/
 		}
 		return true;
 	}

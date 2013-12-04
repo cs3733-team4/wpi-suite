@@ -22,7 +22,6 @@ import javax.swing.JTextArea;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.SwingConstants;
-import javax.swing.border.BevelBorder;
 
 import org.joda.time.DateTime;
 
@@ -70,7 +69,7 @@ public class AddEventDisplay extends JPanel
 	private JButton saveButton;
 	private JButton cancelButton;
 	private Event eventToEdit;
-	private boolean editEvent;
+	private boolean isEditingEvent;
 	private UUID existingEventID; // UUID of event being edited
 	private JComboBox<Category> eventCategoryPicker;
 	
@@ -80,7 +79,7 @@ public class AddEventDisplay extends JPanel
 	{
 		this.eventCategoryPicker = new JComboBox<Category>();
 		this.eventToEdit = mEvent;
-		this.editEvent = true;
+		this.isEditingEvent = true;
 		this.existingEventID = eventToEdit.getEventID();
 		setUpUI();
 		populateEventFields(eventToEdit);
@@ -92,7 +91,7 @@ public class AddEventDisplay extends JPanel
 	public AddEventDisplay()
 	{
 		this.eventCategoryPicker = new JComboBox<Category>();
-		this.editEvent = false;
+		this.isEditingEvent = false;
 		setUpUI();
 		setUpListeners();
 	}
@@ -109,7 +108,10 @@ public class AddEventDisplay extends JPanel
 		this.teamProjectCheckBox.setSelected(eventToEdit.isProjectEvent());
 		this.startTimeDatePicker.setDateTime(eventToEdit.getStart());
 		this.endTimeDatePicker.setDateTime(eventToEdit.getEnd());
-		this.eventCategoryPicker.setSelectedItem(CategoryModel.getInstance().getCategoryByUUID(eventToEdit.getCategory()));
+		if (eventToEdit.getAssociatedCategory()!=null)
+			this.eventCategoryPicker.setSelectedItem(eventToEdit.getAssociatedCategory());
+		else
+			this.eventCategoryPicker.setSelectedItem(Category.DEFUALT_CATEGORY);
 	}
 	
 	/**
@@ -176,14 +178,13 @@ public class AddEventDisplay extends JPanel
 		// Text Field
 		nameTextField.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		nameTextField.setColumns(25);
-		nameTextField.setBorder( new BevelBorder(BevelBorder.LOWERED));
 		nameTextFieldPanel.add(nameTextField);
 		
 		nameErrorLabel.setForeground(Color.RED);
 		validateText(nameTextField.getText(), nameErrorLabel);
 
-		nameLabelPanel.add(nameErrorLabel);
 		nameLabelPanel.add(nameTextField);
+		nameLabelPanel.add(nameErrorLabel);
 		
 		JPanel DateandTimeLabelPane = new JPanel();
 		add(DateandTimeLabelPane);
@@ -234,7 +235,7 @@ public class AddEventDisplay extends JPanel
 		dateAndTimePickerPane.add(new JLabel(" to "));
 		dateAndTimePickerPane.add(endTimeDatePicker);
 		JCheckBox chckbxAllDayEvent = new JCheckBox("All Day Event");
-		dateAndTimePickerPane.add(chckbxAllDayEvent);
+		//dateAndTimePickerPane.add(chckbxAllDayEvent);
 		dateErrorLabel = new JLabel();
 		dateErrorLabel.setForeground(Color.RED);
 		dateAndTimePickerPane.add(dateErrorLabel);
@@ -266,18 +267,37 @@ public class AddEventDisplay extends JPanel
 		
 		// Text Field
 		participantsTextFieldPanel.add(participantsTextField);
-		participantsTextField.setBorder( new BevelBorder(BevelBorder.LOWERED));
 		participantsTextField.setColumns(30);
 		
 		// Add panel to UI
 		this.add(participantsTextFieldPanel);
+		
+		/** Categories ui */
+		
+		JPanel comboHolder = new JPanel();
+		FlowLayout fl_DescriptionLabelPane = (FlowLayout) comboHolder.getLayout();
+		fl_DescriptionLabelPane.setAlignment(FlowLayout.LEFT);
+		
+		JLabel ljtest = new JLabel("Category:");
+		ljtest.setVerticalAlignment(SwingConstants.BOTTOM);
+		ljtest.setAlignmentX(Component.CENTER_ALIGNMENT);
+		ljtest.setHorizontalAlignment(SwingConstants.LEFT);
+		comboHolder.add(ljtest);
+		add(comboHolder);
+		
+		//add the combobox for category
+		comboHolder = new JPanel();
+		fl_DescriptionLabelPane = (FlowLayout) comboHolder.getLayout();
+		fl_DescriptionLabelPane.setAlignment(FlowLayout.LEFT);
+		comboHolder.add(eventCategoryPicker);
+		add(comboHolder);
 		
 		/** Description Panel */
 		
 		// Panel
 		
 		this.descriptionLabelPanel = new JPanel();
-		FlowLayout fl_DescriptionLabelPane = (FlowLayout) descriptionLabelPanel.getLayout();
+		fl_DescriptionLabelPane = (FlowLayout) descriptionLabelPanel.getLayout();
 		fl_DescriptionLabelPane.setAlignment(FlowLayout.LEFT);
 		
 		// Label
@@ -300,7 +320,6 @@ public class AddEventDisplay extends JPanel
 		
 		// Text Area
 		descriptionTextArea.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		descriptionTextArea.setBorder( new BevelBorder(BevelBorder.LOWERED));
 		descriptionTextArea.setLineWrap(true);
 		descriptionTextArea.setWrapStyleWord(true);
 		
@@ -345,15 +364,7 @@ public class AddEventDisplay extends JPanel
 		// Add panel to UI
 		this.add(submissionPanel);
 		
-		
-		//add the combobox for category
-		JPanel comboBoxHolder = new JPanel();
-		this.add(comboBoxHolder);
-		if (this.eventCategoryPicker != null)
-		{
-			comboBoxHolder.add(this.eventCategoryPicker);
-		}
-		
+		saveButton.setEnabled(isSaveable());
 	}
 	
 	/**
@@ -366,55 +377,33 @@ public class AddEventDisplay extends JPanel
 		saveButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				try
-				{
-					startTimeDatePicker.getDate();
+
+				startTimeDatePicker.getDate();
 					endTimeDatePicker.getDate();
 					errorText.setVisible(true);
+			
+					errorText.setVisible(false);
+					Event e = new Event();
+					e.setName(nameTextField.getText().trim());
+					e.setDescription(descriptionTextArea.getText());
+					e.setStart(startTimeDatePicker.getDate());
+					e.setEnd(endTimeDatePicker.getDate());
+					e.setProjectEvent(teamProjectCheckBox.isSelected());
+					e.setParticipants(participantsTextField.getText().trim());
+					e.setCategory(((Category)eventCategoryPicker.getSelectedItem()).getCategoryID());
 					
-					if (nameTextField.getText() == null || nameTextField.getText().trim().length() == 0)
-					{
-						errorText.setText("* Please enter an event title");
+					
+					if (isEditingEvent){
+						e.setEventID(existingEventID);
+						MainPanel.getInstance().updateEvent(e);
+					} else {
+						MainPanel.getInstance().addEvent(e);
 					}
-					else if (!(startTimeDatePicker.getDate().getDayOfYear() == endTimeDatePicker.getDate().getDayOfYear() &&
-						startTimeDatePicker.getDate().getYear() == endTimeDatePicker.getDate().getYear()))
-					{
-						errorText.setText("* Event must start and end on the same date");
-					}
-					else if (startTimeDatePicker.getDate().isAfter(endTimeDatePicker.getDate())) {
-						errorText.setText("* Event start date must be before end date");
-					}
-					else
-					{
-						errorText.setVisible(false);
-						Event e = new Event();
-						e.setName(nameTextField.getText().trim());
-						e.setDescription(descriptionTextArea.getText());
-						e.setStart(startTimeDatePicker.getDate());
-						e.setEnd(endTimeDatePicker.getDate());
-						e.setProjectEvent(teamProjectCheckBox.isSelected());
-						e.setParticipants(participantsTextField.getText().trim());
-						e.setCategory(((Category)eventCategoryPicker.getSelectedItem()).getCategoryID());
-						
-						
-						if (editEvent){
-							e.setEventID(existingEventID);
-							MainPanel.getInstance().updateEvent(e);
-						} else {
-							MainPanel.getInstance().addEvent(e);
-						}
-						
-						saveButton.setEnabled(false);
-						saveButton.setText("Saved!");
-						MainPanel.getInstance().closeTab(tabid);
-						MainPanel.getInstance().refreshView();
-					}
-				}
-				catch (IllegalArgumentException exception)
-				{
-					errorText.setText("* Invalid Date/Time");
-					errorText.setVisible(true);
-				}
+					
+					saveButton.setEnabled(false);
+					saveButton.setText("Saved!");
+					MainPanel.getInstance().closeTab(tabid);
+					MainPanel.getInstance().refreshView();
 				
 				saveButton.setEnabled(false);
 				saveButton.setText("Saved!");
@@ -478,11 +467,7 @@ public class AddEventDisplay extends JPanel
 		{
 			mErrorLabel.setText("* Invalid Date/Time");
 		}//if properly formatted, error if startDate is a different day than the endDate
-		else if (!(mStartTime.getDayOfYear() == mEndTime.getDayOfYear() &&
-			mStartTime.getYear() == mEndTime.getYear()))
-		{
-			mErrorLabel.setText("* Multi-day events not supported");
-		}//error if the start time is after the end time
+		//error if the start time is after the end time
 		else if (!mEndTime.isAfter(mStartTime)) {
 			mErrorLabel.setText("* Event has invalid duration");
 		}else

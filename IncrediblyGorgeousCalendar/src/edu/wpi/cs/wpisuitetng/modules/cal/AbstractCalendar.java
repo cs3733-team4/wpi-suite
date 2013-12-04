@@ -13,6 +13,7 @@ import javax.swing.JComponent;
 
 import org.joda.time.DateTime;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
 /**
@@ -49,4 +50,10 @@ public abstract class AbstractCalendar extends JComponent
 	 * @param added Did we add/edit it or was it deleted (false)
 	 */
 	public abstract void updateEvents(Event event, boolean added);
+	
+	/**
+	 * Select the given displayable via UI changes
+	 * @param item the event to select
+	 */
+	public abstract void select(Displayable item);
 }

@@ -11,12 +11,9 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month;
 
 import java.awt.Component;
 import java.awt.Font;
-import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -25,6 +22,7 @@ import org.joda.time.DateTime;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 
 /**
@@ -33,16 +31,45 @@ import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
  */
 public class MonthItem extends JPanel
 {	
-	JLabel time = new JLabel(), desc = new JLabel();
+	JLabel time = new JLabel(), desc = new JLabel(), lastArrow = new JLabel();
+	DateTime currentTime;
+	
 	private Displayable mDisplayable;
 	
+	
+	public MonthItem(Displayable ndisp)
+	{
+		this(ndisp, DateTime.now());
+	}
+	private boolean isStartBeforeCurrent(DateTime currentDay, DateTime eventStart)
+	{
+		if (eventStart.getYear()<currentDay.getYear())//if the year is less than its always true
+			return true;
+		else if (eventStart.getYear()>currentDay.getYear())
+			return false;
+		else if (eventStart.getDayOfYear()<currentDay.getDayOfYear())//year is the same, so only day matters
+			return true;
+		return false;
+	}
+	private boolean isEndAfterCurrent(DateTime currentDay, DateTime eventEnd)
+	{
+		if (eventEnd.getYear()>currentDay.getYear())//if the year is less than its always true
+			return true;
+		else if (eventEnd.getYear()<currentDay.getYear())
+			return false;
+		else if (eventEnd.getDayOfYear()>currentDay.getDayOfYear())//year is the same, so only day matters
+			return true;
+		return false;
+	}
 	/**
 	 * MonthItem Constructor
 	 * @param when
 	 * @param descr
 	 */
-	public MonthItem(Displayable ndisp)
+	public MonthItem(Displayable ndisp, DateTime day)
 	{
+		currentTime = day;
+		
         setBackground(Colors.TABLE_BACKGROUND);
         setMaximumSize(new java.awt.Dimension(32767, 24));
         setMinimumSize(new java.awt.Dimension(0, 0));
@@ -50,67 +77,80 @@ public class MonthItem extends JPanel
 
         this.mDisplayable = ndisp;
         
-        time.setFont(new java.awt.Font("DejaVu Sans", Font.BOLD, 12));
         if (ndisp instanceof Commitment)
         {
-        	try{
-        		Image img = ImageIO.read(getClass().getResource("redmark.png"));
-        		
-        		time.setIcon(new ImageIcon(img));
-        		
-        	}
-        	catch (Exception ex){
-        		time.setText("!");
-        	}
+
+            time.setFont(new java.awt.Font("DejaVu Sans", Font.BOLD, 14));
+        	time.setForeground(Colors.COMMITMENT_NOTIFICATION);
+        	time.setText("\u2762");
         }
-        else
+        else if (ndisp instanceof Event)
         {
-        	time.setText(simpleTime(mDisplayable.getDate()));
+
+        	lastArrow.setFont(new java.awt.Font("DejaVu Sans", Font.BOLD, 12));
+            time.setFont(new java.awt.Font("DejaVu Sans", Font.BOLD, 12));
+        	if (isStartBeforeCurrent(day, ((Event)ndisp).getStart()) && isEndAfterCurrent(day, ((Event)ndisp).getEnd()))
+        	{
+        		time.setText("\u2190");//the event goes before and after
+        		lastArrow.setText(" \u2192");
+        	}
+        	else if (isStartBeforeCurrent(day, ((Event)ndisp).getStart()))
+        	{
+        		lastArrow.setText(null);
+        		time.setText("\u2190");
+        	}
+        	else if(isEndAfterCurrent(day, ((Event)ndisp).getEnd()))
+        	{
+        		time.setText(simpleTime(mDisplayable.getDate()));
+        		lastArrow.setText(" \u2192");
+        	}
+        	else
+        	{
+        		lastArrow.setText(null);
+        		time.setText(simpleTime(mDisplayable.getDate()));
+        	}
         }
+        lastArrow.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 3));
         time.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 3));
         add(time);
+
 
         desc.putClientProperty("html.disable", true);
         desc.setText(mDisplayable.getName());
         desc.setFont(new java.awt.Font("DejaVu Sans", Font.PLAIN, 12));
         desc.setMinimumSize(new java.awt.Dimension(10, 15));
         add(desc);
-
+        
+        if (lastArrow.getText()!=null)
+        	add(lastArrow);
 		
 		addMouseListener(new MouseListener() {
 			
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
 			}
 			
 			@Override
 			public void mousePressed(MouseEvent e) {
+				MainPanel.getInstance().display(currentTime);
 				if (e.getClickCount() > 1){
-					MainPanel.getInstance().editSelectedDisplayable(MonthItem.this);
+					MainPanel.getInstance().editSelectedDisplayable(mDisplayable);
 				} else {
-					MainPanel.getInstance().updateSelectedDisplayable(MonthItem.this);
+					MainPanel.getInstance().updateSelectedDisplayable(mDisplayable);
 				}
 				
 			}
 			
 			@Override
 			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
 			}
 			
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
 			}
 			
 			@Override
-			public void mouseClicked(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
+			public void mouseClicked(MouseEvent e) {				
 			}
 		});
 	}
@@ -146,8 +186,11 @@ public class MonthItem extends JPanel
 	}
 
 
-	public static Component generateFrom(Displayable elt) {
-		return new MonthItem(elt);
+	public static Component generateFrom(Displayable elt, Displayable selected, DateTime day)
+	{
+		MonthItem mi = new MonthItem(elt, day);
+		mi.setSelected(selected == elt);
+		return mi;
 	}
 	
 	/**
@@ -157,4 +200,12 @@ public class MonthItem extends JPanel
 	public Displayable getDisplayable(){
 		return this.mDisplayable;
 	}
+	
+	public void setSelected(boolean select){
+		if(select){
+			this.setBackground(Colors.SELECTED_BACKGROUND);
+		}
+		else this.setBackground(Colors.TABLE_BACKGROUND);
+	}
 }
+
