@@ -19,8 +19,10 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
+import org.jfree.util.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
+
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
@@ -98,7 +100,6 @@ public class VanGoghPainting extends JPanel
 		lblStarryNightdutch.setVerticalAlignment(SwingConstants.TOP);
 		lblStarryNightdutch.setBackground(bg);
 		lblStarryNightdutch.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblStarryNightdutch.putClientProperty("html.disable", true); //prevents html parsing
 		lblStarryNightdutch.setMinimumSize(new Dimension(0,0));
 		
 		addMouseListener(new MouseListener() {
@@ -205,9 +206,13 @@ public class VanGoghPainting extends JPanel
 		int line = 0;
 		int lengthRemaining = lineLengths.size() > 0 ? lineLengths.get(0).toInt(myWidth) : 0;
 		String formattedDescription = "<html>";
-		for(String word : description)
+		for(String tword : description)
 		{
-			if(wordLengths.get(word).intValue() < lengthRemaining)
+			String word = tword.replaceAll("&", "&amp;");
+			word = word.replaceAll("\"", "&quot;");
+			word = word.replaceAll("<", "&lt;");
+			word = word.replaceAll("<", "&gt;");
+			if(wordLengths.get(tword).intValue() < lengthRemaining)
 				formattedDescription += word;
 			else
 			{
@@ -220,7 +225,7 @@ public class VanGoghPainting extends JPanel
 				lengthRemaining = lineLengths.get(line).toInt(myWidth);
 				//System.out.println("New line! rat wtih" + lineLengths.get(line).toString() + lengthRemaining);
 			}
-			lengthRemaining -= wordLengths.get(word).intValue() + spaceLength;
+			lengthRemaining -= wordLengths.get(tword).intValue() + spaceLength;
 			formattedDescription += " ";
 			
 		}
