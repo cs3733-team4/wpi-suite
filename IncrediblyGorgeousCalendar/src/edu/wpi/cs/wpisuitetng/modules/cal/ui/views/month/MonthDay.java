@@ -44,9 +44,9 @@ public class MonthDay extends JPanel
 	private DateTime day;
 
 	
-	public MonthDay(DateTime day, DayStyle style)
+	public MonthDay(DateTime initDay, DayStyle style)
 	{
-		this.day=day;
+		this.day=initDay;
 		Color grayit, textit = Colors.TABLE_TEXT, bg = Colors.TABLE_BACKGROUND;
 		switch (style)
 		{
@@ -73,7 +73,7 @@ public class MonthDay extends JPanel
 		header.setForeground(textit);
 		header.setFont(new java.awt.Font("DejaVu Sans",	style == DayStyle.Today ? Font.BOLD : Font.PLAIN, 12));
 		header.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-		header.setText(Integer.toString(day.getDayOfMonth()));
+		header.setText(Integer.toString(initDay.getDayOfMonth()));
 		header.setAutoscrolls(true);
 		header.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 		header.setMaximumSize(new java.awt.Dimension(10000, 17));
@@ -85,6 +85,7 @@ public class MonthDay extends JPanel
 			@Override
 			public void mousePressed(MouseEvent e)
 			{
+				MainPanel.getInstance().display(day);
 				MainPanel.getInstance().clearSelected();
 			}
 

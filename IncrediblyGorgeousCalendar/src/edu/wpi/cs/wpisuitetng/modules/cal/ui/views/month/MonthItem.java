@@ -32,6 +32,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 public class MonthItem extends JPanel
 {	
 	JLabel time = new JLabel(), desc = new JLabel(), lastArrow = new JLabel();
+	DateTime currentTime;
 	
 	private Displayable mDisplayable;
 	
@@ -67,6 +68,8 @@ public class MonthItem extends JPanel
 	 */
 	public MonthItem(Displayable ndisp, DateTime day)
 	{
+		currentTime = day;
+		
         setBackground(Colors.TABLE_BACKGROUND);
         setMaximumSize(new java.awt.Dimension(32767, 24));
         setMinimumSize(new java.awt.Dimension(0, 0));
@@ -129,6 +132,7 @@ public class MonthItem extends JPanel
 			
 			@Override
 			public void mousePressed(MouseEvent e) {
+				MainPanel.getInstance().display(currentTime);
 				if (e.getClickCount() > 1){
 					MainPanel.getInstance().editSelectedDisplayable(mDisplayable);
 				} else {

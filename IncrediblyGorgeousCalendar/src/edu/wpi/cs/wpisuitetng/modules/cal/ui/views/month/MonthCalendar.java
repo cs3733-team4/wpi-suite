@@ -222,10 +222,12 @@ public class MonthCalendar extends AbstractCalendar
 		return fom.getYear() == now.getYear() && fom.getDayOfYear() == now.getDayOfYear();
 	}
 
-	public void display(DateTime newtime)
+	public void display(DateTime newTime)
 	{
-		time = newtime;
-		generateDays(new MutableDateTime(time));
+		if(time.getMonthOfYear() != newTime.getMonthOfYear() || time.getYear() != newTime.getYear())
+			generateDays(new MutableDateTime(newTime));
+		time = newTime;
+		mainPanel.miniMove(newTime);
 	}
 
 	public void next()
