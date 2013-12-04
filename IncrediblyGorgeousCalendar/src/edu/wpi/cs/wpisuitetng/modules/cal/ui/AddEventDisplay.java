@@ -69,7 +69,7 @@ public class AddEventDisplay extends JPanel
 	private JButton saveButton;
 	private JButton cancelButton;
 	private Event eventToEdit;
-	private boolean editEvent;
+	private boolean isEditingEvent;
 	private UUID existingEventID; // UUID of event being edited
 	private JComboBox<Category> eventCategoryPicker;
 	
@@ -79,7 +79,7 @@ public class AddEventDisplay extends JPanel
 	{
 		this.eventCategoryPicker = new JComboBox<Category>();
 		this.eventToEdit = mEvent;
-		this.editEvent = true;
+		this.isEditingEvent = true;
 		this.existingEventID = eventToEdit.getEventID();
 		setUpUI();
 		populateEventFields(eventToEdit);
@@ -91,7 +91,7 @@ public class AddEventDisplay extends JPanel
 	public AddEventDisplay()
 	{
 		this.eventCategoryPicker = new JComboBox<Category>();
-		this.editEvent = false;
+		this.isEditingEvent = false;
 		setUpUI();
 		setUpListeners();
 	}
@@ -393,7 +393,7 @@ public class AddEventDisplay extends JPanel
 					e.setCategory(((Category)eventCategoryPicker.getSelectedItem()).getCategoryID());
 					
 					
-					if (editEvent){
+					if (isEditingEvent){
 						e.setEventID(existingEventID);
 						MainPanel.getInstance().updateEvent(e);
 					} else {

@@ -26,6 +26,7 @@ import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -41,21 +42,23 @@ public class AddCommitmentDisplay extends JPanel
 	private JTextField nameTextField;
 	private JTextField participantsTextField;
 	private int tabid;
+	private Commitment commitmentToEdit;
+	private boolean isEditingCommitment;
 	private UUID existingID;//the old ID of the commitment, might be unused if it is a new commitment
-	private boolean editingCommitment;
 	private DatePicker commitTime1;
 	private JLabel dateErrorLabel;
 	private JLabel nameErrorLabel;
 	public AddCommitmentDisplay()
 	{
-		editingCommitment=false;
+		isEditingCommitment=false;
 		init(new Commitment());
 	}
 	public AddCommitmentDisplay(Commitment oldCommitment)
 	{
-		editingCommitment=true;
-		existingID=oldCommitment.getCommitmentID();
-		init(oldCommitment);
+		isEditingCommitment=true;
+		commitmentToEdit=oldCommitment;
+		existingID=commitmentToEdit.getCommitmentID();
+		init(commitmentToEdit);
 	}
 	private void init(Commitment oldCommitment)
 	{
@@ -87,7 +90,7 @@ public class AddCommitmentDisplay extends JPanel
 		NamePane.add(nameTextField);
 		nameTextField.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		nameTextField.setColumns(25);
-		if (editingCommitment)
+		if (isEditingCommitment)
 			nameTextField.setText(oldCommitment.getName());
 		
 		
@@ -106,7 +109,7 @@ public class AddCommitmentDisplay extends JPanel
 
 		//final CommitmentDatePicker commitTime1 = new CommitmentDatePicker(true, null);
 		commitTime1 = new DatePicker(false, null);
-		if (editingCommitment)
+		if (isEditingCommitment)
 			commitTime1.display(oldCommitment.getDate());
 		
 		CommitDatePickerPanel.add(lblDateTime);
@@ -129,7 +132,7 @@ public class AddCommitmentDisplay extends JPanel
 		participantsTextField = new JTextField();
 		ParticipantsPanel.add(participantsTextField);
 		participantsTextField.setColumns(30);
-		if (editingCommitment)
+		if (isEditingCommitment)
 			participantsTextField.setText(oldCommitment.getParticipants());
 		
 		
@@ -158,7 +161,7 @@ public class AddCommitmentDisplay extends JPanel
 		descriptionTextArea.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		descriptionTextArea.setLineWrap(true);
 		descriptionTextArea.setWrapStyleWord(true);
-		if (editingCommitment)
+		if (isEditingCommitment)
 			descriptionTextArea.setText(oldCommitment.getDescription());
 		
 		JScrollPane descriptionScrollPane = new JScrollPane(descriptionTextArea);
@@ -182,10 +185,10 @@ public class AddCommitmentDisplay extends JPanel
 				e.setName(nameTextField.getText().trim());
 				e.setDescription(descriptionTextArea.getText());
 				e.setDate(commitTime1.getDate());
-				if (editingCommitment)
+				if (isEditingCommitment)
 					e.setCommitmentID(existingID);
 				
-				if (editingCommitment)
+				if (isEditingCommitment)
 					MainPanel.getInstance().updateCommitment(e);
 				else
 					MainPanel.getInstance().addCommitment(e);
@@ -294,5 +297,10 @@ public class AddCommitmentDisplay extends JPanel
 	public void setTabId(int id)
 	{
 		tabid = id;
+	}
+	
+	public boolean matchingCommitment(AddCommitmentDisplay other)
+	{
+		return this.commitmentToEdit != null && this.commitmentToEdit.equals(other.commitmentToEdit);
 	}
 }
