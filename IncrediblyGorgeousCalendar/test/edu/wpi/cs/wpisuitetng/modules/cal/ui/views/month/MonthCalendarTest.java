@@ -23,7 +23,7 @@ import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
 
 public class MonthCalendarTest{
 
-	private EventModel dummyModel = new EventModel();
+	private EventModel dummyModel = EventModel.getInstance();
 	private CommitmentModel dummyModel2 = new CommitmentModel();
 	
 	MockData db = new MockData(new HashSet<Object>());

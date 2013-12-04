@@ -43,7 +43,6 @@ import javax.swing.SwingConstants;
 public class VanGoghPainting extends JPanel
 {
 	private final long millisInDay = 86400000;
-	private int lastWidth = 0;
 	private Rational Width;
 	private Rational X;
 	Event event;
@@ -89,10 +88,10 @@ public class VanGoghPainting extends JPanel
 	}
 	
 	@Override
-	public void paint(Graphics g)
+	public void paintComponent(Graphics g)
 	{
 		this.doLayout();
-		super.paint(g);
+		super.paintComponent(g);
 	}
 	
 	@Override
@@ -122,14 +121,6 @@ public class VanGoghPainting extends JPanel
 	
 	private boolean recalcBounds(int parentWidth, int parentHeight)
 	{
-		if (parentWidth != lastWidth)
-		{
-			lastWidth = parentWidth;
-		}
-		else
-		{
-			return false;
-		}
 		lblStarryNightdutch.setMaximumSize(new Dimension(Width.toInt(parentWidth), height-20));
 		int outWidth = Width.toInt(parentWidth);
 		this.setBounds(X.toInt(parentWidth), (int) map(event.getStart().getMillisOfDay(), parentHeight), outWidth, height);
@@ -217,10 +208,10 @@ public class VanGoghPainting extends JPanel
 		int headerHeight = height > hdesc ? hdesc : 0;
 		int zero = traveller.getEvent().getStart().getMillisOfDay() + pxToMs(hdesc);
 		double erowsInter = (traveller.getEvent().getEnd().getMillisOfDay() - zero) / (double) lineheight;
-		int emax = (int)Math.floor(erowsInter);
-		int rows = (int)Math.ceil(erowsInter);
+		int emax = Math.max(0, (int)Math.floor(erowsInter));
+		int rows = Math.max(0, (int)Math.ceil(erowsInter));
 		System.out.println("we are " + traveller + " and have " + emax + ", " + rows + ", " + zero + "  x " + headerHeight + ", " + lineheightp);
-		ArrayList<Rational> ratpack = new ArrayList<>(rows<0?0:rows);
+		ArrayList<Rational> ratpack = new ArrayList<>(rows);
 		for (int i = 0; i <= rows; i++) // <= for extra buffer row
 		{
 			ratpack.add(new Rational(1, 1));
