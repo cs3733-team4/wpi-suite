@@ -208,8 +208,8 @@ public class VanGoghPainting extends JPanel
 		int headerHeight = height > hdesc ? hdesc : 0;
 		int zero = traveller.getEvent().getStart().getMillisOfDay() + pxToMs(hdesc);
 		double erowsInter = (traveller.getEvent().getEnd().getMillisOfDay() - zero) / (double) lineheight;
-		int emax = (int)Math.floor(erowsInter);
-		int rows = (int)Math.ceil(erowsInter);
+		int emax = Math.max(0, (int)Math.floor(erowsInter));
+		int rows = Math.max(0, (int)Math.ceil(erowsInter));
 		System.out.println("we are " + traveller + " and have " + emax + ", " + rows + ", " + zero + "  x " + headerHeight + ", " + lineheightp);
 		ArrayList<Rational> ratpack = new ArrayList<>(rows);
 		for (int i = 0; i <= rows; i++) // <= for extra buffer row

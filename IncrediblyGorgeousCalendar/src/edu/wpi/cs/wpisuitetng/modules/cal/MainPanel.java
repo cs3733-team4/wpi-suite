@@ -32,6 +32,8 @@ import javax.swing.border.EmptyBorder;
 
 import org.joda.time.DateTime;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
@@ -78,6 +80,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	private final HashMap<Integer, JComponent> tabs = new HashMap<Integer, JComponent>();
 	private int tab_id = 0;
 	private EventModel events;
+	private CategoryModel categories;
 	private CommitmentModel commitments;
 	private ViewSize view = ViewSize.Month;
 	private static MainPanel instance;
@@ -121,7 +124,8 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		mTabbedPane = this;
 		this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		
-		events = new EventModel(); // used for accessing events
+		categories = CategoryModel.getInstance();
+		events = EventModel.getInstance(); // used for accessing events
 		commitments= new CommitmentModel();
 		this.mainPaneContainer = new JPanel(); // Container for the navigation and calendars
 		this.sidePanel = new JPanel(); // Container to hold the top and bottom side sub-panels
@@ -339,6 +343,33 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		commitments.updateCommitment(updateCommitment);
 	}
 
+	/**
+	 * Adds a new category to the database and refreshes the UI
+	 * @param newCategory The category to add
+	 */
+	public void addCategory(Category newCategory)
+	{
+		categories.putCategory(newCategory);
+	}
+	
+	/**
+	 * Updates a category as long both categories have the same ID
+	 * @param updateCategory
+	 */
+	public void updateCategory(Category updateCategory)
+	{
+		categories.updateCategory(updateCategory);
+	}
+	
+	
+	/**
+	 * Returns the category model of the main panel
+	 * @return category model of the main panel instance
+	 */
+	public CategoryModel getCategoryModel(){
+		return this.categories;
+	}
+	
 	/**
 	 * Gets the singleton instance of this panel to avoid passing it everywhere
 	 * @return the instance

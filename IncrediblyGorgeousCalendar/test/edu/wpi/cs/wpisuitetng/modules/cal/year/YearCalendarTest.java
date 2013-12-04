@@ -18,7 +18,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 
 public class YearCalendarTest {
 	
-	EventModel events=new EventModel();
+	EventModel events=EventModel.getInstance();
 	DateTime time2000 = new DateTime(2000, 1, 1, 1, 1);
 	
 	@Test

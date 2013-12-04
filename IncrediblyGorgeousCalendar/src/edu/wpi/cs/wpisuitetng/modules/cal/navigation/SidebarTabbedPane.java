@@ -2,6 +2,7 @@ package edu.wpi.cs.wpisuitetng.modules.cal.navigation;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -13,6 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
@@ -35,7 +37,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 public class SidebarTabbedPane extends JTabbedPane{
 	
 	private JPanel detailTab;
-	private JTextPane detailTextPane;
+	private JTextArea detailTextPane;
 	private Document detailTextDoc;
 	private SimpleAttributeSet normalTextStyle;
 	private SimpleAttributeSet boldBlueTextStyle;
@@ -112,7 +114,11 @@ public class SidebarTabbedPane extends JTabbedPane{
 		detailTab.setLayout(new BorderLayout());
 		
 		// setup text area
-		detailTextPane = new JTextPane();
+		detailTextPane = new JTextArea();
+		detailTextPane.setWrapStyleWord(true);
+		detailTextPane.setLineWrap(true);
+		detailTextPane.setMaximumSize(new Dimension(180, this.getHeight()));
+		detailTextPane.setPreferredSize(new Dimension(180, this.getHeight()));
 		detailTextPane.setEditable(false);
 		detailTextPane.setCursor(null);
 		detailTextPane.setFocusable(false);
@@ -174,7 +180,9 @@ public class SidebarTabbedPane extends JTabbedPane{
 	    detailButtonPane = new JPanel();
 	    detailButtonPane.setLayout(new FlowLayout());
 	    detailButtonPane.add(detailEditButton);
-	    detailButtonPane.add(detailDeleteButton);
+	    
+	    //for a later user story
+	    //detailButtonPane.add(detailDeleteButton);
 	    
 	    // add text area and button container to detail tab
 	    detailTab.add(detailTitleContainer, BorderLayout.NORTH);
