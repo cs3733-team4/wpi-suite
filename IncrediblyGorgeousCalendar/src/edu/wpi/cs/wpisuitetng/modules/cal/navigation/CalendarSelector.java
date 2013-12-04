@@ -33,8 +33,8 @@ public class CalendarSelector extends JPanel
 
 		// build button groups
 		ButtonGroup view = new ButtonGroup();
-		view.add(month);
 		view.add(day);
+		view.add(month);
 		view.add(year);
 		month.setSelected(true);
 		ButtonGroup cal = new ButtonGroup();
@@ -45,8 +45,8 @@ public class CalendarSelector extends JPanel
 
 		// layout
 		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-		add(month);
 		add(day);
+		add(month);
 		add(year);
 		add(filler1);
 		this.add(personalCalendar);
