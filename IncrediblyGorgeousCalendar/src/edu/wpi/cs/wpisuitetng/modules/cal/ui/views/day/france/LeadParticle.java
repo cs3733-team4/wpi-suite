@@ -30,28 +30,13 @@ public class LeadParticle implements Comparable<LeadParticle>
 		this.isEnd = isEnd;
 		MutableDateTime mDisplayedDay = new MutableDateTime(displayedDay);
 		
-		if (isEnd)
+		if (!isEnd)
 		{
-			mDisplayedDay.setMillisOfDay(1);
-			//if it starts before the beginning of the day then its a multi day event, or all day event
-			if (event.getStart().isBefore(mDisplayedDay)){
-				mDisplayedDay.setMillisOfDay(0);
-				this.time=mDisplayedDay.toDateTime();
-			}
-			else
-				this.time=event.getStart();
+			this.time=event.getStartTimeOnDay(displayedDay);
 		}
 		else
 		{
-			mDisplayedDay.setMillisOfDay(0);
-			mDisplayedDay.addDays(1);
-			mDisplayedDay.addMillis(-1);
-			if (event.getEnd().isAfter(mDisplayedDay))
-			{
-				this.time=mDisplayedDay.toDateTime();
-			}
-			else
-				this.time=event.getEnd();
+			this.time=event.getEndTimeOnDay(displayedDay);
 		}
 	}
 	

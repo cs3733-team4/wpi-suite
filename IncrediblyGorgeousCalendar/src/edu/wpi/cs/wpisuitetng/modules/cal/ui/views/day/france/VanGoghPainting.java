@@ -21,6 +21,7 @@ import javax.swing.border.LineBorder;
 
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
+import org.joda.time.MutableDateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
@@ -57,8 +58,11 @@ public class VanGoghPainting extends JPanel
 	private int height;
 	private static final int FIXED_HEIGHT = 1440;
 	private TimeTraveller traveller;
-	public VanGoghPainting(TimeTraveller traveller)
+	private DateTime displayedDay;
+	public VanGoghPainting(TimeTraveller traveller, DateTime displayedDay)
 	{
+		
+		this.displayedDay=displayedDay;
 		this.traveller = traveller;
 		height = 25;
 		event = traveller.getEvent();
@@ -69,7 +73,20 @@ public class VanGoghPainting extends JPanel
 		lblEventTitle = new JLabel(event.getName());
 		add(lblEventTitle);
 		lblEventTitle.setFont(new Font("Tahoma", Font.BOLD, 14));
-		lblTimeInfo = new JLabel(formatTime(event.getStart()) + " - " + formatTime(event.getEnd()));
+		
+		if (event.isMultiDayEvent())
+		{
+			if (event.getStart().compareTo(event.getStartTimeOnDay(displayedDay))==0)//if their the same time, its the first day
+				lblTimeInfo = new JLabel(formatTime(event.getStart()) + " - \u2192");
+			else if (event.getEnd().compareTo(event.getEndTimeOnDay(displayedDay))==0)
+				lblTimeInfo = new JLabel("\u2190 - " + formatTime(event.getEnd()));
+			else
+				lblTimeInfo = new JLabel("\u2190 - \u2192");
+				
+		}
+		else
+			lblTimeInfo = new JLabel(formatTime(event.getStart()) + " - " + formatTime(event.getEnd()));
+		
 		lblTimeInfo.setBorder(new EmptyBorder(0,0,3,0));
 		lblTimeInfo.setMaximumSize(new Dimension(32767, 20));
 		lblTimeInfo.setFont(new Font("Tahoma", Font.ITALIC, 14));
@@ -100,7 +117,7 @@ public class VanGoghPainting extends JPanel
 	{
 		if(firstDraw)
 		{
-			height = (int) map(new Interval(event.getStart(), event.getEnd()).toDurationMillis(), this.getParent().getHeight());
+			height = (int) map(new Interval(event.getStartTimeOnDay(displayedDay), event.getEndTimeOnDay(displayedDay)).toDurationMillis(), this.getParent().getHeight());
 			recalcBounds(getParent().getWidth(), getParent().getHeight());
 			FontMetrics descriptionMetrics = getGraphics().getFontMetrics(lblStarryNightdutch.getFont());
 			for(String word : description)
@@ -110,7 +127,7 @@ public class VanGoghPainting extends JPanel
 			int totalHeight = 6 + 2 + getFontMetrics(lblEventTitle.getFont()).getHeight() + getFontMetrics(lblTimeInfo.getFont()).getHeight() + 6;
 			lblEventTitle.validate();
 			lblTimeInfo.validate();
-			System.out.println("falculated to be " + lblEventTitle.getHeight() + lblTimeInfo.getHeight());
+			//System.out.println("falculated to be " + lblEventTitle.getHeight() + lblTimeInfo.getHeight());
 			spaceLength = descriptionMetrics.stringWidth(" ");
 			lineLengths = infest(descriptionMetrics.getHeight(), totalHeight);
 			firstDraw = false;
@@ -132,7 +149,7 @@ public class VanGoghPainting extends JPanel
 		}
 		lblStarryNightdutch.setMaximumSize(new Dimension(Width.toInt(parentWidth), height-20));
 		int outWidth = Width.toInt(parentWidth);
-		this.setBounds(X.toInt(parentWidth), (int) map(event.getStart().getMillisOfDay(), parentHeight), outWidth, height);
+		this.setBounds(X.toInt(parentWidth), (int) map(event.getStartTimeOnDay(displayedDay).getMillisOfDay(), parentHeight), outWidth, height);
 		if(!firstDraw)
 			wrapDescription(outWidth-16);
 		return true;
@@ -150,7 +167,7 @@ public class VanGoghPainting extends JPanel
 	
 	private void wrapDescription(int myWidth)
 	{
-		System.out.println("We are " + myWidth + " for event " + event);
+		//System.out.println("We are " + myWidth + " for event " + event);
 		int line = 0;
 		int lengthRemaining = lineLengths.size() > 0 ? lineLengths.get(0).toInt(myWidth) : 0;
 		String formattedDescription = "<html>";
@@ -167,14 +184,14 @@ public class VanGoghPainting extends JPanel
 					break;
 				}
 				lengthRemaining = lineLengths.get(line).toInt(myWidth);
-				System.out.println("New line! rat wtih" + lineLengths.get(line).toString() + lengthRemaining);
+				//System.out.println("New line! rat wtih" + lineLengths.get(line).toString() + lengthRemaining);
 			}
 			lengthRemaining -= wordLengths.get(word).intValue() + spaceLength;
 			formattedDescription += " ";
 			
 		}
 		formattedDescription += "</html>";
-		System.out.println(formattedDescription);
+		//System.out.println(formattedDescription);
 		lblStarryNightdutch.setText(formattedDescription);
 	}
 	
@@ -213,13 +230,13 @@ public class VanGoghPainting extends JPanel
 	private List<Rational> infest(int lineheightp, int hdesc)
 	{
 		int lineheight = pxToMs(lineheightp);
-		System.out.println("heretics! " + lineheight + ", " + hdesc);
+		//System.out.println("heretics! " + lineheight + ", " + hdesc);
 		int headerHeight = height > hdesc ? hdesc : 0;
-		int zero = traveller.getEvent().getStart().getMillisOfDay() + pxToMs(hdesc);
-		double erowsInter = (traveller.getEvent().getEnd().getMillisOfDay() - zero) / (double) lineheight;
+		int zero = traveller.getEvent().getStartTimeOnDay(displayedDay).getMillisOfDay() + pxToMs(hdesc);
+		double erowsInter = (traveller.getEvent().getEndTimeOnDay(displayedDay).getMillisOfDay() - zero) / (double) lineheight;
 		int emax = (int)Math.floor(erowsInter);
 		int rows = (int)Math.ceil(erowsInter);
-		System.out.println("we are " + traveller + " and have " + emax + ", " + rows + ", " + zero + "  x " + headerHeight + ", " + lineheightp);
+		//System.out.println("we are " + traveller + " and have " + emax + ", " + rows + ", " + zero + "  x " + headerHeight + ", " + lineheightp);
 		ArrayList<Rational> ratpack = new ArrayList<>(rows);
 		for (int i = 0; i <= rows; i++) // <= for extra buffer row
 		{
@@ -227,34 +244,29 @@ public class VanGoghPainting extends JPanel
 		}
 		for (TimeTraveller who : traveller.getOverlappedEvents())
 		{
-			System.out.println("" + who + " was in" + traveller);
+			//System.out.println("" + who + " was in" + traveller);
 			if (who.getXpos().toInt(10000) < traveller.getXpos().toInt(10000))
 				continue;
-			System.out.println("and is good");
+			//System.out.println("and is good");
 			//TODO: does not support multi day events
-			int from = (int)Math.floor((who.getEvent().getStart().getMillisOfDay() - zero) / (double) lineheight);
-			int to = (int)Math.ceil((who.getEvent().getEnd().getMillisOfDay() - zero) / (double) lineheight);
+			int from = (int)Math.floor((who.getEvent().getStartTimeOnDay(displayedDay).getMillisOfDay() - zero) / (double) lineheight);
+			int to = (int)Math.ceil((who.getEvent().getEndTimeOnDay(displayedDay).getMillisOfDay() - zero) / (double) lineheight);
 			from = Math.max(0, from);
 			to = Math.min(emax, to);
-			System.out.println(rows + " of from " + from + " to " + to);
+			//System.out.println(rows + " of from " + from + " to " + to);
 			for (int i = from; i <= to; i++)
 			{
 				// the vermin
 				Rational redRat = ratpack.get(i);
 				Rational blackRat = who.getXpos().subtract(traveller.getXpos()).divide(Width);
-				System.out.println(" Comparing rats["+i+"] " + redRat + " vs " +blackRat + " (generated from " + traveller.getXpos() + ", " + who.getXpos() + ", " + Width + ")");
+				//System.out.println(" Comparing rats["+i+"] " + redRat + " vs " +blackRat + " (generated from " + traveller.getXpos() + ", " + who.getXpos() + ", " + Width + ")");
 				ratpack.set(i, redRat.toInt(10000) < blackRat.toInt(10000) ? redRat : blackRat);
 			}
 		}
 		// remote buffer overflow
 //		ratpack.remove(rows);
 		ratpack.remove(rows - 1);
-		System.out.println("ratpack is");
-		for (Rational rat : ratpack)
-		{
-			System.out.println(" " + rat + " => " + rat.toInt(100) + "%");
-		}
-		System.out.println("ratpack end");
+		
 		
 		return ratpack;
 	}

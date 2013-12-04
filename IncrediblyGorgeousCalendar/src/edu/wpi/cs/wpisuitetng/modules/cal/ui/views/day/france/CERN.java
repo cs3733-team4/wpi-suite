@@ -36,7 +36,7 @@ public class CERN
 		List<TimeTraveller> travellers = tevatrize(particles); // shoot at speed of light to go back in time
 		disperse(particles);
 		Collections.sort(travellers); // Currently traveling backwards, trying to sort things out.
-		return timeWarp(travellers);
+		return timeWarp(travellers, displayedDay);
 	}
 	
 	/**
@@ -130,7 +130,6 @@ public class CERN
 			}
 			else
 			{
-				System.out.println("num: " + x.getResult().getXpos().getNumerator());
 				state.set(x.getResult().getXpos().getNumerator(), false);
 			}
 		}
@@ -141,12 +140,12 @@ public class CERN
 	 * @param travellers
 	 * @return Stolen Van Gogh Paintings for each time traveler
 	 */
-	private static List<VanGoghPainting> timeWarp(List<TimeTraveller> travellers)
+	private static List<VanGoghPainting> timeWarp(List<TimeTraveller> travellers, DateTime displayedDay)
 	{
 		List<VanGoghPainting> paintings = new ArrayList<>(travellers.size());
 		for(TimeTraveller t : travellers)
 		{
-			paintings.add(new VanGoghPainting(t));
+			paintings.add(new VanGoghPainting(t, displayedDay));
 		}
 		return paintings;
 	}

@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.UUID;
 
 import org.joda.time.DateTime;
+import org.joda.time.MutableDateTime;
 
 import com.google.gson.Gson;
 
@@ -313,5 +314,30 @@ public class Event extends AbstractModel implements Displayable
 	public DateTime getDate()
 	{
 		return this.getStart();
+	}
+	public DateTime getStartTimeOnDay(DateTime givenDay)
+	{
+		MutableDateTime mDisplayedDay = new MutableDateTime(givenDay);
+		mDisplayedDay.setMillisOfDay(1);
+		//if it starts before the beginning of the day then its a multi day event, or all day event
+		if (this.getStart().isBefore(mDisplayedDay)){
+			mDisplayedDay.setMillisOfDay(0);
+			return(mDisplayedDay.toDateTime());
+		}
+		else
+			return this.getStart();
+	}
+	public DateTime getEndTimeOnDay(DateTime givenDay)
+	{
+		MutableDateTime mDisplayedDay = new MutableDateTime(givenDay);
+		mDisplayedDay.setMillisOfDay(0);
+		mDisplayedDay.addDays(1);
+		mDisplayedDay.addMillis(-1);
+		if (this.getEnd().isAfter(mDisplayedDay))
+		{
+			return mDisplayedDay.toDateTime();
+		}
+		else
+			return this.getEnd();
 	}
 }
