@@ -222,24 +222,13 @@ public class VanGoghPainting extends JPanel
 	private List<Rational> infest(int lineheightp, int hdesc)
 	{
 		int lineheight = pxToMs(lineheightp);
-		System.out.println("heretics! " + lineheight + ", " + hdesc);
 		int headerHeight = height > hdesc ? hdesc : 0;
-
-		System.out.println("height: " + height + " lineheightp: " + lineheightp + " hdesc: " + hdesc);
-		
 		int zero = traveller.getEvent().getStartTimeOnDay(displayedDay).getMillisOfDay() + pxToMs(headerHeight);
-		System.out.println("Start millis: " + traveller.getEvent().getStartTimeOnDay(displayedDay).getMillisOfDay());
-		
 		
 		double erowsInter = (traveller.getEvent().getEndTimeOnDay(displayedDay).getMillisOfDay() - zero) / (double) lineheight;
-		System.out.println("End millis: " + traveller.getEvent().getEndTimeOnDay(displayedDay).getMillisOfDay());
-		System.out.println("headerHeight: " + headerHeight + " zero: " + zero + " erowsInter: " + erowsInter);
-		
 		
 		int emax = (int)Math.floor(erowsInter);
 		int rows = (int)Math.ceil(erowsInter);
-
-		System.out.println("we are " + traveller + " and have " + emax + ", " + rows + ", " + zero + "  x " + headerHeight + ", " + lineheightp);
 		rows=rows<0? 0: rows;
 		ArrayList<Rational> ratpack = new ArrayList<>(rows);
 		for (int i = 0; i <= rows; i++) // <= for extra buffer row
