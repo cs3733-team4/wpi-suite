@@ -14,11 +14,14 @@ import edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar.DefaultToolbarView;
 public class RibbonToolbar extends DefaultToolbarView {
 	
 	public EventToolbarGroup eventButtonGroup;
+	public CategoryToolbarGroup categoryButtonGroup;
 	
 	public RibbonToolbar(final MainPanel mMainPanel, boolean visible) {
 		
 		eventButtonGroup = new EventToolbarGroup(mMainPanel);
+		categoryButtonGroup = new CategoryToolbarGroup(mMainPanel);
 		this.addGroup(eventButtonGroup);
+		this.addGroup(categoryButtonGroup);
 		eventButtonGroup.disableRemoveEventButton();
 	}
 }

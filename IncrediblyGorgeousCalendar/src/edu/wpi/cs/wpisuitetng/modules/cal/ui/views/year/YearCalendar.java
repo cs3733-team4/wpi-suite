@@ -33,6 +33,7 @@ import org.joda.time.MutableDateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
@@ -135,9 +136,9 @@ public class YearCalendar extends AbstractCalendar
 		int width = 50;
 		int height = 570;
 		
-		p.setMinimumSize(new Dimension(width, height-50));
+		p.setMinimumSize(new Dimension(width, height-150));
 		p.setPreferredSize(new Dimension(width, height));
-		p.setMaximumSize(new Dimension(width, height+50));
+		p.setMaximumSize(new Dimension(width, height+150));
 		
 		return p;
 	}
@@ -222,9 +223,9 @@ public class YearCalendar extends AbstractCalendar
 		int width = 280;
 		int height = 570;
 		
-		p.setMinimumSize(new Dimension(width-50, height-50));
+		p.setMinimumSize(new Dimension(0, height-150));
 		p.setPreferredSize(new Dimension(width, height));
-		p.setMaximumSize(new Dimension(width+50, height+50));
+		p.setMaximumSize(new Dimension(width+350, height+150));
 		
 		
 		return p;
@@ -280,7 +281,7 @@ public class YearCalendar extends AbstractCalendar
 		{
 			super.paintComponent(g);
 			
-			if (this.hasEvent)
+			if (this.hasEvent && this.getHeight() > 30)
 			{
 				g.setColor(defaultBackground.darker());
 				int dotX = this.getWidth()/2-3;
@@ -298,10 +299,7 @@ public class YearCalendar extends AbstractCalendar
 	@Override
 	public void next()
 	{
-		this.events.clear();
-		this.drawCalendar(this.calendarStart.copy());
-		this.revalidate();
-		this.repaint();
+		this.display(this.calendarStart.toDateTime());
 	}
 
 
@@ -310,12 +308,9 @@ public class YearCalendar extends AbstractCalendar
 	@Override
 	public void previous()
 	{
-		this.events.clear();
 		MutableDateTime mdt = new MutableDateTime(this.calendarStart);
 		mdt.addYears(-2);
-		this.drawCalendar(mdt.copy());
-		this.revalidate();
-		this.repaint();
+		this.display(mdt.toDateTime());
 	}
 
 
@@ -325,6 +320,7 @@ public class YearCalendar extends AbstractCalendar
 	public void display(DateTime newTime) {
 		this.events.clear();
 		this.drawCalendar(new MutableDateTime(newTime));
+		MainPanel.getInstance().miniMove(newTime);
 		this.revalidate();
 		this.repaint();
 	}
@@ -372,5 +368,10 @@ public class YearCalendar extends AbstractCalendar
 		{
 			this.updateEvents(e, true);
 		}
+	}
+
+	@Override
+	public void select(Displayable item) {
+		
 	}
 }

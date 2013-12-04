@@ -25,11 +25,11 @@ import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddEventDisplay;
 
 public class EventToolbarGroup extends ToolbarGroupView {
 	
-	private final JPanel eventContentPanel = new JPanel();
 	private final JButton addEventButton, removeEventButton, addCommitmentButton;
 	
 	public EventToolbarGroup(final MainPanel mMainPanel) {
-		super("Events");
+		super("Events & Commitments");
+		setPreferredWidth(300);
 		
 		//this.eventContentPanel.setLayout(new BoxLayout(eventContentPanel, BoxLayout.X_AXIS));
 		
@@ -62,7 +62,6 @@ public class EventToolbarGroup extends ToolbarGroupView {
 				mMainPanel.addTopLevelTab(new JPanel(), "test", true);
 			}
 		});
-		
 		
 		try {
 		    Image img = ImageIO.read(getClass().getResource("add_event.png"));

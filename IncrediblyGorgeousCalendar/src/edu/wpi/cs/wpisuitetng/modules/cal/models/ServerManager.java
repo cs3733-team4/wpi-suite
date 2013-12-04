@@ -24,6 +24,7 @@ import edu.wpi.cs.wpisuitetng.network.models.IRequest;
 /**
  * Class for abstracting the network access away.
  */
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class ServerManager {
 	public static final String separator = "%2C";
 	public static <T> ArrayList<T> get(String path, final Class classType, String... args) {

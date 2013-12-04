@@ -10,6 +10,7 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.france;
 
 import org.joda.time.DateTime;
+import org.joda.time.MutableDateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
@@ -23,11 +24,20 @@ public class LeadParticle implements Comparable<LeadParticle>
 	private boolean isEnd; //is this the start of an event or the end of an event
 	private TimeTraveller result;
 	
-	public LeadParticle(Event event, boolean isEnd)
+	public LeadParticle(Event event, boolean isEnd, DateTime displayedDay)
 	{
 		this.event = event;
 		this.isEnd = isEnd;
-		this.time = isEnd ? event.getEnd() : event.getStart();
+		MutableDateTime mDisplayedDay = new MutableDateTime(displayedDay);
+		
+		if (!isEnd)
+		{
+			this.time=event.getStartTimeOnDay(displayedDay);
+		}
+		else
+		{
+			this.time=event.getEndTimeOnDay(displayedDay);
+		}
 	}
 	
 	public Event getEvent()

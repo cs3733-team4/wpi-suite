@@ -15,7 +15,6 @@ import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
 
 import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
@@ -24,6 +23,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.france.LouvreTour;
@@ -41,8 +41,6 @@ public class DayCalendar extends AbstractCalendar
 	private JScrollPane scroll = new JScrollPane(holder);
 
 	private EventModel eventModel;
-	
-	private int sizeW = 0;
 
 	private DateTimeFormatter titleFmt = DateTimeFormat.forPattern("EEEE, MMM d, yyyy");
 
@@ -65,25 +63,16 @@ public class DayCalendar extends AbstractCalendar
 
 	private void generateDay()
 	{
-		if (this.getWidth() > 0)this.sizeW = this.getWidth();
 		this.holder.removeAll();
 		this.removeAll();
 		this.add(scroll, BorderLayout.CENTER);
 		this.add(new JLabel(time.toString(titleFmt)), BorderLayout.NORTH);
 
 		this.current = new LouvreTour();
-		this.current.setEvents(getVisibleEvents());
+		this.current.setEvents(getVisibleEvents(), time);
 
 		this.holder.add(DayGridLabel.getInstance(), BorderLayout.WEST);
 		this.holder.add(this.current, BorderLayout.CENTER);
-		SwingUtilities.invokeLater(new Runnable() {
-			
-			@Override
-			public void run() {
-				holder.revalidate();
-				holder.repaint();
-			}
-		});
 		// notify mini-calendar to change
 		mainPanel.miniMove(time);
 	}
@@ -119,6 +108,11 @@ public class DayCalendar extends AbstractCalendar
 	{
 		this.time = newTime;
 		this.generateDay();
+
+		this.current.repaint();
+		
+		mainPanel.revalidate();
+		mainPanel.repaint();
 	}
 
 	@Override
@@ -126,5 +120,11 @@ public class DayCalendar extends AbstractCalendar
 	{
 		// at the moment, we don't care, and just re-pull from the DB. TODO: this should change
 		this.generateDay();
+	}
+
+	@Override
+	public void select(Displayable item)
+	{
+		current.select(item);		
 	}
 }

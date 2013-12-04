@@ -32,6 +32,8 @@ import javax.swing.border.EmptyBorder;
 
 import org.joda.time.DateTime;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
@@ -42,9 +44,11 @@ import edu.wpi.cs.wpisuitetng.modules.cal.navigation.GoToPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MainCalendarNavigation;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarHostIface;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.navigation.SidebarTabbedPane;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.ViewSize;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddCommitmentDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddEventDisplay;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.CategoryManager;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.DayCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthItem;
@@ -64,6 +68,8 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	private JPanel centerPanelTop;
 	private JPanel centerPanelBottom;
 	private JPanel sidePanel;
+	private JPanel sidePanelTop;
+	private SidebarTabbedPane sideTabbedPanel;
 	private MainCalendarNavigation mainCalendarNavigationPanel;
 	private GoToPanel mGoToPanel;
 	private AbstractCalendar mCalendar, monthCal, dayCal, yearCal;
@@ -75,12 +81,11 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	private final HashMap<Integer, JComponent> tabs = new HashMap<Integer, JComponent>();
 	private int tab_id = 0;
 	private EventModel events;
+	private CategoryModel categories;
 	private CommitmentModel commitments;
 	private ViewSize view = ViewSize.Month;
 	private static MainPanel instance;
-	private MonthItem currentSelected;
-	private MonthItem previouslySelected;
-	private Displayable currentDisplayable;
+	private Displayable currentSelected;
 	
 	//TODO: "make this better" -Patrick
 	public boolean showPersonal = true;
@@ -118,16 +123,20 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		mTabbedPane = this;
 		this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		
-		events = new EventModel(); // used for accessing events
+		categories = CategoryModel.getInstance();
+		events = EventModel.getInstance(); // used for accessing events
 		commitments= new CommitmentModel();
 		this.mainPaneContainer = new JPanel(); // Container for the navigation and calendars
-		this.sidePanel = new JPanel(); // Panel to hold the mini calendar and the goto date
+		this.sidePanel = new JPanel(); // Container to hold the top and bottom side sub-panels
+		this.sidePanelTop = new JPanel(); // Panel to hold the mini calendar and the goto date
 		this.centerPanel = new JPanel(); // Container for top and bottom sub-panels
 		this.centerPanelTop = new JPanel(); // Container for navigation and calendar selector
 		this.centerPanelBottom = new JPanel(); // Container for calendar itself
 		
-		// Components of center panel
+		// mMiniCalendarPanel must be initialized before monthCal and dayCal because they call miniMove() in their constructors
 		this.mMiniCalendarPanel = new MiniCalendarPanel(DateTime.now(), this); // Mini calendar
+		
+		// Components of center panel
 		this.mCalendar = monthCal = new MonthCalendar(DateTime.now(), events, commitments); // Monthly calendar
 		this.dayCal = new DayCalendar(DateTime.now(), events); // Day calendar (hidden)
 		this.yearCal = new YearCalendar(DateTime.now(), events); // Year calendar (hidden)
@@ -145,8 +154,15 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		sidePanel.setPreferredSize(new Dimension(200, 1024));
 		sidePanel.setLayout(new BorderLayout());
 		sidePanel.setBorder(new EmptyBorder(5, 5, 0, 0));
-		sidePanel.add(mMiniCalendarPanel, BorderLayout.NORTH);
-		sidePanel.add(mGoToPanel, BorderLayout.CENTER);
+		
+		sidePanelTop.setLayout(new BorderLayout());
+		sidePanelTop.add(mMiniCalendarPanel, BorderLayout.NORTH);
+		sidePanelTop.add(mGoToPanel, BorderLayout.CENTER);
+		
+		sideTabbedPanel = new SidebarTabbedPane();
+		
+		sidePanel.add(sidePanelTop, BorderLayout.NORTH);
+		sidePanel.add(sideTabbedPanel, BorderLayout.CENTER);
 		
 		// Set up center panel elements
 		centerPanelTop.setLayout(new BorderLayout());
@@ -206,7 +222,6 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	 * @param name the name of the tab
 	 * @param closeable whether the tab can be closed
 	 */
-	
 	public int addTopLevelTab(JComponent component, String name, boolean closeable)
 	{
 		
@@ -305,6 +320,8 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	 * @param updateEvent event to update
 	 */
 	public void updateEvent(Event updateEvent){
+		if((currentSelected instanceof Event) && updateEvent.getEventID().equals(((Event) currentSelected).getEventID()))
+			clearSelected();
 		events.updateEvent(updateEvent);
 	}
 	
@@ -325,6 +342,33 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		commitments.updateCommitment(updateCommitment);
 	}
 
+	/**
+	 * Adds a new category to the database and refreshes the UI
+	 * @param newCategory The category to add
+	 */
+	public void addCategory(Category newCategory)
+	{
+		categories.putCategory(newCategory);
+	}
+	
+	/**
+	 * Updates a category as long both categories have the same ID
+	 * @param updateCategory
+	 */
+	public void updateCategory(Category updateCategory)
+	{
+		categories.updateCategory(updateCategory);
+	}
+	
+	
+	/**
+	 * Returns the category model of the main panel
+	 * @return category model of the main panel instance
+	 */
+	public CategoryModel getCategoryModel(){
+		return this.categories;
+	}
+	
 	/**
 	 * Gets the singleton instance of this panel to avoid passing it everywhere
 	 * @return the instance
@@ -362,15 +406,16 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	
 	/**
 	 * Updates calendar in view and sets navigation panel to act on the active view
-	 * @param monthCal2
+	 * @param absCalendar
 	 */
-	private void refreshView(AbstractCalendar monthCal2)
+	private void refreshView(final AbstractCalendar absCalendar)
 	{
 		centerPanelBottom.remove(mCalendar);
-		mCalendar = monthCal2;
+		mCalendar = absCalendar;
 		mainCalendarNavigationPanel.updateCalendar(mCalendar);
 		centerPanelBottom.add(mCalendar, BorderLayout.CENTER);
 		mCalendar.display(lastTime);
+		
 		revalidate();
 		repaint();
 	}
@@ -397,7 +442,8 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	 * Close specified tab
 	 * @param id
 	 */
-	public void closeTab(int id){
+	public void closeTab(int id)
+	{
 		mTabbedPane.remove(tabs.get(id));
 	}
 	
@@ -405,33 +451,23 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	 * Highlights the  selected monthItem on the calendar
 	 * @param Item the month item to highlight
 	 */
-	public void updateSelectedDisplayable(MonthItem Item){
-		
-		this.currentSelected = Item;
-		
-		if (previouslySelected != null)
-			previouslySelected.setBackground(Colors.TABLE_BACKGROUND);
-		
-		currentSelected.setBackground(Colors.SELECTED_BACKGROUND);
-		previouslySelected = currentSelected;
-		
+	public void updateSelectedDisplayable(Displayable item)
+	{
+		mCalendar.select(item);
+		this.currentSelected = item;	
+		sideTabbedPanel.showDetails(item);
 	}
 	
 	/**
 	 * Edits the selected displayable
 	 * @param Item the month item containing the displayable to edit
 	 */
-	public void editSelectedDisplayable(MonthItem Item){
+	public void editSelectedDisplayable(Displayable item)
+	{
+		updateSelectedDisplayable(item);
 		
-		this.currentSelected = Item;
-		this.currentDisplayable = Item.getDisplayable();
-		
-		
-		currentSelected.setBackground(Colors.TABLE_BACKGROUND);
-		previouslySelected = currentSelected;
-		
-		if (currentDisplayable instanceof Event) {
-			AddEventDisplay mAddEventDisplay = new AddEventDisplay((Event) currentDisplayable);
+		if (item instanceof Event) {
+			AddEventDisplay mAddEventDisplay = new AddEventDisplay((Event) item);
 			boolean openNewTab = true;
 			JComponent tabToOpen = null;
 			
@@ -449,12 +485,12 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 			}
 			else if (tabToOpen != null)
 			{
-				this.mTabbedPane.setSelectedComponent(tabToOpen);
+				setSelectedTab(tabToOpen);
 			}
 			
 		}
-		else if (currentDisplayable instanceof Commitment) {
-			AddCommitmentDisplay mAddCommitmentDisplay = new AddCommitmentDisplay((Commitment) currentDisplayable);
+		else if (item instanceof Commitment) {
+			AddCommitmentDisplay mAddCommitmentDisplay = new AddCommitmentDisplay((Commitment) item);
 			mAddCommitmentDisplay.setTabId(instance.addTopLevelTab(mAddCommitmentDisplay, "Edit Commitment", true));
 		}
 	}
@@ -462,8 +498,32 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	/**
 	 * Clears selected MonthItem from calendar
 	 */
-	public void clearSelected(){
-		if (previouslySelected != null)
-			previouslySelected.setBackground(Colors.TABLE_BACKGROUND);
+	public void clearSelected()
+	{
+		updateSelectedDisplayable(null);
+		sideTabbedPanel.clearDetails();
+	}
+	
+	public CategoryManager getCategoryManagerTab()
+	{
+		for(JComponent c : tabs.values())
+		{
+			if (c instanceof CategoryManager)
+			{
+				return (CategoryManager) c;
+			}
+		}
+		return null;
+	}
+	
+	public void setSelectedTab(JComponent tabToFocus)
+	{
+		try
+		{
+			this.mTabbedPane.setSelectedComponent(tabToFocus);
+		}catch(IllegalArgumentException e)
+		{
+			e.printStackTrace(); //tab not found
+		}
 	}
 }

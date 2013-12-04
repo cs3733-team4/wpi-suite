@@ -20,6 +20,8 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.Duration;
 import org.joda.time.MutableDateTime;
 import org.joda.time.ReadableDateTime;
 
@@ -30,6 +32,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.DayStyle;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
@@ -41,15 +44,15 @@ import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
 public class MonthCalendar extends AbstractCalendar
 {
 
-	private JPanel inside = new JPanel(),
-			top = new JPanel(),
-			mainCalendarView = new JPanel(),
-			calendarTitlePanel = new JPanel();
-	
+	private JPanel inside = new JPanel(), top = new JPanel(),
+			mainCalendarView = new JPanel(), calendarTitlePanel = new JPanel();
+
 	private JLabel monthLabel = new JLabel();
 	private DateTime time;
 	private MainPanel mainPanel;
-
+	private Displayable lastSelection;
+	private DateTime firstOnMonth;
+	private DateTime lastOnMonth;
 	private HashMap<Integer, MonthDay> days = new HashMap<Integer, MonthDay>();
 
 	private EventModel eventModel;
@@ -125,7 +128,7 @@ public class MonthCalendar extends AbstractCalendar
 			this.addEvent(e);
 		}
 	}
-	
+
 	void setCommitments(List<Commitment> commitments)
 	{
 		clearCommitments();
@@ -142,12 +145,36 @@ public class MonthCalendar extends AbstractCalendar
 	 */
 	void addEvent(Event e)
 	{
-		MonthDay md = this.days.get(e.getStart().getDayOfYear());
-		md.addEvent(e);
+		
+		MonthDay md;
+		MutableDateTime startDay = new MutableDateTime(e.getStart());
+		MutableDateTime endDay = new MutableDateTime(e.getEnd());
+		endDay.setMillisOfDay(0);
+		startDay.setMillisOfDay(0);
+		
+		if (startDay.isBefore(firstOnMonth))
+			startDay=new MutableDateTime(firstOnMonth);
+		if (endDay.isAfter(lastOnMonth))
+			endDay= new MutableDateTime(lastOnMonth);
+			
+		while (!endDay.isBefore(startDay))
+		{
+			md = this.days.get(startDay.getDayOfYear());
+			try{
+				md.addEvent(e);
+			}
+			catch(NullPointerException ex)
+			{
+				System.err.println("Error when adding Event: " + e.toJSON());
+			}
+			startDay.addDays(1);
+		
+		}
 	}
-	
+
 	/**
 	 * Add a commitment
+	 * 
 	 * @param c
 	 */
 	void addCommitment(Commitment c)
@@ -166,13 +193,13 @@ public class MonthCalendar extends AbstractCalendar
 		MonthDay md = this.days.get(e.getStart().getDayOfYear());
 		md.removeEvent(e);
 	}
-	
+
 	void removeCommitment(Commitment c)
 	{
 		MonthDay md = this.days.get(c.getDate().getDayOfYear());
 		md.removeCommitment(c);
 	}
-	
+
 	void clearEvents()
 	{
 		for (Component i : inside.getComponents())
@@ -180,7 +207,7 @@ public class MonthCalendar extends AbstractCalendar
 			((MonthDay)i).clear();
 		}
 	}
-	
+
 	void clearCommitments()
 	{
 		for (Component i : inside.getComponents())
@@ -235,9 +262,11 @@ public class MonthCalendar extends AbstractCalendar
 		inside.setLayout(new java.awt.GridLayout(weeks, 7));
 		referenceDay.addDays(-first);
 
+		firstOnMonth = new DateTime(referenceDay);
+		
 		// remove all old days
 		inside.removeAll();
-		
+
 		DateTime from = referenceDay.toDateTime();
 
 		// generate days, weeks*7 covers all possible months, so we just loop
@@ -246,13 +275,14 @@ public class MonthCalendar extends AbstractCalendar
 		{
 			MonthDay md = new MonthDay(referenceDay.toDateTime(), getMarker(referenceDay));
 			inside.add(md);
-			md.reBorder(i < 7, (i % 7) == 0, i >= (weeks-1) * 7);
+			md.reBorder(i < 7, (i % 7) == 0, i >= (weeks - 1) * 7);
 			this.days.put(referenceDay.getDayOfYear(), md);
 			referenceDay.addDays(1); // go to next day
 		}
-		
+
 		referenceDay.addDays(-1);// go back one to counteract last add one
 		
+		lastOnMonth = new DateTime(referenceDay);
 		setEvents(getVisibleEvents(from, referenceDay.toDateTime()));
 		setCommitments(getVisibleCommitments(from, referenceDay.toDateTime()));
 
@@ -270,7 +300,7 @@ public class MonthCalendar extends AbstractCalendar
 		// TODO: this is where filtering should go
 		return eventModel.getEvents(from, to);
 	}
-	
+
 	private List<Commitment> getVisibleCommitments(DateTime from, DateTime to)
 	{
 		return commitmentModel.getCommitments(from, to);
@@ -301,5 +331,72 @@ public class MonthCalendar extends AbstractCalendar
 	public void updateEvents(Event events, boolean addOrRemove)
 	{
 		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void select(Displayable item)
+	{
+		Displayable oitem = item;
+		MonthDay day;
+		if (item == null && lastSelection == null)
+			return;
+		if (item == null)
+			oitem = lastSelection;
+		
+		if (lastSelection != null)
+		{
+			if (lastSelection instanceof Event)
+				selectEvents((Event)lastSelection, null);
+			else
+			{
+				day = days.get(lastSelection.getDate().getDayOfYear());
+				if (day != null)
+				{
+					day.select(null);
+				}
+			}
+		}
+
+		if (item != null && item instanceof Event)
+			selectEvents((Event)item, item);
+		else
+		{
+			day = days.get(oitem.getDate().getDayOfYear());
+			if (day != null)
+			{
+				day.select(item);
+			}
+		}
+		lastSelection = item;
+	}
+
+	private void selectEvents(Event on, Displayable setTo)
+	{
+		// TODO: refactor this pattern
+		MonthDay md;
+		MutableDateTime startDay = new MutableDateTime(on.getStart());
+		MutableDateTime endDay = new MutableDateTime(on.getEnd());
+		endDay.setMillisOfDay(0);
+		startDay.setMillisOfDay(0);
+		
+		if (startDay.isBefore(firstOnMonth))
+			startDay=new MutableDateTime(firstOnMonth);
+		if (endDay.isAfter(lastOnMonth))
+			endDay= new MutableDateTime(lastOnMonth);
+			
+		while (!endDay.isBefore(startDay))
+		{
+			md = this.days.get(startDay.getDayOfYear());
+			try
+			{
+				md.select(setTo);
+			}
+			catch(NullPointerException ex)
+			{
+				// silently ignore
+			}
+			startDay.addDays(1);
+		
+		}
 	}
 }
