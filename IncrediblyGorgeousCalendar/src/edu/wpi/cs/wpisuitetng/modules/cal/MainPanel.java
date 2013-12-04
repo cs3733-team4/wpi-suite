@@ -445,6 +445,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	public void closeTab(int id)
 	{
 		mTabbedPane.remove(tabs.get(id));
+		tabs.remove(id);
 	}
 	
 	/**
