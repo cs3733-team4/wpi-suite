@@ -329,10 +329,8 @@ public class Event extends AbstractModel implements Displayable
 	}
 	public DateTime getEndTimeOnDay(DateTime givenDay)
 	{
-		MutableDateTime mDisplayedDay = new MutableDateTime(givenDay);
-		mDisplayedDay.setMillisOfDay(0);
-		mDisplayedDay.addDays(1);
-		mDisplayedDay.addMillis(-1);
+		MutableDateTime mDisplayedDay = new MutableDateTime(givenDay);;
+		mDisplayedDay.setMillisOfDay(86400000-2);
 		if (this.getEnd().isAfter(mDisplayedDay))
 		{
 			return mDisplayedDay.toDateTime();
