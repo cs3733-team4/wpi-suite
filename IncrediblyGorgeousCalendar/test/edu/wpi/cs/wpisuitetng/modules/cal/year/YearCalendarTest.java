@@ -18,7 +18,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 
 public class YearCalendarTest {
 	
-	EventModel events=new EventModel();
+	EventModel events=EventModel.getInstance();
 	DateTime time2000 = new DateTime(2000, 1, 1, 1, 1);
 	MutableDateTime Mtime2000 = new MutableDateTime(2000, 1, 1, 1, 1, 0, 0);
 	MutableDateTime Mtime2001 = new MutableDateTime(2001, 1, 1, 1, 1, 0, 0);

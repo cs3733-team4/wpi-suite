@@ -14,7 +14,6 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -71,6 +70,7 @@ public class MonthItem extends JPanel
         time.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 3));
         add(time);
 
+        desc.putClientProperty("html.disable", true);
         desc.setText(mDisplayable.getName());
         desc.setFont(new java.awt.Font("DejaVu Sans", Font.PLAIN, 12));
         desc.setMinimumSize(new java.awt.Dimension(10, 15));
