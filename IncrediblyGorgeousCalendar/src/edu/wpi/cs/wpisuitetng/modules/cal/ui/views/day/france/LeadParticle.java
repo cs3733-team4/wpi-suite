@@ -10,6 +10,7 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.france;
 
 import org.joda.time.DateTime;
+import org.joda.time.MutableDateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
@@ -27,11 +28,31 @@ public class LeadParticle implements Comparable<LeadParticle>
 	{
 		this.event = event;
 		this.isEnd = isEnd;
+		MutableDateTime mDisplayedDay = new MutableDateTime(displayedDay);
+		
 		if (isEnd)
 		{
-			
+			mDisplayedDay.setMillisOfDay(1);
+			//if it starts before the beginning of the day then its a multi day event, or all day event
+			if (event.getStart().isBefore(mDisplayedDay)){
+				mDisplayedDay.setMillisOfDay(0);
+				this.time=mDisplayedDay.toDateTime();
+			}
+			else
+				this.time=event.getStart();
 		}
-		this.time = isEnd ? event.getEnd() : event.getStart();
+		else
+		{
+			mDisplayedDay.setMillisOfDay(0);
+			mDisplayedDay.addDays(1);
+			mDisplayedDay.addMillis(-1);
+			if (event.getEnd().isAfter(mDisplayedDay))
+			{
+				this.time=mDisplayedDay.toDateTime();
+			}
+			else
+				this.time=event.getEnd();
+		}
 	}
 	
 	public Event getEvent()

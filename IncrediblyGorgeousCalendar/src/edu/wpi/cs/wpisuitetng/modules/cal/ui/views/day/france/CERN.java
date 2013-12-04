@@ -51,6 +51,7 @@ public class CERN
 		{
 			re[i*2] = new LeadParticle(events.get(i), false, displayedDay);
 			re[i*2 + 1] = new LeadParticle(events.get(i), true, displayedDay);
+
 		}
 		Arrays.sort(re);
 		return re;
@@ -129,6 +130,7 @@ public class CERN
 			}
 			else
 			{
+				System.out.println("num: " + x.getResult().getXpos().getNumerator());
 				state.set(x.getResult().getXpos().getNumerator(), false);
 			}
 		}
