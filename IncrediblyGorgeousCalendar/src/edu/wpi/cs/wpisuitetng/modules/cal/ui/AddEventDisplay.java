@@ -366,15 +366,6 @@ public class AddEventDisplay extends JPanel
 		this.add(submissionPanel);
 		
 		saveButton.setEnabled(isSaveable());
-		
-		//add the combobox for category
-		JPanel comboBoxHolder = new JPanel();
-		this.add(comboBoxHolder);
-		if (this.eventCategoryPicker != null)
-		{
-			comboBoxHolder.add(this.eventCategoryPicker);
-		}
-		
 	}
 	
 	/**
