@@ -20,14 +20,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextArea;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.SwingConstants;
 
 import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
 import java.awt.Color;
 import java.awt.Dimension;

@@ -111,8 +111,9 @@ public class MonthItem extends JPanel
         time.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 3));
         add(time);
 
-		desc.setText(mDisplayable.getName());
-       
+
+        desc.putClientProperty("html.disable", true);
+        desc.setText(mDisplayable.getName());
         desc.setFont(new java.awt.Font("DejaVu Sans", Font.PLAIN, 12));
         desc.setMinimumSize(new java.awt.Dimension(10, 15));
         add(desc);

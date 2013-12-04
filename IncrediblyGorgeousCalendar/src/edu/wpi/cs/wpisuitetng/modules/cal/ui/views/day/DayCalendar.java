@@ -15,7 +15,6 @@ import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
 
 import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
@@ -41,8 +40,6 @@ public class DayCalendar extends AbstractCalendar
 	private JScrollPane scroll = new JScrollPane(holder);
 
 	private EventModel eventModel;
-	
-	private int sizeW = 0;
 
 	private DateTimeFormatter titleFmt = DateTimeFormat.forPattern("EEEE, MMM d, yyyy");
 
@@ -65,7 +62,6 @@ public class DayCalendar extends AbstractCalendar
 
 	private void generateDay()
 	{
-		if (this.getWidth() > 0)this.sizeW = this.getWidth();
 		this.holder.removeAll();
 		this.removeAll();
 		this.add(scroll, BorderLayout.CENTER);
@@ -76,14 +72,6 @@ public class DayCalendar extends AbstractCalendar
 
 		this.holder.add(DayGridLabel.getInstance(), BorderLayout.WEST);
 		this.holder.add(this.current, BorderLayout.CENTER);
-		SwingUtilities.invokeLater(new Runnable() {
-			
-			@Override
-			public void run() {
-				holder.revalidate();
-				holder.repaint();
-			}
-		});
 		// notify mini-calendar to change
 		mainPanel.miniMove(time);
 	}
@@ -119,6 +107,11 @@ public class DayCalendar extends AbstractCalendar
 	{
 		this.time = newTime;
 		this.generateDay();
+
+		this.current.repaint();
+		
+		mainPanel.revalidate();
+		mainPanel.repaint();
 	}
 
 	@Override

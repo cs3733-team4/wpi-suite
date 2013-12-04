@@ -10,7 +10,6 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.navigation;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -19,20 +18,13 @@ import java.awt.event.ActionListener;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
 import org.joda.time.DateTime;
-import org.joda.time.MutableDateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
 
 public class MiniCalendarPanel extends JPanel

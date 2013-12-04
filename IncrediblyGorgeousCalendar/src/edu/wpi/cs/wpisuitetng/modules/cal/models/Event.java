@@ -302,8 +302,18 @@ public class Event extends AbstractModel implements Displayable
 
 	public Color getColor()
 	{
-		// TODO: if category, get category color
-		return isProjectEvent ? new Color(125,157,227) : new Color(227,125,147);
+		Color fallbackColor = isProjectEvent ? new Color(125,157,227) : new Color(227,125,147);
+		Category cat = CategoryModel.getInstance().getCategoryByUUID(category);
+		if (cat == null)
+		{
+			return fallbackColor;
+		}
+		Color eventColor = cat.getColor();
+		if (eventColor != null)
+		{
+			return eventColor;
+		}
+		return fallbackColor;
 	}
 	public boolean isMultiDayEvent()
 	{
