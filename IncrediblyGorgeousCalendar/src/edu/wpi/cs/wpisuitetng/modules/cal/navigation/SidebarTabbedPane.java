@@ -210,6 +210,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 		{    
 	        try
 	        {
+				detailTitleLabel.setOpaque(true);
 	        	detailTitleLabel.setBackground(((Event)mDisplayable).getColor());
 				detailTitleLabel.setText(mDisplayable.getName());
 				if (!((Event) mDisplayable).isMultiDayEvent())
@@ -235,8 +236,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 			try
 	        {
 				detailTitleLabel.setText(mDisplayable.getName());
-
-				detailTitleLabel.setBackground(Colors.TABLE_BACKGROUND);
+				detailTitleLabel.setOpaque(false);
 	        	detailTextDoc.insertString(detailTextDoc.getLength(), "Date:\n   " + ((Commitment) mDisplayable).getDate().toString(dateFormatter) + "\n", normalTextStyle);
 	        	detailTextDoc.insertString(detailTextDoc.getLength(), "Description:\n   " + mDisplayable.getDescription() + "\n", normalTextStyle);
 	        }catch(Exception e)
@@ -252,7 +252,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 	 * clears the text area of any details
 	 */
 	public void clearDetails() {
-		detailTitleLabel.setBackground(Colors.TABLE_BACKGROUND);
+		detailTitleLabel.setOpaque(false);
 		detailTitleLabel.setText("");
 		detailTextPane.setText("");
 		setButtonsEnabled(false);

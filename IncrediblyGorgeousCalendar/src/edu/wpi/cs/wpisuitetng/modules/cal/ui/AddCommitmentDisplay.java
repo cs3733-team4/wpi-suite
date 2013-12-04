@@ -178,40 +178,22 @@ public class AddCommitmentDisplay extends JPanel
 		saveButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				try
-				{
-					commitTime1.getDate();
-					errorText.setVisible(true);
-					
-					if (nameTextField.getText() == null || nameTextField.getText().trim().length() == 0)
-					{
-						errorText.setText("* Please enter a commitment title");
-					}
-					else
-					{
-						errorText.setVisible(false);
-						Commitment e = new Commitment();
-						e.setName(nameTextField.getText().trim());
-						e.setDescription(descriptionTextArea.getText());
-						e.setDate(commitTime1.getDate());
-						if (editingCommitment)
-							e.setCommitmentID(existingID);
-						
-						if (editingCommitment)
-							MainPanel.getInstance().updateCommitment(e);
-						else
-							MainPanel.getInstance().addCommitment(e);
-						saveButton.setEnabled(false);
-						saveButton.setText("Saved!");
-						MainPanel.getInstance().closeTab(tabid);
-						MainPanel.getInstance().refreshView();
-					}
-				}
-				catch (IllegalArgumentException exception)
-				{
-					errorText.setText("* Invalid Date");
-					errorText.setVisible(true);
-				}
+				Commitment e = new Commitment();
+				e.setName(nameTextField.getText().trim());
+				e.setDescription(descriptionTextArea.getText());
+				e.setDate(commitTime1.getDate());
+				if (editingCommitment)
+					e.setCommitmentID(existingID);
+				
+				if (editingCommitment)
+					MainPanel.getInstance().updateCommitment(e);
+				else
+					MainPanel.getInstance().addCommitment(e);
+				
+				saveButton.setEnabled(false);
+				saveButton.setText("Saved!");
+				MainPanel.getInstance().closeTab(tabid);
+				MainPanel.getInstance().refreshView();
 			}
 		});
 		saveButton.setHorizontalAlignment(SwingConstants.LEFT);
@@ -259,10 +241,13 @@ public class AddCommitmentDisplay extends JPanel
 				saveButton.setEnabled(isSaveable());
 			}
 		});
+		
 		validateDate(commitTime1.getDate(), dateErrorLabel);
 		validateText(nameTextField.getText(), nameErrorLabel);
-		
+		saveButton.setEnabled(isSaveable());
 	}
+	
+	
 	public boolean isSaveable()
 	{
 		return validateText(nameTextField.getText(), nameErrorLabel) && 

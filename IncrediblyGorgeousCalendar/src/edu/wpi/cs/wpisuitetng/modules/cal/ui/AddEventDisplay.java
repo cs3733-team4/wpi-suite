@@ -22,7 +22,6 @@ import javax.swing.JTextArea;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.SwingConstants;
-import javax.swing.border.BevelBorder;
 
 import org.joda.time.DateTime;
 
@@ -236,7 +235,7 @@ public class AddEventDisplay extends JPanel
 		dateAndTimePickerPane.add(new JLabel(" to "));
 		dateAndTimePickerPane.add(endTimeDatePicker);
 		JCheckBox chckbxAllDayEvent = new JCheckBox("All Day Event");
-		dateAndTimePickerPane.add(chckbxAllDayEvent);
+		//dateAndTimePickerPane.add(chckbxAllDayEvent);
 		dateErrorLabel = new JLabel();
 		dateErrorLabel.setForeground(Color.RED);
 		dateAndTimePickerPane.add(dateErrorLabel);
@@ -378,41 +377,33 @@ public class AddEventDisplay extends JPanel
 		saveButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				try
-				{
-					startTimeDatePicker.getDate();
+
+				startTimeDatePicker.getDate();
 					endTimeDatePicker.getDate();
 					errorText.setVisible(true);
-				
-						errorText.setVisible(false);
-						Event e = new Event();
-						e.setName(nameTextField.getText().trim());
-						e.setDescription(descriptionTextArea.getText());
-						e.setStart(startTimeDatePicker.getDate());
-						e.setEnd(endTimeDatePicker.getDate());
-						e.setProjectEvent(teamProjectCheckBox.isSelected());
-						e.setParticipants(participantsTextField.getText().trim());
-						e.setCategory(((Category)eventCategoryPicker.getSelectedItem()).getCategoryID());
-						
-						
-						if (editEvent){
-							e.setEventID(existingEventID);
-							MainPanel.getInstance().updateEvent(e);
-						} else {
-							MainPanel.getInstance().addEvent(e);
-						}
-						
-						saveButton.setEnabled(false);
-						saveButton.setText("Saved!");
-						MainPanel.getInstance().closeTab(tabid);
-						MainPanel.getInstance().refreshView();
+			
+					errorText.setVisible(false);
+					Event e = new Event();
+					e.setName(nameTextField.getText().trim());
+					e.setDescription(descriptionTextArea.getText());
+					e.setStart(startTimeDatePicker.getDate());
+					e.setEnd(endTimeDatePicker.getDate());
+					e.setProjectEvent(teamProjectCheckBox.isSelected());
+					e.setParticipants(participantsTextField.getText().trim());
+					e.setCategory(((Category)eventCategoryPicker.getSelectedItem()).getCategoryID());
 					
-				}
-				catch (IllegalArgumentException exception)
-				{
-					errorText.setText("* Invalid Date/Time");
-					errorText.setVisible(true);
-				}
+					
+					if (editEvent){
+						e.setEventID(existingEventID);
+						MainPanel.getInstance().updateEvent(e);
+					} else {
+						MainPanel.getInstance().addEvent(e);
+					}
+					
+					saveButton.setEnabled(false);
+					saveButton.setText("Saved!");
+					MainPanel.getInstance().closeTab(tabid);
+					MainPanel.getInstance().refreshView();
 				
 				saveButton.setEnabled(false);
 				saveButton.setText("Saved!");
