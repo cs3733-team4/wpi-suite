@@ -410,6 +410,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	 */
 	private void refreshView(final AbstractCalendar absCalendar)
 	{
+		clearSelected();
 		centerPanelBottom.remove(mCalendar);
 		mCalendar = absCalendar;
 		mainCalendarNavigationPanel.updateCalendar(mCalendar);
