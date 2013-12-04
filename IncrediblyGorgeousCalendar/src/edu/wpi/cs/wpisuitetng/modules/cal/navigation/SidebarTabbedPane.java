@@ -43,7 +43,6 @@ public class SidebarTabbedPane extends JTabbedPane{
 	private SimpleAttributeSet boldBlueTextStyle;
 	private SimpleAttributeSet boldRedTextStyle;
 	private JScrollPane detailScrollPane;
-	private JPanel detailTitleContainer;
 	private JLabel detailTitleLabel;
 	private JPanel detailButtonPane;
 	private JButton detailEditButton;
@@ -67,7 +66,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 		
 		//add tabs
 		this.addTab("Details", detailScrollPane);
-		this.addTab("Commitments", commitmentTab);
+		//this.addTab("Commitments", commitmentTab);
 	}
 	
 	/**
@@ -137,12 +136,6 @@ public class SidebarTabbedPane extends JTabbedPane{
 		detailTitleLabel.setFont(new Font("Tahoma", Font.BOLD, 12));
 		detailTitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		
-		//setup text title container
-	    detailTitleContainer = new JPanel();
-		detailTitleContainer.setOpaque(true);
-		detailTitleContainer.setPreferredSize(detailTextPane.getPreferredSize());
-		detailTitleContainer.setLayout(new BorderLayout());
-		detailTitleContainer.add(detailTitleLabel, BorderLayout.CENTER);
 		
 	    // setup buttons and listeners
 	    detailEditButton = new JButton("Edit");
@@ -185,7 +178,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 	    //detailButtonPane.add(detailDeleteButton);
 	    
 	    // add text area and button container to detail tab
-	    detailTab.add(detailTitleContainer, BorderLayout.NORTH);
+	    detailTab.add(detailTitleLabel, BorderLayout.NORTH);
 	    detailTab.add(detailTextPane, BorderLayout.CENTER);
 	    detailTab.add(detailButtonPane, BorderLayout.SOUTH);
 	    
@@ -217,13 +210,20 @@ public class SidebarTabbedPane extends JTabbedPane{
 		{    
 	        try
 	        {
-	    		detailTitleContainer.setOpaque(true);
-	        	detailTitleContainer.setBackground(Colors.SELECTED_BACKGROUND);
+	        	detailTitleLabel.setBackground(((Event)mDisplayable).getColor());
 				detailTitleLabel.setText(mDisplayable.getName());
+				if (!((Event) mDisplayable).isMultiDayEvent())
+					detailTextDoc.insertString(detailTextDoc.getLength(), "Time:\n   " + ((Event) mDisplayable).getStart().toString(timeFormatter) + " - " + ((Event) mDisplayable).getEnd().toString(timeFormatter) + "\n", normalTextStyle);
+				else
+				{
+					detailTextDoc.insertString(detailTextDoc.getLength(), "Starts:\n   " + ((Event) mDisplayable).getStart().toString(dateFormatter) + " " + ((Event) mDisplayable).getStart().toString(timeFormatter) + "\n", normalTextStyle);
+					detailTextDoc.insertString(detailTextDoc.getLength(), "Ends:\n   " + ((Event) mDisplayable).getEnd().toString(dateFormatter) + " " + ((Event) mDisplayable).getEnd().toString(timeFormatter) + "\n", normalTextStyle);
+				}
 				
-	        	detailTextDoc.insertString(detailTextDoc.getLength(), ((Event) mDisplayable).getStart().toString(timeFormatter) + " - ", normalTextStyle);
-	        	detailTextDoc.insertString(detailTextDoc.getLength(), ((Event) mDisplayable).getEnd().toString(timeFormatter) + "\n", normalTextStyle);
-	        	detailTextDoc.insertString(detailTextDoc.getLength(), mDisplayable.getDescription() + "\n", normalTextStyle);
+				detailTextDoc.insertString(detailTextDoc.getLength(), "Description:\n   " + mDisplayable.getDescription() + "\n", normalTextStyle);
+				if (((Event)mDisplayable).getAssociatedCategory() != null)
+					detailTextDoc.insertString(detailTextDoc.getLength(), "Category:\n   " + ((Event)mDisplayable).getAssociatedCategory().getName() + "\n", normalTextStyle);
+		        
 	        }catch(Exception e)
 	        {
 	        	e.printStackTrace();
@@ -234,13 +234,11 @@ public class SidebarTabbedPane extends JTabbedPane{
 		{
 			try
 	        {
-				detailTitleContainer.setOpaque(true);
-				// TODO: Change this to a predefined color or category color
-				detailTitleContainer.setBackground(Color.ORANGE);
 				detailTitleLabel.setText(mDisplayable.getName());
-				
-	        	detailTextDoc.insertString(detailTextDoc.getLength(), ((Commitment) mDisplayable).getDate().toString(dateFormatter) + "\n", normalTextStyle);
-	        	detailTextDoc.insertString(detailTextDoc.getLength(), mDisplayable.getDescription() + "\n", normalTextStyle);
+
+				detailTitleLabel.setBackground(Colors.TABLE_BACKGROUND);
+	        	detailTextDoc.insertString(detailTextDoc.getLength(), "Date:\n   " + ((Commitment) mDisplayable).getDate().toString(dateFormatter) + "\n", normalTextStyle);
+	        	detailTextDoc.insertString(detailTextDoc.getLength(), "Description:\n   " + mDisplayable.getDescription() + "\n", normalTextStyle);
 	        }catch(Exception e)
 	        {
 	        	e.printStackTrace();
@@ -254,7 +252,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 	 * clears the text area of any details
 	 */
 	public void clearDetails() {
-		detailTitleContainer.setOpaque(false);
+		detailTitleLabel.setBackground(Colors.TABLE_BACKGROUND);
 		detailTitleLabel.setText("");
 		detailTextPane.setText("");
 		setButtonsEnabled(false);

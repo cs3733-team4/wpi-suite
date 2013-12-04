@@ -299,7 +299,10 @@ public class Event extends AbstractModel implements Displayable
 	{
 		this.owner = owner;
 	}
-
+	public Category getAssociatedCategory()
+	{
+		return CategoryModel.getInstance().getCategoryByUUID(category);
+	}
 	public Color getColor()
 	{
 		Color fallbackColor = isProjectEvent ? new Color(125,157,227) : new Color(227,125,147);
