@@ -15,11 +15,14 @@ import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.SwingConstants;
 
 import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+
+import com.lowagie.text.Font;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
@@ -66,7 +69,11 @@ public class DayCalendar extends AbstractCalendar
 		this.holder.removeAll();
 		this.removeAll();
 		this.add(scroll, BorderLayout.CENTER);
-		this.add(new JLabel(time.toString(titleFmt)), BorderLayout.NORTH);
+		
+		JLabel dayTitle = new JLabel(time.toString(titleFmt));
+		dayTitle.setFont(new java.awt.Font("DejaVu Sans", Font.BOLD, 25));
+		dayTitle.setHorizontalAlignment(SwingConstants.CENTER);
+		this.add(dayTitle, BorderLayout.NORTH);
 
 		this.current = new LouvreTour();
 		this.current.setEvents(getVisibleEvents(), time);
