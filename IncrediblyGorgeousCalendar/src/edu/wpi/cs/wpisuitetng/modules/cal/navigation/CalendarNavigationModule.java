@@ -36,15 +36,6 @@ public class CalendarNavigationModule{
 		next.addMonths(-1);
 		return new CalendarNavigationModule(next.toDateTime(), mc);
 	}
-	
-	/**
-	 * Added getTime for testing purposes
-	 * @return the time of the CalendarYearModule object
-	 */
-	
-	public DateTime getTime(){
-		return time;
-	}
 
 	public CalendarNavigationModule getFollowing() {
 		MutableDateTime next = new MutableDateTime(time);
