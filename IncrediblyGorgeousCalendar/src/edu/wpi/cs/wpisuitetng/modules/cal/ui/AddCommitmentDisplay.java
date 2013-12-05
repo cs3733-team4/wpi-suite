@@ -48,8 +48,11 @@ public class AddCommitmentDisplay extends JPanel
 	private DatePicker commitTime1;
 	private JLabel dateErrorLabel;
 	private JLabel nameErrorLabel;
+	private DateTime currentTime;
+	
 	public AddCommitmentDisplay()
 	{
+		currentTime = new DateTime();
 		isEditingCommitment=false;
 		init(new Commitment());
 	}
@@ -111,6 +114,8 @@ public class AddCommitmentDisplay extends JPanel
 		commitTime1 = new DatePicker(false, null);
 		if (isEditingCommitment)
 			commitTime1.display(oldCommitment.getDate());
+		else
+			commitTime1.display(currentTime);
 		
 		CommitDatePickerPanel.add(lblDateTime);
 		CommitDatePickerPanel.add(commitTime1);

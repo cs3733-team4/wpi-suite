@@ -73,6 +73,7 @@ public class AddEventDisplay extends JPanel
 	private boolean isEditingEvent;
 	private UUID existingEventID; // UUID of event being edited
 	private JComboBox<Category> eventCategoryPicker;
+	private DateTime currentTime;
 	
 	
 	// Constructor for edit event.
@@ -93,7 +94,9 @@ public class AddEventDisplay extends JPanel
 	{
 		this.eventCategoryPicker = new JComboBox<Category>();
 		this.isEditingEvent = false;
+		this.currentTime = new DateTime();
 		setUpUI();
+		setCurrentDateAndTime();
 		setUpListeners();
 	}
 	
@@ -490,9 +493,29 @@ public class AddEventDisplay extends JPanel
 		return validateText(nameTextField.getText(), nameErrorLabel) && 
 				validateDate(startTimeDatePicker.getDate(), endTimeDatePicker.getDate(), dateErrorLabel);
 	}
-
+	
+	
+	/**
+	 * Checks whether events match 
+	 * 
+	 * @param other the event to compare with the event to edit
+	 * @return boolean indicating whether the events match
+	 */
 	public boolean matchingEvent(AddEventDisplay other)
 	{
 		return this.eventToEdit != null && this.eventToEdit.equals(other.eventToEdit);
+	}
+	
+	
+	/**
+	 * Sets the default date and time text fields to the current date and time
+	 * 
+	 * Should be only called if creating a new event, not when editing since edit
+	 * event already has a date and time to fill the text fields with
+	 */
+	public void setCurrentDateAndTime()
+	{
+		this.startTimeDatePicker.setDateTime(currentTime);
+		this.endTimeDatePicker.setDateTime(currentTime.plusHours(1));
 	}
 }
