@@ -125,7 +125,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		
 		categories = CategoryModel.getInstance();
 		events = EventModel.getInstance(); // used for accessing events
-		commitments= new CommitmentModel();
+		commitments= CommitmentModel.getInstance();
 		this.mainPaneContainer = new JPanel(); // Container for the navigation and calendars
 		this.sidePanel = new JPanel(); // Container to hold the top and bottom side sub-panels
 		this.sidePanelTop = new JPanel(); // Panel to hold the mini calendar and the goto date
@@ -545,5 +545,15 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		{
 			e.printStackTrace(); //tab not found
 		}
+	}
+
+	public void deleteDisplayable(Displayable currentDisplayable)
+	{
+		if (this.currentSelected == currentDisplayable)
+		{
+			this.clearSelected();
+		}
+		currentDisplayable.delete();
+		this.refreshView();
 	}
 }

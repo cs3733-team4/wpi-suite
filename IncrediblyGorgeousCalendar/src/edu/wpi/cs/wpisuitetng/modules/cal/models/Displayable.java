@@ -16,14 +16,31 @@ import org.joda.time.DateTime;
  */
 public interface Displayable
 {
+	/**
+	 * 
+	 * @return
+	 */
 	public String getName();
 
+	/**
+	 * 
+	 * @return
+	 */
 	public String getDescription();
 
+	/**
+	 * 
+	 * @return
+	 */
 	public String getParticipants();
 
 	/**
 	 * The date to display. If there are more than one, the default date (start)
 	 */
 	public DateTime getDate();
+	
+	/**
+	 * deletes this Displayable
+	 */
+	public void delete();
 }
