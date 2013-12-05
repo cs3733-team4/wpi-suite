@@ -31,15 +31,16 @@ public class MonthCalendarTest{
 	public void setUp() throws Exception {
 		// Mock network
 		Network.initNetwork(new MockNetwork());
-		final NetworkConfiguration config = new NetworkConfiguration("http://localhost:8080");
-		Network.getInstance().setDefaultNetworkConfiguration(config);
+		//final NetworkConfiguration config = new NetworkConfiguration("http://localhost:8080");
+		//Network.getInstance().setDefaultNetworkConfiguration(config);
 		
-	//	EventModel dummyModel = EventModel.getInstance();
+		Network.getInstance().setDefaultNetworkConfiguration(
+				new NetworkConfiguration("http://wpisuitetng"));
+		
+		//	EventModel dummyModel = EventModel.getInstance();
 		//CommitmentModel dummyModel2 = new CommitmentModel();
 		
 		//MockData db = new MockData(new HashSet<Object>());
-		//final NetworkConfiguration config = new NetworkConfiguration("http://localhost:8080");
-		//Network.getInstance().setDefaultNetworkConfiguration(config);
 	}
 	
 	private DateTime time =  new DateTime();
