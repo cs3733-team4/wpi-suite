@@ -165,7 +165,7 @@ public class AddCommitmentDisplay extends JPanel
 			descriptionTextArea.setText(oldCommitment.getDescription());
 		
 		JScrollPane descriptionScrollPane = new JScrollPane(descriptionTextArea);
-		descriptionScrollPane.setBorder(null);
+		descriptionScrollPane.setBorder(nameTextField.getBorder());
 		DescriptionPanel.add(descriptionScrollPane);
 		
 		JPanel SubmitPanel = new JPanel();

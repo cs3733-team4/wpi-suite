@@ -10,6 +10,7 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.ui;
 
 import javax.swing.Box.Filler;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.JComboBox;
@@ -324,7 +325,7 @@ public class AddEventDisplay extends JPanel
 		descriptionTextArea.setWrapStyleWord(true);
 		
 		JScrollPane descriptionScrollPane = new JScrollPane(descriptionTextArea);
-		descriptionScrollPane.setBorder(null);
+		descriptionScrollPane.setBorder(nameTextField.getBorder());
 		descriptionTextFieldPanel.add(descriptionScrollPane);
 		
 		// Add panel to UI
