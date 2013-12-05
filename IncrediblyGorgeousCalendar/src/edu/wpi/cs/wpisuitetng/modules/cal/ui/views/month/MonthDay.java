@@ -257,7 +257,7 @@ public class MonthDay extends JPanel
 			if (c instanceof MonthItem)
 			{
 				MonthItem mi = ((MonthItem) c);
-				mi.setSelected(mi.getDisplayable() == item);
+				mi.setSelected(mi.getDisplayable(), item);
 			}
 		}
 	}

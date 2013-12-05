@@ -185,11 +185,11 @@ public class MonthItem extends JPanel
 		return ret;
 	}
 
-
+	
 	public static Component generateFrom(Displayable elt, Displayable selected, DateTime day)
 	{
 		MonthItem mi = new MonthItem(elt, day);
-		mi.setSelected(selected == elt);
+		mi.setSelected(elt, selected);
 		return mi;
 	}
 	
@@ -201,11 +201,14 @@ public class MonthItem extends JPanel
 		return this.mDisplayable;
 	}
 	
-	public void setSelected(boolean select){
-		if(select){
+	public void setSelected(Displayable elt, Displayable item){
+		if(elt == item){
 			this.setBackground(Colors.SELECTED_BACKGROUND);
 		}
-		else this.setBackground(Colors.TABLE_BACKGROUND);
+		else if (elt instanceof Event) 
+			this.setBackground(((Event) elt).getColor());
+		else
+			this.setBackground(Colors.TABLE_BACKGROUND);
 	}
 }
 
