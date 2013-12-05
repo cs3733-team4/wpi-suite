@@ -118,7 +118,14 @@ public class CommitmentEntityManager implements EntityManager<Commitment> {
 	 */
 	@Override
 	public Commitment[] getAll(Session s) {
-		return db.retrieveAll(new Commitment(), s.getProject()).toArray(new Commitment[0]);
+		Commitment [] allCommitments = db.retrieveAll(new Commitment(), s.getProject()).toArray(new Commitment[0]);
+		ArrayList<Commitment> commitmentArray = new ArrayList<>();
+		for (Commitment c: allCommitments)
+		{
+			if (s.getUser().equals(c.getOwner()))
+					commitmentArray.add(c);
+		}
+		return commitmentArray.toArray(new Commitment[0]);
 	}
 
 	/**
@@ -189,7 +196,9 @@ public class CommitmentEntityManager implements EntityManager<Commitment> {
 
 		db.delete(existingCommitment);
 		
-		
+
+		updatedCommitment.setOwner(existingCommitment.getOwner());
+		updatedCommitment.setProject(existingCommitment.getProject());
 		if(!db.save(updatedCommitment, session.getProject())) {
 			throw new WPISuiteException();
 		}
