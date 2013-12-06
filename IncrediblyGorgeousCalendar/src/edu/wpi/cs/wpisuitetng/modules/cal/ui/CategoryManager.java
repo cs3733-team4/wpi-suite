@@ -251,7 +251,7 @@ public class CategoryManager extends JPanel {
 	{
 		if(mText==null || mText.trim().length()==0)
 		{
-			mErrorLabel.setText("* Required Field");
+			mErrorLabel.setText(" * Required Field");
 			return false;
 		}
 		
