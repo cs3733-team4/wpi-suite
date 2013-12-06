@@ -10,12 +10,14 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 
 import org.joda.time.DateTime;
 
@@ -31,8 +33,11 @@ import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
  */
 public class MonthItem extends JPanel
 {	
-	JLabel time = new JLabel(), desc = new JLabel(), lastArrow = new JLabel();
-	DateTime currentTime;
+	private JLabel time = new JLabel(), desc = new JLabel(), lastArrow = new JLabel();
+	
+	private JPanel categoryColor = new JPanel();
+			
+	private DateTime currentTime;
 	
 	private Displayable mDisplayable;
 	
@@ -112,9 +117,18 @@ public class MonthItem extends JPanel
         }
         lastArrow.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 3));
         time.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 3));
+        
+        // OPTION 2
+        if (ndisp instanceof Event) {
+	        categoryColor.setPreferredSize(new Dimension(8, 14));
+	    	categoryColor.setMaximumSize(new Dimension(8, 14));
+	    	categoryColor.setBackground(((Event) ndisp).getColor());
+	    	categoryColor.setBorder(new EmptyBorder(0, 0, 0, 0));
+	    	add(categoryColor);
+        }
+        
         add(time);
-
-
+        
         desc.putClientProperty("html.disable", true);
         desc.setText(mDisplayable.getName());
         desc.setFont(new java.awt.Font("DejaVu Sans", Font.PLAIN, 12));
@@ -203,12 +217,16 @@ public class MonthItem extends JPanel
 	
 	public void setSelected(Displayable elt, Displayable item){
 		if(elt == item){
+			// Change background color
 			this.setBackground(Colors.SELECTED_BACKGROUND);
 		}
-		else if (elt instanceof Event) 
-			this.setBackground(((Event) elt).getColor());
+		// OPTION 1
+		//else if (elt instanceof Event) 
+			//this.setBackground(((Event) elt).getColor());
 		else
+			// Change background color
 			this.setBackground(Colors.TABLE_BACKGROUND);
+
 	}
 }
 
