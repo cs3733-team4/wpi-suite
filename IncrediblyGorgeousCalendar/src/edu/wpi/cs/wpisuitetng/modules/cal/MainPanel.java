@@ -206,6 +206,8 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 				while (getTabCount() > 1)
 				{
 					removeTabAt(1);
+					tabs.clear();
+
 				}
 			}
 		});
