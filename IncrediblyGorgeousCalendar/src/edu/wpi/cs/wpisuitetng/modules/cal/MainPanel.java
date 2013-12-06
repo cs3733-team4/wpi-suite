@@ -210,6 +210,8 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 			}
 		});
 		
+		// Get focus for arrow key input
+		mainCalendarNavigationPanel.grabFocus();
 		
 		
 	}

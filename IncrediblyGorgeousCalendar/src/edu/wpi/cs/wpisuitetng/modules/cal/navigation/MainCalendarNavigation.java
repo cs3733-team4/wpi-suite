@@ -14,10 +14,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.beans.PropertyChangeListener;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 
 import org.joda.time.DateTime;
 
@@ -38,35 +42,10 @@ public class MainCalendarNavigation extends JPanel {
 		navigationButtonPanel.add(todayButton, BorderLayout.CENTER);
 		navigationButtonPanel.add(previousButton, BorderLayout.WEST);
 		
-		// Listens for arrow keyboard input
-		this.setFocusable(true);
-		this.addKeyListener(new KeyListener() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				// TODO Auto-generated method stub
-			}
-
-			@Override
-			public void keyReleased(KeyEvent e) {
-				// TODO Auto-generated method stub	
-			}
-
-			@Override
-			public void keyTyped(KeyEvent e) {
-				int pressedKey = e.getKeyCode();
-				// 37 = left, 39 = right
-				if (pressedKey == 37) {
-					currentCalendar.previous();
-				}
-				else if (pressedKey == 39) {
-					currentCalendar.next();
-				}
-			}
-		});
-		
 		// Set current calendar
 		this.currentCalendar = mAbstractCalendar;
 		
+		// Set up button action listeners
 		nextButton.addActionListener(new ActionListener() {
 			
 			@Override
@@ -90,11 +69,43 @@ public class MainCalendarNavigation extends JPanel {
 			}
 		});
 		
+		// Set up UI
 		this.setLayout(new BorderLayout());
 		this.add(navigationButtonPanel, BorderLayout.WEST);
+	
+		// Listens for arrow keyboard input
+		this.setFocusable(true);
+		this.getInputMap().put(KeyStroke.getKeyStroke("LEFT"), "prevMonth");
+		this.getActionMap().put("prevMonth", prevMonth);
+		this.getInputMap().put(KeyStroke.getKeyStroke("RIGHT"), "nextMonth");
+		this.getActionMap().put("nextMonth", nextMonth);
+	
 	}
 	
+	/**
+	 * Update the calendar referenced by the calendar navigation panel
+	 * @param newCalendar calendar to reference
+	 */
 	public void updateCalendar (AbstractCalendar newCalendar){
 		this.currentCalendar = newCalendar;
 	}
+	
+
+	/**
+	 * Action to execute upon press of left arrow key
+	 */
+	private Action prevMonth = new AbstractAction("prevMonth"){
+		public void actionPerformed(ActionEvent e){
+			currentCalendar.previous();
+		}
+	};
+	
+	/**
+	 * Action to execute upon press of right arrow key
+	 */
+	private Action nextMonth = new AbstractAction("prevMonth"){
+		public void actionPerformed(ActionEvent e){
+			currentCalendar.next();
+		}
+	};
 }
