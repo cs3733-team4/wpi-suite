@@ -54,6 +54,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthItem;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.year.YearCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
+import edu.wpi.cs.wpisuitetng.modules.cal.views.week.WeekCalendar;
 
 /**
  * The main UI of the Calendar module. This singleton is basically the controller for everything
@@ -72,7 +73,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	private SidebarTabbedPane sideTabbedPanel;
 	private MainCalendarNavigation mainCalendarNavigationPanel;
 	private GoToPanel mGoToPanel;
-	private AbstractCalendar mCalendar, monthCal, dayCal, yearCal;
+	private AbstractCalendar mCalendar, monthCal, dayCal, yearCal, weekCal;
 	private DateTime lastTime = DateTime.now();
 	private CalendarSelector mCalendarSelector;
 	private JPopupMenu popup = new JPopupMenu();
@@ -138,8 +139,10 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		
 		// Components of center panel
 		this.mCalendar = monthCal = new MonthCalendar(DateTime.now(), events, commitments); // Monthly calendar
+		
 		this.dayCal = new DayCalendar(DateTime.now(), events); // Day calendar (hidden)
 		this.yearCal = new YearCalendar(DateTime.now(), events); // Year calendar (hidden)
+		this.weekCal = new WeekCalendar(DateTime.now(), events); // Year calendar (hidden)
 		
 		this.mainCalendarNavigationPanel = new MainCalendarNavigation(this, mCalendar); // Navigation bar 
 		
@@ -402,6 +405,12 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	{
 		view = ViewSize.Month;
 		refreshView(yearCal);
+	}
+	
+	public void viewWeek()
+	{
+		view = ViewSize.Week;
+		refreshView(weekCal);
 	}
 	
 	/**
