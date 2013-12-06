@@ -132,7 +132,7 @@ public class MonthItem extends JPanel
 			
 			@Override
 			public void mousePressed(MouseEvent e) {
-				MainPanel.getInstance().display(currentTime);
+				MainPanel.getInstance().setSelectedDay(currentTime);
 				if (e.getClickCount() > 1){
 					MainPanel.getInstance().editSelectedDisplayable(mDisplayable);
 				} else {

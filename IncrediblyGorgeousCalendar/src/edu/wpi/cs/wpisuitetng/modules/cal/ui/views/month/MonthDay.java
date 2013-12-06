@@ -85,7 +85,7 @@ public class MonthDay extends JPanel
 			@Override
 			public void mousePressed(MouseEvent e)
 			{
-				MainPanel.getInstance().display(day);
+				MainPanel.getInstance().setSelectedDay(day);
 				MainPanel.getInstance().clearSelected();
 			}
 

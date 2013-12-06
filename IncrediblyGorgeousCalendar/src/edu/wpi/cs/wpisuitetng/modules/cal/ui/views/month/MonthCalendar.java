@@ -224,10 +224,9 @@ public class MonthCalendar extends AbstractCalendar
 
 	public void display(DateTime newTime)
 	{
-		if(time.getMonthOfYear() != newTime.getMonthOfYear() || time.getYear() != newTime.getYear())
-			generateDays(new MutableDateTime(newTime));
 		time = newTime;
-		mainPanel.miniMove(newTime);
+		generateDays(new MutableDateTime(time));
+		mainPanel.miniMove(time);
 	}
 
 	public void next()

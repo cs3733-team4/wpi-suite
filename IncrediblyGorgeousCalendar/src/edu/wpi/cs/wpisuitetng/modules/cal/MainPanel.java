@@ -546,4 +546,9 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 			e.printStackTrace(); //tab not found
 		}
 	}
+	
+	public void setSelectedDay(DateTime time)
+	{
+		lastTime = time;
+	}
 }
