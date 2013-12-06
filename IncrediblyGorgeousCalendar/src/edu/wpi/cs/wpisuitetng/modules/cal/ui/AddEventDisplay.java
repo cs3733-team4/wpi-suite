@@ -77,7 +77,6 @@ public class AddEventDisplay extends JPanel
 	// Constructor for edit event.
 	public AddEventDisplay(Event mEvent)
 	{
-		this.eventCategoryPicker = new JComboBox<Category>();
 		this.eventToEdit = mEvent;
 		this.isEditingEvent = true;
 		this.existingEventID = eventToEdit.getEventID();
@@ -90,7 +89,6 @@ public class AddEventDisplay extends JPanel
 	// Constructor for create new event.
 	public AddEventDisplay()
 	{
-		this.eventCategoryPicker = new JComboBox<Category>();
 		this.isEditingEvent = false;
 		setUpUI();
 		setUpListeners();
@@ -121,6 +119,8 @@ public class AddEventDisplay extends JPanel
 	{
 		
 		// set up the combobox
+		this.eventCategoryPicker = new JComboBox<Category>();
+		this.eventCategoryPicker.putClientProperty("html.disable", true);
 		this.eventCategoryPicker.addItem(Category.DEFUALT_CATEGORY);
 		for(Category c : CategoryModel.getInstance().getAllCategories())
 		{
@@ -217,7 +217,7 @@ public class AddEventDisplay extends JPanel
 			
 			@Override
 			public void datePickerUpdate(DateTime mDateTime) {
-				dateErrorLabel.setVisible(!validateDate(mDateTime, endTimeDatePicker.getDate(), dateErrorLabel));
+				dateErrorLabel.setVisible(!validateDate(mDateTime, endTimeDatePicker.getDateTime(), dateErrorLabel));
 				saveButton.setEnabled(isSaveable());
 			}
 		});
@@ -225,7 +225,7 @@ public class AddEventDisplay extends JPanel
 		endTimeDatePicker.addChangeListener(new DatePickerListener() {
 			@Override
 			public void datePickerUpdate(DateTime mDateTime) {
-				dateErrorLabel.setVisible(!validateDate(startTimeDatePicker.getDate(), mDateTime, dateErrorLabel));
+				dateErrorLabel.setVisible(!validateDate(startTimeDatePicker.getDateTime(), mDateTime, dateErrorLabel));
 				saveButton.setEnabled(isSaveable());
 			}
 		});
@@ -378,16 +378,16 @@ public class AddEventDisplay extends JPanel
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 
-				startTimeDatePicker.getDate();
-					endTimeDatePicker.getDate();
+					startTimeDatePicker.getDateTime();
+					endTimeDatePicker.getDateTime();
 					errorText.setVisible(true);
 			
 					errorText.setVisible(false);
 					Event e = new Event();
 					e.setName(nameTextField.getText().trim());
 					e.setDescription(descriptionTextArea.getText());
-					e.setStart(startTimeDatePicker.getDate());
-					e.setEnd(endTimeDatePicker.getDate());
+					e.setStart(startTimeDatePicker.getDateTime());
+					e.setEnd(endTimeDatePicker.getDateTime());
 					e.setProjectEvent(teamProjectCheckBox.isSelected());
 					e.setParticipants(participantsTextField.getText().trim());
 					e.setCategory(((Category)eventCategoryPicker.getSelectedItem()).getCategoryID());
@@ -424,7 +424,7 @@ public class AddEventDisplay extends JPanel
 		
 		//this should be called in updateSaveable() and thus isnt necessary here
 		//but error msg didn't start visible unless I called it directly
-		validateDate(startTimeDatePicker.getDate(), endTimeDatePicker.getDate(), dateErrorLabel);
+		validateDate(startTimeDatePicker.getDateTime(), endTimeDatePicker.getDateTime(), dateErrorLabel);
 		
 		saveButton.setEnabled(isSaveable());
 	}
@@ -487,7 +487,7 @@ public class AddEventDisplay extends JPanel
 	public boolean isSaveable()
 	{
 		return validateText(nameTextField.getText(), nameErrorLabel) && 
-				validateDate(startTimeDatePicker.getDate(), endTimeDatePicker.getDate(), dateErrorLabel);
+				validateDate(startTimeDatePicker.getDateTime(), endTimeDatePicker.getDateTime(), dateErrorLabel);
 	}
 
 	public boolean matchingEvent(AddEventDisplay other)

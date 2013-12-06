@@ -51,9 +51,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddEventDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.CategoryManager;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.DayCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthCalendar;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthItem;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.year.YearCalendar;
-import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 
 /**
  * The main UI of the Calendar module. This singleton is basically the controller for everything
@@ -524,6 +522,10 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		sideTabbedPanel.clearDetails();
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public CategoryManager getCategoryManagerTab()
 	{
 		for(JComponent c : tabs.values())
@@ -536,6 +538,10 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		return null;
 	}
 	
+	/**
+	 * 
+	 * @param tabToFocus
+	 */
 	public void setSelectedTab(JComponent tabToFocus)
 	{
 		try
@@ -547,13 +553,27 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		}
 	}
 
-	public void deleteDisplayable(Displayable currentDisplayable)
+	/**
+	 * deletes the displayable, then repaints
+	 * 
+	 * @param displayableToDelete the displayable to delete
+	 */
+	public void deleteDisplayable(Displayable displayableToDelete)
 	{
-		if (this.currentSelected == currentDisplayable)
+		if (this.currentSelected == displayableToDelete)
 		{
 			this.clearSelected();
 		}
-		currentDisplayable.delete();
+		displayableToDelete.delete();
 		this.refreshView();
+	}
+	
+	/**
+	 * 
+	 * @param time
+	 */
+	public void setSelectedDay(DateTime time)
+	{
+		lastTime = time;
 	}
 }
