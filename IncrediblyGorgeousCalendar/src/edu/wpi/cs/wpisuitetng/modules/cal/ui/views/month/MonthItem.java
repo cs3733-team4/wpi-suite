@@ -35,6 +35,7 @@ public class MonthItem extends JPanel
 {	
 	private JLabel time = new JLabel(), desc = new JLabel(), lastArrow = new JLabel();
 	
+	// TODO OPTION 2
 	private JPanel categoryColor = new JPanel();
 			
 	private DateTime currentTime;
@@ -118,7 +119,7 @@ public class MonthItem extends JPanel
         lastArrow.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 3));
         time.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 3));
         
-        // OPTION 2
+        // TODO OPTION 2
         if (ndisp instanceof Event) {
 	        categoryColor.setPreferredSize(new Dimension(8, 14));
 	    	categoryColor.setMaximumSize(new Dimension(8, 14));
@@ -220,7 +221,7 @@ public class MonthItem extends JPanel
 			// Change background color
 			this.setBackground(Colors.SELECTED_BACKGROUND);
 		}
-		// OPTION 1
+		// TODO  OPTION 1
 		//else if (elt instanceof Event) 
 			//this.setBackground(((Event) elt).getColor());
 		else
