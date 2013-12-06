@@ -60,6 +60,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 		
 		//setup
 		this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+		this.setFocusable(false);
 		
 		setupTextStyles();
 		setupDetailTab();
@@ -140,6 +141,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 		
 	    // setup buttons and listeners
 	    detailEditButton = new JButton("Edit");
+	    detailEditButton.setFocusable(false);
 	    detailEditButton.addActionListener(new ActionListener() {
 			
 			@Override

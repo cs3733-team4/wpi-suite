@@ -13,6 +13,10 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -97,6 +101,24 @@ public class GoToPanel extends JPanel {
 		top.add(bot, BorderLayout.SOUTH);
 		
 		this.add(top, BorderLayout.NORTH);
+		
+		// Give focus to navigation after focus is lost
+		gotoDateField.addFocusListener(new FocusListener(){
+
+			@Override
+			public void focusLost(FocusEvent e) {
+				MainPanel.getInstance().getCalNav().grabFocus();
+				
+			}
+
+			@Override
+			public void focusGained(FocusEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		
 	}
 	
 	/**

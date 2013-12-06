@@ -37,6 +37,12 @@ public class MainCalendarNavigation extends JPanel {
 
 	public MainCalendarNavigation(JComponent parent, final AbstractCalendar mAbstractCalendar) {
 		
+		// Disable focus to allow arrow keys to respond to navigation requests
+		nextButton.setFocusable(false);
+		previousButton.setFocusable(false);
+		todayButton.setFocusable(false);
+		navigationButtonPanel.setFocusable(false);
+		
 		navigationButtonPanel.setLayout(new BorderLayout());
 		navigationButtonPanel.add(nextButton, BorderLayout.EAST);
 		navigationButtonPanel.add(todayButton, BorderLayout.CENTER);
