@@ -34,7 +34,7 @@ public class CommitmentUIValidationTest {
 	@Test
 	public void testIfSaveButtonIsDisabledWithProperDateButNoName() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		
-		Field f= mCommitDisplay.getClass().getDeclaredField("commitTime1");
+		Field f= mCommitDisplay.getClass().getDeclaredField("commitTimePicker");
 		f.setAccessible(true);
 			
 		((DatePicker) f.get(mCommitDisplay)).date.setValue("11/20/13");
@@ -72,7 +72,7 @@ public class CommitmentUIValidationTest {
 	public void testIfSaveButtonIsNoLongerEnabledAfterDateDeletion() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		setUpAndTestValidCommitmentFields();
 		
-		Field f= mCommitDisplay.getClass().getDeclaredField("commitTime1");
+		Field f= mCommitDisplay.getClass().getDeclaredField("commitTimePicker");
 		f.setAccessible(true);
 		
 		((DatePicker) f.get(mCommitDisplay)).date.setValue("");
@@ -95,7 +95,7 @@ public class CommitmentUIValidationTest {
 	private void setUpAndTestValidCommitmentFields() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException
 	{
 		
-		Field f= mCommitDisplay.getClass().getDeclaredField("commitTime1");
+		Field f= mCommitDisplay.getClass().getDeclaredField("commitTimePicker");
 		f.setAccessible(true);
 				
 		Field ff = mCommitDisplay.getClass().getDeclaredField("nameTextField");
