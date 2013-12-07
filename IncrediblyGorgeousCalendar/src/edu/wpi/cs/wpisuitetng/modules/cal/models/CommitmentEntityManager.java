@@ -11,6 +11,7 @@ package edu.wpi.cs.wpisuitetng.modules.cal.models;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
@@ -80,11 +81,32 @@ public class CommitmentEntityManager implements EntityManager<Commitment> {
 				return getCommitmentsByRange(s, args[1], args[2]);
 			case "get-all-commitments":
 				return getAll(s);
+			case "filter-commitment-by-uuid":
+				return getCommitmentByUUID(s, args[1]);
 			default:
 				throw new NotFoundException("Error: " + args[0] + " not a valid method");
 		}
 	}
 	
+	/**
+	 * 
+	 * @param ses the session
+	 * @param uuid the uuid of the commitment
+	 * @return an array containing the commitment that matches this uuid
+	 * @throws NotFoundException 
+	 */
+	private Commitment[] getCommitmentByUUID(Session ses, String uuid) throws NotFoundException {
+		UUID from = UUID.fromString(uuid);
+		try 
+		{
+			return db.retrieve(Commitment.class, "commitmentID", from, ses.getProject()).toArray(new Commitment[0]);
+		}
+		catch (WPISuiteException e)
+		{
+			throw new NotFoundException(uuid);
+		}
+	}
+
 	/**
 	 * Query database to retrieve commitments with overlapping range
 	 * @param sfrom date from, DateTime formatted as String

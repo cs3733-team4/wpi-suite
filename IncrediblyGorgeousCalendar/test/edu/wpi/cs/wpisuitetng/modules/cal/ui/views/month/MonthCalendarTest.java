@@ -24,7 +24,7 @@ import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
 public class MonthCalendarTest{
 
 	private EventModel dummyModel = EventModel.getInstance();
-	private CommitmentModel dummyModel2 = new CommitmentModel();
+	private CommitmentModel dummyModel2 = CommitmentModel.getInstance();
 	
 	MockData db = new MockData(new HashSet<Object>());
 	final NetworkConfiguration config = new NetworkConfiguration("http://localhost:8080");

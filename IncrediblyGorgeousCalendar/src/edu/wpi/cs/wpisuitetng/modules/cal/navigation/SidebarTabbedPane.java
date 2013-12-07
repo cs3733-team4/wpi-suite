@@ -31,9 +31,12 @@ import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddCommitmentDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddEventDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 
 public class SidebarTabbedPane extends JTabbedPane{
 	
@@ -154,8 +157,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO Add event and commitment deletion
-				
+				MainPanel.getInstance().deleteDisplayable(currentDisplayable);
 			}
 		});
 
@@ -166,6 +168,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 	    detailButtonPane = new JPanel();
 	    detailButtonPane.setLayout(new FlowLayout());
 	    detailButtonPane.add(detailEditButton);
+	    detailButtonPane.add(detailDeleteButton);
 	    
 	    //for a later user story
 	    //detailButtonPane.add(detailDeleteButton);
