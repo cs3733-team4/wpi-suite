@@ -9,15 +9,23 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Insets;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JToolTip;
 
 import edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar.ToolbarGroupView;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddCommitmentDisplay;
@@ -26,14 +34,50 @@ import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddEventDisplay;
 public class EventToolbarGroup extends ToolbarGroupView {
 	
 	private final JButton addEventButton, removeEventButton, addCommitmentButton;
-	
 	public EventToolbarGroup(final MainPanel mMainPanel) {
 		super("Events & Commitments");
 		setPreferredWidth(300);
 		
 		//this.eventContentPanel.setLayout(new BoxLayout(eventContentPanel, BoxLayout.X_AXIS));
 		
-		addEventButton = new JButton("<html>Add<br/>Event</html>");
+		addEventButton = new JButton("<html>Add<br/>Event</html>"){
+			JToolTip toolTip;  
+			@Override  
+		    public JToolTip createToolTip() {  
+				if (toolTip == null) {  
+					JPanel panel = new JPanel(new GridLayout(0, 1));  
+					JLabel label = new JLabel("<html> <tab>Lets you make a new event in<br>the calendar</html>");
+			        JButton button = new JButton("Get Help");  
+			        button.addActionListener(new ActionListener() {  
+			        	public void actionPerformed(ActionEvent e) {  
+			        		System.out.println("You clicked button");  
+			            }  
+			        });  
+			        panel.add(label);
+			        panel.add(button);  
+			        
+			  
+			        toolTip = super.createToolTip();  
+			        toolTip.setLayout(new BorderLayout());  
+			        Insets insets = toolTip.getInsets();  
+			        Dimension panelSize = panel.getPreferredSize();  
+			        panelSize.width += insets.left + insets.right+5;  
+			        panelSize.height += insets.top + insets.bottom;  
+			        toolTip.setPreferredSize(panelSize);  
+			        toolTip.setBackground(super.createToolTip().getBackground());
+			        label.setBackground(toolTip.getBackground());
+			        toolTip.add(panel);  
+		        }  
+		        return toolTip;  
+			} 
+			@Override
+			public Point getToolTipLocation(MouseEvent e)
+			{
+				return new Point(95, 40);
+			}
+		};
+		addEventButton.setToolTipText("h");
+		    
 		addEventButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e){
@@ -43,6 +87,7 @@ public class EventToolbarGroup extends ToolbarGroupView {
 				//TODO: use selected times. ned.display(DateTime.now());
 			}
 		});
+		
 		
 		addCommitmentButton = new JButton("<html>Add<br/>Commitment</html>");
 		addCommitmentButton.addActionListener(new ActionListener(){
