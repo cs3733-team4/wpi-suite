@@ -70,22 +70,6 @@ public class MonthCalendar extends AbstractCalendar
 
 		generateDays(new MutableDateTime(on));
 		generateHeaders(new MutableDateTime(on));
-
-		addMouseMotionListener(new MouseMotionListener(){
-
-			@Override
-			public void mouseDragged(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				// this will be for moving the event to a new month day
-			}
-
-			@Override
-			public void mouseMoved(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-		});
 		
 	}
 

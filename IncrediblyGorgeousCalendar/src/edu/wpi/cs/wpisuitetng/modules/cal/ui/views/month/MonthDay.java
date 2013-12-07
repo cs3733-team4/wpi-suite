@@ -14,6 +14,7 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -110,8 +111,35 @@ public class MonthDay extends JPanel
 			@Override
 			public void mouseExited(MouseEvent e)
 			{
-
+				//this.resetBackgroundColor();
 			}
+		});
+		
+		addMouseMotionListener(new MouseMotionListener(){
+
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				MainPanel p = MainPanel.getInstance();
+				Displayable d = p.getSelectedEvent();
+				if (d != null && !p.getSelectedDay().equals(day))
+				{
+					System.out.println(d.getName());
+				}else
+				{
+					System.out.println("wat");
+				}
+			}
+
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				MainPanel p = MainPanel.getInstance();
+				Displayable d = p.getSelectedEvent();
+				if (d != null && !p.getSelectedDay().equals(day))
+				{
+					System.out.println(d.getName());
+				}
+			}
+			
 		});
 	}
 

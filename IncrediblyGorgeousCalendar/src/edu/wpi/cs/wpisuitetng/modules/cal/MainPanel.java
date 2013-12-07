@@ -51,9 +51,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddEventDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.CategoryManager;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.DayCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthCalendar;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthItem;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.year.YearCalendar;
-import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 
 /**
  * The main UI of the Calendar module. This singleton is basically the controller for everything
@@ -535,7 +533,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		}
 		return null;
 	}
-	
+
 	public void setSelectedTab(JComponent tabToFocus)
 	{
 		try
@@ -546,9 +544,27 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 			e.printStackTrace(); //tab not found
 		}
 	}
-	
+
 	public void setSelectedDay(DateTime time)
 	{
 		lastTime = time;
+	}
+	
+	/**
+	 * 
+	 * @return the currently selected displayable
+	 */
+	public Displayable getSelectedEvent()
+	{
+		return this.currentSelected;
+	}
+	
+	/**
+	 * 
+	 * @return the currently selected day
+	 */
+	public DateTime getSelectedDay()
+	{
+		return this.lastTime;
 	}
 }
