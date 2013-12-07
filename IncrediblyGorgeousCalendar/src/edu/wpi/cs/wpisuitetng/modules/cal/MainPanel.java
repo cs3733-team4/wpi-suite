@@ -522,10 +522,6 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		sideTabbedPanel.clearDetails();
 	}
 	
-	/**
-	 * 
-	 * @return
-	 */
 	public CategoryManager getCategoryManagerTab()
 	{
 		for(JComponent c : tabs.values())
@@ -537,11 +533,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		}
 		return null;
 	}
-	
-	/**
-	 * 
-	 * @param tabToFocus
-	 */
+
 	public void setSelectedTab(JComponent tabToFocus)
 	{
 		try
@@ -568,10 +560,6 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		this.refreshView();
 	}
 	
-	/**
-	 * 
-	 * @param time
-	 */
 	public void setSelectedDay(DateTime time)
 	{
 		lastTime = time;
