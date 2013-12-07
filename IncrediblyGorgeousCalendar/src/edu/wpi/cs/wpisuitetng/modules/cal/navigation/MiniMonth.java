@@ -90,6 +90,8 @@ public class MiniMonth extends JPanel
 			}
 			else if (MainPanel.getInstance().getView() == ViewSize.Day)
 				flipFlop = referenceDay.getDayOfYear() == time.getDayOfYear() && referenceDay.getYear() == time.getYear();
+			else if (MainPanel.getInstance().getView() == ViewSize.Week)
+				flipFlop = referenceDay.getDayOfYear() >= time.getDayOfYear() && referenceDay.getDayOfYear() <= time.getDayOfYear()+6 && referenceDay.getYear() == time.getYear();
 			
 			if (flipFlop)
 				day = new ActiveDayLabel(referenceDay.toDateTime());
