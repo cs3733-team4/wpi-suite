@@ -33,7 +33,7 @@ public class MonthItemTest {
 	
 	@Test
 	public void testSimpleTimeAM() {
-		MonthItem mItem = new MonthItem(e);
+		MonthItem mItem = new MonthItem(e, null);
 		assertEquals("simpleTime should return in hour:minute", "1:01", mItem.simpleTime(timeForSimpleTime));
 		assertEquals("simpleTime should return in hour:minute", "12:01", mItem.simpleTime(timeForSimpleTime2));
 		assertEquals("simpleTime should return in hour:minute", "11:59", mItem.simpleTime(timeForSimpleTime3));
@@ -41,7 +41,7 @@ public class MonthItemTest {
 	
 	@Test
 	public void testSimpleTimePM() {
-		MonthItem mItem = new MonthItem(e);
+		MonthItem mItem = new MonthItem(e, null);
 		assertEquals("simpleTime should return in hour:minute. If time is past 12:00, a p should be appended to the end", "10:01p", mItem.simpleTime(timeForSimpleTimePM));
 		assertEquals("simpleTime should return in hour:minute. If time is past 12:00, a p should be appended to the end", "12:01p", mItem.simpleTime(timeForSimpleTimePM2));
 		assertEquals("simpleTime should return in hour:minute. If time is past 12:00, a p should be appended to the end", "11:59p", mItem.simpleTime(timeForSimpleTimePM3));

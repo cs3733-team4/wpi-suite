@@ -111,7 +111,7 @@ public class MonthDay extends JPanel
 			@Override
 			public void mouseExited(MouseEvent e)
 			{
-				//this.resetBackgroundColor();
+				setBackground(Colors.TABLE_BACKGROUND);
 			}
 		});
 		
@@ -121,24 +121,20 @@ public class MonthDay extends JPanel
 			public void mouseDragged(MouseEvent e) {
 				MainPanel p = MainPanel.getInstance();
 				Displayable d = p.getSelectedEvent();
-				if (d != null && !p.getSelectedDay().equals(day))
+				if (d != null && !d.getDate().dayOfYear().equals(day.dayOfYear()))
 				{
 					System.out.println(d.getName());
-				}else
+					setBackground(Color.yellow);
+				}
+				else
 				{
-					System.out.println("wat");
+					System.out.println(d.getDate().getDayOfYear());
+					System.out.println(day.getDayOfYear());
 				}
 			}
 
 			@Override
-			public void mouseMoved(MouseEvent e) {
-				MainPanel p = MainPanel.getInstance();
-				Displayable d = p.getSelectedEvent();
-				if (d != null && !p.getSelectedDay().equals(day))
-				{
-					System.out.println(d.getName());
-				}
-			}
+			public void mouseMoved(MouseEvent e) {}
 			
 		});
 	}
@@ -242,14 +238,14 @@ public class MonthDay extends JPanel
 				}
 				else
 				{
-					this.add(MonthItem.generateFrom(elt, selected, day));
+					this.add(MonthItem.generateFrom(elt, selected, day, this));
 				}
 			}
 		}
 
 		if (hidden == 1) // silly, add it anyway
 		{
-			this.add(MonthItem.generateFrom(allitems.get(allitems.size() - 1), selected, day));
+			this.add(MonthItem.generateFrom(allitems.get(allitems.size() - 1), selected, day, this));
 		}
 		else if (hidden > 1)
 		{
@@ -289,4 +285,5 @@ public class MonthDay extends JPanel
 			}
 		}
 	}
+	
 }

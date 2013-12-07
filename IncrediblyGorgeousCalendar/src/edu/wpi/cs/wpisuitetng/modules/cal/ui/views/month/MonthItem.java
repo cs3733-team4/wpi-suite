@@ -13,6 +13,7 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -37,9 +38,9 @@ public class MonthItem extends JPanel
 	private Displayable mDisplayable;
 	
 	
-	public MonthItem(Displayable ndisp)
+	public MonthItem(Displayable ndisp, MonthDay parent)
 	{
-		this(ndisp, DateTime.now());
+		this(ndisp, DateTime.now(), parent);
 	}
 	private boolean isStartBeforeCurrent(DateTime currentDay, DateTime eventStart)
 	{
@@ -66,7 +67,7 @@ public class MonthItem extends JPanel
 	 * @param when
 	 * @param descr
 	 */
-	public MonthItem(Displayable ndisp, DateTime day)
+	public MonthItem(Displayable ndisp, DateTime day, final MonthDay parent)
 	{
 		currentTime = day;
 		
@@ -138,7 +139,6 @@ public class MonthItem extends JPanel
 				} else {
 					MainPanel.getInstance().updateSelectedDisplayable(mDisplayable);
 				}
-				
 			}
 			
 			@Override
@@ -152,6 +152,20 @@ public class MonthItem extends JPanel
 			@Override
 			public void mouseClicked(MouseEvent e) {				
 			}
+		});
+		
+		addMouseMotionListener(new MouseMotionListener(){
+
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				parent.dispatchEvent(e);
+			}
+
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				parent.dispatchEvent(e);
+			}
+			
 		});
 	}
 
@@ -186,9 +200,9 @@ public class MonthItem extends JPanel
 	}
 
 
-	public static Component generateFrom(Displayable elt, Displayable selected, DateTime day)
+	public static Component generateFrom(Displayable elt, Displayable selected, DateTime day, MonthDay parent)
 	{
-		MonthItem mi = new MonthItem(elt, day);
+		MonthItem mi = new MonthItem(elt, day, parent);
 		mi.setSelected(selected == elt);
 		return mi;
 	}
