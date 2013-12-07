@@ -33,8 +33,8 @@ import edu.wpi.cs.wpisuitetng.janeway.gui.widgets.Hoverable;
 @SuppressWarnings("serial")
 public class ToolbarGroupView extends JPanel implements Hoverable {
 	
-	private JLabel label;
-	private JPanel content;
+	protected JLabel label;
+	protected JPanel content;
 	private static final int DEFAULT_WIDTH = 300;
 	
 	/**
