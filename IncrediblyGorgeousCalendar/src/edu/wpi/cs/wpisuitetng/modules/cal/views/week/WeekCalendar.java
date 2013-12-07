@@ -48,7 +48,7 @@ public class WeekCalendar extends AbstractCalendar
 	public WeekCalendar(DateTime on, EventModel emodel)
 	{
 		this.mainPanel = MainPanel.getInstance();
-		this.time = Months.getWeekStart(on);
+		this.time = on;
 		eventModel = emodel;
 		scroll.setBackground(Colors.TABLE_BACKGROUND);
 		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -69,7 +69,7 @@ public class WeekCalendar extends AbstractCalendar
 		this.add(scroll, BorderLayout.CENTER);
 		this.add(new JLabel(time.toString(titleFmt)), BorderLayout.NORTH);
 
-		MutableDateTime increment=new MutableDateTime(time);
+		MutableDateTime increment=new MutableDateTime(Months.getWeekStart(time));
 		
 		this.sun = new LouvreTour();
 		this.sun.setEvents(getVisibleEvents(increment.toDateTime()), increment.toDateTime());
@@ -101,7 +101,7 @@ public class WeekCalendar extends AbstractCalendar
 		this.holder.add(this.fri, BorderLayout.EAST);
 		this.holder.add(this.sat, BorderLayout.EAST);
 		// notify mini-calendar to change
-		mainPanel.miniMove(time);
+		mainPanel.miniMove(Months.getWeekStart(time));
 	}
 	
 	private List<Event> getVisibleEvents(DateTime curDay)
