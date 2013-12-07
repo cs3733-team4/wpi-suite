@@ -112,7 +112,7 @@ public class EventEntityManager implements EntityManager<Event> {
 		}
 		return retrievedEvents.toArray(new Event[0]);
 	}
-
+	
 	/**
 	 * Retrieves all events from the database
 	 * @param s the session
@@ -121,7 +121,14 @@ public class EventEntityManager implements EntityManager<Event> {
 	@Override
 	public Event[] getAll(Session s) {
 		System.out.println("GET ALL!");
-		return db.retrieveAll(new Event(), s.getProject()).toArray(new Event[0]);
+		Event [] allEvents = db.retrieveAll(new Event(), s.getProject()).toArray(new Event[0]);
+		ArrayList<Event> eventArray = new ArrayList<>();
+		for (Event e: allEvents)
+		{
+			if (s.getUser().equals(e.getOwner()) || e.isProjectEvent())
+					eventArray.add(e);
+		}
+		return eventArray.toArray(new Event[0]);
 	}
 
 	/**
@@ -192,6 +199,8 @@ public class EventEntityManager implements EntityManager<Event> {
 		
 		db.delete(existingEvent);
 		
+		updatedEvent.setOwner(existingEvent.getOwner());
+		updatedEvent.setProject(existingEvent.getProject());
 		if(!db.save(updatedEvent, session.getProject())) {
 			throw new WPISuiteException();
 		}
