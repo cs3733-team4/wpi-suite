@@ -97,7 +97,7 @@ public class AddCommitmentDisplay extends JPanel
 		JPanel DateLabelPane = new JPanel();
 		DateLabelPane.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		
-		JLabel lblDateTime = new JLabel("Date:");
+		JLabel lblDateTime = new JLabel("Date and Time:");
 		lblDateTime.setVerticalAlignment(SwingConstants.BOTTOM);
 		lblDateTime.setHorizontalAlignment(SwingConstants.LEFT);
 		DateLabelPane.add(lblDateTime);
@@ -108,9 +108,9 @@ public class AddCommitmentDisplay extends JPanel
 		add(CommitDatePickerPanel);
 
 		//final CommitmentDatePicker commitTime1 = new CommitmentDatePicker(true, null);
-		commitTimePicker = new DatePicker(false, null);
+		commitTimePicker = new DatePicker(true, null);
 		if (isEditingCommitment)
-			commitTimePicker.display(oldCommitment.getDate());
+			commitTimePicker.setDateTime(oldCommitment.getDate());
 		
 		CommitDatePickerPanel.add(lblDateTime);
 		CommitDatePickerPanel.add(commitTimePicker);
@@ -268,7 +268,7 @@ public class AddCommitmentDisplay extends JPanel
 	{
 		if(dueDate == null)//Make sure that a date has been selected
 		{
-			mErrorLabel.setText("* Invalid Date");
+			mErrorLabel.setText("* Invalid Date/Time");
 			return false;
 		}
 		
