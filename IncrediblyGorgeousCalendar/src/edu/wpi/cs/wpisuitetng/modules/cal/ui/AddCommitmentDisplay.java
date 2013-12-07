@@ -45,14 +45,11 @@ public class AddCommitmentDisplay extends JPanel
 	private Commitment commitmentToEdit;
 	private boolean isEditingCommitment;
 	private UUID existingID;//the old ID of the commitment, might be unused if it is a new commitment
-	private DatePicker commitTime1;
+	private DatePicker commitTimePicker;
 	private JLabel dateErrorLabel;
 	private JLabel nameErrorLabel;
-	private DateTime currentTime;
-	
 	public AddCommitmentDisplay()
 	{
-		currentTime = new DateTime();
 		isEditingCommitment=false;
 		init(new Commitment());
 	}
@@ -100,7 +97,7 @@ public class AddCommitmentDisplay extends JPanel
 		JPanel DateLabelPane = new JPanel();
 		DateLabelPane.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		
-		JLabel lblDateTime = new JLabel("Date:");
+		JLabel lblDateTime = new JLabel("Date and Time:");
 		lblDateTime.setVerticalAlignment(SwingConstants.BOTTOM);
 		lblDateTime.setHorizontalAlignment(SwingConstants.LEFT);
 		DateLabelPane.add(lblDateTime);
@@ -111,14 +108,12 @@ public class AddCommitmentDisplay extends JPanel
 		add(CommitDatePickerPanel);
 
 		//final CommitmentDatePicker commitTime1 = new CommitmentDatePicker(true, null);
-		commitTime1 = new DatePicker(false, null);
+		commitTimePicker = new DatePicker(true, null);
 		if (isEditingCommitment)
-			commitTime1.display(oldCommitment.getDate());
-		else
-			commitTime1.display(currentTime);
+			commitTimePicker.setDateTime(oldCommitment.getDate());
 		
 		CommitDatePickerPanel.add(lblDateTime);
-		CommitDatePickerPanel.add(commitTime1);
+		CommitDatePickerPanel.add(commitTimePicker);
 		
 		JPanel ParticipantsLabelPane = new JPanel();
 		FlowLayout flowLayout_1 = (FlowLayout) ParticipantsLabelPane.getLayout();
@@ -170,7 +165,7 @@ public class AddCommitmentDisplay extends JPanel
 			descriptionTextArea.setText(oldCommitment.getDescription());
 		
 		JScrollPane descriptionScrollPane = new JScrollPane(descriptionTextArea);
-		descriptionScrollPane.setBorder(nameTextField.getBorder());
+		descriptionScrollPane.setBorder(null);
 		DescriptionPanel.add(descriptionScrollPane);
 		
 		JPanel SubmitPanel = new JPanel();
@@ -189,7 +184,7 @@ public class AddCommitmentDisplay extends JPanel
 				Commitment e = new Commitment();
 				e.setName(nameTextField.getText().trim());
 				e.setDescription(descriptionTextArea.getText());
-				e.setDate(commitTime1.getDate());
+				e.setDate(commitTimePicker.getDateTime());
 				if (isEditingCommitment)
 					e.setCommitmentID(existingID);
 				
@@ -241,16 +236,16 @@ public class AddCommitmentDisplay extends JPanel
 				//Not triggered by plaintext fields
 			}
 		});
-		commitTime1.addChangeListener(new DatePickerListener() {
+		commitTimePicker.addChangeListener(new DatePickerListener() {
 			
 			@Override
 			public void datePickerUpdate(DateTime mDateTime) {
-				dateErrorLabel.setVisible(!validateDate(commitTime1.getDate(), dateErrorLabel));
+				dateErrorLabel.setVisible(!validateDate(commitTimePicker.getDateTime(), dateErrorLabel));
 				saveButton.setEnabled(isSaveable());
 			}
 		});
 		
-		validateDate(commitTime1.getDate(), dateErrorLabel);
+		validateDate(commitTimePicker.getDateTime(), dateErrorLabel);
 		validateText(nameTextField.getText(), nameErrorLabel);
 		saveButton.setEnabled(isSaveable());
 	}
@@ -259,7 +254,7 @@ public class AddCommitmentDisplay extends JPanel
 	public boolean isSaveable()
 	{
 		return validateText(nameTextField.getText(), nameErrorLabel) && 
-				validateDate(commitTime1.getDate(), dateErrorLabel);
+				validateDate(commitTimePicker.getDateTime(), dateErrorLabel);
 	}
 	
 	/**
@@ -273,7 +268,7 @@ public class AddCommitmentDisplay extends JPanel
 	{
 		if(dueDate == null)//Make sure that a date has been selected
 		{
-			mErrorLabel.setText("* Commitment must have a due date");
+			mErrorLabel.setText("* Invalid Date/Time");
 			return false;
 		}
 		

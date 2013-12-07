@@ -85,7 +85,7 @@ public class MonthDay extends JPanel
 			@Override
 			public void mousePressed(MouseEvent e)
 			{
-				MainPanel.getInstance().display(day);
+				MainPanel.getInstance().setSelectedDay(day);
 				MainPanel.getInstance().clearSelected();
 			}
 
@@ -229,12 +229,6 @@ public class MonthDay extends JPanel
 		}
 
 		super.doLayout();
-	}
-
-	// Added for testing purposes
-	boolean hasEvent(Event e)
-	{
-		return events.contains(e);
 	}
 
 	public void clear()

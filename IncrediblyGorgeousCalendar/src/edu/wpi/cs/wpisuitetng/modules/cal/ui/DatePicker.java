@@ -108,6 +108,8 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 						switch(input.length())
 						{
 						case 4:
+							if(Integer.valueOf(input)>1259)
+								time.setValue(time.getValue());
 							break;
 							
 						case 3:
@@ -118,11 +120,14 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 							if(Integer.valueOf(input)<13)
 								time.setValue(input+":00");
 							else
-								time.setValue("00:00");	
+								time.setValue(time.getValue());
 							break;
 							
 						case 1:
-							time.setValue("0"+input+":00");
+							if(Integer.valueOf(input) == 0)
+								time.setValue(time.getValue());
+							else
+								time.setValue("0"+input+":00");
 							break;
 							
 						default:
@@ -177,7 +182,11 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 				}
 
 				public void mouseReleased(MouseEvent e) {
-					JFrame cal = new PopupCalendar(DateTime.now(), me);
+					JFrame cal;
+					if(getDate()!=null)
+						cal = new PopupCalendar(getDate(), me);
+					else
+						cal = new PopupCalendar(DateTime.now(), me);
 				    cal.setUndecorated(true);
 				    cal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				    Point loc = date.getLocationOnScreen();
@@ -207,7 +216,17 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 			linked.display(value);
 	}
 	
-	public DateTime getDate() {
+	public DateTime getDate()	{
+		try
+		{
+			return dateFmt.parseDateTime(date.getText());
+		}catch(IllegalArgumentException e)
+		{
+			return null;
+		}
+	}
+	
+	public DateTime getDateTime() {
 		try
 		{
 			return dateTimeFmt.parseDateTime(date.getText()+" "+time.getText()+" "+AMPM.getSelectedItem());
@@ -242,7 +261,7 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 	{
 		for(DatePickerListener d : changeListeners)
 		{
-			d.datePickerUpdate(this.getDate());
+			d.datePickerUpdate(this.getDateTime());
 		}
 	}
 }
