@@ -201,4 +201,23 @@ private AddEventDisplay mEventDisplay = new AddEventDisplay();
 		
 		assertTrue("Event is saveable with proper input", mEventDisplay.isSaveable());
 	}
+	
+	@Test
+	public void autoFillDateAndTimeIsSavable() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException
+	{
+		AddEventDisplay mEventDisplay = new AddEventDisplay();
+		
+		Field f= mEventDisplay.getClass().getDeclaredField("startTimeDatePicker");
+		f.setAccessible(true);
+		
+		Field ff= mEventDisplay.getClass().getDeclaredField("endTimeDatePicker");
+		ff.setAccessible(true);
+		
+		Field fff= mEventDisplay.getClass().getDeclaredField("nameTextField");
+		fff.setAccessible(true);
+		
+		((JTextField) fff.get(mEventDisplay)).setText("Test Event");
+		
+		assertTrue("Event is saveable with proper input", mEventDisplay.isSaveable());
+	}
 }

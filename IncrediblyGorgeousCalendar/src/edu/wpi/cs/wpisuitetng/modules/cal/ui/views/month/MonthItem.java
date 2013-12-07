@@ -100,15 +100,20 @@ public class MonthItem extends JPanel
         	categoryColor.setBackground(((Event) ndisp).getColor());
         	categoryColor.setBorder(new EmptyBorder(0, 0, 0, 0));
         	
-        	if (isStartBeforeCurrent(day, ((Event)ndisp).getStart()) && isEndAfterCurrent(day, ((Event)ndisp).getEnd()))
+        	// Temporary variables for shorthand
+        	Event tmpEvent = ((Event)ndisp);
+        	DateTime eventStart = tmpEvent.getStart();
+        	DateTime eventEnd = tmpEvent.getEnd();
+        	
+        	if (isStartBeforeCurrent(day, eventStart) && isEndAfterCurrent(day, eventEnd))
         	{
         		arrow.setText("\u2194");//the event goes before and after
         	}
-        	else if (isStartBeforeCurrent(day, ((Event)ndisp).getStart()))
+        	else if ((isStartBeforeCurrent(day, eventStart)))
         	{
         		arrow.setText("\u2190");
         	}
-        	else if(isEndAfterCurrent(day, ((Event)ndisp).getEnd()))
+        	else if(isEndAfterCurrent(day, eventEnd))
         	{
         		time.setText(simpleTime(mDisplayable.getDate()));
         		arrow.setText("\u2192");
