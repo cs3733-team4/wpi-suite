@@ -107,7 +107,7 @@ public class WeekCalendar extends AbstractCalendar
 		this.holder.add(this.fri, BorderLayout.EAST);
 		this.holder.add(this.sat, BorderLayout.EAST);
 		// notify mini-calendar to change
-		mainPanel.miniMove(Months.getWeekStart(time));
+		mainPanel.miniMove(time);
 	}
 	
 	private List<Event> getVisibleEvents(DateTime curDay)
