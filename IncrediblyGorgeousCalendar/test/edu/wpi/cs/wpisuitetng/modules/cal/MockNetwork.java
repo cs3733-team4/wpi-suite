@@ -9,6 +9,14 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal;
 
+import java.util.HashMap;
+import java.util.HashSet;
+
+import edu.wpi.cs.wpisuitetng.Session;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryEntityManager;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentEntityManager;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.EventEntityManager;
+import edu.wpi.cs.wpisuitetng.modules.core.models.*;
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
@@ -20,6 +28,14 @@ import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 public class MockNetwork extends Network {
 	
 	protected MockRequest lastRequestMade = null;
+	protected HashMap<String, Project> projects = new HashMap<>();
+	protected HashMap<String, User> users = new HashMap<>();
+	protected HashMap<String, Session> sessions = new HashMap<>();
+	protected static int projectID = 0, userID=0;
+	protected Session loggedIn;
+	protected EventEntityManager eventManager = new EventEntityManager(new MockData(new HashSet<Object>()));
+	protected CommitmentEntityManager commitmentManager = new CommitmentEntityManager(new MockData(new HashSet<Object>()));
+	protected CategoryEntityManager categoryManager = new CategoryEntityManager(new MockData(new HashSet<Object>()));
 	
 	/**
 	 * Method makeRequest.
@@ -34,7 +50,7 @@ public class MockNetwork extends Network {
 		}
 		
 		lastRequestMade = new MockRequest(defaultNetworkConfiguration, path, requestMethod); 
-		
+		lastRequestMade.loadMockingbird(loggedIn, eventManager, commitmentManager, categoryManager);
 		return lastRequestMade;
 	}
 	
@@ -44,5 +60,32 @@ public class MockNetwork extends Network {
 	 * @return MockRequest */
 	public MockRequest getLastRequestMade() {
 		return lastRequestMade;
+	}
+	
+	public void addProject(String name)
+	{
+		projects.put(name, new Project(name, Integer.toString(projectID++)));
+	}
+	
+	public void addUser(String name)
+	{
+		users.put(name, new User(name,name, name, userID++));
+	}
+	
+	public void addSession(String user, String project, String ssid)
+	{
+		sessions.put(ssid, new Session(users.get(user), projects.get(project), ssid));
+	}
+	
+	public void loginSession(String ssid)
+	{
+		loggedIn = sessions.get(ssid);
+	}
+	
+	public void clearCache()
+	{
+		eventManager = new EventEntityManager(new MockData(new HashSet<Object>()));
+		commitmentManager = new CommitmentEntityManager(new MockData(new HashSet<Object>()));
+		categoryManager = new CategoryEntityManager(new MockData(new HashSet<Object>()));
 	}
 }

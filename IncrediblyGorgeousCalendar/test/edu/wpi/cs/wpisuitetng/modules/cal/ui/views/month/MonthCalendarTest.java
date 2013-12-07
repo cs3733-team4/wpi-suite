@@ -6,6 +6,7 @@ import java.util.HashSet;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MockData;
@@ -27,20 +28,10 @@ public class MonthCalendarTest{
 	private EventModel dummyModel = EventModel.getInstance();
 	private CommitmentModel dummyModel2 = new CommitmentModel();
 	
-	@Before
-	public void setUp() throws Exception {
-		// Mock network
-		Network.initNetwork(new MockNetwork());
-		//final NetworkConfiguration config = new NetworkConfiguration("http://localhost:8080");
-		//Network.getInstance().setDefaultNetworkConfiguration(config);
-		
-		Network.getInstance().setDefaultNetworkConfiguration(
-				new NetworkConfiguration("http://wpisuitetng"));
-		
-		//	EventModel dummyModel = EventModel.getInstance();
-		//CommitmentModel dummyModel2 = new CommitmentModel();
-		
-		//MockData db = new MockData(new HashSet<Object>());
+	@BeforeClass
+	public static void setUp() throws Exception
+	{
+		((MockNetwork)Network.getInstance()).clearCache();
 	}
 	
 	private DateTime time =  new DateTime();
@@ -49,15 +40,6 @@ public class MonthCalendarTest{
 	private DateTime timePlusOneMonth = time.plusMonths(1);
 	private DateTime timeOneHourThirtyMinutesBeforeDST = new DateTime(2013, 11, 3, 0, 30);
 	private DateTime timeOneHourThirtyMinutesBeforeDSTPlusOneMonth = new DateTime(2013, 12, 3, 0, 30);
-	
-	
-	// Testing is currently broken: Network configuration must not be null.
-	// When initializing a new monthCalendar, it tries to generate days to display by requesting
-	// from the currently uninitialized network. I tried initializing networkConfiguration like
-	// another team did in edu.wpi.cs.wpisuitetng.janeway.network.requestExample, but the commented
-	// out line of code above doesn't work and I'm stuck.
-	
-	
 	
 	@Test
 	public void testgetTimeReturnsProvidedTime() {
