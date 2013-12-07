@@ -26,7 +26,7 @@ import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
 public class MonthCalendarTest{
 	
 	private EventModel dummyModel = EventModel.getInstance();
-	private CommitmentModel dummyModel2 = new CommitmentModel();
+	private CommitmentModel dummyModel2 = CommitmentModel.getInstance();
 	
 	@BeforeClass
 	public static void setUp() throws Exception

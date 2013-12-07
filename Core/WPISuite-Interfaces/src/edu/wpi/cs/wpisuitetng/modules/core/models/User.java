@@ -203,6 +203,8 @@ public class User extends AbstractModel
 	 * @return true if this and anotherUser are equal
 	 */
 	public boolean equals(User anotherUser){
+		if (anotherUser==null)
+			return false;
 		return this.name.equalsIgnoreCase(anotherUser.getName()) &&
 				this.username.equalsIgnoreCase(anotherUser.getUsername()) &&
 				this.idNum == anotherUser.getIdNum();
