@@ -232,6 +232,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 				detailTitleLabel.setText(mDisplayable.getName());
 				detailTitleLabel.setOpaque(false);
 	        	detailTextDoc.insertString(detailTextDoc.getLength(), "Date:\n   " + ((Commitment) mDisplayable).getDate().toString(dateFormatter) + "\n", normalTextStyle);
+	        	detailTextDoc.insertString(detailTextDoc.getLength(), "Time:\n   " + ((Commitment) mDisplayable).getDate().toString(timeFormatter) + "\n", normalTextStyle);
 	        	detailTextDoc.insertString(detailTextDoc.getLength(), "Description:\n   " + mDisplayable.getDescription() + "\n", normalTextStyle);
 	        }catch(Exception e)
 	        {
