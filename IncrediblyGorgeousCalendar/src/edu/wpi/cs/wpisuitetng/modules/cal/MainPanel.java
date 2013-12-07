@@ -32,6 +32,7 @@ import javax.swing.border.EmptyBorder;
 
 import org.joda.time.DateTime;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.documentation.DocumentMainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
@@ -118,6 +119,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	 */
 	void finishInit()
 	{
+		
 		if (mTabbedPane == this)
 			return;
 		mTabbedPane = this;
@@ -183,6 +185,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		mainPaneContainer.setLayout(new BorderLayout());
 		mainPaneContainer.add(sidePanel, BorderLayout.WEST);
 		mainPaneContainer.add(centerPanel, BorderLayout.CENTER);
+		
 		
 		// Add default tabs to main panel
 		addTopLevelTab(mainPaneContainer, "Calendar", false);
