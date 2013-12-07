@@ -31,8 +31,8 @@ public class DocumentMainPanel extends JPanel{
     	 //set the url
         try {
         	
-            //url = new URL("file:///C:/Users/Brendan/Desktop/newDocs/GettingStarted.html");
-            url = new URL("file:///C:/Users/Brendan/Desktop/newDocs/YOCO Calendar.html");
+            url = new URL("file:///C:/Users/Brendan/Desktop/newDocs/GettingStarted.html");
+            //url = new URL("file:///C:/Users/Brendan/Desktop/newDocs/YOCO Calendar.html");
         }
         catch(MalformedURLException mue) {
             JOptionPane.showMessageDialog(null,mue);
