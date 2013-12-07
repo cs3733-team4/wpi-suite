@@ -103,6 +103,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 			throw new RuntimeException("Trying to create more than one calendar panel!");
 
 		instance = this; // Variable for creating new tabs in addTopLevelTab
+
 	}
 	
 	@Override
@@ -111,6 +112,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		// call finish init always, it has a if to prevent multiple calls. see below comment on why
 		finishInit();
 		super.paint(g);
+		this.mainCalendarNavigationPanel.grabFocus();
 	}
 	
 	/**
@@ -215,7 +217,6 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		
 		// Get focus for arrow key input
 		mainCalendarNavigationPanel.grabFocus();
-		
 		
 	}
 	
@@ -540,6 +541,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	{
 		updateSelectedDisplayable(null);
 		sideTabbedPanel.clearDetails();
+		this.mainCalendarNavigationPanel.grabFocus();
 	}
 	
 	public CategoryManager getCategoryManagerTab()
