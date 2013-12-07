@@ -21,6 +21,7 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.print.Doc;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -28,6 +29,7 @@ import javax.swing.JPanel;
 import javax.swing.JToolTip;
 
 import edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar.ToolbarGroupView;
+import edu.wpi.cs.wpisuitetng.modules.cal.documentation.DocumentMainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddCommitmentDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddEventDisplay;
 
@@ -50,7 +52,8 @@ public class EventToolbarGroup extends ToolbarGroupView {
 			        JButton button = new JButton("Get Help");  
 			        button.addActionListener(new ActionListener() {  
 			        	public void actionPerformed(ActionEvent e) {  
-			        		System.out.println("You clicked button");  
+			        		DocumentMainPanel.getInstance().setVisible(!DocumentMainPanel.getInstance().isVisible());
+			        		DocumentMainPanel.getInstance().goToPage("file:/C:/Users/Brendan/Desktop/newDocs/CreatinganEvent.html");  
 			            }  
 			        });  
 			        panel.add(label);

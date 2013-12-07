@@ -13,8 +13,10 @@ import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.print.attribute.standard.JobPrioritySupported;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 
 import edu.wpi.cs.wpisuitetng.janeway.modules.IJanewayModule;
 import edu.wpi.cs.wpisuitetng.janeway.modules.JanewayTabModel;
@@ -39,9 +41,11 @@ public class Calendar implements IJanewayModule
 		RibbonToolbar buttonPanel = new RibbonToolbar(mMainPanel, true);
 		buttonPanel.setFloatable(false);
 
-		JPanel testP = new JPanel(new BorderLayout());
-		testP.add(mMainPanel, BorderLayout.CENTER);
-		testP.add(DocumentMainPanel.getInstance(), BorderLayout.EAST);
+		JSplitPane testP = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+		testP.add(mMainPanel);
+		testP.add(DocumentMainPanel.getInstance(), -1);
+
+		DocumentMainPanel.getInstance().setVisible(false);
 		tabs = new ArrayList<JanewayTabModel>();
 		JanewayTabModel tab = new JanewayTabModel(getName(), new ImageIcon(),
 				buttonPanel, testP);

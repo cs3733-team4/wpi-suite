@@ -1,5 +1,6 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.documentation;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.io.IOException;
@@ -19,17 +20,19 @@ import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddEventDisplay;
 
 public class DocumentMainPanel extends JPanel{
 
-    private JEditorPane editor;
+    private JEditorPane webPage;
     private JScrollPane scroll;
     private URL url;
     private static DocumentMainPanel instance;
     public DocumentMainPanel()
     {
     	super();
+    	this.setLayout(new BorderLayout());
     	 //set the url
         try {
         	
-            url = new URL("file:///C:/Users/Brendan/Desktop/newDocs/GettingStarted.html");
+            //url = new URL("file:///C:/Users/Brendan/Desktop/newDocs/GettingStarted.html");
+            url = new URL("file:///C:/Users/Brendan/Desktop/newDocs/YOCO Calendar.html");
         }
         catch(MalformedURLException mue) {
             JOptionPane.showMessageDialog(null,mue);
@@ -37,23 +40,22 @@ public class DocumentMainPanel extends JPanel{
         
         //create the JEditorPane
         try {
-            editor = new JEditorPane(url);
+            webPage = new JEditorPane(url);
             
             //set the editor pane to false.
-            editor.setEditable(false);
+            webPage.setEditable(false);
         }
         catch(IOException ioe) {
             JOptionPane.showMessageDialog(null,ioe);
         }
-        this.setMaximumSize(new Dimension(400, 1000));
-        this.setPreferredSize(new Dimension(400, 1000));
         //create the scroll pane and add the JEditorPane to it.
-        scroll = new JScrollPane(editor, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scroll = new JScrollPane(webPage);
+        scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         
         //create the JTextField
-        editor.setBackground(Color.getColor("EFEFEF"));
-        editor.addHyperlinkListener(new HyperlinkListener() {
+        webPage.setBackground(Color.getColor("EFEFEF"));
+        webPage.addHyperlinkListener(new HyperlinkListener() {
             public void hyperlinkUpdate(HyperlinkEvent e) {
                 if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED)
                       	try {
@@ -65,7 +67,7 @@ public class DocumentMainPanel extends JPanel{
                       			}
                       			else
                       			{
-                      				editor.setPage(e.getURL());
+                      				webPage.setPage(e.getURL());
                       				System.out.println(e.getURL().toString());
                       			}
                             }
@@ -74,7 +76,7 @@ public class DocumentMainPanel extends JPanel{
                             }
                     }//end hyperlinkUpdate()
                 });//end HyperlinkListener
-        this.add(scroll);
+        this.add(scroll, BorderLayout.CENTER);
     }
     public static DocumentMainPanel getInstance()
 	{
@@ -84,5 +86,26 @@ public class DocumentMainPanel extends JPanel{
 		}
 		return instance;
 	}
+    
+    @Override
+    public void setVisible(boolean vis)
+    {
+    	super.setVisible(vis);
+    	if (vis)
+    		this.setPreferredSize(new Dimension(200, 1000));
+    }
+    public void goToPage(String Page)
+    {
+    	try {
+			webPage.setPage(new URL(Page));
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    }
 
 }
