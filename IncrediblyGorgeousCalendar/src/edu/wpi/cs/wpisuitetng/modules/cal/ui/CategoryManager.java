@@ -52,15 +52,14 @@ public class CategoryManager extends JPanel {
 	private JTextField categoryName;
 	private JPanel categoryNamePanel;
 	private JLabel categoryNameLabel;
-	private JLabel categoryErrorLabel;
+	private JLabel categoryNameErrorLabel;
 	private PastelColorPicker colorPicker;
-	private JButton updateList;
+	private JButton saveCategoryButton;
 	private JCheckBox deleteCategory;
 	private DefaultListModel<Category> JListModel;
 	private JList<Category> categoriesList;
 	private JPanel bottomEditPanel;
 	private List<Category> allCategories;
-	private JLabel errorText;
 	private boolean editCategory = false;
 	private UUID selectedCategoryUUID;
 	private Category selectedCategory;
@@ -92,7 +91,7 @@ public class CategoryManager extends JPanel {
 		// Label
 		categoryNameLabel = new JLabel("Name: ");
 		categoryNamePanel.add(categoryNameLabel);
-		categoryErrorLabel = new JLabel();
+		categoryNameErrorLabel = new JLabel();
 		
 		// Text Field
 		categoryName = new JTextField();
@@ -104,14 +103,14 @@ public class CategoryManager extends JPanel {
 			
 			@Override
 			public void removeUpdate(DocumentEvent e) {
-				categoryErrorLabel.setVisible(!validateText(categoryName.getText(), categoryErrorLabel));
-				updateList.setEnabled(isSaveable());
+				categoryNameErrorLabel.setVisible(!validateText(categoryName.getText(), categoryNameErrorLabel));
+				saveCategoryButton.setEnabled(isSaveable());
 			}
 			
 			@Override
 			public void insertUpdate(DocumentEvent e) {
-				categoryErrorLabel.setVisible(!validateText(categoryName.getText(), categoryErrorLabel));
-				updateList.setEnabled(isSaveable());
+				categoryNameErrorLabel.setVisible(!validateText(categoryName.getText(), categoryNameErrorLabel));
+				saveCategoryButton.setEnabled(isSaveable());
 			}
 			
 			@Override
@@ -120,11 +119,11 @@ public class CategoryManager extends JPanel {
 			}
 		});
 		
-		categoryErrorLabel.setForeground(Color.RED);
-		validateText(categoryName.getText(), categoryErrorLabel);
+		categoryNameErrorLabel.setForeground(Color.RED);
+		validateText(categoryName.getText(), categoryNameErrorLabel);
 
 		categoryNamePanel.add(categoryName);
-		categoryNamePanel.add(categoryErrorLabel);
+		categoryNamePanel.add(categoryNameErrorLabel);
 		
 		// Add to UI
 		rightCategoryEdit.add(categoryNamePanel);
@@ -150,18 +149,13 @@ public class CategoryManager extends JPanel {
 		bottomEditPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		
 		// Buttons
-		updateList = new JButton("Update List");
+		saveCategoryButton = new JButton("Save");
 		deleteCategory = new JCheckBox("Delete selected");
 		deleteCategory.setSelected(false);
 		
-		// Error label
-		this.errorText = new JLabel();
-		errorText.setForeground(Color.RED);
-
 		// Add to Panel
-		bottomEditPanel.add(updateList);
+		bottomEditPanel.add(saveCategoryButton);
 		//bottomEditPanel.add(deleteCategory);
-		bottomEditPanel.add(errorText);
 		bottomEditPanel.add(Box.createHorizontalGlue());
 		
 		// Add to UI
@@ -171,7 +165,6 @@ public class CategoryManager extends JPanel {
 		/** List model for the category display */
 		
 		JListModel = new DefaultListModel<Category>();
-		
 		categoriesList = new JList<Category>(JListModel);
 		
 		/* Add click listener
@@ -210,7 +203,9 @@ public class CategoryManager extends JPanel {
 				bg.add(colorBlast);
 				bg.add(Box.createHorizontalStrut(3));
 				
-				JLabel display = new JLabel(value.getName());
+				JLabel display = new JLabel();
+				display.putClientProperty("html.disable", true);
+				display.setText(value.getName());
 				bg.add(display);
 				bg.add(Box.createHorizontalGlue());
 				bg.setOpaque(true);
@@ -259,6 +254,14 @@ public class CategoryManager extends JPanel {
 			mErrorLabel.setText(" * Required Field");
 			return false;
 		}
+		
+		for (Category cat : allCategories){
+			if (cat.getName().equals(categoryName.getText())){
+				mErrorLabel.setText("* Category name already exists");
+				return false;
+			}
+		}
+		
 		return true;
 	}
 
@@ -268,7 +271,7 @@ public class CategoryManager extends JPanel {
 	 */
 	public boolean isSaveable()
 	{
-		return validateText(categoryName.getText(), categoryErrorLabel);
+		return validateText(categoryName.getText(), categoryNameErrorLabel);
 	}
 
 	/**
@@ -284,63 +287,36 @@ public class CategoryManager extends JPanel {
 		
 		// Update List Button
 		
-		updateList.addActionListener(new ActionListener(){
+		saveCategoryButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				try
-				{
-					errorText.setVisible(true);
-					
-					for (Category cat : allCategories){
-						if (cat.getName().equals(categoryName.getText())){
-							errorText.setText("* Category name already exists");
-							return;
-						}
-					}
-					
-					
-					if (categoryName.getText() == null || categoryName.getText().trim().length() == 0)
-					{
-						errorText.setText("* Please enter a category title");
-					}
-					else
-					{
-						errorText.setVisible(false);
-						Category c = new Category();
-						c.setName(categoryName.getText().trim());
-						c.setColor(colorPicker.getCurrentColorState()); // Get color from color picker
+				Category c = new Category();
+				c.setName(categoryName.getText().trim());
+				c.setColor(colorPicker.getCurrentColorState()); // Get color from color picker
 
-						if (editCategory){
-							c.setCategoryID(selectedCategoryUUID);
-							MainPanel.getInstance().updateCategory(c);
-							JListModel.removeElement(selectedCategory);
-							JListModel.addElement(c);
-						} else {
-							MainPanel.getInstance().addCategory(c);
-							if (JListModel.contains(Category.DEFUALT_DISPLAY_CATEGORY))
-								JListModel.removeElement(Category.DEFUALT_DISPLAY_CATEGORY);
-							JListModel.addElement(c);
-						}
-						
-						categoryName.setText(""); // Clear category name text field upon addition
-						selectedCategory = null; // Clear selection
-						
-						updateList.setEnabled(false);
-
-					}
+				if (editCategory){
+					c.setCategoryID(selectedCategoryUUID);
+					MainPanel.getInstance().updateCategory(c);
+					JListModel.removeElement(selectedCategory);
+					JListModel.addElement(c);
+				} else {
+					MainPanel.getInstance().addCategory(c);
+					if (JListModel.contains(Category.DEFUALT_DISPLAY_CATEGORY))
+						JListModel.removeElement(Category.DEFUALT_DISPLAY_CATEGORY);
+					JListModel.addElement(c);
 				}
-				catch (IllegalArgumentException exception)
-				{
-					errorText.setText("* Invalid Date/Time");
-					errorText.setVisible(true);
-				}
+				
+				categoryName.setText(""); // Clear category name text field upon addition
+				selectedCategory = null; // Clear selection
+				
+				saveCategoryButton.setEnabled(false);
 			}
 		});
 		
 		//this should be called in updateSaveable() and thus isnt necessary here
 		//but error msg didn't start visible unless I called it directly
 		
-		updateList.setEnabled(isSaveable());
+		saveCategoryButton.setEnabled(isSaveable());
 		
 
 	}
