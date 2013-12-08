@@ -39,7 +39,7 @@ public class MiniMonth extends JPanel
 		this.setLayout(new GridLayout(7, 7));
 		MutableDateTime prevMonth = new MutableDateTime(time);
 		prevMonth.setDayOfMonth(1);
-		prevMonth.addMonths(-1);
+		prevMonth.addMonths(-1); // What is prevMonth for?
 		String[] dayLabel = {"S", "M", "T", "W", "R", "F", "S"};
 
 		MouseListener monthChanger = new MouseListener()
@@ -92,8 +92,13 @@ public class MiniMonth extends JPanel
 			else if (MainPanel.getInstance().getView() == ViewSize.Day)
 				flipFlop = referenceDay.getDayOfYear() == time.getDayOfYear() && referenceDay.getYear() == time.getYear();
 			else if (MainPanel.getInstance().getView() == ViewSize.Week)
-				flipFlop = referenceDay.getDayOfYear() >= Months.getWeekStart(time).getDayOfYear() && referenceDay.getDayOfYear() <= Months.getWeekStart(time).getDayOfYear()+6 && referenceDay.getYear() == time.getYear();
-			
+			{
+				if(Months.getWeekStart(time).getMonthOfYear()==12 && Months.getWeekStart(time).getDayOfMonth()>=26) // Exception case for weeks between years
+					flipFlop = time.getMonthOfYear()==12 ? i>=35 : i<=6;
+				else
+					flipFlop = referenceDay.getDayOfYear() >= Months.getWeekStart(time).getDayOfYear() && referenceDay.getDayOfYear() <= Months.getWeekStart(time).getDayOfYear()+6;
+			}
+				
 			if (flipFlop)
 				day = new ActiveDayLabel(referenceDay.toDateTime());
 			else

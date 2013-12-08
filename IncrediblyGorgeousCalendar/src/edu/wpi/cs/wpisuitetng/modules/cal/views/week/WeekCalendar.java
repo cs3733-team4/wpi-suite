@@ -70,7 +70,7 @@ public class WeekCalendar extends AbstractCalendar
 		this.holder.removeAll();
 		this.removeAll();
 		this.add(scroll, BorderLayout.CENTER);
-		JLabel weekTitle = new JLabel("Week of " + time.toString(titleFmt));
+		JLabel weekTitle = new JLabel("Week of " + Months.getWeekStart(time).toString(titleFmt));
 		weekTitle.setFont(new java.awt.Font("DejaVu Sans", Font.BOLD, 25));
 		weekTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		this.add(weekTitle, BorderLayout.NORTH);
