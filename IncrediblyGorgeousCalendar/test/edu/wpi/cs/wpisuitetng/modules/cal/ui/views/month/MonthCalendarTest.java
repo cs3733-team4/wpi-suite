@@ -5,6 +5,8 @@ import static org.junit.Assert.*;
 import java.util.HashSet;
 
 import org.joda.time.DateTime;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MockData;
@@ -12,7 +14,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthCalendar;
-import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
+import edu.wpi.cs.wpisuitetng.modules.cal.MockNetwork;
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
 
@@ -22,13 +24,15 @@ import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
  */
 
 public class MonthCalendarTest{
-
-	private EventModel dummyModel = EventModel.getInstance();
-	private CommitmentModel dummyModel2 = new CommitmentModel();
 	
-	MockData db = new MockData(new HashSet<Object>());
-	final NetworkConfiguration config = new NetworkConfiguration("http://localhost:8080");
-	//Network.getInstance().setDefaultNetworkConfiguration(config);
+	private EventModel dummyModel = EventModel.getInstance();
+	private CommitmentModel dummyModel2 = CommitmentModel.getInstance();
+	
+	@BeforeClass
+	public static void setUp() throws Exception
+	{
+		((MockNetwork)Network.getInstance()).clearCache();
+	}
 	
 	private DateTime time =  new DateTime();
 	private DateTime timeDecember = new DateTime(2012,12,1,1,1);
@@ -36,15 +40,6 @@ public class MonthCalendarTest{
 	private DateTime timePlusOneMonth = time.plusMonths(1);
 	private DateTime timeOneHourThirtyMinutesBeforeDST = new DateTime(2013, 11, 3, 0, 30);
 	private DateTime timeOneHourThirtyMinutesBeforeDSTPlusOneMonth = new DateTime(2013, 12, 3, 0, 30);
-	
-	
-	// Testing is currently broken: Network configuration must not be null.
-	// When initializing a new monthCalendar, it tries to generate days to display by requesting
-	// from the currently uninitialized network. I tried initializing networkConfiguration like
-	// another team did in edu.wpi.cs.wpisuitetng.janeway.network.requestExample, but the commented
-	// out line of code above doesn't work and I'm stuck.
-	
-	
 	
 	@Test
 	public void testgetTimeReturnsProvidedTime() {

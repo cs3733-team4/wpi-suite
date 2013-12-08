@@ -22,6 +22,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.print.Doc;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -38,9 +39,9 @@ public class EventToolbarGroup extends ToolbarGroupView {
 	private final JButton addEventButton, removeEventButton, addCommitmentButton;
 	public EventToolbarGroup(final MainPanel mMainPanel) {
 		super("Events & Commitments");
-		setPreferredWidth(300);
+		setPreferredWidth(600);
 		
-		//this.eventContentPanel.setLayout(new BoxLayout(eventContentPanel, BoxLayout.X_AXIS));
+		this.content.setLayout(new BoxLayout(content, BoxLayout.X_AXIS));
 		
 		addEventButton = new JButton("<html>Add<br/>Event</html>"){
 			JToolTip toolTip;  
