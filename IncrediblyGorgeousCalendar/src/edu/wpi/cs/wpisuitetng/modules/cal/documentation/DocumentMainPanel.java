@@ -2,7 +2,6 @@ package edu.wpi.cs.wpisuitetng.modules.cal.documentation;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -10,13 +9,12 @@ import java.net.URL;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddEventDisplay;
 
 public class DocumentMainPanel extends JFrame{
@@ -25,10 +23,13 @@ public class DocumentMainPanel extends JFrame{
     private JScrollPane scroll;
     private URL url;
     private String serverLocation = "http://users.wpi.edu/~bkmcleod/newDocs/";
+    private TableOfContents tableOfContents;
     private static DocumentMainPanel instance;
     private DocumentMainPanel()
     {
     	super();
+    	tableOfContents=new TableOfContents(serverLocation);
+    	
     	this.setLayout(new BorderLayout());
     	
         try {
@@ -73,7 +74,11 @@ public class DocumentMainPanel extends JFrame{
                             }
                     }//end hyperlinkUpdate()
                 });//end HyperlinkListener
-        this.add(scroll, BorderLayout.CENTER);
+
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        splitPane.add(tableOfContents);
+        splitPane.add(scroll);
+        this.add(splitPane, BorderLayout.CENTER);
     }
     
     private boolean doAction(String actionPath)
