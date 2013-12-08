@@ -8,6 +8,7 @@ import java.text.ParseException;
 import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 
+import org.joda.time.DateTime;
 import org.junit.Test;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddEventDisplay;
@@ -218,6 +219,33 @@ private AddEventDisplay mEventDisplay = new AddEventDisplay();
 		
 		((JTextField) fff.get(mEventDisplay)).setText("Test Event");
 		
+		assertTrue("Event is saveable with proper input", mEventDisplay.isSaveable());
+	}
+	
+	@Test
+	public void autoFillDateAndTimeIsNow() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException
+	{
+		AddEventDisplay mEventDisplay = new AddEventDisplay();
+		
+		DateTime today = new DateTime();
+		DateTime todayPlusOneHour = today.plusHours(1);
+		
+		
+		Field f= mEventDisplay.getClass().getDeclaredField("startTimeDatePicker");
+		f.setAccessible(true);
+		
+		Field ff= mEventDisplay.getClass().getDeclaredField("endTimeDatePicker");
+		ff.setAccessible(true);
+		
+		Field fff= mEventDisplay.getClass().getDeclaredField("nameTextField");
+		fff.setAccessible(true);
+	
+		((JTextField) fff.get(mEventDisplay)).setText("Test Event");
+		
+		assertEquals(((DatePicker)f.get(mEventDisplay)).getDate().getMonthOfYear(), today.getMonthOfYear());
+		assertEquals(((DatePicker)f.get(mEventDisplay)).getDate().getDayOfMonth(), today.getDayOfMonth());
+		assertEquals(((DatePicker)ff.get(mEventDisplay)).getDate().getMonthOfYear(), todayPlusOneHour.getMonthOfYear());
+		assertEquals(((DatePicker)ff.get(mEventDisplay)).getDate().getDayOfMonth(), todayPlusOneHour.getDayOfMonth());
 		assertTrue("Event is saveable with proper input", mEventDisplay.isSaveable());
 	}
 }

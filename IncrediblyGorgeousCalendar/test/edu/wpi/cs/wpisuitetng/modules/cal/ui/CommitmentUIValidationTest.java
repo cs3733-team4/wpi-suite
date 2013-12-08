@@ -8,6 +8,7 @@ import java.text.ParseException;
 import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 
+import org.joda.time.DateTime;
 import org.junit.Test;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddCommitmentDisplay;
@@ -34,7 +35,7 @@ public class CommitmentUIValidationTest {
 	@Test
 	public void testIfSaveButtonIsDisabledWithProperDateButNoName() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		
-		Field f= mCommitDisplay.getClass().getDeclaredField("commitTime1");
+		Field f= mCommitDisplay.getClass().getDeclaredField("commitTimePicker");
 		f.setAccessible(true);
 			
 		((DatePicker) f.get(mCommitDisplay)).date.setValue("11/20/13");
@@ -53,7 +54,7 @@ public class CommitmentUIValidationTest {
 		
 		((JTextField) fff.get(mCommitDisplay)).setText("Test Commitment");
 		
-		assertFalse("Commitment is not saveable with no date and time", mCommitDisplay.isSaveable());
+		assertTrue("Commitment date and time is set automatically", mCommitDisplay.isSaveable());
 	}
 	
 	@Test
@@ -72,7 +73,7 @@ public class CommitmentUIValidationTest {
 	public void testIfSaveButtonIsNoLongerEnabledAfterDateDeletion() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		setUpAndTestValidCommitmentFields();
 		
-		Field f= mCommitDisplay.getClass().getDeclaredField("commitTime1");
+		Field f= mCommitDisplay.getClass().getDeclaredField("commitTimePicker");
 		f.setAccessible(true);
 		
 		((DatePicker) f.get(mCommitDisplay)).date.setValue("");
@@ -95,7 +96,7 @@ public class CommitmentUIValidationTest {
 	private void setUpAndTestValidCommitmentFields() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException
 	{
 		
-		Field f= mCommitDisplay.getClass().getDeclaredField("commitTime1");
+		Field f= mCommitDisplay.getClass().getDeclaredField("commitTimePicker");
 		f.setAccessible(true);
 				
 		Field ff = mCommitDisplay.getClass().getDeclaredField("nameTextField");
@@ -108,6 +109,28 @@ public class CommitmentUIValidationTest {
 		//((DatePicker) f.get(mCommitDisplay)).time.setValue("03:00");
 		//((DatePicker) f.get(mCommitDisplay)).AMPM.setSelectedItem("PM");
 				
+		assertTrue("Commitment is saveable with proper input", mCommitDisplay.isSaveable());
+	}
+	
+	@Test
+	public void testAutoFillDate() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+		
+		DateTime today = new DateTime();
+		
+		AddCommitmentDisplay mCommitDisplay = new AddCommitmentDisplay();
+		
+		Field f= mCommitDisplay.getClass().getDeclaredField("commitTimePicker");
+		f.setAccessible(true);
+				
+		Field ff = mCommitDisplay.getClass().getDeclaredField("nameTextField");
+		ff.setAccessible(true);
+		
+		((JTextField) ff.get(mCommitDisplay)).setText("Test Commitment");
+		
+		
+		assertEquals(((DatePicker)f.get(mCommitDisplay)).getDate().getMonthOfYear(), today.getMonthOfYear());
+		assertEquals(((DatePicker)f.get(mCommitDisplay)).getDate().getDayOfYear(), today.getDayOfYear());
+		assertEquals(((DatePicker)f.get(mCommitDisplay)).getDate().getYear(), today.getYear());
 		assertTrue("Commitment is saveable with proper input", mCommitDisplay.isSaveable());
 	}
 
