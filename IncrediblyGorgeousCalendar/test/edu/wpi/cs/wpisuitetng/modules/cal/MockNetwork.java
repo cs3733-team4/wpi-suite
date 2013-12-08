@@ -22,8 +22,8 @@ import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 
 /**
- * @author justinhess
- * @version $Revision: 1.0 $
+ * Allows testing of network things without having a real network to test on.
+ * 
  */
 public class MockNetwork extends Network {
 	

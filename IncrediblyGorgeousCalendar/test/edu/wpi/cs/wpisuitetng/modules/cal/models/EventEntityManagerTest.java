@@ -217,7 +217,7 @@ public class EventEntityManagerTest {
                 // The huge string being used as input is "filter-events-by-range," + string form of starting dateTime + "," + string form of ending dateTime
                 // This method is really just another way of calling getEventsByRange with new inputs; as such, it has the same limitations and only needs basic testing
                 
-                assertEquals("getEntity will return an event in the database if it was stored there before",e.getName(),eem.getEntity(ses1,"filter-events-by-range,20000101T010000.000Z,20000102T030000.000Z")[0].getName());
+                assertEquals("getEntity will return an event in the database if it was stored there before",e.getName(),eem.getEntity(ses1,"filter-events-by-range,20000101T010000.000Z,20000102T020000.000Z")[0].getName());
                 assertEquals("getEntity will return an event in the database if it was stored there before",eee.getName(),eem.getEntity(ses1,"filter-events-by-range,20000104T030000.000Z,20000104T070100.000Z")[0].getName());
                 assertEquals("getEntity will return an empty array if no events are within the given range", 0 ,eem.getEntity(ses1,"filter-events-by-range,20500101T010100.000Z,20500101T010100.000Z").length);
         }

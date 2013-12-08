@@ -49,7 +49,6 @@ public class CategoryEntityManager implements EntityManager<Category> {
          */
         @Override
         public Category makeEntity(Session s, String content) throws WPISuiteException {
-                System.out.println(content+ " was just sent!");
                 final Category newCategory = Category.fromJson(content);
                 newCategory.setOwner(s.getUser());
                 newCategory.setProject(s.getProject());
@@ -69,14 +68,12 @@ public class CategoryEntityManager implements EntityManager<Category> {
         @Override
         public Category[] getEntity(Session s, String id) throws NotFoundException, WPISuiteException {
 
-                System.out.println(id+ " was just sent!");
                 String[] args = id.split(",");
                 
                 Category[] retrievedCategories = null;
                 
                 switch (args[0]) {
                         case "get-all-categories":
-                                System.out.println("All categories was requested");
                                 return getAll(s);
                         case "get-user-categories":
                                 return getUserCategories(s);
@@ -215,7 +212,6 @@ public class CategoryEntityManager implements EntityManager<Category> {
 
         @Override
         public Category[] getAll(Session s) throws WPISuiteException {
-                System.out.println("GET ALL!");
                 return db.retrieveAll(new Category(), s.getProject()).toArray(new Category[0]);
         }
 
