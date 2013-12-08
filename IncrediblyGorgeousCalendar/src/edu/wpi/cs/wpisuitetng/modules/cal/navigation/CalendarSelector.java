@@ -41,7 +41,7 @@ public class CalendarSelector extends JPanel
 		cal.add(personalCalendar);
 		cal.add(teamCalendar);
 		cal.add(bothCalendar);
-		personalCalendar.setSelected(true);
+		bothCalendar.setSelected(true);
 
 		// layout
 		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));

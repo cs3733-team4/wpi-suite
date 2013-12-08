@@ -111,6 +111,8 @@ public class AddCommitmentDisplay extends JPanel
 		commitTimePicker = new DatePicker(true, null);
 		if (isEditingCommitment)
 			commitTimePicker.setDateTime(oldCommitment.getDate());
+		else
+			commitTimePicker.setDateTime(new DateTime());
 		
 		CommitDatePickerPanel.add(lblDateTime);
 		CommitDatePickerPanel.add(commitTimePicker);
