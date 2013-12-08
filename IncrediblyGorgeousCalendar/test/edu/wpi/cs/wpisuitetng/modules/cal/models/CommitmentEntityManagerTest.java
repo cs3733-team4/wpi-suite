@@ -15,16 +15,14 @@ import static org.junit.Assert.*;
 import java.util.HashSet;
 
 import org.junit.Test;
-
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
-
 import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
 import edu.wpi.cs.wpisuitetng.modules.cal.MockData;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentEntityManager;
-
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 
@@ -33,11 +31,10 @@ public class CommitmentEntityManagerTest {
         MockData db = new MockData(new HashSet<Object>());
            
 
-        DateTime one=new DateTime(2000,1,1,1,1);
-        
-        DateTime two=new DateTime(2000,1,2,2,1);
-        DateTime three=new DateTime(2000,1,3,3,1);
-        DateTime four=new DateTime(2000,1,4,4,1);
+        DateTime one=new DateTime(2000,1,1,1,1, DateTimeZone.UTC);
+        DateTime two=new DateTime(2000,1,2,2,1, DateTimeZone.UTC);
+        DateTime three=new DateTime(2000,1,3,3,1, DateTimeZone.UTC);
+        DateTime four=new DateTime(2000,1,4,4,1, DateTimeZone.UTC);
         
         
         
@@ -171,7 +168,6 @@ public class CommitmentEntityManagerTest {
                 String after ="20000102T020000.000Z"; // DateTime string at 1/2/2000, 2:00; ie a little before datetime two in basicDateTime string format
                 Commitment[] eList=cem.getCommitmentsByRange(ses1,before,after);
                 boolean hasCommitment=false;
-                
                 if(eList[0].getName().equals("First"))
                         hasCommitment=true;
                 assertTrue("GetCommitmentsByRange, if given a time range that only one Commitment is within, will return only that Commitment",hasCommitment);
