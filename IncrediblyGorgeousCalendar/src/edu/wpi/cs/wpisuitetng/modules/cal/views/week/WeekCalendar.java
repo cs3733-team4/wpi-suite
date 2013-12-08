@@ -19,11 +19,14 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.SwingConstants;
 
 import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+
+import com.lowagie.text.Font;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
@@ -53,12 +56,12 @@ public class WeekCalendar extends AbstractCalendar
 
 	private EventModel eventModel;
 
-	private DateTimeFormatter titleFmt = DateTimeFormat.forPattern("EEEE, MMM d, yyyy");
+	private DateTimeFormatter titleFmt = DateTimeFormat.forPattern("MMM d, yyyy");
 
 	public WeekCalendar(DateTime on, EventModel emodel)
 	{
 		this.mainPanel = MainPanel.getInstance();
-		this.time = Months.getWeekStart(on);
+		this.time = on;
 		eventModel = emodel;
 		scroll.setBackground(Colors.TABLE_BACKGROUND);
 		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -66,12 +69,12 @@ public class WeekCalendar extends AbstractCalendar
 		scroll.getVerticalScrollBar().setUnitIncrement(20);
 		dayGrid.setBackground(Colors.TABLE_BACKGROUND);
 		
-		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		this.setLayout(new BorderLayout());
 		this.dayHolderPanel.setLayout(new BorderLayout());
 		this.dayGrid.setLayout(new GridLayout(1, 7));
 		this.dayTitleGrid.setLayout(new GridLayout(1, 7));
 		this.dayTitlesContainer.setLayout(new BoxLayout(dayTitlesContainer, BoxLayout.X_AXIS));
-		this.dayGridContainer.setLayout(new BorderLayout()); //Nested BorderLayouts arent the best
+		this.dayGridContainer.setLayout(new BorderLayout());
 		
 		generateDay();
 	}
@@ -80,36 +83,36 @@ public class WeekCalendar extends AbstractCalendar
 	{
 		this.dayGrid.removeAll();
 		this.removeAll();
-		
-		MutableDateTime increment=new MutableDateTime(time);
-		
+
+		MutableDateTime increment=new MutableDateTime(Months.getWeekStart(time));
+
 		this.sun = new LouvreTour();
 		this.sun.setEvents(getVisibleEvents(increment.toDateTime()), increment.toDateTime());
-		this.sun.setBorder(BorderFactory.createLineBorder(Colors.BORDER));
+		this.sun.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 1, Colors.BORDER));
 		increment.addDays(1);
 		this.mon = new LouvreTour();
 		this.mon.setEvents(getVisibleEvents(increment.toDateTime()), increment.toDateTime());
-		this.mon.setBorder(BorderFactory.createLineBorder(Colors.BORDER));
+		this.mon.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 1, Colors.BORDER));
 		increment.addDays(1);
 		this.tue = new LouvreTour();
 		this.tue.setEvents(getVisibleEvents(increment.toDateTime()), increment.toDateTime());
-		this.tue.setBorder(BorderFactory.createLineBorder(Colors.BORDER));
+		this.tue.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 1, Colors.BORDER));
 		increment.addDays(1);
 		this.wed = new LouvreTour();
 		this.wed.setEvents(getVisibleEvents(increment.toDateTime()), increment.toDateTime());
-		this.wed.setBorder(BorderFactory.createLineBorder(Colors.BORDER));
+		this.wed.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 1, Colors.BORDER));
 		increment.addDays(1);
 		this.thu = new LouvreTour();
 		this.thu.setEvents(getVisibleEvents(increment.toDateTime()), increment.toDateTime());
-		this.thu.setBorder(BorderFactory.createLineBorder(Colors.BORDER));
+		this.thu.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 1, Colors.BORDER));
 		increment.addDays(1);
 		this.fri = new LouvreTour();
 		this.fri.setEvents(getVisibleEvents(increment.toDateTime()), increment.toDateTime());
-		this.fri.setBorder(BorderFactory.createLineBorder(Colors.BORDER));
+		this.fri.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 1, Colors.BORDER));
 		increment.addDays(1);
 		this.sat = new LouvreTour();
 		this.sat.setEvents(getVisibleEvents(increment.toDateTime()), increment.toDateTime());
-		this.sat.setBorder(BorderFactory.createLineBorder(Colors.BORDER));
+		this.sat.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 1, Colors.BORDER));
 
 		//add days to grid
 		this.dayGrid.add(this.sun);
@@ -131,7 +134,7 @@ public class WeekCalendar extends AbstractCalendar
 		this.dayTitleGrid.add(new JLabel("Sat", JLabel.CENTER));
 		
 		//initialize spacer label for dayGridLabel
-		JLabel spacerLabel = new JLabel("10:00    ");
+		JLabel spacerLabel = new JLabel(" 10:00 PM  ");
 		spacerLabel.setForeground(spacerLabel.getBackground());
 		spacerLabel.setBorder(BorderFactory.createLineBorder(spacerLabel.getBackground()));
 		
@@ -148,9 +151,14 @@ public class WeekCalendar extends AbstractCalendar
 		this.dayHolderPanel.add(dayTitlesContainer, BorderLayout.NORTH);
 		this.dayHolderPanel.add(scroll, BorderLayout.CENTER);
 		
+		//setup week title
+		JLabel weekTitle = new JLabel("Week of " + time.toString(titleFmt));
+		weekTitle.setFont(new java.awt.Font("DejaVu Sans", Font.BOLD, 25));
+		weekTitle.setHorizontalAlignment(SwingConstants.CENTER);
+		
 		//add title and week view to this
-		this.add(new JLabel(time.toString(titleFmt)));
-		this.add(dayHolderPanel);
+		this.add(weekTitle, BorderLayout.NORTH);
+		this.add(dayHolderPanel, BorderLayout.CENTER);
 		
 		// notify mini-calendar to change
 		mainPanel.miniMove(time);

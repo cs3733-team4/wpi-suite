@@ -27,6 +27,7 @@ import org.joda.time.MutableDateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
 
 /**
  * Sidebar sidekick month view to enable quick navigation to other months/days/weeks.
@@ -91,7 +92,7 @@ public class MiniMonth extends JPanel
 			else if (MainPanel.getInstance().getView() == ViewSize.Day)
 				flipFlop = referenceDay.getDayOfYear() == time.getDayOfYear() && referenceDay.getYear() == time.getYear();
 			else if (MainPanel.getInstance().getView() == ViewSize.Week)
-				flipFlop = referenceDay.getDayOfYear() >= time.getDayOfYear() && referenceDay.getDayOfYear() <= time.getDayOfYear()+6 && referenceDay.getYear() == time.getYear();
+				flipFlop = referenceDay.getDayOfYear() >= Months.getWeekStart(time).getDayOfYear() && referenceDay.getDayOfYear() <= Months.getWeekStart(time).getDayOfYear()+6 && referenceDay.getYear() == time.getYear();
 			
 			if (flipFlop)
 				day = new ActiveDayLabel(referenceDay.toDateTime());

@@ -133,14 +133,14 @@ public class Months
 	{
 		MutableDateTime mdt = new MutableDateTime(time);
 		mdt.addDays(7);
-		return getWeekStart(mdt.toDateTime());
+		return mdt.toDateTime();
 	}
 
 	public static DateTime prevWeek(DateTime time)
 	{
 		MutableDateTime mdt = new MutableDateTime(time);
-		mdt.addDays(7);
-		return getWeekStart(mdt.toDateTime());
+		mdt.addDays(-7);
+		return mdt.toDateTime();
 	}
 
 	/**
