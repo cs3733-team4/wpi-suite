@@ -250,20 +250,22 @@ public class WeekCalendar extends AbstractCalendar
 		LouvreTour mLouvreTour;
 		MutableDateTime startDay = new MutableDateTime(on.getStart());
 		MutableDateTime endDay = new MutableDateTime(on.getEnd());
-		MutableDateTime startWeek = new MutableDateTime(Months.getWeekStart(time));
-		MutableDateTime endWeek = new MutableDateTime(Months.getWeekStart(time));
-		endWeek.addDays(7);
 		
 		endDay.setMillisOfDay(0);
 		startDay.setMillisOfDay(0);
 		
-		if (startDay.isBefore(startWeek))
-			startDay=new MutableDateTime(startWeek);
-		if (endDay.isAfter(endWeek))
-			endDay = new MutableDateTime(endWeek);
-			
 		int index = 0;
-		while (!endDay.isBefore(startDay))
+		
+		for(int i = 0; i< 7; i++)
+		{
+			if(startDay.getDayOfYear()==daysOfWeekArray[i].getDisplayDate().getDayOfYear())
+			{
+				index = i;
+				break;
+			}
+		}
+		
+		while (index<7 && !endDay.isBefore(daysOfWeekArray[index].getDisplayDate()))
 		{
 			mLouvreTour = daysOfWeekArray[index];
 			try
@@ -274,7 +276,6 @@ public class WeekCalendar extends AbstractCalendar
 			{
 				// silently ignore
 			}
-			startDay.addDays(1);
 			index++;
 		}
 	}

@@ -121,6 +121,8 @@ public class LouvreTour extends JPanel
 	{
 		for (VanGoghPainting v : guides.values())
 		{
+			if(item instanceof Event && v.getEvent().getEventID().equals(((Event) item).getEventID()))
+				item = v.getEvent();
 			v.setSelected(false);
 		}
 		if (item instanceof Event)
