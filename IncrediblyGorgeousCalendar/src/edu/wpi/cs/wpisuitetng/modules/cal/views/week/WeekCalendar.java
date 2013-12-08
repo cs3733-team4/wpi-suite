@@ -218,7 +218,13 @@ public class WeekCalendar extends AbstractCalendar
 	@Override
 	public void select(Displayable item)
 	{
-		// What are we doing for selection? Going to the dayview or going to that event?
-		//current.select(item);		
+		sun.select(item);	
+		mon.select(item);	
+		tue.select(item);	
+		wed.select(item);	
+		thu.select(item);	
+		fri.select(item);	
+		sat.select(item);	
+		
 	}
 }
