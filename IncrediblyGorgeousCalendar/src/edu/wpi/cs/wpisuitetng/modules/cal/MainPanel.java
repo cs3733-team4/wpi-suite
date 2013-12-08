@@ -174,7 +174,6 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		centerPanelBottom.setLayout(new BorderLayout());
 		centerPanelBottom.add(mCalendar, BorderLayout.CENTER);
 		
-		
 		// Add top bar and monthly calendar to center panel
 		centerPanel.setLayout(new BorderLayout());
 		centerPanel.setBorder(new EmptyBorder(5, 5, 5, 5));

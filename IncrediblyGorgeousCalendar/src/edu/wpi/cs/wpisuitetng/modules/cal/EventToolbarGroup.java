@@ -53,7 +53,7 @@ public class EventToolbarGroup extends ToolbarGroupView {
 			        button.addActionListener(new ActionListener() {  
 			        	public void actionPerformed(ActionEvent e) {  
 			        		DocumentMainPanel.getInstance().setVisible(!DocumentMainPanel.getInstance().isVisible());
-			        		DocumentMainPanel.getInstance().goToPage("file:/C:/Users/Brendan/Desktop/newDocs/CreatinganEvent.html");  
+			        		DocumentMainPanel.getInstance().goToPage("CreateanEvent.html");  
 			            }  
 			        });  
 			        panel.add(label);
@@ -120,8 +120,6 @@ public class EventToolbarGroup extends ToolbarGroupView {
 		    removeEventButton.setIcon(new ImageIcon(img));
 		} catch (IOException ex) {}
 
-		//eventContentPanel.add(addEventButton);
-		//eventContentPanel.add(removeEventButton);
 		this.getContent().add(addEventButton);
 		this.getContent().add(addCommitmentButton);
 	}

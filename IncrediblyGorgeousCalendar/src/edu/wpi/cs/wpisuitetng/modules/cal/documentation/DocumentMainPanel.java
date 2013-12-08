@@ -8,6 +8,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.swing.JEditorPane;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -18,21 +19,21 @@ import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddEventDisplay;
 
-public class DocumentMainPanel extends JPanel{
+public class DocumentMainPanel extends JFrame{
 
     private JEditorPane webPage;
     private JScrollPane scroll;
     private URL url;
+    private String serverLocation = "http://users.wpi.edu/~bkmcleod/newDocs/";
     private static DocumentMainPanel instance;
-    public DocumentMainPanel()
+    private DocumentMainPanel()
     {
     	super();
     	this.setLayout(new BorderLayout());
-    	 //set the url
+    	
         try {
         	
-            url = new URL("file:///C:/Users/Brendan/Desktop/newDocs/GettingStarted.html");
-            //url = new URL("file:///C:/Users/Brendan/Desktop/newDocs/YOCO Calendar.html");
+            url = new URL(serverLocation + "Introduction.html");
         }
         catch(MalformedURLException mue) {
             JOptionPane.showMessageDialog(null,mue);
@@ -48,6 +49,8 @@ public class DocumentMainPanel extends JPanel{
         catch(IOException ioe) {
             JOptionPane.showMessageDialog(null,ioe);
         }
+        
+        
         //create the scroll pane and add the JEditorPane to it.
         scroll = new JScrollPane(webPage);
         scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -59,13 +62,7 @@ public class DocumentMainPanel extends JPanel{
             public void hyperlinkUpdate(HyperlinkEvent e) {
                 if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED)
                       	try {
-                      			if (e.getURL().toString().contains("OpenNewEventWindow"))
-                      			{
-                      				System.out.println("Action for new Event");
-                      				AddEventDisplay ned = new AddEventDisplay();
-                    				ned.setTabId(MainPanel.getInstance().addTopLevelTab(ned, "New Event", true));
-                      			}
-                      			else
+                      			if (!doAction(e.getURL().toString()))
                       			{
                       				webPage.setPage(e.getURL());
                       				System.out.println(e.getURL().toString());
@@ -78,6 +75,29 @@ public class DocumentMainPanel extends JPanel{
                 });//end HyperlinkListener
         this.add(scroll, BorderLayout.CENTER);
     }
+    
+    private boolean doAction(String actionPath)
+    {
+    	if (actionPath.contains("#OpenNewEventWindow"))
+		{
+			System.out.println("Action for new Event");
+			AddEventDisplay ned = new AddEventDisplay();
+			ned.setTabId(MainPanel.getInstance().addTopLevelTab(ned, "New Event", true));
+			return true;
+		}
+    	else if (actionPath.contains("#SaveNewEvent"))
+		{
+    		if (MainPanel.getInstance().getSelectedComponent() instanceof AddEventDisplay)
+    			System.out.println("Could try to save a new event!!");
+			return true;
+		}
+    	return false;
+    }
+    
+    /**
+     * Allows for singleton of DocumentMainPanel
+     * @return the only existing instance of DocumentMainPanel
+     */
     public static DocumentMainPanel getInstance()
 	{
 		if (instance == null)
@@ -92,17 +112,21 @@ public class DocumentMainPanel extends JPanel{
     {
     	super.setVisible(vis);
     	if (vis)
-    		this.setPreferredSize(new Dimension(200, 1000));
+    		this.setSize(800, 600);
     }
-    public void goToPage(String Page)
+    
+    /**
+     * Navigates the documentation view to a specific page
+     * @param page the HTML page to navigate to. DO NOT INCLUDE THE SERVER PATH!!!!
+     */
+    public void goToPage(String page)
     {
     	try {
-			webPage.setPage(new URL(Page));
+			webPage.setPage(new URL(serverLocation + page));
+			System.out.println(webPage.getPage().toString());
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     	
