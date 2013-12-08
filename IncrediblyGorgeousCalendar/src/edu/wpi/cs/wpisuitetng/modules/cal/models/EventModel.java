@@ -66,6 +66,10 @@ public class EventModel {
 		return ServerManager.post("cal/events", toUpdate.toJSON());
 	}
 	
+	public boolean deleteEvent(Event toRemove)
+	{
+		return ServerManager.delete("cal/events", "filter-event-by-uuid", toRemove.getEventID().toString());
+	}
 	
 
 }

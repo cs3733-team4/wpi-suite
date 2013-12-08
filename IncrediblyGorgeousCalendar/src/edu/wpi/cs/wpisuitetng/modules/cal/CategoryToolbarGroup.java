@@ -15,6 +15,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -30,7 +31,7 @@ public class CategoryToolbarGroup extends ToolbarGroupView {
 	
 	public CategoryToolbarGroup(final MainPanel mMainPanel) {
 		super("Categories");
-		setPreferredWidth(150);
+		this.content.setLayout(new BoxLayout(content, BoxLayout.X_AXIS));
 		
 		editCategory = new JButton("<html>Manage<br/>Categories</html>");
 		editCategory.addActionListener(new ActionListener(){
