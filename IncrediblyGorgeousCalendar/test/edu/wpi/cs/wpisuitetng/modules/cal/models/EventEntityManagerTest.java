@@ -14,9 +14,10 @@ import static org.junit.Assert.*;
 
 import java.util.HashSet;
 
+import org.junit.After;
 import org.junit.Test;
-
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
@@ -30,10 +31,10 @@ public class EventEntityManagerTest {
 
         MockData db = new MockData(new HashSet<Object>());
            
-        DateTime one=new DateTime(2000,1,1,1,30);   // Datetime at Jan 1st, 2000: 1:30
-        DateTime two=new DateTime(2000,1,2,2,30);   // Datetime at Jan 2nd, 2000: 2:30
-        DateTime three=new DateTime(2000,1,3,3,30); // Datetime at Jan 3rd, 2000: 3:30
-        DateTime four=new DateTime(2000,1,4,4,30);  // Datetime at Jan 4th, 2000: 4:30
+        DateTime one=new DateTime(2000,1,1,1,30, DateTimeZone.UTC);   // Datetime at Jan 1st, 2000: 1:30
+        DateTime two=new DateTime(2000,1,2,2,30, DateTimeZone.UTC);   // Datetime at Jan 2nd, 2000: 2:30
+        DateTime three=new DateTime(2000,1,3,3,30, DateTimeZone.UTC); // Datetime at Jan 3rd, 2000: 3:30
+        DateTime four=new DateTime(2000,1,4,4,30, DateTimeZone.UTC);  // Datetime at Jan 4th, 2000: 4:30
         
         
         
@@ -50,7 +51,12 @@ public class EventEntityManagerTest {
         Project p=new Project("p","26");
         User u1 = new User("User1", "U1", null, 0);
         Session ses1 = new Session(u1, p, "26");
-           
+        
+        @After
+        public void resetDB()
+        {
+        	db = new MockData(new HashSet<Object>());
+        }
         
         
         @Test

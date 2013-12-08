@@ -58,6 +58,7 @@ public class CommitmentUIValidationTest
 	public void testIfSaveButtonIsDisabledWithProperNameButNoDate() throws NoSuchFieldException, SecurityException, IllegalArgumentException,
 			IllegalAccessException
 	{
+		ff.date.setValue("");
 		fff.setText("Test Commitment");
 		assertFalse("Commitment is not saveable with no date and time", mCommitDisplay.isSaveable());
 	}
