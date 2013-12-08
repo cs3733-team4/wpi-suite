@@ -38,9 +38,8 @@ public class CommitmentUIValidationTest {
 		f.setAccessible(true);
 			
 		((DatePicker) f.get(mCommitDisplay)).date.setValue("11/20/13");
-		//TODO: Uncomment these after commitment times are implemented
-		//((DatePicker) f.get(mCommitDisplay)).time.setValue("03:00");
-		//((DatePicker) f.get(mCommitDisplay)).AMPM.setSelectedItem("PM");
+		((DatePicker) f.get(mCommitDisplay)).time.setValue("03:00");
+		((DatePicker) f.get(mCommitDisplay)).AMPM.setSelectedItem("PM");
 		
 		assertFalse("Commitment is not saveable with no Commitment name", mCommitDisplay.isSaveable());
 	}
@@ -104,9 +103,8 @@ public class CommitmentUIValidationTest {
 		((JTextField) ff.get(mCommitDisplay)).setText("Test Commitment");
 		
 		((DatePicker) f.get(mCommitDisplay)).date.setValue("11/20/13");
-		//TODO: Once times are added, uncomment to test
-		//((DatePicker) f.get(mCommitDisplay)).time.setValue("03:00");
-		//((DatePicker) f.get(mCommitDisplay)).AMPM.setSelectedItem("PM");
+		((DatePicker) f.get(mCommitDisplay)).time.setValue("03:00");
+		((DatePicker) f.get(mCommitDisplay)).AMPM.setSelectedItem("PM");
 				
 		assertTrue("Commitment is saveable with proper input", mCommitDisplay.isSaveable());
 	}
