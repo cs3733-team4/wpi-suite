@@ -76,13 +76,13 @@ public class LouvreTour extends JPanel
 	public void setEvents(List<Event> events, DateTime displayedDay)
 	{
 		List<VanGoghPainting> gallery = CERN.createEventsReallyNicely(events, displayedDay);
+		this.displayDate = displayedDay;
 		removeAll();
 		guides.clear();
 		for (VanGoghPainting vanGoghPainting : gallery)
 		{
 			guides.put(vanGoghPainting.event, vanGoghPainting);
 			add(vanGoghPainting); // priceless
-			this.displayDate = vanGoghPainting.event.getDate();
 		}
 		revalidate();
 	}
@@ -131,6 +131,10 @@ public class LouvreTour extends JPanel
 				mona.setSelected(true);
 			}
 		}		
+	}
+
+	public DateTime getDisplayDate() {
+		return displayDate;
 	}
 	
 // //TODO: fix so that we can easily re-compute a part of the events stack	

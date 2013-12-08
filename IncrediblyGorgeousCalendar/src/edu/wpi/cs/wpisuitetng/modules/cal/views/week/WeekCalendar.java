@@ -205,13 +205,20 @@ public class WeekCalendar extends AbstractCalendar
 				selectEvents((Event)lastSelection, null);
 			else
 			{
-				/*
-				day = days.get(lastSelection.getDate().getDayOfYear());
+				day = null;
+				for(LouvreTour lt : daysOfWeekArray)
+				{
+					if(lastSelection.getDate().getDayOfYear()==lt.getDisplayDate().getDayOfYear())
+					{
+						day = lt;
+						break;
+					}
+				}
+
 				if (day != null)
 				{
 					day.select(null);
 				}
-				*/
 			}
 		}
 
@@ -219,13 +226,20 @@ public class WeekCalendar extends AbstractCalendar
 			selectEvents((Event)item, item);
 		else
 		{
-			/*
-			day = days.get(oitem.getDate().getDayOfYear());
+			day = null;
+			for(LouvreTour lt : daysOfWeekArray)
+			{
+				if(oitem.getDate().getDayOfYear()==lt.getDisplayDate().getDayOfYear())
+				{
+					day = lt;
+					break;
+				}
+			}
+
 			if (day != null)
 			{
 				day.select(item);
 			}
-			*/
 		}
 		lastSelection = item;
 	}
