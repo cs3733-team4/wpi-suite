@@ -30,7 +30,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.AddEvent;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.DisplayableEditorView;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -42,7 +42,7 @@ import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class AddEventDisplay extends AddEvent
+public class AddEventDisplay extends DisplayableEditorView
 {
 	
 	private int tabid;

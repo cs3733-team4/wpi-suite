@@ -33,7 +33,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 /**
  * The UI for AddEvent
  */
-public class AddEvent extends JPanel
+public class DisplayableEditorView extends JPanel
 {
 	protected JTextField nameTextField, participantsTextField;
 	protected final ButtonGroup buttonGroup = new ButtonGroup();
@@ -45,7 +45,7 @@ public class AddEvent extends JPanel
 	protected JComboBox<Category> eventCategoryPicker;
 	protected JButton cancelButton, saveButton;
 
-	public AddEvent()
+	public DisplayableEditorView()
 	{
 		nameTextField = new JTextField();
 		nameTextField.setColumns(30);
