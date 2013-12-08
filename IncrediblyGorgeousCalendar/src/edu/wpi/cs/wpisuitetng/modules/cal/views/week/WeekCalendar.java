@@ -35,6 +35,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.DayGridLabel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.france.LouvreTour;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthDay;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
 
@@ -44,6 +45,10 @@ public class WeekCalendar extends AbstractCalendar
 	private DateTime time;
 	private MainPanel mainPanel;
 	private LouvreTour sun, mon, tue, wed, thu, fri, sat;
+	
+	private Displayable lastSelection;
+	
+	private LouvreTour[] daysOfWeekArray = {sun, mon, tue, wed, thu, fri, sat};
 	
 	private JPanel dayHolderPanel = new JPanel();
 	private JPanel dayGrid = new JPanel();
@@ -85,44 +90,16 @@ public class WeekCalendar extends AbstractCalendar
 		this.removeAll();
 
 		MutableDateTime increment=new MutableDateTime(Months.getWeekStart(time));
-
-		this.sun = new LouvreTour();
-		this.sun.setEvents(getVisibleEvents(increment.toDateTime()), increment.toDateTime());
-		this.sun.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 1, Colors.BORDER));
-		increment.addDays(1);
-		this.mon = new LouvreTour();
-		this.mon.setEvents(getVisibleEvents(increment.toDateTime()), increment.toDateTime());
-		this.mon.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 1, Colors.BORDER));
-		increment.addDays(1);
-		this.tue = new LouvreTour();
-		this.tue.setEvents(getVisibleEvents(increment.toDateTime()), increment.toDateTime());
-		this.tue.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 1, Colors.BORDER));
-		increment.addDays(1);
-		this.wed = new LouvreTour();
-		this.wed.setEvents(getVisibleEvents(increment.toDateTime()), increment.toDateTime());
-		this.wed.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 1, Colors.BORDER));
-		increment.addDays(1);
-		this.thu = new LouvreTour();
-		this.thu.setEvents(getVisibleEvents(increment.toDateTime()), increment.toDateTime());
-		this.thu.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 1, Colors.BORDER));
-		increment.addDays(1);
-		this.fri = new LouvreTour();
-		this.fri.setEvents(getVisibleEvents(increment.toDateTime()), increment.toDateTime());
-		this.fri.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 1, Colors.BORDER));
-		increment.addDays(1);
-		this.sat = new LouvreTour();
-		this.sat.setEvents(getVisibleEvents(increment.toDateTime()), increment.toDateTime());
-		this.sat.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 1, Colors.BORDER));
-
-		//add days to grid
-		this.dayGrid.add(this.sun);
-		this.dayGrid.add(this.mon);
-		this.dayGrid.add(this.tue);
-		this.dayGrid.add(this.wed);
-		this.dayGrid.add(this.thu);
-		this.dayGrid.add(this.fri);
-		this.dayGrid.add(this.sat);
 		
+		for(int index=0;index<7;index++)
+		{
+			this.daysOfWeekArray[index] = new LouvreTour();
+			this.daysOfWeekArray[index].setEvents(getVisibleEvents(increment.toDateTime()), increment.toDateTime());
+			this.daysOfWeekArray[index].setBorder(BorderFactory.createMatteBorder(0, 1, 0, 1, Colors.BORDER));
+			this.dayGrid.add(this.daysOfWeekArray[index]);
+			increment.addDays(1);
+		}
+
 		//add titles to grid
 		this.dayTitleGrid.removeAll();
 		this.dayTitleGrid.add(new JLabel("Sun", JLabel.CENTER));
@@ -196,13 +173,10 @@ public class WeekCalendar extends AbstractCalendar
 		this.time = newTime;
 		this.generateDay();
 
-		this.sun.repaint();
-		this.mon.repaint();
-		this.tue.repaint();
-		this.wed.repaint();
-		this.thu.repaint();
-		this.fri.repaint();
-		this.sat.repaint();
+		for(int index=0;index<7;index++)
+		{
+			this.daysOfWeekArray[index].repaint();
+		}
 		
 		mainPanel.revalidate();
 		mainPanel.repaint();
@@ -218,13 +192,76 @@ public class WeekCalendar extends AbstractCalendar
 	@Override
 	public void select(Displayable item)
 	{
-		sun.select(item);	
-		mon.select(item);	
-		tue.select(item);	
-		wed.select(item);	
-		thu.select(item);	
-		fri.select(item);	
-		sat.select(item);	
+		Displayable oitem = item;
+		LouvreTour day;
+		if (item == null && lastSelection == null)
+			return;
+		if (item == null)
+			oitem = lastSelection;
 		
+		if (lastSelection != null)
+		{
+			if (lastSelection instanceof Event)
+				selectEvents((Event)lastSelection, null);
+			else
+			{
+				/*
+				day = days.get(lastSelection.getDate().getDayOfYear());
+				if (day != null)
+				{
+					day.select(null);
+				}
+				*/
+			}
+		}
+
+		if (item != null && item instanceof Event)
+			selectEvents((Event)item, item);
+		else
+		{
+			/*
+			day = days.get(oitem.getDate().getDayOfYear());
+			if (day != null)
+			{
+				day.select(item);
+			}
+			*/
+		}
+		lastSelection = item;
+	}
+	
+	private void selectEvents(Event on, Displayable setTo)
+	{
+		// TODO: refactor this pattern
+		LouvreTour mLouvreTour;
+		MutableDateTime startDay = new MutableDateTime(on.getStart());
+		MutableDateTime endDay = new MutableDateTime(on.getEnd());
+		MutableDateTime startWeek = new MutableDateTime(Months.getWeekStart(time));
+		MutableDateTime endWeek = new MutableDateTime(Months.getWeekStart(time));
+		endWeek.addDays(7);
+		
+		endDay.setMillisOfDay(0);
+		startDay.setMillisOfDay(0);
+		
+		if (startDay.isBefore(startWeek))
+			startDay=new MutableDateTime(startWeek);
+		if (endDay.isAfter(endWeek))
+			endDay = new MutableDateTime(endWeek);
+			
+		int index = 0;
+		while (!endDay.isBefore(startDay))
+		{
+			mLouvreTour = daysOfWeekArray[index];
+			try
+			{
+				mLouvreTour.select(setTo);
+			}
+			catch(NullPointerException ex)
+			{
+				// silently ignore
+			}
+			startDay.addDays(1);
+			index++;
+		}
 	}
 }
