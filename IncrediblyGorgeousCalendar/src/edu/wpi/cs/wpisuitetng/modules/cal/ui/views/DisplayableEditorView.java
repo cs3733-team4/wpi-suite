@@ -122,11 +122,11 @@ public class DisplayableEditorView extends JPanel
 
 		cancelButton = new JButton("Cancel");
 		cancelButton.setMinimumSize(new Dimension(80, 0));
-		this.add(cancelButton, "flowx,cell 1 7,alignx right,aligny bottom tag cancel");
+		this.add(cancelButton, "flowx,cell 1 7,alignx right,aligny bottom,tag cancel");
 
 		saveButton = new JButton("Save");
 		saveButton.setMinimumSize(new Dimension(80, 0));
-		this.add(saveButton, "cell 1 7,alignx right,aligny bottom tag ok");
+		this.add(saveButton, "cell 1 7,alignx right,aligny bottom,tag ok");
 	}
 
 	private class CategoryComboBoxRenderer implements ListCellRenderer<Category>
