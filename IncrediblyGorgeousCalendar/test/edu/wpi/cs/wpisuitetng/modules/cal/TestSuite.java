@@ -13,24 +13,34 @@ import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthDayTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthItemTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.MonthsTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.GoToPanelTest;
+import edu.wpi.cs.wpisuitetng.modules.cal.navigation.SidebarTabbedPaneTest;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.CommitmentUIValidationTest;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.DatePickerTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.EventUIValidationTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.CalendarNavigationModuleTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.year.YearCalendarTest;
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
 
-
 /**
  * Test suite for running all test classes.
- *
+ * 
  */
 
-
 @RunWith(Suite.class)
-@SuiteClasses({CalendarNavigationModuleTest.class, EventEntityManagerTest.class, GoToPanelTest.class, EventUIValidationTest.class, CommitmentEntityManagerTest.class, MonthItemTest.class, MonthCalendarTest.class, YearCalendarTest.class, MonthDayTest.class, MonthsTest.class})
+@SuiteClasses({
+	MonthsTest.class,
+	CommitmentEntityManagerTest.class, EventEntityManagerTest.class,
+	CalendarNavigationModuleTest.class, GoToPanelTest.class, SidebarTabbedPaneTest.class,
+	MonthCalendarTest.class, MonthDayTest.class, MonthItemTest.class,
+	CommitmentUIValidationTest.class, DatePickerTest.class,
+	EventUIValidationTest.class,
+	YearCalendarTest.class })
 public class TestSuite
 {
-	@BeforeClass public static void setUpClass() {
+	@BeforeClass
+	public static void setUpClass()
+	{
 		MockNetwork mn = new MockNetwork();
 		mn.addUser("testing11");
 		mn.addUser("testing12");
@@ -42,11 +52,13 @@ public class TestSuite
 		// TODO: add more sessions
 		mn.loginSession("default");
 		Network.initNetwork(mn);
-		Network.getInstance().setDefaultNetworkConfiguration(
-				new NetworkConfiguration("http://wpisuitetng"));
+		Network.getInstance().setDefaultNetworkConfiguration(new NetworkConfiguration("http://wpisuitetng"));
 		MainPanel.getInstance().finishInit();
-    }
-    @AfterClass public static void tearDownClass() {
-        // Common cleanup for all tests
-    }
+	}
+
+	@AfterClass
+	public static void tearDownClass()
+	{
+		// Common cleanup for all tests
+	}
 }
