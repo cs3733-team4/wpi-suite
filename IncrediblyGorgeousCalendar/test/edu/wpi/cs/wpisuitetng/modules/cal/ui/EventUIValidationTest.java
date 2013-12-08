@@ -8,197 +8,174 @@ import java.text.ParseException;
 import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 
+import org.junit.Before;
 import org.junit.Test;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.ReflectUtils;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddEventDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.DatePicker;
 
-public class EventUIValidationTest {
-private AddEventDisplay mEventDisplay = new AddEventDisplay();
-	
+public class EventUIValidationTest
+{
+	private AddEventDisplay mEventDisplay = new AddEventDisplay();
+
+	DatePicker f;
+
+	DatePicker ff;
+
+	JTextField fff;
+
+	@Before
+	public void setup() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException
+	{
+		f = ReflectUtils.getFieldValue(mEventDisplay, "startTimeDatePicker");
+		ff = ReflectUtils.getFieldValue(mEventDisplay, "endTimeDatePicker");
+		fff = ReflectUtils.getFieldValue(mEventDisplay, "nameTextField");
+	}
+
 	@Test
-	public void testIfEventDisplayIsNonNull() {
+	public void testIfEventDisplayIsNonNull()
+	{
 		assertNotNull("Make sure it actually runs", mEventDisplay);
 	}
-	
+
 	@Test
-	public void testIfSaveButtonStartsDisabled() {
+	public void testIfSaveButtonStartsDisabled()
+	{
 		assertFalse("Event is not saveable by default", mEventDisplay.isSaveable());
 	}
-	
+
 	@Test
-	public void testIfSaveButtonIsEnabledWithProperInput() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+	public void testIfSaveButtonIsEnabledWithProperInput() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException
+	{
 		setUpAndTestValidEventFields();
 	}
-	
+
 	@Test
-	public void testIfSaveButtonIsDisabledWithProperDateButNoName() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		
-		Field f= mEventDisplay.getClass().getDeclaredField("startTimeDatePicker");
-		f.setAccessible(true);
-		
-		Field ff= mEventDisplay.getClass().getDeclaredField("endTimeDatePicker");
-		ff.setAccessible(true);
-		
-		((DatePicker) f.get(mEventDisplay)).date.setValue("11/20/13");
-		((DatePicker) f.get(mEventDisplay)).time.setValue("03:00");
-		((DatePicker) f.get(mEventDisplay)).AMPM.setSelectedItem("PM");
-		
-		((DatePicker) ff.get(mEventDisplay)).date.setValue("11/20/13");
-		((DatePicker) ff.get(mEventDisplay)).time.setValue("04:00");
-		((DatePicker) ff.get(mEventDisplay)).AMPM.setSelectedItem("PM");
-		
+	public void testIfSaveButtonIsDisabledWithProperDateButNoName() throws NoSuchFieldException, SecurityException, IllegalArgumentException,
+			IllegalAccessException
+	{
+
+		f.date.setValue("11/20/13");
+		f.time.setValue("03:00");
+		f.AMPM.setSelectedItem("PM");
+
+		ff.date.setValue("11/20/13");
+		ff.time.setValue("04:00");
+		ff.AMPM.setSelectedItem("PM");
+
 		assertFalse("Event is not saveable with no event name", mEventDisplay.isSaveable());
 	}
-	
+
 	@Test
-	public void testIfSaveButtonIsDisabledWithProperNameButNoStartDate() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		
-		Field ff= mEventDisplay.getClass().getDeclaredField("endTimeDatePicker");
-		ff.setAccessible(true);
-		
-		Field fff= mEventDisplay.getClass().getDeclaredField("nameTextField");
-		fff.setAccessible(true);
-		
-		((JTextField) fff.get(mEventDisplay)).setText("Test Event");
-		
-		((DatePicker) ff.get(mEventDisplay)).date.setValue("11/20/13");
-		((DatePicker) ff.get(mEventDisplay)).time.setValue("04:00");
-		((DatePicker) ff.get(mEventDisplay)).AMPM.setSelectedItem("PM");
-		
+	public void testIfSaveButtonIsDisabledWithProperNameButNoStartDate() throws NoSuchFieldException, SecurityException, IllegalArgumentException,
+			IllegalAccessException
+	{
+
+		fff.setText("Test Event");
+
+		ff.date.setValue("11/20/13");
+		ff.time.setValue("04:00");
+		ff.AMPM.setSelectedItem("PM");
+
 		assertFalse("Event is not saveable with no start date", mEventDisplay.isSaveable());
 	}
-	
+
 	@Test
-	public void testIfSaveButtonIsDisabledWithProperNameButNoEndDate() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		
-		Field f= mEventDisplay.getClass().getDeclaredField("startTimeDatePicker");
-		f.setAccessible(true);
-		
-		Field fff= mEventDisplay.getClass().getDeclaredField("nameTextField");
-		fff.setAccessible(true);
-		
-		((JTextField) fff.get(mEventDisplay)).setText("Test Event");
-		
-		((DatePicker) f.get(mEventDisplay)).date.setValue("11/20/13");
-		((DatePicker) f.get(mEventDisplay)).time.setValue("03:00");
-		((DatePicker) f.get(mEventDisplay)).AMPM.setSelectedItem("PM");
-		
+	public void testIfSaveButtonIsDisabledWithProperNameButNoEndDate() throws NoSuchFieldException, SecurityException, IllegalArgumentException,
+			IllegalAccessException
+	{
+
+		fff.setText("Test Event");
+
+		f.date.setValue("11/20/13");
+		f.time.setValue("03:00");
+		f.AMPM.setSelectedItem("PM");
+
 		assertFalse("Event is not saveable with no end date", mEventDisplay.isSaveable());
 	}
-	
+
 	@Test
-	public void testIfSaveButtonIsDisabledWithStartDateAfterEndDate() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		
-		Field f= mEventDisplay.getClass().getDeclaredField("startTimeDatePicker");
-		f.setAccessible(true);
-		
-		Field ff= mEventDisplay.getClass().getDeclaredField("endTimeDatePicker");
-		ff.setAccessible(true);
-		
-		Field fff= mEventDisplay.getClass().getDeclaredField("nameTextField");
-		fff.setAccessible(true);
-		
-		((JTextField) fff.get(mEventDisplay)).setText("Test Event");
-		
-		((DatePicker) f.get(mEventDisplay)).date.setValue("11/20/13");
-		((DatePicker) f.get(mEventDisplay)).time.setValue("05:00");
-		((DatePicker) f.get(mEventDisplay)).AMPM.setSelectedItem("PM");
-		
-		((DatePicker) ff.get(mEventDisplay)).date.setValue("11/20/13");
-		((DatePicker) ff.get(mEventDisplay)).time.setValue("04:00");
-		((DatePicker) ff.get(mEventDisplay)).AMPM.setSelectedItem("PM");
-		
+	public void testIfSaveButtonIsDisabledWithStartDateAfterEndDate() throws NoSuchFieldException, SecurityException, IllegalArgumentException,
+			IllegalAccessException
+	{
+
+		fff.setText("Test Event");
+
+		f.date.setValue("11/20/13");
+		f.time.setValue("05:00");
+		f.AMPM.setSelectedItem("PM");
+
+		ff.date.setValue("11/20/13");
+		ff.time.setValue("04:00");
+		ff.AMPM.setSelectedItem("PM");
+
 		assertFalse("Event is not saveable with start date after end date", mEventDisplay.isSaveable());
 	}
-	
-	
-	
-	
-	// We should change / remove this test as soon as they implement multi-day events
+
 	@Test
-	public void testIfSaveButtonIsDisabledOnMultidayEvent() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		
-		Field f= mEventDisplay.getClass().getDeclaredField("startTimeDatePicker");
-		f.setAccessible(true);
-		
-		Field ff= mEventDisplay.getClass().getDeclaredField("endTimeDatePicker");
-		ff.setAccessible(true);
-		
-		Field fff= mEventDisplay.getClass().getDeclaredField("nameTextField");
-		fff.setAccessible(true);
-		
-		((JTextField) fff.get(mEventDisplay)).setText("Test Event");
-		
-		((DatePicker) f.get(mEventDisplay)).date.setValue("11/20/13");
-		((DatePicker) f.get(mEventDisplay)).time.setValue("05:00");
-		((DatePicker) f.get(mEventDisplay)).AMPM.setSelectedItem("PM");
-		
-		((DatePicker) ff.get(mEventDisplay)).date.setValue("11/21/13");
-		((DatePicker) ff.get(mEventDisplay)).time.setValue("04:00");
-		((DatePicker) ff.get(mEventDisplay)).AMPM.setSelectedItem("PM");
-		
-		assertFalse("Event is not saveable with multiday event", mEventDisplay.isSaveable());
+	public void testIfSaveButtonIsDisabledOnMultidayEvent() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException
+	{
+
+		fff.setText("Test Event");
+
+		f.date.setValue("11/20/13");
+		f.time.setValue("05:00");
+		f.AMPM.setSelectedItem("PM");
+
+		ff.date.setValue("11/21/13");
+		ff.time.setValue("04:00");
+		ff.AMPM.setSelectedItem("PM");
+
+		assertTrue("Event is saveable with multiday event", mEventDisplay.isSaveable());
 	}
-	
+
 	@Test
-	public void testIfSaveButtonIsNoLongerEnabledAfterNameDeletion() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+	public void testIfSaveButtonIsNoLongerEnabledAfterNameDeletion() throws NoSuchFieldException, SecurityException, IllegalArgumentException,
+			IllegalAccessException
+	{
 		setUpAndTestValidEventFields();
 
-		Field fff= mEventDisplay.getClass().getDeclaredField("nameTextField");
-		fff.setAccessible(true);
-		
-		((JTextField) fff.get(mEventDisplay)).setText("");
-		
+		fff.setText("");
+
 		assertFalse("Event is no longer saveable", mEventDisplay.isSaveable());
 	}
-	
+
 	@Test
-	public void testIfSaveButtonIsNoLongerEnabledAfterDateDeletion() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+	public void testIfSaveButtonIsNoLongerEnabledAfterDateDeletion() throws NoSuchFieldException, SecurityException, IllegalArgumentException,
+			IllegalAccessException
+	{
 		setUpAndTestValidEventFields();
-		
-		Field f= mEventDisplay.getClass().getDeclaredField("startTimeDatePicker");
-		f.setAccessible(true);
-		
-		((DatePicker) f.get(mEventDisplay)).date.setValue("11/21/13");
-		
+
+		f.date.setValue("11/21/13");
+
 		assertFalse("Event is no longer saveable", mEventDisplay.isSaveable());
 	}
-	
+
 	@Test
-	public void testIfSaveButtonIsDisabledWithOnlySpacesForEventName() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+	public void testIfSaveButtonIsDisabledWithOnlySpacesForEventName() throws NoSuchFieldException, SecurityException, IllegalArgumentException,
+			IllegalAccessException
+	{
 		setUpAndTestValidEventFields();
-		
-		Field fff= mEventDisplay.getClass().getDeclaredField("nameTextField");
-		fff.setAccessible(true);
-		
-		((JTextField) fff.get(mEventDisplay)).setText("    ");
-		
+
+		fff.setText("    ");
+
 		assertFalse("Event is no longer saveable", mEventDisplay.isSaveable());
 	}
-	
+
 	private void setUpAndTestValidEventFields() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException
 	{
-		
-		Field f= mEventDisplay.getClass().getDeclaredField("startTimeDatePicker");
-		f.setAccessible(true);
-		
-		Field ff= mEventDisplay.getClass().getDeclaredField("endTimeDatePicker");
-		ff.setAccessible(true);
-		
-		Field fff= mEventDisplay.getClass().getDeclaredField("nameTextField");
-		fff.setAccessible(true);
-		
-		((JTextField) fff.get(mEventDisplay)).setText("Test Event");
-		
-		((DatePicker) f.get(mEventDisplay)).date.setValue("11/20/13");
-		((DatePicker) f.get(mEventDisplay)).time.setValue("03:00");
-		((DatePicker) f.get(mEventDisplay)).AMPM.setSelectedItem("PM");
-		
-		((DatePicker) ff.get(mEventDisplay)).date.setValue("11/20/13");
-		((DatePicker) ff.get(mEventDisplay)).time.setValue("11:00");
-		((DatePicker) ff.get(mEventDisplay)).AMPM.setSelectedItem("PM");
-		
+
+		fff.setText("Test Event");
+
+		f.date.setValue("11/20/13");
+		f.time.setValue("03:00");
+		f.AMPM.setSelectedItem("PM");
+
+		ff.date.setValue("11/20/13");
+		ff.time.setValue("11:00");
+		ff.AMPM.setSelectedItem("PM");
+
 		assertTrue("Event is saveable with proper input", mEventDisplay.isSaveable());
 	}
 }
