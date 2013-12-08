@@ -20,7 +20,7 @@ public class MainCalendarNavigationTest {
 
 	MainPanel dummyPanel;
 	
-	MainCalendarNavigation mc = new MainCalendarNavigation(dummyPanel ,new MonthCalendar(new DateTime(), EventModel.getInstance(), new CommitmentModel()));
+	MainCalendarNavigation mc = new MainCalendarNavigation(dummyPanel ,new MonthCalendar(new DateTime(), EventModel.getInstance(), CommitmentModel.getInstance()));
 	
 	@Test
 	public void testMainCalendarFocused() {
