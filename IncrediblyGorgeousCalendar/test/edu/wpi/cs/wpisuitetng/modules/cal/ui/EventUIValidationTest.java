@@ -2,10 +2,6 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui;
 
 import static org.junit.Assert.*;
 
-import java.lang.reflect.Field;
-import java.text.ParseException;
-
-import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 
 import org.junit.Before;

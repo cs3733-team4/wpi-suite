@@ -9,37 +9,18 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.ui;
 
-import javax.swing.Box.Filler;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.JComboBox;
-import javax.swing.JPanel;
-import javax.swing.BoxLayout;
 import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.JTextArea;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-
 import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.DisplayableEditorView;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Component;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashMap;
 import java.util.UUID;
 
 public class AddEventDisplay extends DisplayableEditorView
@@ -54,6 +35,7 @@ public class AddEventDisplay extends DisplayableEditorView
 	// Constructor for edit event.
 	public AddEventDisplay(Event mEvent)
 	{
+		super(true);
 		this.eventToEdit = mEvent;
 		this.isEditingEvent = true;
 		this.existingEventID = eventToEdit.getEventID();
@@ -66,6 +48,7 @@ public class AddEventDisplay extends DisplayableEditorView
 	// Constructor for create new event.
 	public AddEventDisplay()
 	{
+		super(true);
 		this.isEditingEvent = false;
 		setUpUI();
 		setUpListeners();
@@ -98,11 +81,6 @@ public class AddEventDisplay extends DisplayableEditorView
 	 */
 	private void setUpUI()
 	{
-		this.eventCategoryPicker.addItem(Category.DEFUALT_CATEGORY);
-		for(Category c : CategoryModel.getInstance().getAllCategories())
-		{
-			this.eventCategoryPicker.addItem(c);
-		}
 		nameTextField.requestFocus();
 	}
 	

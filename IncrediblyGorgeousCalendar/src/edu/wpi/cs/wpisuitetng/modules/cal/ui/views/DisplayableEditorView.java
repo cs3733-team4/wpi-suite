@@ -27,6 +27,7 @@ import javax.swing.Box.Filler;
 
 import net.miginfocom.swing.MigLayout;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.DatePicker;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 
@@ -45,7 +46,7 @@ public class DisplayableEditorView extends JPanel
 	protected JComboBox<Category> eventCategoryPicker;
 	protected JButton cancelButton, saveButton;
 
-	public DisplayableEditorView()
+	public DisplayableEditorView(boolean showEnd)
 	{
 		nameTextField = new JTextField();
 		nameTextField.setColumns(30);
@@ -58,22 +59,27 @@ public class DisplayableEditorView extends JPanel
 
 		nameErrorLabel = new JLabel("Please name this event");
 		nameErrorLabel.setForeground(Color.RED);
+		nameErrorLabel.setVisible(false);
 		this.add(nameErrorLabel, "cell 1 0");
 
 		dateAndTimeLabel = new JLabel("When:");
 		this.add(dateAndTimeLabel, "cell 0 1,alignx right,aligny baseline");
 
 		endTimeDatePicker = new DatePicker(true, null);
-		startTimeDatePicker = new DatePicker(true, endTimeDatePicker);
+		startTimeDatePicker = new DatePicker(true, showEnd ? endTimeDatePicker : null);
 		this.add(startTimeDatePicker, "flowx,cell 1 1,alignx left,growy");
-
-		lblUntil = new JLabel("until");
-		this.add(lblUntil, "flowx,cell 1 1,alignx left,growy");
-
-		this.add(endTimeDatePicker, "flowx,cell 1 1,alignx left,growy");
+		
+		if (showEnd)
+		{
+			lblUntil = new JLabel("until");
+			this.add(lblUntil, "flowx,cell 1 1,alignx left,growy");
+	
+			this.add(endTimeDatePicker, "flowx,cell 1 1,alignx left,growy");
+		}
 
 		dateErrorLabel = new JLabel("Event can't start after it ends");
 		dateErrorLabel.setForeground(Color.RED);
+		dateErrorLabel.setVisible(false);
 		this.add(dateErrorLabel, "flowx,cell 1 1,alignx left,growy");
 
 		participantsLabel = new JLabel("Participants:");
@@ -88,6 +94,11 @@ public class DisplayableEditorView extends JPanel
 
 		eventCategoryPicker = new JComboBox<>();
 		eventCategoryPicker.setRenderer(new CategoryComboBoxRenderer());
+		this.eventCategoryPicker.addItem(Category.DEFUALT_CATEGORY);
+		for(Category c : CategoryModel.getInstance().getAllCategories())
+		{
+			this.eventCategoryPicker.addItem(c);
+		}
 
 		this.add(eventCategoryPicker, "cell 1 3,alignx left,aligny baseline");
 
@@ -99,6 +110,7 @@ public class DisplayableEditorView extends JPanel
 		this.add(rdbtnPersonal, "flowx,cell 1 4,alignx left,growy");
 
 		rdbtnTeam = new JRadioButton("Team");
+		rdbtnTeam.setSelected(true);
 		buttonGroup.add(rdbtnTeam);
 		this.add(rdbtnTeam, "cell 1 4");
 
