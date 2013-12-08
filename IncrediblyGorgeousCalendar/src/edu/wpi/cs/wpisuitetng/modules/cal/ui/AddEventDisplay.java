@@ -22,6 +22,7 @@ import javax.swing.JTextArea;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
 import org.joda.time.DateTime;
 
@@ -29,6 +30,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.AddEvent;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -40,38 +42,13 @@ import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class AddEventDisplay extends JPanel
+public class AddEventDisplay extends AddEvent
 {
 	
 	private int tabid;
-	private JPanel nameLabelPanel;
-	private JPanel dateAndTimeLabelPane;
-	private JPanel dateAndTimePickerPane;
-	private JPanel participantsLabelPanel;
-	private JPanel participantsTextFieldPanel;
-	private JPanel descriptionTextFieldPanel;
-	private JPanel descriptionLabelPanel;
-	private JPanel submissionPanel;
-	private JLabel nameLabel;
-	private JLabel dateAndTimeLabel;
-	private JLabel participantsLabel;
-	private JLabel descriptionLabel;
-	private JPanel nameTextFieldPanel;
-	private JTextField nameTextField = new JTextField();
-	private JTextField participantsTextField = new JTextField();
-	private JTextArea descriptionTextArea = new JTextArea(5,35);
-	private DatePicker endTimeDatePicker = new DatePicker(true, null);
-	private DatePicker startTimeDatePicker = new DatePicker(true, endTimeDatePicker);
-	private JCheckBox teamProjectCheckBox = new JCheckBox("Project Event");
-	private JLabel errorText;
-	private JLabel nameErrorLabel;
-	private JLabel dateErrorLabel;
-	private JButton saveButton;
-	private JButton cancelButton;
 	private Event eventToEdit;
 	private boolean isEditingEvent;
 	private UUID existingEventID; // UUID of event being edited
-	private JComboBox<Category> eventCategoryPicker;
 	
 	
 	// Constructor for edit event.
@@ -103,13 +80,17 @@ public class AddEventDisplay extends JPanel
 		this.participantsTextField.setText(eventToEdit.getParticipants());
 		this.nameTextField.setText(eventToEdit.getName());
 		this.descriptionTextArea.setText(eventToEdit.getDescription());
-		this.teamProjectCheckBox.setSelected(eventToEdit.isProjectEvent());
+		this.rdbtnPersonal.setSelected(!eventToEdit.isProjectEvent());
+		this.rdbtnTeam.setSelected(eventToEdit.isProjectEvent());
 		this.startTimeDatePicker.setDateTime(eventToEdit.getStart());
 		this.endTimeDatePicker.setDateTime(eventToEdit.getEnd());
 		if (eventToEdit.getAssociatedCategory()!=null)
 			this.eventCategoryPicker.setSelectedItem(eventToEdit.getAssociatedCategory());
 		else
 			this.eventCategoryPicker.setSelectedItem(Category.DEFUALT_CATEGORY);
+
+		//TODO:
+		nameTextField.requestFocus();
 	}
 	
 	/**
@@ -117,45 +98,20 @@ public class AddEventDisplay extends JPanel
 	 */
 	private void setUpUI()
 	{
-		
-		// set up the combobox
-		this.eventCategoryPicker = new JComboBox<Category>();
-		this.eventCategoryPicker.putClientProperty("html.disable", true);
 		this.eventCategoryPicker.addItem(Category.DEFUALT_CATEGORY);
 		for(Category c : CategoryModel.getInstance().getAllCategories())
 		{
 			this.eventCategoryPicker.addItem(c);
 		}
+		nameTextField.requestFocus();
+	}
+	
+	/**
+	 * Adds button listeners based on whether an event is being edited or created
+	 */
+	private void setUpListeners(){
 		
-		
-		// Basic Layout
-		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		
-		/** Name  Panel */
-		
-		// Panel
-		this.nameLabelPanel = new JPanel();
-		FlowLayout flowLayout_2 = (FlowLayout) nameLabelPanel.getLayout();
-		flowLayout_2.setAlignment(FlowLayout.LEFT);
-		
-		// Label
-		this.nameLabel = new JLabel("Name:");
-		nameLabel.setVerticalAlignment(SwingConstants.BOTTOM);
-		nameLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		nameLabelPanel.add(nameLabel);
-		
-		// Add panel to UI
-		this.add(nameLabelPanel);
-		
-		/** Name text field */
-		
-		// Panel
-		this.nameTextFieldPanel = new JPanel();
-		FlowLayout fl_NamePane = (FlowLayout) nameTextFieldPanel.getLayout();
-		fl_NamePane.setAlignment(FlowLayout.LEFT);
-		
-		nameErrorLabel = new JLabel();
-		nameTextField.setColumns(25);
+
 		nameTextField.getDocument().addDocumentListener(new DocumentListener() {
 			
 			@Override
@@ -175,44 +131,7 @@ public class AddEventDisplay extends JPanel
 				//Not triggered by plaintext fields
 			}
 		});
-		// Text Field
-		nameTextField.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		nameTextField.setColumns(25);
-		nameTextFieldPanel.add(nameTextField);
-		
-		nameErrorLabel.setForeground(Color.RED);
-		validateText(nameTextField.getText(), nameErrorLabel);
 
-		nameLabelPanel.add(nameTextField);
-		nameLabelPanel.add(nameErrorLabel);
-		
-		JPanel DateandTimeLabelPane = new JPanel();
-		add(DateandTimeLabelPane);
-		DateandTimeLabelPane.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-		
-		/** Date and Time Panel */
-		
-		// Panel
-		this.dateAndTimeLabelPane = new JPanel();
-		dateAndTimeLabelPane.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-		
-		// Label
-		
-		this.dateAndTimeLabel = new JLabel("Date and Time:");
-		dateAndTimeLabel.setVerticalAlignment(SwingConstants.BOTTOM);
-		dateAndTimeLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		dateAndTimeLabelPane.add(dateAndTimeLabel);
-		
-		// Add panel to UI
-		this.add(dateAndTimeLabelPane);
-		
-		/** Date and Time Picker */
-		
-		// Panel
-		this.dateAndTimePickerPane = new JPanel();
-		FlowLayout flowLayout_5 = (FlowLayout) dateAndTimePickerPane.getLayout();
-		flowLayout_5.setAlignment(FlowLayout.LEFT);
-		this.add(dateAndTimePickerPane);
 		startTimeDatePicker.addChangeListener(new DatePickerListener() {
 			
 			@Override
@@ -229,150 +148,6 @@ public class AddEventDisplay extends JPanel
 				saveButton.setEnabled(isSaveable());
 			}
 		});
-
-		dateAndTimePickerPane.add(new JLabel("From "));
-		dateAndTimePickerPane.add(startTimeDatePicker);
-		dateAndTimePickerPane.add(new JLabel(" to "));
-		dateAndTimePickerPane.add(endTimeDatePicker);
-		JCheckBox chckbxAllDayEvent = new JCheckBox("All Day Event");
-		//dateAndTimePickerPane.add(chckbxAllDayEvent);
-		dateErrorLabel = new JLabel();
-		dateErrorLabel.setForeground(Color.RED);
-		dateAndTimePickerPane.add(dateErrorLabel);
-		
-		// Add panel to UI
-		this.add(dateAndTimePickerPane);
-		
-		/** Participants Panel */
-		
-		// Panel
-		this.participantsLabelPanel = new JPanel();
-		FlowLayout flowLayout_1 = (FlowLayout) participantsLabelPanel.getLayout();
-		flowLayout_1.setAlignment(FlowLayout.LEFT);
-		
-		// Label
-		this.participantsLabel = new JLabel("Participants:");
-		participantsLabel.setVerticalAlignment(SwingConstants.BOTTOM);
-		participantsLabelPanel.add(participantsLabel);
-		
-		// Add panel to UI
-		this.add(participantsLabelPanel);
-		
-		/** Participants Text Field */
-		
-		// Panel
-		participantsTextFieldPanel = new JPanel();
-		FlowLayout flowLayout_4 = (FlowLayout) participantsTextFieldPanel.getLayout();
-		flowLayout_4.setAlignment(FlowLayout.LEFT);
-		
-		// Text Field
-		participantsTextFieldPanel.add(participantsTextField);
-		participantsTextField.setColumns(30);
-		
-		// Add panel to UI
-		this.add(participantsTextFieldPanel);
-		
-		/** Categories ui */
-		
-		JPanel comboHolder = new JPanel();
-		FlowLayout fl_DescriptionLabelPane = (FlowLayout) comboHolder.getLayout();
-		fl_DescriptionLabelPane.setAlignment(FlowLayout.LEFT);
-		
-		JLabel ljtest = new JLabel("Category:");
-		ljtest.setVerticalAlignment(SwingConstants.BOTTOM);
-		ljtest.setAlignmentX(Component.CENTER_ALIGNMENT);
-		ljtest.setHorizontalAlignment(SwingConstants.LEFT);
-		comboHolder.add(ljtest);
-		add(comboHolder);
-		
-		//add the combobox for category
-		comboHolder = new JPanel();
-		fl_DescriptionLabelPane = (FlowLayout) comboHolder.getLayout();
-		fl_DescriptionLabelPane.setAlignment(FlowLayout.LEFT);
-		comboHolder.add(eventCategoryPicker);
-		add(comboHolder);
-		
-		/** Description Panel */
-		
-		// Panel
-		
-		this.descriptionLabelPanel = new JPanel();
-		fl_DescriptionLabelPane = (FlowLayout) descriptionLabelPanel.getLayout();
-		fl_DescriptionLabelPane.setAlignment(FlowLayout.LEFT);
-		
-		// Label
-		descriptionLabel = new JLabel("Description:");
-		descriptionLabel.setVerticalAlignment(SwingConstants.BOTTOM);
-		descriptionLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-		descriptionLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		descriptionLabelPanel.add(descriptionLabel);
-		
-		// Add panel to UI
-		this.add(descriptionLabelPanel);
-		
-		/** Description Text Field */
-		
-		// Panel
-		this.descriptionTextFieldPanel = new JPanel();
-		FlowLayout flowLayout_6 = (FlowLayout) descriptionTextFieldPanel.getLayout();
-		flowLayout_6.setAlignment(FlowLayout.LEFT);
-		descriptionTextFieldPanel.setMinimumSize(new Dimension(100, 100));
-		
-		// Text Area
-		descriptionTextArea.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		descriptionTextArea.setLineWrap(true);
-		descriptionTextArea.setWrapStyleWord(true);
-		
-		JScrollPane descriptionScrollPane = new JScrollPane(descriptionTextArea);
-		descriptionScrollPane.setBorder(null);
-		descriptionTextFieldPanel.add(descriptionScrollPane);
-		
-		// Add panel to UI
-		this.add(descriptionTextFieldPanel);
-		
-		// Format UI
-		Filler filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767), new java.awt.Dimension(0, 32767));
-        this.add(filler1);
-		
-        /** Submission panel */
-       
-        // Panel
-		this.submissionPanel = new JPanel();
-		FlowLayout flowLayout = (FlowLayout) submissionPanel.getLayout();
-		flowLayout.setAlignment(FlowLayout.LEFT);
-		
-		// CheckBox
-		teamProjectCheckBox.setSelected(true);
-		
-		// Error label
-		this.errorText = new JLabel();
-		errorText.setForeground(Color.RED);
-		
-		// Save button
-		this.saveButton = new JButton("Save");
-		saveButton.setHorizontalAlignment(SwingConstants.LEFT);
-		submissionPanel.add(saveButton);
-		
-		// Cancel Button
-		this.cancelButton = new JButton("Cancel");
-		submissionPanel.add(cancelButton);
-		
-		// Add checkbox and error text to panel
-		submissionPanel.add(teamProjectCheckBox);
-		submissionPanel.add(errorText);
-		
-		// Add panel to UI
-		this.add(submissionPanel);
-		
-		saveButton.setEnabled(isSaveable());
-	}
-	
-	/**
-	 * Adds button listeners based on whether an event is being edited or created
-	 */
-	private void setUpListeners(){
-		
-		// Save Button
 		
 		saveButton.addActionListener(new ActionListener(){
 			@Override
@@ -380,15 +155,13 @@ public class AddEventDisplay extends JPanel
 
 					startTimeDatePicker.getDateTime();
 					endTimeDatePicker.getDateTime();
-					errorText.setVisible(true);
-			
-					errorText.setVisible(false);
+					
 					Event e = new Event();
 					e.setName(nameTextField.getText().trim());
 					e.setDescription(descriptionTextArea.getText());
 					e.setStart(startTimeDatePicker.getDateTime());
 					e.setEnd(endTimeDatePicker.getDateTime());
-					e.setProjectEvent(teamProjectCheckBox.isSelected());
+					e.setProjectEvent(rdbtnTeam.isSelected());
 					e.setParticipants(participantsTextField.getText().trim());
 					e.setCategory(((Category)eventCategoryPicker.getSelectedItem()).getCategoryID());
 					
@@ -448,7 +221,7 @@ public class AddEventDisplay extends JPanel
 	{
 		if(mText==null || mText.trim().length()==0)
 		{
-			mErrorLabel.setText("* Required Field");
+			mErrorLabel.setText("This field is required");
 			return false;
 		}
 		return true;
@@ -465,11 +238,11 @@ public class AddEventDisplay extends JPanel
 	{
 		if(mStartTime == null || mEndTime == null)
 		{
-			mErrorLabel.setText("* Invalid Date/Time");
+			mErrorLabel.setText("That does not look like a valid date & time");
 		}//if properly formatted, error if startDate is a different day than the endDate
 		//error if the start time is after the end time
 		else if (!mEndTime.isAfter(mStartTime)) {
-			mErrorLabel.setText("* Event has invalid duration");
+			mErrorLabel.setText("Event can't start after it ends");
 		}else
 		{
 			//no errors found
