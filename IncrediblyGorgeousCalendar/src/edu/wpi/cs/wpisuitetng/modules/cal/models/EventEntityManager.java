@@ -11,6 +11,7 @@ package edu.wpi.cs.wpisuitetng.modules.cal.models;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
@@ -73,13 +74,17 @@ public class EventEntityManager implements EntityManager<Event> {
 	 * @return the event matching the given id * @throws NotFoundException * @throws NotFoundException * @throws NotFoundException
 	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#getEntity(Session, String) */
 	@Override
-	public Event[] getEntity(Session s, String data) throws NotFoundException {
+	public Event[] getEntity(Session s, String data) throws NotFoundException
+	{
 		String[] args = data.split(",");
 		
 		
-		switch (args[0]) {
+		switch (args[0])
+		{
 			case "filter-events-by-range":
 				return getEventsByRange(s, args[1], args[2]);
+			case "filter-event-by-uuid":
+				return getEventByUUID(s, args[1]);
 			default:
 				throw new NotFoundException("Error: " + args[0] + " not a valid method");
 		}
@@ -87,6 +92,28 @@ public class EventEntityManager implements EntityManager<Event> {
 	
 	}
 	
+	/**
+	 * gets the event with the current UUID
+	 * 
+	 * @param ses the session
+	 * @param uuid the event's UUID
+	 * @return an array containing just this event
+	 * @throws NotFoundException
+	 */
+	private Event[] getEventByUUID(Session ses, String uuid) throws NotFoundException
+	{
+		UUID from = UUID.fromString(uuid);
+		try 
+		{
+			return db.retrieve(Event.class, "eventID", from, ses.getProject()).toArray(new Event[0]);
+		}
+		catch (WPISuiteException e)
+		{
+			throw new NotFoundException(uuid);
+		}
+		
+	}
+
 	/**
 	 * Query database to retrieve events with overlapping range
 	 * @param sfrom date from, DateTime formatted as String
@@ -112,7 +139,7 @@ public class EventEntityManager implements EntityManager<Event> {
 		}
 		return retrievedEvents.toArray(new Event[0]);
 	}
-
+	
 	/**
 	 * Retrieves all events from the database
 	 * @param s the session
@@ -120,8 +147,14 @@ public class EventEntityManager implements EntityManager<Event> {
 	 */
 	@Override
 	public Event[] getAll(Session s) {
-		System.out.println("GET ALL!");
-		return db.retrieveAll(new Event(), s.getProject()).toArray(new Event[0]);
+		Event [] allEvents = db.retrieveAll(new Event(), s.getProject()).toArray(new Event[0]);
+		ArrayList<Event> eventArray = new ArrayList<>();
+		for (Event e: allEvents)
+		{
+			if (s.getUser().equals(e.getOwner()) || e.isProjectEvent())
+					eventArray.add(e);
+		}
+		return eventArray.toArray(new Event[0]);
 	}
 
 	/**
@@ -192,6 +225,8 @@ public class EventEntityManager implements EntityManager<Event> {
 		
 		db.delete(existingEvent);
 		
+		updatedEvent.setOwner(existingEvent.getOwner());
+		updatedEvent.setProject(existingEvent.getProject());
 		if(!db.save(updatedEvent, session.getProject())) {
 			throw new WPISuiteException();
 		}

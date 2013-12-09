@@ -51,7 +51,6 @@ import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddEventDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.CategoryManager;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.DayCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthCalendar;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthItem;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.year.YearCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.week.WeekCalendar;
@@ -90,7 +89,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	
 	//TODO: "make this better" -Patrick
 	public boolean showPersonal = true;
-	public boolean showTeam = false;
+	public boolean showTeam = true;
 
 	/** Tabbed main panel to display in the calendar module. This pane will contain
 	 *  the rest of the elements in the calendar module, including the calendar view,
@@ -126,7 +125,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		
 		categories = CategoryModel.getInstance();
 		events = EventModel.getInstance(); // used for accessing events
-		commitments= new CommitmentModel();
+		commitments= CommitmentModel.getInstance();
 		this.mainPaneContainer = new JPanel(); // Container for the navigation and calendars
 		this.sidePanel = new JPanel(); // Container to hold the top and bottom side sub-panels
 		this.sidePanelTop = new JPanel(); // Panel to hold the mini calendar and the goto date
@@ -209,6 +208,8 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 				while (getTabCount() > 1)
 				{
 					removeTabAt(1);
+					tabs.clear();
+
 				}
 			}
 		});
@@ -544,7 +545,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		}
 		return null;
 	}
-	
+
 	public void setSelectedTab(JComponent tabToFocus)
 	{
 		try
@@ -554,6 +555,21 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		{
 			e.printStackTrace(); //tab not found
 		}
+	}
+
+	/**
+	 * deletes the displayable, then repaints
+	 * 
+	 * @param displayableToDelete the displayable to delete
+	 */
+	public void deleteDisplayable(Displayable displayableToDelete)
+	{
+		if (this.currentSelected == displayableToDelete)
+		{
+			this.clearSelected();
+		}
+		displayableToDelete.delete();
+		this.refreshView();
 	}
 	
 	public void setSelectedDay(DateTime time)

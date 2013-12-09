@@ -8,21 +8,25 @@ import org.junit.Test;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.DatePicker;
 
-public class DatePickerTest {
-//	private DatePicker datepickertest = new DatePicker(false, null);
-//	
+public class DatePickerTest
+{
+	private DatePicker datepickertest = new DatePicker(false, null);
+
+	@Test
+	public void testIfStartAndEndTimeFieldsExist()
+	{
+		assertNotNull("Make sure it actually runs", datepickertest);
+	}
+
 //	@Test
-//	public void testIfStartAndEndTimeFieldsExist() {
-//		assertNotNull("Make sure it actually runs", datepickertest);
-//	}
-//	
-//	@Test
-//	public void testIfCanChangeCheckBox() {
+//	public void testIfCanChangeCheckBox()
+//	{
 //		assertFalse("Make sure the checkbox starts out as unchecked", datepickertest.getIsAllDay().isSelected());
 //	}
-//	
+//
 //	@Test
-//	public void testIfClickingCheckboxDisablesTimeEditing() {
+//	public void testIfClickingCheckboxDisablesTimeEditing()
+//	{
 //		JCheckBox checkbox = datepickertest.getIsAllDay();
 //		assertTrue("The time changes should be changeable initially", datepickertest.getStartTime().isEnabled());
 //		assertTrue("The time changes should be changeable initially", datepickertest.getEndTime().isEnabled());

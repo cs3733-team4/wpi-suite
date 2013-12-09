@@ -118,7 +118,7 @@ public class Event extends AbstractModel implements Displayable
 	@Override
 	public void delete()
 	{
-		// This is never called by the core ?
+		EventModel.getInstance().deleteEvent(this);
 	}
 
 	public String toJSON()

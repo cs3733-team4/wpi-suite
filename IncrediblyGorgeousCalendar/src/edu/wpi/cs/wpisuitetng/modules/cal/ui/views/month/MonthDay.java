@@ -231,12 +231,6 @@ public class MonthDay extends JPanel
 		super.doLayout();
 	}
 
-	// Added for testing purposes
-	boolean hasEvent(Event e)
-	{
-		return events.contains(e);
-	}
-
 	public void clear()
 	{
 		events.clear();
@@ -257,7 +251,7 @@ public class MonthDay extends JPanel
 			if (c instanceof MonthItem)
 			{
 				MonthItem mi = ((MonthItem) c);
-				mi.setSelected(mi.getDisplayable() == item);
+				mi.setSelected(mi.getDisplayable(), item);
 			}
 		}
 	}

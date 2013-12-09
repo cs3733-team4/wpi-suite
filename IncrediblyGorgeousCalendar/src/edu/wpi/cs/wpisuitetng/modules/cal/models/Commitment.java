@@ -17,7 +17,6 @@ import org.joda.time.DateTime;
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
-
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
@@ -93,7 +92,7 @@ public class Commitment extends AbstractModel implements Displayable
 	@Override
 	public void delete()
 	{
-		// This is never called by the core ?
+		CommitmentModel.getInstance().deleteCommitment(this);
 	}
 
 	public String toJSON()
