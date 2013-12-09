@@ -5,16 +5,21 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
@@ -32,6 +37,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddCommitmentDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddEventDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
@@ -55,6 +61,10 @@ public class SidebarTabbedPane extends JTabbedPane{
 	private DateTimeFormatter timeFormatter = DateTimeFormat.forPattern("h:mm aa");
 	private DateTimeFormatter dateFormatter = DateTimeFormat.forPattern("MM/dd/yy");
 	private Displayable currentDisplayable;
+	// Category filter tab
+	private JPanel categoryFilterTab;
+	private JPanel categoryList;
+	private JScrollPane categoryScroll;
 	
 	/**
 	 * Tabbed panel in the navigation sidebar to hold additional details of selected items
@@ -67,10 +77,12 @@ public class SidebarTabbedPane extends JTabbedPane{
 		setupTextStyles();
 		setupDetailTab();
 		setupCommitementTab();
+		setUpCategoryFilterTab();
 		
 		//add tabs
 		this.addTab("Details", detailTab);
 		//this.addTab("Commitments", commitmentTab);
+		this.addTab("Filters", categoryFilterTab);
 	}
 	
 	/**
@@ -183,6 +195,71 @@ public class SidebarTabbedPane extends JTabbedPane{
 	    detailTab.add(detailTitleLabel, BorderLayout.NORTH);
 	    detailTab.add(detailScrollPane, BorderLayout.CENTER);
 	    detailTab.add(detailButtonPane, BorderLayout.SOUTH);
+	}
+	
+	/**
+	 * Sets up the components of the category filter tab
+	 */
+	private void setUpCategoryFilterTab(){
+
+		// Set up container panel
+		categoryFilterTab = new JPanel();
+		categoryFilterTab.setLayout(new BorderLayout());
+		categoryFilterTab.setBorder(BorderFactory.createEmptyBorder(3, 0, 0, 0));
+		categoryFilterTab.setBackground(Colors.TABLE_BACKGROUND);
+		categoryFilterTab.setAlignmentY(LEFT_ALIGNMENT);
+		
+		// Set up panel with categories
+		categoryList = new JPanel();
+		categoryList.setLayout(new BoxLayout(categoryList, BoxLayout.Y_AXIS));
+		categoryList.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+		categoryList.setBackground(Colors.TABLE_BACKGROUND);
+		categoryList.putClientProperty("html.disable", true);
+		categoryList.setAlignmentY(LEFT_ALIGNMENT);
+		
+		// Add categories to panel
+		for(Category c : CategoryModel.getInstance().getAllCategories())
+		{
+			// Check box for current category
+			JCheckBox categoryCheckBox = new JCheckBox(c.getName());
+			
+			// Category color indicator for current category
+			JPanel categoryColor = new JPanel();
+			categoryColor.setPreferredSize(new Dimension(16, 15));
+	    	categoryColor.setMaximumSize(new Dimension(16, 15));
+	    	categoryColor.setMinimumSize(new Dimension(16, 15));
+	    	categoryColor.setLayout(new GridLayout(1,1));
+	    	categoryColor.setBorder(new EmptyBorder(0, 0, 0, 0));
+	    	categoryColor.setBackground(c.getColor());
+			
+			// Container for category color and checkbox
+			JPanel container = new JPanel();
+			container.setLayout(new BoxLayout(container, BoxLayout.X_AXIS));
+			container.setAlignmentY(LEFT_ALIGNMENT);
+			container.setBackground(Colors.TABLE_BACKGROUND);
+			
+			// Set up container UI
+			container.add(categoryColor);
+			container.add(categoryCheckBox);
+			container.add(Box.createHorizontalGlue());
+			
+			
+			// Add container to category list
+			categoryList.add(container);
+		}
+
+		// Set up scroll panel
+		categoryScroll = new JScrollPane(categoryList);
+		//categoryScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+	    //categoryScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		categoryScroll.setBorder(new EmptyBorder(5,5,5,5));
+		categoryScroll.setBackground(Colors.TABLE_BACKGROUND);
+		categoryScroll.setAlignmentY(LEFT_ALIGNMENT);
+		
+		// Set up UI
+		categoryFilterTab.add(categoryScroll);
+		//categoryFilterTab.setFocusable(false); // Keep tab form grabbing focus from arrow keys
+		
 	}
 	
 	/**
