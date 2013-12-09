@@ -39,7 +39,6 @@ public class AddEventDisplay extends DisplayableEditorView
 		this.eventToEdit = mEvent;
 		this.isEditingEvent = true;
 		this.existingEventID = eventToEdit.getEventID();
-		setUpUI();
 		populateEventFields(eventToEdit);
 		setUpListeners();
 		
@@ -51,7 +50,6 @@ public class AddEventDisplay extends DisplayableEditorView
 		super(true);
 		this.isEditingEvent = false;
 		this.currentTime = new DateTime();
-		setUpUI();
 		setCurrentDateAndTime();
 		setUpListeners();
 	}
@@ -73,17 +71,6 @@ public class AddEventDisplay extends DisplayableEditorView
 			this.eventCategoryPicker.setSelectedItem(eventToEdit.getAssociatedCategory());
 		else
 			this.eventCategoryPicker.setSelectedItem(Category.DEFUALT_CATEGORY);
-
-		//TODO:
-		nameTextField.requestFocus();
-	}
-	
-	/**
-	 * Set up the UI layout for AddEventDisplay
-	 */
-	private void setUpUI()
-	{
-		nameTextField.requestFocus();
 	}
 	
 	/**

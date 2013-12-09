@@ -114,7 +114,6 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		});
 
 		saveButton.setEnabled(isSaveable());
-		// TODO: autofocus
 	}
 
 	public boolean isSaveable()
