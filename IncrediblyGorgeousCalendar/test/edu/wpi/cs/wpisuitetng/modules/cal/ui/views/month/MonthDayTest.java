@@ -15,13 +15,13 @@ public class MonthDayTest {
 	
 	@Test
 	public void testExists() {
-		MonthDay MD = new MonthDay(now, DayStyle.Normal);
+		MonthDay MD = new MonthDay(now, DayStyle.Normal, null);
 		assertNotNull("A MonthDay can be created", MD);
 	}
 	
 	@Test
 	public void testAddEvents() {
-		MonthDay MD = new MonthDay(now, DayStyle.Normal);
+		MonthDay MD = new MonthDay(now, DayStyle.Normal, null);
 		Event eatIcecream=new Event().addName("Eat icecream")
 									 .addDescription("Yummy!")
 									 .addStartTime(new DateTime(2000, 10, 10, 0, 0))
@@ -39,7 +39,7 @@ public class MonthDayTest {
 	
 	@Test
 	public void testRemoveEvents() {
-		MonthDay MD = new MonthDay(now, DayStyle.Normal);
+		MonthDay MD = new MonthDay(now, DayStyle.Normal, null);
 		Event eatIcecream=new Event().addName("Eat icecream")
 				 					 .addDescription("Yummy!")
 				 					 .addStartTime(new DateTime(2000, 10, 10, 0, 0))

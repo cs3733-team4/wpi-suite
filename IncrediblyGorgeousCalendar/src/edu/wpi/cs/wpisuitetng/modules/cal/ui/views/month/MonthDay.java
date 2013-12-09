@@ -12,6 +12,7 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -43,11 +44,13 @@ public class MonthDay extends JPanel
 	private List<Event> events = new ArrayList<Event>();
 	private List<Commitment> commitments = new ArrayList<Commitment>();
 	private DateTime day;
+	private MonthCalendar parent;
 
 	
-	public MonthDay(DateTime initDay, DayStyle style)
+	public MonthDay(DateTime initDay, DayStyle style, final MonthCalendar parent)
 	{
-		this.day=initDay;
+		this.day = initDay;
+		this.parent = parent;
 		Color grayit, textit = Colors.TABLE_TEXT, bg = Colors.TABLE_BACKGROUND;
 		switch (style)
 		{
@@ -86,6 +89,7 @@ public class MonthDay extends JPanel
 			@Override
 			public void mousePressed(MouseEvent e)
 			{
+				parent.dispatchEvent(e);
 				MainPanel.getInstance().setSelectedDay(day);
 				MainPanel.getInstance().clearSelected();
 			}
@@ -105,7 +109,7 @@ public class MonthDay extends JPanel
 			@Override
 			public void mouseEntered(MouseEvent e)
 			{
-
+				
 			}
 
 			@Override
@@ -119,18 +123,7 @@ public class MonthDay extends JPanel
 
 			@Override
 			public void mouseDragged(MouseEvent e) {
-				MainPanel p = MainPanel.getInstance();
-				Displayable d = p.getSelectedEvent();
-				if (d != null && !d.getDate().dayOfYear().equals(day.dayOfYear()))
-				{
-					System.out.println(d.getName());
-					setBackground(Color.yellow);
-				}
-				else
-				{
-					System.out.println(d.getDate().getDayOfYear());
-					System.out.println(day.getDayOfYear());
-				}
+				parent.dispatchEvent(e);
 			}
 
 			@Override

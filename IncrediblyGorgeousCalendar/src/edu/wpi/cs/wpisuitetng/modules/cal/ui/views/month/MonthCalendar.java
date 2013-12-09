@@ -10,13 +10,18 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridLayout;
+import java.awt.MouseInfo;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -71,6 +76,34 @@ public class MonthCalendar extends AbstractCalendar
 		generateDays(new MutableDateTime(on));
 		generateHeaders(new MutableDateTime(on));
 		
+		addMouseMotionListener(new MouseMotionListener(){
+
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				System.out.println("dragged!");
+				
+				MainPanel p = MainPanel.getInstance();
+				Displayable d = p.getSelectedEvent();
+				
+				Point l = MouseInfo.getPointerInfo().getLocation();
+				Point pp = inside.getLocationOnScreen();
+				
+				int x = l.x-pp.x;
+				int y = l.y-pp.y;
+				
+				Component jc = inside.getComponentAt(x, y);
+				if (d != null && jc instanceof MonthDay)//&& !d.getDate().dayOfYear().equals(day.dayOfYear()))
+				{
+					MonthDay draggedOnDay = (MonthDay) jc;
+					System.out.println(d.getName());
+					draggedOnDay.setBackground(Color.yellow);
+				}
+			}
+
+			@Override
+			public void mouseMoved(MouseEvent e) {}
+			
+		});
 	}
 
 	/**
@@ -274,7 +307,7 @@ public class MonthCalendar extends AbstractCalendar
 		// through and add each day
 		for (int i = 0; i < (weeks * 7); i++)
 		{
-			MonthDay md = new MonthDay(referenceDay.toDateTime(), getMarker(referenceDay));
+			MonthDay md = new MonthDay(referenceDay.toDateTime(), getMarker(referenceDay), this);
 			inside.add(md);
 			md.reBorder(i < 7, (i % 7) == 0, i >= (weeks - 1) * 7);
 			this.days.put(referenceDay.getDayOfYear(), md);

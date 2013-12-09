@@ -11,6 +11,7 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month;
 
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -133,6 +134,7 @@ public class MonthItem extends JPanel
 			
 			@Override
 			public void mousePressed(MouseEvent e) {
+				parent.dispatchEvent(e);
 				MainPanel.getInstance().setSelectedDay(currentTime);
 				if (e.getClickCount() > 1){
 					MainPanel.getInstance().editSelectedDisplayable(mDisplayable);
