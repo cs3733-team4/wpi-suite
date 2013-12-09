@@ -27,6 +27,7 @@ import org.joda.time.DateTime;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.RequestFocusListener;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -90,6 +91,8 @@ public class AddCommitmentDisplay extends JPanel
 		NamePane.add(nameTextField);
 		nameTextField.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		nameTextField.setColumns(25);
+		nameTextField.addAncestorListener(new RequestFocusListener());
+
 		if (isEditingCommitment)
 			nameTextField.setText(oldCommitment.getName());
 		

@@ -30,6 +30,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.RequestFocusListener;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -179,9 +180,10 @@ public class AddEventDisplay extends JPanel
 				//Not triggered by plaintext fields
 			}
 		});
+		
 		// Text Field
 		nameTextField.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		nameTextField.setColumns(25);
+		nameTextField.addAncestorListener(new RequestFocusListener());
 		nameTextFieldPanel.add(nameTextField);
 		
 		nameErrorLabel.setForeground(Color.RED);
