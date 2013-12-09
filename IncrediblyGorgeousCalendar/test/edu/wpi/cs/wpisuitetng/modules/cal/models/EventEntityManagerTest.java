@@ -1,12 +1,23 @@
+/*******************************************************************************
+ * Copyright (c) 2013 WPI-Suite
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors: Team YOCO (You Only Compile Once)
+ ******************************************************************************/
+
 package edu.wpi.cs.wpisuitetng.modules.cal.models;
 
 import static org.junit.Assert.*;
 
 import java.util.HashSet;
 
+import org.junit.After;
 import org.junit.Test;
-
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
@@ -20,10 +31,10 @@ public class EventEntityManagerTest {
 
         MockData db = new MockData(new HashSet<Object>());
            
-        DateTime one=new DateTime(2000,1,1,1,30);   // Datetime at Jan 1st, 2000: 1:30
-        DateTime two=new DateTime(2000,1,2,2,30);   // Datetime at Jan 2nd, 2000: 2:30
-        DateTime three=new DateTime(2000,1,3,3,30); // Datetime at Jan 3rd, 2000: 3:30
-        DateTime four=new DateTime(2000,1,4,4,30);  // Datetime at Jan 4th, 2000: 4:30
+        DateTime one=new DateTime(2000,1,1,1,30, DateTimeZone.UTC);   // Datetime at Jan 1st, 2000: 1:30
+        DateTime two=new DateTime(2000,1,2,2,30, DateTimeZone.UTC);   // Datetime at Jan 2nd, 2000: 2:30
+        DateTime three=new DateTime(2000,1,3,3,30, DateTimeZone.UTC); // Datetime at Jan 3rd, 2000: 3:30
+        DateTime four=new DateTime(2000,1,4,4,30, DateTimeZone.UTC);  // Datetime at Jan 4th, 2000: 4:30
         
         
         
@@ -40,7 +51,12 @@ public class EventEntityManagerTest {
         Project p=new Project("p","26");
         User u1 = new User("User1", "U1", null, 0);
         Session ses1 = new Session(u1, p, "26");
-           
+        
+        @After
+        public void resetDB()
+        {
+        	db = new MockData(new HashSet<Object>());
+        }
         
         
         @Test
@@ -201,7 +217,7 @@ public class EventEntityManagerTest {
                 // The huge string being used as input is "filter-events-by-range," + string form of starting dateTime + "," + string form of ending dateTime
                 // This method is really just another way of calling getEventsByRange with new inputs; as such, it has the same limitations and only needs basic testing
                 
-                assertEquals("getEntity will return an event in the database if it was stored there before",e.getName(),eem.getEntity(ses1,"filter-events-by-range,20000101T010000.000Z,20000102T030000.000Z")[0].getName());
+                assertEquals("getEntity will return an event in the database if it was stored there before",e.getName(),eem.getEntity(ses1,"filter-events-by-range,20000101T010000.000Z,20000102T020000.000Z")[0].getName());
                 assertEquals("getEntity will return an event in the database if it was stored there before",eee.getName(),eem.getEntity(ses1,"filter-events-by-range,20000104T030000.000Z,20000104T070100.000Z")[0].getName());
                 assertEquals("getEntity will return an empty array if no events are within the given range", 0 ,eem.getEntity(ses1,"filter-events-by-range,20500101T010100.000Z,20500101T010100.000Z").length);
         }
