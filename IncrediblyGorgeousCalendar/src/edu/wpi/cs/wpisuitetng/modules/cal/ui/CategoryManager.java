@@ -43,6 +43,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.PastelColorPicker;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.RequestFocusListener;
 
 public class CategoryManager extends JPanel {
 	
@@ -98,6 +99,7 @@ public class CategoryManager extends JPanel {
 		categoryName.setColumns(25);
 		categoryName.setPreferredSize(new Dimension(200, 30));
 		categoryName.setMaximumSize(new Dimension(200, 30));
+		categoryName.addAncestorListener(new RequestFocusListener());
 		
 		categoryName.getDocument().addDocumentListener(new DocumentListener() {
 			
