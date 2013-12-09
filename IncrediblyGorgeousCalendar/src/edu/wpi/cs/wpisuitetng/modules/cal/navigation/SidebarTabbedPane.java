@@ -436,6 +436,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 				if (selectedCategories.contains(referencedCategory.getCategoryID()))
 					selectedCategories.remove(referencedCategory.getCategoryID());
 			}
+			MainPanel.getInstance().refreshView(); //Update view for selected filters
 		}
 	}
 	
@@ -444,17 +445,17 @@ public class SidebarTabbedPane extends JTabbedPane{
 	 */
 	public void selectAllCategories()
 	{
-		// Clear previous selected categories to re-populate list
-		selectedCategories.clear();
-		
 		// Iterate over check boxes and categories, checking them and adding to list
 		for (Map.Entry<JCheckBox, Category> entry : checkBoxCategoryMap.entrySet()){
 			JCheckBox key = entry.getKey();
 			Category value = entry.getValue();
 			
-			key.setSelected(true);
-			if(! selectedCategories.contains(value.getCategoryID()))
+			if (!key.isSelected())
+			{
+				key.setSelected(true);
+				if(! selectedCategories.contains(value.getCategoryID()))
 					selectedCategories.add(value.getCategoryID());
+			}
 		}
 	}
 	
