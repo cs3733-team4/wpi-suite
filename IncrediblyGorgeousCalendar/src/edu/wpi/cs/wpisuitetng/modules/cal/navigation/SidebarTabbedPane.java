@@ -8,7 +8,6 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -19,7 +18,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
@@ -33,16 +31,12 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddCommitmentDisplay;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddEventDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 
 public class SidebarTabbedPane extends JTabbedPane{
 	
@@ -218,40 +212,12 @@ public class SidebarTabbedPane extends JTabbedPane{
 		categoryList.setAlignmentY(LEFT_ALIGNMENT);
 		
 		// Add categories to panel
-		for(Category c : CategoryModel.getInstance().getAllCategories())
-		{
-			// Check box for current category
-			JCheckBox categoryCheckBox = new JCheckBox(c.getName());
-			
-			// Category color indicator for current category
-			JPanel categoryColor = new JPanel();
-			categoryColor.setPreferredSize(new Dimension(16, 15));
-	    	categoryColor.setMaximumSize(new Dimension(16, 15));
-	    	categoryColor.setMinimumSize(new Dimension(16, 15));
-	    	categoryColor.setLayout(new GridLayout(1,1));
-	    	categoryColor.setBorder(new EmptyBorder(0, 0, 0, 0));
-	    	categoryColor.setBackground(c.getColor());
-			
-			// Container for category color and checkbox
-			JPanel container = new JPanel();
-			container.setLayout(new BoxLayout(container, BoxLayout.X_AXIS));
-			container.setAlignmentY(LEFT_ALIGNMENT);
-			container.setBackground(Colors.TABLE_BACKGROUND);
-			
-			// Set up container UI
-			container.add(categoryColor);
-			container.add(categoryCheckBox);
-			container.add(Box.createHorizontalGlue());
-			
-			
-			// Add container to category list
-			categoryList.add(container);
-		}
+		populateCategoryList(categoryList);
 
 		// Set up scroll panel
 		categoryScroll = new JScrollPane(categoryList);
-		//categoryScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-	    //categoryScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		categoryScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+	    categoryScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		categoryScroll.setBorder(new EmptyBorder(5,5,5,5));
 		categoryScroll.setBackground(Colors.TABLE_BACKGROUND);
 		categoryScroll.setAlignmentY(LEFT_ALIGNMENT);
@@ -331,5 +297,60 @@ public class SidebarTabbedPane extends JTabbedPane{
 		detailTitleLabel.setText("");
 		detailTextPane.setText("");
 		setButtonsEnabled(false);
+	}
+	
+	/**
+	 * Refreshes the category filter tab
+	 */
+	public void refreshFilterTab()
+	{
+		populateCategoryList(categoryList);
+		categoryScroll.getVerticalScrollBar().setValue(0); // Scroll to top after adding element
+		this.categoryFilterTab.revalidate();
+		this.categoryFilterTab.repaint();
+	}
+	
+	/**
+	 * Populate provided JPanel with list of categories
+	 * @param categoryListHolder the JPanel to populate
+	 */
+	public void populateCategoryList(JPanel categoryListHolder){
+		// Clear category list
+		categoryListHolder.removeAll();
+		
+		for(Category c : CategoryModel.getInstance().getAllCategories())
+		{
+			// Check box for current category
+			JCheckBox categoryCheckBox = new JCheckBox(c.getName());
+			categoryCheckBox.setAlignmentX(BOTTOM_ALIGNMENT);
+			categoryCheckBox.setFocusable(false);
+			categoryCheckBox.setSelected(true);
+			
+			// Category color indicator for current category
+			JPanel categoryColor = new JPanel();
+			categoryColor.setPreferredSize(new Dimension(16, 15));
+	    	categoryColor.setMaximumSize(new Dimension(16, 15));
+	    	categoryColor.setMinimumSize(new Dimension(16, 15));
+	    	categoryColor.setLayout(new GridLayout(1,1));
+	    	categoryColor.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+	    	categoryColor.setBackground(c.getColor());
+	    	categoryColor.setAlignmentX(BOTTOM_ALIGNMENT);
+			
+			// Container for category color and check box
+			JPanel container = new JPanel();
+			container.setLayout(new BoxLayout(container, BoxLayout.X_AXIS));
+			container.setAlignmentY(LEFT_ALIGNMENT);
+			container.setAlignmentX(BOTTOM_ALIGNMENT);
+			container.setBackground(Colors.TABLE_BACKGROUND);
+			
+			// Set up container UI
+			container.add(categoryColor);
+			container.add(Box.createHorizontalStrut(2));
+			container.add(categoryCheckBox);
+			container.add(Box.createHorizontalGlue());
+			
+			// Add container to category list
+			categoryListHolder.add(container);
+		}
 	}
 }

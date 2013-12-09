@@ -283,10 +283,12 @@ public class CategoryManager extends JPanel {
 		tabid = id;
 	}
 	
+	/**
+	 * Set up button listeners for the category manager
+	 */
 	private void setUpListeners(){
 		
 		// Update List Button
-		
 		saveCategoryButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -305,6 +307,8 @@ public class CategoryManager extends JPanel {
 						JListModel.removeElement(Category.DEFUALT_DISPLAY_CATEGORY);
 					JListModel.addElement(c);
 				}
+				
+				MainPanel.getInstance().refreshCategoryFilterTab();
 				
 				categoryName.setText(""); // Clear category name text field upon addition
 				selectedCategory = null; // Clear selection

@@ -566,4 +566,9 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	{
 		lastTime = time;
 	}
+	
+	public void refreshCategoryFilterTab()
+	{
+		this.sideTabbedPanel.refreshFilterTab();
+	}
 }
