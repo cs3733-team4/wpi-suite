@@ -22,6 +22,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.print.Doc;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -38,9 +39,9 @@ public class EventToolbarGroup extends ToolbarGroupView {
 	private final JButton addEventButton, removeEventButton, addCommitmentButton;
 	public EventToolbarGroup(final MainPanel mMainPanel) {
 		super("Events & Commitments");
-		setPreferredWidth(300);
+		setPreferredWidth(600);
 		
-		//this.eventContentPanel.setLayout(new BoxLayout(eventContentPanel, BoxLayout.X_AXIS));
+		this.content.setLayout(new BoxLayout(content, BoxLayout.X_AXIS));
 		
 		addEventButton = new JButton("<html>Add<br/>Event</html>"){
 			JToolTip toolTip;  
@@ -53,7 +54,7 @@ public class EventToolbarGroup extends ToolbarGroupView {
 			        button.addActionListener(new ActionListener() {  
 			        	public void actionPerformed(ActionEvent e) {  
 			        		DocumentMainPanel.getInstance().setVisible(!DocumentMainPanel.getInstance().isVisible());
-			        		DocumentMainPanel.getInstance().goToPage("file:/C:/Users/Brendan/Desktop/newDocs/CreatinganEvent.html");  
+			        		DocumentMainPanel.getInstance().goToPage("CreateanEvent.html");  
 			            }  
 			        });  
 			        panel.add(label);
@@ -120,8 +121,6 @@ public class EventToolbarGroup extends ToolbarGroupView {
 		    removeEventButton.setIcon(new ImageIcon(img));
 		} catch (IOException ex) {}
 
-		//eventContentPanel.add(addEventButton);
-		//eventContentPanel.add(removeEventButton);
 		this.getContent().add(addEventButton);
 		this.getContent().add(addCommitmentButton);
 	}

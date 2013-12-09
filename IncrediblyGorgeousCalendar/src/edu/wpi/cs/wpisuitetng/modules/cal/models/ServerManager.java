@@ -26,7 +26,16 @@ import edu.wpi.cs.wpisuitetng.network.models.IRequest;
  */
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class ServerManager {
-	public static final String separator = "%2C";
+	
+	public static final String SEPARATOR = "%2C";
+	
+	/**
+	 * 
+	 * @param path
+	 * @param classType
+	 * @param args
+	 * @return
+	 */
 	public static <T> ArrayList<T> get(String path, final Class classType, String... args) {
 		final Semaphore sem = new Semaphore(1);
 		try {
@@ -52,7 +61,7 @@ public class ServerManager {
 			@Override
 			public void responseError(IRequest iReq) {
 				System.err.println("The request to select events errored:");
-				System.err.println(iReq.getBody());
+				System.err.println(iReq.getResponse().getBody());
 				sem.release();
 
 			}
@@ -60,7 +69,7 @@ public class ServerManager {
 			@Override
 			public void fail(IRequest iReq, Exception exception) {
 				System.err.println("The request to select events failed:");
-				System.err.println(iReq.getBody());
+				System.err.println(iReq.getResponse().getBody());
 				sem.release();
 			}
 		}); // add an observer to process the response
@@ -76,20 +85,106 @@ public class ServerManager {
 		}
 		return events;
 	}
+	
+	/**
+	 * 
+	 * @param path
+	 * @param json
+	 * @return
+	 */
+	public static boolean delete(String path, String... args)
+	{
+		final Semaphore sem = new Semaphore(1);
+		
+		try
+		{
+			sem.acquire();
+			boolean succeded = false;
+			
+			final Request request = Network.getInstance().makeRequest(new StringBuilder().append(path)
+																						 .append("/")
+																						 .append(glue(args))
+																						 .toString(), HttpMethod.DELETE);
+			request.addObserver(new RequestObserver()
+			{
+				@Override
+				public void responseSuccess(IRequest iReq)
+				{
+					sem.release();
+				}
+
+				@Override
+				public void responseError(IRequest iReq)
+				{
+					System.err.println("The request to delete an event errored:");
+					System.err.println(iReq.getResponse().getBody());
+					sem.release();
+
+				}
+
+				@Override
+				public void fail(IRequest iReq, Exception exception)
+				{
+					System.err.println("The request to delete an event failed:");
+					System.err.println(iReq.getResponse().getBody());
+					sem.release();
+				}
+			});
+			
+			request.send();
+			boolean acquired = false;
+			
+			while (!acquired)
+			{
+				try
+				{
+					sem.acquire();
+					acquired = true;
+				} 
+				catch (InterruptedException e) {}
+			}
+			
+			return succeded;
+		} 
+		catch (InterruptedException e1) 
+		{
+			e1.printStackTrace();
+			return false;
+		}
+		
+	}
+	
+	/**
+	 * 
+	 * @param path
+	 * @param json
+	 * @return
+	 */
 	public static boolean put(String path, String json)
 	{
 		return sendData(HttpMethod.PUT, path, json);
 	}
 	
+	/**
+	 * 
+	 * @param path
+	 * @param json
+	 * @return
+	 */
 	public static boolean post(String path, String json)
 	{
 		return sendData(HttpMethod.POST, path, json);
 	}
-	public static boolean delete(String path, String json)
-	{
-		return sendData(HttpMethod.DELETE, path, json);
-	}
 	
+	
+	
+	/**
+	 * 
+	 * @param method
+	 * @param path
+	 * @param json
+	 * @return
+	 */
 	public static boolean sendData(HttpMethod method, String path, String json) {
 
 		final Request request = Network.getInstance().makeRequest(path,
@@ -152,7 +247,7 @@ public class ServerManager {
 		for (String string : args) {
 			sb.append(string);
 			if (args[args.length - 1] != string) // yes, this is reference equals to check for the last item
-				sb.append(separator);
+				sb.append(SEPARATOR);
 		}
 		return sb.toString();
 	}
