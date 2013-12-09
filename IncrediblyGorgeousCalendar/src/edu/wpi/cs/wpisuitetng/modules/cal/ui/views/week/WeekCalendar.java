@@ -10,7 +10,6 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.week;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.util.List;
 
@@ -35,7 +34,6 @@ import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.DayGridLabel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.france.LouvreTour;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthDay;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
 
@@ -60,7 +58,8 @@ public class WeekCalendar extends AbstractCalendar
 
 	private EventModel eventModel;
 
-	private DateTimeFormatter weekTitleFmt = DateTimeFormat.forPattern("MMM d, yyyy");
+	private DateTimeFormatter weekTitleFmtStart = DateTimeFormat.forPattern("MMM d - ");
+	private DateTimeFormatter weekTitleFmtEnd = DateTimeFormat.forPattern("d, yyyy");
 	private DateTimeFormatter dayTitleFmt = DateTimeFormat.forPattern("E M/d");
 	
 	public WeekCalendar(DateTime on, EventModel emodel)
@@ -134,7 +133,7 @@ public class WeekCalendar extends AbstractCalendar
 		
 		//setup week title
 		increment.addDays(-1);
-		JLabel weekTitle = new JLabel(time.toString(weekTitleFmt) + " - " + increment.toString(weekTitleFmt));
+		JLabel weekTitle = new JLabel(time.toString(weekTitleFmtStart) + increment.toString(weekTitleFmtEnd));
 		weekTitle.setFont(new java.awt.Font("DejaVu Sans", Font.BOLD, 25));
 		weekTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		
