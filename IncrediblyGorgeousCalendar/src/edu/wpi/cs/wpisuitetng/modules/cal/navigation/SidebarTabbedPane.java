@@ -8,6 +8,13 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.UUID;
+
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -55,10 +62,12 @@ public class SidebarTabbedPane extends JTabbedPane{
 	private DateTimeFormatter timeFormatter = DateTimeFormat.forPattern("h:mm aa");
 	private DateTimeFormatter dateFormatter = DateTimeFormat.forPattern("MM/dd/yy");
 	private Displayable currentDisplayable;
+	
 	// Category filter tab
 	private JPanel categoryFilterTab;
 	private JPanel categoryList;
 	private JScrollPane categoryScroll;
+	private Collection<UUID> selectedCategories = new ArrayList<UUID>();
 	
 	/**
 	 * Tabbed panel in the navigation sidebar to hold additional details of selected items
@@ -315,8 +324,11 @@ public class SidebarTabbedPane extends JTabbedPane{
 	 * @param categoryListHolder the JPanel to populate
 	 */
 	public void populateCategoryList(JPanel categoryListHolder){
-		// Clear category list
+		// Clear category list panel
 		categoryListHolder.removeAll();
+		
+		// Clear category list array
+		selectedCategories.clear();
 		
 		for(Category c : CategoryModel.getInstance().getAllCategories())
 		{
@@ -325,6 +337,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 			categoryCheckBox.setAlignmentX(BOTTOM_ALIGNMENT);
 			categoryCheckBox.setFocusable(false);
 			categoryCheckBox.setSelected(true);
+			categoryCheckBox.addItemListener(new CheckBoxListener(c));
 			
 			// Category color indicator for current category
 			JPanel categoryColor = new JPanel();
@@ -343,14 +356,55 @@ public class SidebarTabbedPane extends JTabbedPane{
 			container.setAlignmentX(BOTTOM_ALIGNMENT);
 			container.setBackground(Colors.TABLE_BACKGROUND);
 			
+			// Store reference to check boxes and categories
+			if (categoryCheckBox.isSelected())
+				selectedCategories.add(c.getCategoryID());
+			
 			// Set up container UI
 			container.add(categoryColor);
 			container.add(Box.createHorizontalStrut(2));
 			container.add(categoryCheckBox);
 			container.add(Box.createHorizontalGlue());
 			
-			// Add container to category list
+			// Add container to category list holder
 			categoryListHolder.add(container);
 		}
 	}
+	
+	/**
+	 * Get the collection of selected categories
+	 * @return the collection of selected UUIDs
+	 */
+	public Collection<UUID> getSelectedCategories()
+	{
+		return this.selectedCategories;
+	}
+	
+	/**
+	 * Custom listener for check boxes
+	 *
+	 * Maintains the selected category collection updated
+	 */
+	private class CheckBoxListener implements ItemListener{
+		
+		private Category referencedCategory;
+		
+		public CheckBoxListener(Category c) {
+			this.referencedCategory = c;
+		}
+		
+		public void itemStateChanged(ItemEvent e) {
+			if(((JCheckBox)e.getSource()).isSelected())
+			{
+				if (! selectedCategories.contains(referencedCategory.getCategoryID()))
+					selectedCategories.add(referencedCategory.getCategoryID());
+			} else
+			{
+				if (selectedCategories.contains(referencedCategory.getCategoryID()))
+					selectedCategories.remove(referencedCategory.getCategoryID());
+			}
+		}
+	}
+	
+	
 }

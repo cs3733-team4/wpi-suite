@@ -12,8 +12,10 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.GridLayout;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -298,8 +300,20 @@ public class MonthCalendar extends AbstractCalendar
 
 	private List<Event> getVisibleEvents(DateTime from, DateTime to)
 	{
-		// TODO: this is where filtering should go
-		return eventModel.getEvents(from, to);
+		List<Event> visibleEvents = eventModel.getEvents(from, to);
+		
+		// Filter for selected categories
+		Collection<UUID> selectedCategories = MainPanel.getInstance().getSelectedCategories();
+		
+		for (int i = 0; i < visibleEvents.size(); i++){
+			UUID tmpUUID = visibleEvents.get(i).getCategory();
+			if (! selectedCategories.contains(tmpUUID)){
+				visibleEvents.remove(i);
+			}
+		}
+		
+		// Return list of events to be displayed
+		return visibleEvents;
 	}
 
 	private List<Commitment> getVisibleCommitments(DateTime from, DateTime to)

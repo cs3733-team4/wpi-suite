@@ -18,7 +18,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.UUID;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -121,6 +123,11 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		mTabbedPane = this;
 		this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		
+		// Side tabbed panel needs to be initialized here because event model references the 
+		// category filters. If panel is initialized after events are references, a null pointer
+		// exception will be thrown
+		sideTabbedPanel = new SidebarTabbedPane();
+		
 		categories = CategoryModel.getInstance();
 		events = EventModel.getInstance(); // used for accessing events
 		commitments= CommitmentModel.getInstance();
@@ -156,8 +163,6 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		sidePanelTop.setLayout(new BorderLayout());
 		sidePanelTop.add(mMiniCalendarPanel, BorderLayout.NORTH);
 		sidePanelTop.add(mGoToPanel, BorderLayout.CENTER);
-		
-		sideTabbedPanel = new SidebarTabbedPane();
 		
 		sidePanel.add(sidePanelTop, BorderLayout.NORTH);
 		sidePanel.add(sideTabbedPanel, BorderLayout.CENTER);
@@ -567,8 +572,19 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		lastTime = time;
 	}
 	
+	/**
+	 * Updates category filter tab to show additions and deletions via the
+	 * category manager
+	 */
 	public void refreshCategoryFilterTab()
 	{
 		this.sideTabbedPanel.refreshFilterTab();
+	}
+	
+	/**
+	 * Gets the selected categories by the filters in side pane
+	 */
+	public Collection<UUID> getSelectedCategories(){
+		return this.sideTabbedPanel.getSelectedCategories();
 	}
 }
