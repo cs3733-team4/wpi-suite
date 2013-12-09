@@ -39,6 +39,7 @@ Janeway/janeway.conf
 /Core/WPISuite/WebContent/WEB-INF/lib/PostBoard.jar
 /Core/WPISuite/WebContent/WEB-INF/lib/RequirementManager.jar
 /Core/WPISuite/WebContent/WEB-INF/lib/Calendar.jar
+/Core/WPISuite/WebContent/docs/*/*
 
 .idea
 .idea/*

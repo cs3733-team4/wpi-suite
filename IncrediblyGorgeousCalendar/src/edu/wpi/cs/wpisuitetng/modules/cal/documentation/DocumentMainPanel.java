@@ -17,6 +17,8 @@ import javax.swing.event.HyperlinkListener;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddEventDisplay;
+import edu.wpi.cs.wpisuitetng.network.Network;
+import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 
 public class DocumentMainPanel extends JPanel{
 
@@ -29,10 +31,9 @@ public class DocumentMainPanel extends JPanel{
     	super();
     	this.setLayout(new BorderLayout());
     	 //set the url
-        try {
-        	
-            url = new URL("file:///C:/Users/Brendan/Desktop/newDocs/GettingStarted.html");
-            //url = new URL("file:///C:/Users/Brendan/Desktop/newDocs/YOCO Calendar.html");
+        try
+        {
+        	url = new URL(Network.getInstance().makeRequest("docs/Calendar/GettingStarted.html", HttpMethod.GET).getUrl().toString().replace("API/", ""));
         }
         catch(MalformedURLException mue) {
             JOptionPane.showMessageDialog(null,mue);
