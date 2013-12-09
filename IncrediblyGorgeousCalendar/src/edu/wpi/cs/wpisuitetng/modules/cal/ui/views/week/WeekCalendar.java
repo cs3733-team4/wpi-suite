@@ -58,8 +58,9 @@ public class WeekCalendar extends AbstractCalendar
 
 	private EventModel eventModel;
 
-	private DateTimeFormatter weekTitleFmtStart = DateTimeFormat.forPattern("MMM d - ");
-	private DateTimeFormatter weekTitleFmtEnd = DateTimeFormat.forPattern("d, yyyy");
+	private DateTimeFormatter monthDayFmt = DateTimeFormat.forPattern("MMM d");
+	private DateTimeFormatter dayYearFmt = DateTimeFormat.forPattern("d, yyyy");
+	private DateTimeFormatter monthDayYearFmt = DateTimeFormat.forPattern("MMM d, yyyy");
 	private DateTimeFormatter dayTitleFmt = DateTimeFormat.forPattern("E M/d");
 	
 	public WeekCalendar(DateTime on, EventModel emodel)
@@ -132,7 +133,18 @@ public class WeekCalendar extends AbstractCalendar
 		
 		//setup week title
 		increment.addDays(-1);
-		JLabel weekTitle = new JLabel(Months.getWeekStart(time).toString(weekTitleFmtStart) + increment.toString(weekTitleFmtEnd));
+		JLabel weekTitle = new JLabel();
+		
+		if(Months.getWeekStart(time).getYear() != increment.getYear())
+			weekTitle.setText(Months.getWeekStart(time).toString(monthDayYearFmt) + " - " +
+							increment.toString(monthDayYearFmt));
+		else if(Months.getWeekStart(time).getMonthOfYear() != increment.getMonthOfYear())
+			weekTitle.setText(Months.getWeekStart(time).toString(monthDayFmt) + " - " +
+							increment.toString(monthDayYearFmt));
+		else
+			weekTitle.setText(Months.getWeekStart(time).toString(monthDayFmt) + " - " +
+							increment.toString(dayYearFmt));
+			
 		weekTitle.setFont(new java.awt.Font("DejaVu Sans", Font.BOLD, 25));
 		weekTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		
