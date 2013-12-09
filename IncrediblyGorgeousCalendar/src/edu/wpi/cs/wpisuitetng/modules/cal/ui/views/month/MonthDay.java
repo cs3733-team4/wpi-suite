@@ -12,7 +12,6 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
-import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -111,6 +110,31 @@ public class MonthDay extends JPanel
 			{
 				
 			}
+
+			@Override
+			public void mouseExited(MouseEvent e)
+			{
+				setBackground(Colors.TABLE_BACKGROUND);
+			}
+		});
+		
+		header.addMouseListener(new MouseListener(){
+			
+			@Override
+			public void mousePressed(MouseEvent e)
+			{}
+
+			@Override
+			public void mouseClicked(MouseEvent e)
+			{}
+
+			@Override
+			public void mouseReleased(MouseEvent e)
+			{}
+
+			@Override
+			public void mouseEntered(MouseEvent e)
+			{}
 
 			@Override
 			public void mouseExited(MouseEvent e)

@@ -12,7 +12,7 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Point;
+import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -20,6 +20,7 @@ import java.awt.event.MouseMotionListener;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
 import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
@@ -216,7 +217,7 @@ public class MonthItem extends JPanel
 	 */
 	public static Component generateFrom(Displayable elt, Displayable selected, DateTime day, MonthDay parent)
 	{
-		MonthItem mi = new MonthItem(elt, day);
+		MonthItem mi = new MonthItem(elt, day, parent);
 		mi.setSelected(elt, selected);
 		return mi;
 	}
