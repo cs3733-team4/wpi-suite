@@ -31,6 +31,7 @@ import com.lowagie.text.Font;
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.DayStyle;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
@@ -305,13 +306,10 @@ public class MonthCalendar extends AbstractCalendar
 		Collection<UUID> selectedCategories = MainPanel.getInstance().getSelectedCategories();
 		List<Event> categoryFilteredEvents = new ArrayList<Event>();
 		
-		// If no categories selected, return the empty list
-		if (selectedCategories.isEmpty())
-			return categoryFilteredEvents;
-		
 		// Else, loop through events and filter by selected categories
 		for (Event e : visibleEvents){
-			if (selectedCategories.contains(e.getCategory()))
+			if (selectedCategories.contains(e.getCategory()) || 
+					e.getCategory().equals(Category.DEFUALT_CATEGORY.getCategoryID()))
 				categoryFilteredEvents.add(e);
 		}
 		
