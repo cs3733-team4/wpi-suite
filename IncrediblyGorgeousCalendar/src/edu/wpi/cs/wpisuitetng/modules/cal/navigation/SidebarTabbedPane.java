@@ -245,7 +245,6 @@ public class SidebarTabbedPane extends JTabbedPane{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				selectAllCategories();
-				
 			}
 		});
 		
@@ -388,10 +387,11 @@ public class SidebarTabbedPane extends JTabbedPane{
 			container.setBackground(Colors.TABLE_BACKGROUND);
 			
 			// Store reference to check boxes and categories
-			if (categoryCheckBox.isSelected())
+			if (categoryCheckBox.isSelected() && !(selectedCategories.contains(c.getCategoryID())))
 				selectedCategories.add(c.getCategoryID());
 			
-			checkBoxCategoryMap.put(categoryCheckBox, c);
+			if (!checkBoxCategoryMap.containsKey(categoryCheckBox))
+				checkBoxCategoryMap.put(categoryCheckBox, c);
 			
 			// Set up container UI
 			container.add(categoryColor);
@@ -453,7 +453,8 @@ public class SidebarTabbedPane extends JTabbedPane{
 			Category value = entry.getValue();
 			
 			key.setSelected(true);
-			selectedCategories.add(value.getCategoryID());
+			if(! selectedCategories.contains(value.getCategoryID()))
+					selectedCategories.add(value.getCategoryID());
 		}
 	}
 	

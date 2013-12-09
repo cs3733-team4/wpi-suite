@@ -12,6 +12,7 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.GridLayout;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -22,8 +23,6 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import org.joda.time.DateTime;
-import org.joda.time.Days;
-import org.joda.time.Duration;
 import org.joda.time.MutableDateTime;
 import org.joda.time.ReadableDateTime;
 
@@ -304,16 +303,20 @@ public class MonthCalendar extends AbstractCalendar
 		
 		// Filter for selected categories
 		Collection<UUID> selectedCategories = MainPanel.getInstance().getSelectedCategories();
+		List<Event> categoryFilteredEvents = new ArrayList<Event>();
 		
-		for (int i = 0; i < visibleEvents.size(); i++){
-			UUID tmpUUID = visibleEvents.get(i).getCategory();
-			if (! selectedCategories.contains(tmpUUID)){
-				visibleEvents.remove(i);
-			}
+		// If no categories selected, return the empty list
+		if (selectedCategories.isEmpty())
+			return categoryFilteredEvents;
+		
+		// Else, loop through events and filter by selected categories
+		for (Event e : visibleEvents){
+			if (selectedCategories.contains(e.getCategory()))
+				categoryFilteredEvents.add(e);
 		}
 		
 		// Return list of events to be displayed
-		return visibleEvents;
+		return categoryFilteredEvents;
 	}
 
 	private List<Commitment> getVisibleCommitments(DateTime from, DateTime to)
