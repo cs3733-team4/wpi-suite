@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import javax.swing.JTextField;
 
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -58,9 +59,9 @@ public class CommitmentUIValidationTest
 	public void testIfSaveButtonIsDisabledWithProperNameButNoDate() throws NoSuchFieldException, SecurityException, IllegalArgumentException,
 			IllegalAccessException
 	{
-		ff.date.setValue("");
 		fff.setText("Test Commitment");
-		assertFalse("Commitment is not saveable with no date and time", mCommitDisplay.isSaveable());
+
+		assertTrue("Commitment date and time is set automatically", mCommitDisplay.isSaveable());
 	}
 
 	@Test
@@ -96,6 +97,19 @@ public class CommitmentUIValidationTest
 		ff.date.setValue("11/20/13");
 		ff.time.setValue("03:00");
 		ff.AMPM.setSelectedItem("PM");
+		assertTrue("Commitment is saveable with proper input", mCommitDisplay.isSaveable());
+	}
+
+	@Test
+	public void testAutoFillDate() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException
+	{
+		DateTime today = new DateTime();
+
+		fff.setText("Test Commitment");
+
+		assertEquals(ff.getDate().getMonthOfYear(), today.getMonthOfYear());
+		assertEquals(ff.getDate().getDayOfYear(), today.getDayOfYear());
+		assertEquals(ff.getDate().getYear(), today.getYear());
 		assertTrue("Commitment is saveable with proper input", mCommitDisplay.isSaveable());
 	}
 }

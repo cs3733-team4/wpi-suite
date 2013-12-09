@@ -51,6 +51,7 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		descriptionTextArea.setText(oldCommitment.getDescription());
 
 		saveButton.addActionListener(new ActionListener() {
+
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{

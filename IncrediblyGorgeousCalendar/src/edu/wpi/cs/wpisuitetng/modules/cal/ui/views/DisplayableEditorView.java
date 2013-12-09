@@ -118,6 +118,7 @@ public class DisplayableEditorView extends JPanel
 		this.add(descriptionLabel, "cell 0 5,alignx right,aligny top");
 
 		descriptionTextArea = new JTextArea();
+		descriptionTextArea.setBorder(nameTextField.getBorder());
 		this.add(descriptionTextArea, "cell 1 5,grow");
 
 		cancelButton = new JButton("Cancel");

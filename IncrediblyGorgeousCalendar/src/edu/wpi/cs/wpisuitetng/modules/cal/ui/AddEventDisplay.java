@@ -30,7 +30,7 @@ public class AddEventDisplay extends DisplayableEditorView
 	private Event eventToEdit;
 	private boolean isEditingEvent;
 	private UUID existingEventID; // UUID of event being edited
-	
+	private DateTime currentTime;
 	
 	// Constructor for edit event.
 	public AddEventDisplay(Event mEvent)
@@ -50,7 +50,9 @@ public class AddEventDisplay extends DisplayableEditorView
 	{
 		super(true);
 		this.isEditingEvent = false;
+		this.currentTime = new DateTime();
 		setUpUI();
+		setCurrentDateAndTime();
 		setUpListeners();
 	}
 	
@@ -240,9 +242,29 @@ public class AddEventDisplay extends DisplayableEditorView
 		return validateText(nameTextField.getText(), nameErrorLabel) && 
 				validateDate(startTimeDatePicker.getDateTime(), endTimeDatePicker.getDateTime(), dateErrorLabel);
 	}
-
+	
+	
+	/**
+	 * Checks whether events match 
+	 * 
+	 * @param other the event to compare with the event to edit
+	 * @return boolean indicating whether the events match
+	 */
 	public boolean matchingEvent(AddEventDisplay other)
 	{
 		return this.eventToEdit != null && this.eventToEdit.equals(other.eventToEdit);
+	}
+	
+	
+	/**
+	 * Sets the default date and time text fields to the current date and time
+	 * 
+	 * Should be only called if creating a new event, not when editing since edit
+	 * event already has a date and time to fill the text fields with
+	 */
+	public void setCurrentDateAndTime()
+	{
+		this.startTimeDatePicker.setDateTime(currentTime);
+		this.endTimeDatePicker.setDateTime(currentTime.plusHours(1));
 	}
 }

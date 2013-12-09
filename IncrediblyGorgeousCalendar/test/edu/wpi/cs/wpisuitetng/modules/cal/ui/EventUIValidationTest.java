@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import javax.swing.JTextField;
 
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -87,6 +88,8 @@ public class EventUIValidationTest
 		f.date.setValue("11/20/13");
 		f.time.setValue("03:00");
 		f.AMPM.setSelectedItem("PM");
+		
+		ff.date.setValue("");
 
 		assertFalse("Event is not saveable with no end date", mEventDisplay.isSaveable());
 	}
@@ -172,6 +175,29 @@ public class EventUIValidationTest
 		ff.time.setValue("11:00");
 		ff.AMPM.setSelectedItem("PM");
 
+		assertTrue("Event is saveable with proper input", mEventDisplay.isSaveable());
+	}
+	
+	@Test
+	public void autoFillDateAndTimeIsSavable() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException
+	{
+		fff.setText("Test Event");
+		
+		assertTrue("Event is saveable with proper input", mEventDisplay.isSaveable());
+	}
+	
+	@Test
+	public void autoFillDateAndTimeIsNow() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException
+	{	
+		DateTime today = new DateTime();
+		DateTime todayPlusOneHour = today.plusHours(1);
+	
+		fff.setText("Test Event");
+		
+		assertEquals(f.getDate().getMonthOfYear(), today.getMonthOfYear());
+		assertEquals(f.getDate().getDayOfMonth(), today.getDayOfMonth());
+		assertEquals(ff.getDate().getMonthOfYear(), todayPlusOneHour.getMonthOfYear());
+		assertEquals(ff.getDate().getDayOfMonth(), todayPlusOneHour.getDayOfMonth());
 		assertTrue("Event is saveable with proper input", mEventDisplay.isSaveable());
 	}
 }
