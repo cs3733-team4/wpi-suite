@@ -13,6 +13,7 @@ import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.swing.BorderFactory;
@@ -66,7 +67,11 @@ public class SidebarTabbedPane extends JTabbedPane{
 	// Category filter tab
 	private JPanel categoryFilterTab;
 	private JPanel categoryList;
+	private JPanel categoryButtonPanel;
+	private JButton selectAllButton;
+	private JButton clearAllButton;
 	private JScrollPane categoryScroll;
+	private HashMap<JCheckBox, Category> checkBoxCategoryMap = new HashMap<JCheckBox, Category>();
 	private Collection<UUID> selectedCategories = new ArrayList<UUID>();
 	
 	/**
@@ -185,9 +190,6 @@ public class SidebarTabbedPane extends JTabbedPane{
 	    detailButtonPane.add(detailEditButton);
 	    detailButtonPane.add(detailDeleteButton);
 	    
-	    //for a later user story
-	    //detailButtonPane.add(detailDeleteButton);
-	    
 	    // put entire tab into a scroll pane
 	    detailScrollPane = new JScrollPane(detailTextPane);
 	    detailScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -231,9 +233,37 @@ public class SidebarTabbedPane extends JTabbedPane{
 		categoryScroll.setBackground(Colors.TABLE_BACKGROUND);
 		categoryScroll.setAlignmentY(LEFT_ALIGNMENT);
 		
+		// Set up selection buttons
+		categoryButtonPanel = new JPanel();
+		categoryButtonPanel.setLayout(new GridLayout());
+		categoryButtonPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+		categoryButtonPanel.setBackground(Colors.TABLE_BACKGROUND);
+		categoryButtonPanel.putClientProperty("html.disable", true);
+		
+		selectAllButton = new JButton("Select All");
+		selectAllButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				selectAllCategories();
+				
+			}
+		});
+		
+		clearAllButton = new JButton("Clear");
+		clearAllButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				deselectAllCategories();
+			}
+		});
+		
+		categoryButtonPanel.add(selectAllButton);
+		categoryButtonPanel.add(clearAllButton);
+		
 		// Set up UI
+		categoryFilterTab.add(categoryButtonPanel, BorderLayout.NORTH);
 		categoryFilterTab.add(categoryScroll);
-		//categoryFilterTab.setFocusable(false); // Keep tab form grabbing focus from arrow keys
+		categoryFilterTab.setFocusable(false); // Keep tab form grabbing focus from arrow keys
 		
 	}
 	
@@ -329,6 +359,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 		
 		// Clear category list array
 		selectedCategories.clear();
+		checkBoxCategoryMap.clear();
 		
 		for(Category c : CategoryModel.getInstance().getAllCategories())
 		{
@@ -359,6 +390,8 @@ public class SidebarTabbedPane extends JTabbedPane{
 			// Store reference to check boxes and categories
 			if (categoryCheckBox.isSelected())
 				selectedCategories.add(c.getCategoryID());
+			
+			checkBoxCategoryMap.put(categoryCheckBox, c);
 			
 			// Set up container UI
 			container.add(categoryColor);
@@ -404,6 +437,37 @@ public class SidebarTabbedPane extends JTabbedPane{
 					selectedCategories.remove(referencedCategory.getCategoryID());
 			}
 		}
+	}
+	
+	/**
+	 * Checks all category check boxes and adds UUID to selectedCategories collection
+	 */
+	public void selectAllCategories()
+	{
+		// Clear previous selected categories to re-populate list
+		selectedCategories.clear();
+		
+		// Iterate over check boxes and categories, checking them and adding to list
+		for (Map.Entry<JCheckBox, Category> entry : checkBoxCategoryMap.entrySet()){
+			JCheckBox key = entry.getKey();
+			Category value = entry.getValue();
+			
+			key.setSelected(true);
+			selectedCategories.add(value.getCategoryID());
+		}
+	}
+	
+	/**
+	 * Un-checks all category check boxes and clears selectedCategories collection
+	 */
+	public void deselectAllCategories()
+	{
+		// Clear previous selected categories
+		selectedCategories.clear();
+		
+		// Iterate over check boxes and uncheck them
+		for (JCheckBox key : checkBoxCategoryMap.keySet())
+			key.setSelected(false);
 	}
 	
 	
