@@ -144,6 +144,7 @@ public class DisplayableEditorView extends JPanel
 			jPanel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(3, 6, 3, 0));
 			jPanel1.setAlignmentX(0.0F);
 			jPanel1.setAlignmentY(0.0F);
+			jPanel1.setOpaque(false);
 			jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.X_AXIS));
 
 			jPanel2.setBackground(value.getColor());
@@ -163,6 +164,7 @@ public class DisplayableEditorView extends JPanel
 			jPanel1.setName("ComboBox.listRenderer");
 			if (isSelected)
 			{
+				jPanel1.setOpaque(true);
 				jPanel1.setBackground(list.getSelectionBackground());
 				jPanel1.setForeground(list.getSelectionForeground());
 			}
