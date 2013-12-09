@@ -90,8 +90,7 @@ public class WeekCalendar extends AbstractCalendar
 		this.dayTitleGrid.removeAll();
 		this.dayTitlesContainer.removeAll();
 		
-		time = Months.getWeekStart(time);
-		MutableDateTime increment=new MutableDateTime(time);
+		MutableDateTime increment=new MutableDateTime(Months.getWeekStart(time));
 		
 		for(int index=0;index<7;index++)
 		{
@@ -133,7 +132,7 @@ public class WeekCalendar extends AbstractCalendar
 		
 		//setup week title
 		increment.addDays(-1);
-		JLabel weekTitle = new JLabel(time.toString(weekTitleFmtStart) + increment.toString(weekTitleFmtEnd));
+		JLabel weekTitle = new JLabel(Months.getWeekStart(time).toString(weekTitleFmtStart) + increment.toString(weekTitleFmtEnd));
 		weekTitle.setFont(new java.awt.Font("DejaVu Sans", Font.BOLD, 25));
 		weekTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		
@@ -284,5 +283,9 @@ public class WeekCalendar extends AbstractCalendar
 			}
 			index++;
 		}
+	}
+
+	public DateTime getTime() {
+		return time;
 	}
 }
