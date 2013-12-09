@@ -118,7 +118,17 @@ public class TableOfContents extends JPanel implements TreeSelectionListener {
 				if (holdLine.contains("<ul>"))
 					level++;
 				if (holdLine.contains("</ul>"))
-					level--;
+				{
+					for (int i=0; i<holdLine.length(); i++)
+					{
+						if (holdLine.indexOf("</ul>", i)>0)
+						{
+
+							level--;
+							i=holdLine.indexOf("</ul>", i);
+						}
+					}
+				}
 				holdLine=read.readLine();
 				if(holdLine.contains("div"))
 					break;

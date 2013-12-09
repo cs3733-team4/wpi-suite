@@ -30,12 +30,14 @@ public class DocumentMainPanel extends JFrame{
     private DocumentMainPanel()
     {
     	super();
-    	tableOfContents=new TableOfContents(serverLocation);
     	
     	this.setLayout(new BorderLayout());
     	
-    	serverLocation = Network.getInstance().makeRequest("docs/Calendar/", HttpMethod.GET).getUrl().toString().replace("API/", "");
-        try
+    	//serverLocation = Network.getInstance().makeRequest("docs/Calendar/", HttpMethod.GET).getUrl().toString().replace("API/", "");
+        serverLocation = "http://www.wpi.edu/~bkmcleod/newDocs/";
+
+    	tableOfContents=new TableOfContents(serverLocation);
+    	try
         {
         	url = new URL(serverLocation + "Introduction.html");
         }
@@ -60,7 +62,7 @@ public class DocumentMainPanel extends JFrame{
         scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         
-        //create the JTextField
+        //create the JTextField that shows the HTML Page
         webPage.setBackground(Color.getColor("EFEFEF"));
         webPage.addHyperlinkListener(new HyperlinkListener() {
             public void hyperlinkUpdate(HyperlinkEvent e) {
@@ -84,6 +86,11 @@ public class DocumentMainPanel extends JFrame{
         this.add(splitPane, BorderLayout.CENTER);
     }
     
+    /**
+     * doAction will return true if there is/was an action committed as a result of the link
+     * @param actionPath The URL Path that is requested
+     * @return if an action was completed
+     */
     private boolean doAction(String actionPath)
     {
     	if (actionPath.contains("#OpenNewEventWindow"))
