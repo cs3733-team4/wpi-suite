@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2013 WPI-Suite
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors: Team YOCO (You Only Compile Once)
+ ******************************************************************************/
+
 package edu.wpi.cs.wpisuitetng.modules.cal.models;
 
 import static org.junit.Assert.*;
@@ -5,16 +15,14 @@ import static org.junit.Assert.*;
 import java.util.HashSet;
 
 import org.junit.Test;
-
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
-
 import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
 import edu.wpi.cs.wpisuitetng.modules.cal.MockData;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentEntityManager;
-
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 
@@ -23,11 +31,10 @@ public class CommitmentEntityManagerTest {
         MockData db = new MockData(new HashSet<Object>());
            
 
-        DateTime one=new DateTime(2000,1,1,1,1);
-        
-        DateTime two=new DateTime(2000,1,2,2,1);
-        DateTime three=new DateTime(2000,1,3,3,1);
-        DateTime four=new DateTime(2000,1,4,4,1);
+        DateTime one=new DateTime(2000,1,1,1,1, DateTimeZone.UTC);
+        DateTime two=new DateTime(2000,1,2,2,1, DateTimeZone.UTC);
+        DateTime three=new DateTime(2000,1,3,3,1, DateTimeZone.UTC);
+        DateTime four=new DateTime(2000,1,4,4,1, DateTimeZone.UTC);
         
         
         
@@ -161,7 +168,6 @@ public class CommitmentEntityManagerTest {
                 String after ="20000102T020000.000Z"; // DateTime string at 1/2/2000, 2:00; ie a little before datetime two in basicDateTime string format
                 Commitment[] eList=cem.getCommitmentsByRange(ses1,before,after);
                 boolean hasCommitment=false;
-                
                 if(eList[0].getName().equals("First"))
                         hasCommitment=true;
                 assertTrue("GetCommitmentsByRange, if given a time range that only one Commitment is within, will return only that Commitment",hasCommitment);
@@ -222,7 +228,7 @@ public class CommitmentEntityManagerTest {
                 // The huge string being used as input is "filter-commitments-by-range," + string form of starting dateTime + "," + string form of ending dateTime
                 // This method is really just another way of calling getCommitmentsByRange with new inputs; as such, it has the same limitations and only needs basic testing
                 
-                assertEquals("getEntity will return a commitment in the database if it was stored there before",e.getName(),cem.getEntity(ses1,"filter-commitments-by-range,20000101T010000.000Z,20000102T030000.000Z")[0].getName());
+                assertEquals("getEntity will return a commitment in the database if it was stored there before",e.getName(),cem.getEntity(ses1,"filter-commitments-by-range,20000101T010000.000Z,20000102T020000.000Z")[0].getName());
                 assertEquals("getEntity will return a commitment in the database if it was stored there before",eee.getName(),cem.getEntity(ses1,"filter-commitments-by-range,20000103T030000.000Z,20000104T070100.000Z")[0].getName());
                 assertEquals("getEntity will return an empty array if no commitments are within the given range", 0 ,cem.getEntity(ses1,"filter-commitments-by-range,20500101T010100.000Z,20500101T010100.000Z").length);
         }

@@ -7,6 +7,7 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
+
 package edu.wpi.cs.wpisuitetng.modules.cal.models;
 
 import java.util.List;

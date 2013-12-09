@@ -147,7 +147,6 @@ public class EventEntityManager implements EntityManager<Event> {
 	 */
 	@Override
 	public Event[] getAll(Session s) {
-		System.out.println("GET ALL!");
 		Event [] allEvents = db.retrieveAll(new Event(), s.getProject()).toArray(new Event[0]);
 		ArrayList<Event> eventArray = new ArrayList<>();
 		for (Event e: allEvents)
