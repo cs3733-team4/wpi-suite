@@ -30,6 +30,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.DatePicker;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.RequestFocusListener;
 
 /**
  * The UI for AddEvent
@@ -50,6 +51,7 @@ public class DisplayableEditorView extends JPanel
 	{
 		nameTextField = new JTextField();
 		nameTextField.setColumns(30);
+		nameTextField.addAncestorListener(new RequestFocusListener());
 
 		nameLabel = new JLabel("Name:");
 		this.setLayout(new MigLayout("", "[45px][334px,grow]",
