@@ -49,6 +49,7 @@ public class WeekCalendar extends AbstractCalendar
 	private Displayable lastSelection;
 	
 	private LouvreTour[] daysOfWeekArray = {sun, mon, tue, wed, thu, fri, sat};
+	private String[] dayOfWeekNames = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
 	
 	private JPanel dayHolderPanel = new JPanel();
 	private JPanel dayGrid = new JPanel();
@@ -86,39 +87,42 @@ public class WeekCalendar extends AbstractCalendar
 
 	private void generateDay()
 	{
-		this.dayGrid.removeAll();
 		this.removeAll();
-
+		this.dayGrid.removeAll();
+		this.dayTitleGrid.removeAll();
+		this.dayTitlesContainer.removeAll();
+		
 		MutableDateTime increment=new MutableDateTime(Months.getWeekStart(time));
 		
 		for(int index=0;index<7;index++)
 		{
+			//add day views to the day grid
 			this.daysOfWeekArray[index] = new LouvreTour();
 			this.daysOfWeekArray[index].setEvents(getVisibleEvents(increment.toDateTime()), increment.toDateTime());
-			this.daysOfWeekArray[index].setBorder(BorderFactory.createMatteBorder(0, 1, 0, 1, Colors.BORDER));
+			this.daysOfWeekArray[index].setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, Colors.BORDER));
 			this.dayGrid.add(this.daysOfWeekArray[index]);
+			
+			//add day titles to the title grid
+			JLabel currDayTitle = new JLabel(dayOfWeekNames[index], JLabel.CENTER);
+			this.dayTitleGrid.add(currDayTitle);
+			
 			increment.addDays(1);
 		}
 
-		//add titles to grid
-		this.dayTitleGrid.removeAll();
-		this.dayTitleGrid.add(new JLabel("Sun", JLabel.CENTER));
-		this.dayTitleGrid.add(new JLabel("Mon", JLabel.CENTER));
-		this.dayTitleGrid.add(new JLabel("Tue", JLabel.CENTER));
-		this.dayTitleGrid.add(new JLabel("Wed", JLabel.CENTER));
-		this.dayTitleGrid.add(new JLabel("Thu", JLabel.CENTER));
-		this.dayTitleGrid.add(new JLabel("Fri", JLabel.CENTER));
-		this.dayTitleGrid.add(new JLabel("Sat", JLabel.CENTER));
+		//initialize spacer label to offset dayGridLabel
+		JLabel spacerLabel = new JLabel(" 10:00 PM ");
+		spacerLabel.setForeground(spacerLabel.getBackground());
+		spacerLabel.setBorder(BorderFactory.createLineBorder(spacerLabel.getBackground()));
+		this.dayTitlesContainer.add(spacerLabel);
 		
-		//initialize spacer label for dayGridLabel
-		JLabel spacerLabel = new JLabel(" 10:00 PM  ");
+		//initialize spacer label to offset scrollbar
+		spacerLabel = new JLabel("     ");
 		spacerLabel.setForeground(spacerLabel.getBackground());
 		spacerLabel.setBorder(BorderFactory.createLineBorder(spacerLabel.getBackground()));
 		
 		//add grids to box container
-		this.dayTitlesContainer.removeAll();
+		this.dayTitlesContainer.add(dayTitleGrid);
 		this.dayTitlesContainer.add(spacerLabel);
-		this.dayTitlesContainer.add(dayTitleGrid);		
 
 		//add spacer and time labels to container
 		this.dayGridContainer.add(DayGridLabel.getInstance(), BorderLayout.WEST);
@@ -252,6 +256,8 @@ public class WeekCalendar extends AbstractCalendar
 		MutableDateTime endDay = new MutableDateTime(on.getEnd());
 		
 		endDay.setMillisOfDay(0);
+		endDay.addDays(1);
+		endDay.addMillis(-1);
 		startDay.setMillisOfDay(0);
 		
 		int index = 0;
