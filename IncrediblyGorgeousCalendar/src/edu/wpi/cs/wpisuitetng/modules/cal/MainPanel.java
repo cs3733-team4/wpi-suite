@@ -54,7 +54,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthItem;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.year.YearCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
-import edu.wpi.cs.wpisuitetng.modules.cal.views.week.WeekCalendar;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.week.WeekCalendar;
 
 /**
  * The main UI of the Calendar module. This singleton is basically the controller for everything

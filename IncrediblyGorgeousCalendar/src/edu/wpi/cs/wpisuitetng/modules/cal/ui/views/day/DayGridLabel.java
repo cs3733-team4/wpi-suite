@@ -36,13 +36,13 @@ public class DayGridLabel extends JPanel{
 		for(int i = 0; i < 24; i++)
 		{
 			int hour = i%12==0?12:i%12;
-			String padding = (hour < 10) ? "   " : "  ";
+			String padding = (hour < 10) ? "    " : "   ";
 			StringBuilder currtime = new StringBuilder();
 			currtime.append(" ").append(hour).append(":00");
 			if (i <= 11)
-				currtime.append(" AM");
+				currtime.append("am");
 			else
-				currtime.append(" PM");
+				currtime.append("pm");
 			JLabel text = new JLabel(currtime.append(padding).toString());
 			text.setBackground(Colors.TABLE_BACKGROUND);
 			text.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 1, Colors.BORDER));

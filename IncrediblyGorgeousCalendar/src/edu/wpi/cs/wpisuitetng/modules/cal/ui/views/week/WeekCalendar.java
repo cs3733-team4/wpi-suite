@@ -7,7 +7,7 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.cal.views.week;
+package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.week;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -44,12 +44,10 @@ public class WeekCalendar extends AbstractCalendar
 
 	private DateTime time;
 	private MainPanel mainPanel;
-	private LouvreTour sun, mon, tue, wed, thu, fri, sat;
 	
 	private Displayable lastSelection;
 	
-	private LouvreTour[] daysOfWeekArray = {sun, mon, tue, wed, thu, fri, sat};
-	private String[] dayOfWeekNames = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+	private LouvreTour[] daysOfWeekArray = new LouvreTour[7];
 	
 	private JPanel dayHolderPanel = new JPanel();
 	private JPanel dayGrid = new JPanel();
@@ -62,8 +60,9 @@ public class WeekCalendar extends AbstractCalendar
 
 	private EventModel eventModel;
 
-	private DateTimeFormatter titleFmt = DateTimeFormat.forPattern("MMM d, yyyy");
-
+	private DateTimeFormatter weekTitleFmt = DateTimeFormat.forPattern("MMM d, yyyy");
+	private DateTimeFormatter dayTitleFmt = DateTimeFormat.forPattern("E M/d");
+	
 	public WeekCalendar(DateTime on, EventModel emodel)
 	{
 		this.mainPanel = MainPanel.getInstance();
@@ -92,7 +91,8 @@ public class WeekCalendar extends AbstractCalendar
 		this.dayTitleGrid.removeAll();
 		this.dayTitlesContainer.removeAll();
 		
-		MutableDateTime increment=new MutableDateTime(Months.getWeekStart(time));
+		time = Months.getWeekStart(time);
+		MutableDateTime increment=new MutableDateTime(time);
 		
 		for(int index=0;index<7;index++)
 		{
@@ -103,7 +103,7 @@ public class WeekCalendar extends AbstractCalendar
 			this.dayGrid.add(this.daysOfWeekArray[index]);
 			
 			//add day titles to the title grid
-			JLabel currDayTitle = new JLabel(dayOfWeekNames[index], JLabel.CENTER);
+			JLabel currDayTitle = new JLabel(increment.toDateTime().toString(dayTitleFmt), JLabel.CENTER);
 			this.dayTitleGrid.add(currDayTitle);
 			
 			increment.addDays(1);
@@ -133,7 +133,8 @@ public class WeekCalendar extends AbstractCalendar
 		this.dayHolderPanel.add(scroll, BorderLayout.CENTER);
 		
 		//setup week title
-		JLabel weekTitle = new JLabel("Week of " + time.toString(titleFmt));
+		increment.addDays(-1);
+		JLabel weekTitle = new JLabel(time.toString(weekTitleFmt) + " - " + increment.toString(weekTitleFmt));
 		weekTitle.setFont(new java.awt.Font("DejaVu Sans", Font.BOLD, 25));
 		weekTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		
