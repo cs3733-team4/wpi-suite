@@ -48,4 +48,10 @@ public interface Displayable
 	 * sets the time (for easy updating)
 	 */
 	public void setTime(DateTime newTime);
+	
+	/**
+	 * updates this event (sends call to db layer)
+	 */
+	public void update();
+	
 }

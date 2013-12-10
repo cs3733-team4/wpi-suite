@@ -66,9 +66,6 @@ public class Commitment extends AbstractModel implements Displayable
 		return this;
 	}
 	
-	
-	
-	
 	/**
 	 * Create an event with the default characteristics.
 	 */
@@ -77,6 +74,11 @@ public class Commitment extends AbstractModel implements Displayable
 		super();
 	}
 
+	/**
+	 * 
+	 * @param json the JSON string that represents this object
+	 * @return a commitment with fields matching the JSON
+	 */
 	public static Commitment fromJson(String json)
 	{
 		final Gson parser = new Gson();
@@ -95,6 +97,9 @@ public class Commitment extends AbstractModel implements Displayable
 		CommitmentModel.getInstance().deleteCommitment(this);
 	}
 
+	/**
+	 * @return this object in JSON form
+	 */
 	public String toJSON()
 	{
 		return new Gson().toJson(this, Commitment.class);
@@ -197,8 +202,6 @@ public class Commitment extends AbstractModel implements Displayable
 		this.participants = participants;
 	}
 
-
-	 
 	/**
 	 * @return the owner
 	 */
@@ -218,6 +221,11 @@ public class Commitment extends AbstractModel implements Displayable
 	@Override
 	public void setTime(DateTime newTime) {
 		this.duedate = newTime.toDate();
+	}
+
+	@Override
+	public void update() {
+		CommitmentModel.getInstance().updateCommitment(this);
 	}
 
 }

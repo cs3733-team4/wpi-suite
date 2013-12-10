@@ -247,7 +247,7 @@ public class MonthCalendar extends AbstractCalendar
 	{
 		for (Component i : inside.getComponents())
 		{
-			((MonthDay)i).clear();
+			((MonthDay)i).clearEvents();
 		}
 	}
 

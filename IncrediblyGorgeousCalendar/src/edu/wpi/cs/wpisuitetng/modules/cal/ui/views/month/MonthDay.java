@@ -110,23 +110,19 @@ public class MonthDay extends JPanel
 				{
 					MonthDay releasedDay = parent.getMonthDayAtCursor();
 					Displayable selected = MainPanel.getInstance().getSelectedEvent();
-					MutableDateTime newTime = new MutableDateTime(selected.getDate());
-					
-					newTime.setYear(releasedDay.day.getYear());
-					newTime.setDayOfYear(releasedDay.day.getDayOfYear());
-					
-					selected.setTime(newTime.toDateTime());
-					
-					if (selected instanceof Event)
+					if (selected != null)
 					{
-						EventModel.getInstance().updateEvent((Event) selected);
+						MutableDateTime newTime = new MutableDateTime(selected.getDate());
+						
+						newTime.setYear(releasedDay.day.getYear());
+						newTime.setDayOfYear(releasedDay.day.getDayOfYear());
+						
+						selected.setTime(newTime.toDateTime());
+						
+						selected.update();
+						
+						parent.display(selected.getDate());
 					}
-					else if (selected instanceof Commitment)
-					{
-						CommitmentModel.getInstance().updateCommitment((Commitment) selected);
-					}
-					
-					parent.display(selected.getDate());
 				}
 				parent.setEscaped(false);
 				parent.repaint();
@@ -226,6 +222,11 @@ public class MonthDay extends JPanel
 		revalidate();
 	}
 
+	/**
+	 * removes a commitment from this monthday
+	 * 
+	 * @param c the commitment to remove
+	 */
 	public void removeCommitment(Commitment c)
 	{
 		this.commitments.remove(c);
@@ -302,18 +303,29 @@ public class MonthDay extends JPanel
 		super.doLayout();
 	}
 
-	public void clear()
+	/**
+	 * remove all events from the monthday
+	 */
+	public void clearEvents()
 	{
 		events.clear();
 		revalidate();
 	}
 
+	/**
+	 * remove all commitments from the monthday
+	 */
 	public void clearComms()
 	{
 		commitments.clear();
 		revalidate();
 	}
 
+	/**
+	 * "selects" an item by keeping a special reference to and and highlighting it
+	 * 
+	 * @param item the displayable item that the user has clicked on to select
+	 */
 	public void select(Displayable item)
 	{
 		selected = item;

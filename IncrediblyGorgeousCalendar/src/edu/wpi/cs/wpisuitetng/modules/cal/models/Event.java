@@ -104,6 +104,12 @@ public class Event extends AbstractModel implements Displayable
 		super();
 	}
 
+	/**
+	 * make an event from JSON
+	 * 
+	 * @param json the JSON string that represents this object
+	 * @return an Event instance represented by the provided JSON
+	 */
 	public static Event fromJson(String json)
 	{
 		final Gson parser = new Gson();
@@ -122,6 +128,7 @@ public class Event extends AbstractModel implements Displayable
 		EventModel.getInstance().deleteEvent(this);
 	}
 
+	@Override
 	public String toJSON()
 	{
 		return new Gson().toJson(this, Event.class);
@@ -275,11 +282,20 @@ public class Event extends AbstractModel implements Displayable
 		this.participants = participants;
 	}
 
+	/**
+	 * 
+	 * @return whether this is an all day event or not
+	 */
 	boolean isAllDay()
 	{
 		return isAllDay;
 	}
 
+	/**
+	 * set this event to be all day or not all day
+	 * 
+	 * @param isAllDay a boolean representing whether this event is all day
+	 */
 	void setAllDay(boolean isAllDay)
 	{
 		this.isAllDay = isAllDay;
@@ -300,10 +316,21 @@ public class Event extends AbstractModel implements Displayable
 	{
 		this.owner = owner;
 	}
+	
+	/**
+	 * returns the category that this event is associated with
+	 * 
+	 * @return a Category Object
+	 */
 	public Category getAssociatedCategory()
 	{
 		return CategoryModel.getInstance().getCategoryByUUID(category);
 	}
+	
+	/**
+	 * get the color that this event wants to be drawn
+	 * @return a Color Object
+	 */
 	public Color getColor()
 	{
 		Color fallbackColor = isProjectEvent ? new Color(125,157,227) : new Color(227,125,147);
@@ -319,16 +346,28 @@ public class Event extends AbstractModel implements Displayable
 		}
 		return fallbackColor;
 	}
+	
+	/**
+	 * 
+	 * @return whether this day is a multiday event
+	 */
 	public boolean isMultiDayEvent()
 	{
-		return (getEnd().getYear()!=getStart().getYear() || getEnd().getDayOfYear()!=getStart().getDayOfYear());
-			
+		return (getEnd().getYear()!=getStart().getYear() || getEnd().getDayOfYear()!=getStart().getDayOfYear());		
 	}
+	
 	@Override
 	public DateTime getDate()
 	{
 		return this.getStart();
 	}
+	
+	/**
+	 * this is primarily used for multiday events
+	 * 
+	 * @param givenDay gets the time that this event starts on a given day
+	 * @return when this event starts
+	 */
 	public DateTime getStartTimeOnDay(DateTime givenDay)
 	{
 		MutableDateTime mDisplayedDay = new MutableDateTime(givenDay);
@@ -341,6 +380,13 @@ public class Event extends AbstractModel implements Displayable
 		else
 			return this.getStart();
 	}
+	
+	/**
+	 * this is primarily used for multiday events
+	 * 
+	 * @param givenDay gets the time that this event ends on a given day
+	 * @return when this event ends
+	 */
 	public DateTime getEndTimeOnDay(DateTime givenDay)
 	{
 		MutableDateTime mDisplayedDay = new MutableDateTime(givenDay);;
@@ -381,5 +427,10 @@ public class Event extends AbstractModel implements Displayable
 		this.end = newEnd.toDate();
 		this.start = newTime.toDate();
 		
+	}
+
+	@Override
+	public void update() {
+		EventModel.getInstance().updateEvent(this);
 	}
 }
