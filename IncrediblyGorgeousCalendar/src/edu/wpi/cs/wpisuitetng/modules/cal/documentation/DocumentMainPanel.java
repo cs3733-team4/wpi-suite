@@ -70,6 +70,8 @@ public class DocumentMainPanel extends JFrame{
     public void init()
     {
 
+    	if (serverLocation!=null)
+    		return;
     	tocView = new JPanel(new BorderLayout());
     	openInBrowser = new JButton("Open In Browser");
     	this.setTitle("YOCO Calendar Help");
@@ -375,18 +377,17 @@ public class DocumentMainPanel extends JFrame{
     	return false;
     }
     /**
-     * Just a little helper function to re-use some code, it just pulls the open tab and relays the requested focus
-     * @param field the field to focus on
-     */
-    private void setSelectedForCommitment(SelectableField field)
-    {
-    	if (MainPanel.getInstance().getSelectedComponent() instanceof AddCommitmentDisplay)
+	 * Just a little helper function to re-use some code, it just pulls the open tab and relays the requested focus
+	 * @param field the field to focus on
+	 */
+	private void setSelectedForCommitment(SelectableField field)
+	{
+		if (MainPanel.getInstance().getSelectedComponent() instanceof AddCommitmentDisplay)
 		{
 			AddCommitmentDisplay ned = (AddCommitmentDisplay) MainPanel.getInstance().getSelectedComponent();
 			ned.setSelected(field);
 		}
-    }
-
+	}
     /**
      * Just a little helper function to re-use some code, it just pulls the open tab and relays the requested focus
      * @param field the field to focus on
