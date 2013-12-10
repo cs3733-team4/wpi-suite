@@ -30,6 +30,7 @@ public class Commitment extends AbstractModel implements Displayable
 	private String name;
 	private String description;
 	private Date duedate;
+	private UUID category;
 	private String participants;
 	private boolean isProjectCommitment;
 	private User owner;
@@ -67,7 +68,23 @@ public class Commitment extends AbstractModel implements Displayable
 		return this;
 	}
 	
-	
+	/**
+	 * @return the category
+	 */
+	public UUID getCategory()
+	{
+		return category;
+	}
+
+	/**
+	 * @param category
+	 *            the category to set
+	 */
+	public void setCategory(UUID category)
+	{
+		this.category = category;
+	}
+
 	
 	
 	/**

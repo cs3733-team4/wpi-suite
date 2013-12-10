@@ -53,7 +53,7 @@ public class CommitmentModel {
 		/*return ServerManager.get("cal/commitments/", Commitment[].class, "filter-commitments-by-range", 
 				from.toString(serializer),
 				to.toString(serializer));*/
-		final List<Commitment> commitments = ServerManager.get("cal/events/", Commitment[].class, "filter-events-by-range", from.toString(serializer),
+		final List<Commitment> commitments = ServerManager.get("cal/commitments/", Commitment[].class, "filter-commitments-by-range", from.toString(serializer),
 				to.toString(serializer));
 		
 		//set up to filter events based on booleans in MainPanel

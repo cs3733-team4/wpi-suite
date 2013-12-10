@@ -9,71 +9,63 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.ui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JLabel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.JLabel;
+
 import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.DisplayableEditorView;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class AddCommitmentDisplay extends DisplayableEditorView
 {
 	private int tabid;
 	private Commitment commitmentToEdit;
 	private boolean isEditingCommitment;
+	private DateTime currentTime;
 
+	// For a new commitment.
 	public AddCommitmentDisplay()
 	{
 		super(false);
 		isEditingCommitment = false;
-		init(new Commitment());
+		currentTime = new DateTime();
+		populateCommitmentFields(new Commitment());
+		setCurrentDateAndTime();
+		setUpListeners();
 	}
 
-	public AddCommitmentDisplay(Commitment oldCommitment)
+	// For editing a commitment.
+	public AddCommitmentDisplay(Commitment mCommitment)
 	{
 		super(false);
 		isEditingCommitment = true;
-		commitmentToEdit = oldCommitment;
-		init(commitmentToEdit);
+		commitmentToEdit = mCommitment;
+		populateCommitmentFields(commitmentToEdit);
+		setUpListeners();
 	}
-
-	private void init(final Commitment oldCommitment)
+	
+	private void populateCommitmentFields(Commitment mCommitment)
 	{
-		nameTextField.setText(oldCommitment.getName());
-		startTimeDatePicker.setDateTime(oldCommitment.getDate());
-		participantsTextField.setText(oldCommitment.getParticipants());
+		nameTextField.setText(mCommitment.getName());
+		startTimeDatePicker.setDateTime(mCommitment.getDate());
+		participantsTextField.setText(mCommitment.getParticipants());
 		// TODO: categories and team/personal
-		this.rdbtnPersonal.setSelected(!oldCommitment.isProjectCommitment());
-		this.rdbtnTeam.setSelected(oldCommitment.isProjectCommitment());
-		descriptionTextArea.setText(oldCommitment.getDescription());
-
-		saveButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0)
-			{
-				Commitment e = oldCommitment;
-				e.setName(nameTextField.getText().trim());
-				e.setDescription(descriptionTextArea.getText());
-				e.setDate(startTimeDatePicker.getDateTime());
-
-				if (isEditingCommitment)
-					MainPanel.getInstance().updateCommitment(e);
-				else
-					MainPanel.getInstance().addCommitment(e);
-
-				saveButton.setEnabled(false);
-				saveButton.setText("Saved!");
-				MainPanel.getInstance().closeTab(tabid);
-				MainPanel.getInstance().refreshView();
-			}
-		});
-
+		System.out.println("Project Commitment: " + mCommitment.isProjectCommitment());
+		this.rdbtnPersonal.setSelected(!mCommitment.isProjectCommitment());
+		this.rdbtnTeam.setSelected(mCommitment.isProjectCommitment());
+		descriptionTextArea.setText(mCommitment.getDescription());
+		saveButton.setEnabled(isSaveable());
+	}
+	
+	private void setUpListeners()
+	{
 		cancelButton.addActionListener(new ActionListener() {
 
 			@Override
@@ -105,6 +97,7 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 				// Not triggered by plaintext fields
 			}
 		});
+		
 		startTimeDatePicker.addChangeListener(new DatePickerListener() {
 
 			@Override
@@ -114,8 +107,30 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 				saveButton.setEnabled(isSaveable());
 			}
 		});
+		
+		saveButton.addActionListener(new ActionListener(){
 
-		saveButton.setEnabled(isSaveable());
+			@Override
+			public void actionPerformed(ActionEvent arg0){
+				Commitment e = commitmentToEdit;
+				e.setName(nameTextField.getText().trim());
+				e.setDescription(descriptionTextArea.getText());
+				e.setDate(startTimeDatePicker.getDateTime());
+				e.setProjectCommitment(rdbtnTeam.isSelected());
+				e.setParticipants(participantsTextField.getText().trim());
+				e.setCategory(((Category)eventCategoryPicker.getSelectedItem()).getCategoryID());
+
+				if (isEditingCommitment)
+					MainPanel.getInstance().updateCommitment(e);
+				else
+					MainPanel.getInstance().addCommitment(e);
+
+				saveButton.setEnabled(false);
+				saveButton.setText("Saved!");
+				MainPanel.getInstance().closeTab(tabid);
+				MainPanel.getInstance().refreshView();
+			}
+		});
 	}
 
 	public boolean isSaveable()
@@ -172,5 +187,16 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 	public boolean matchingCommitment(AddCommitmentDisplay other)
 	{
 		return this.commitmentToEdit != null && this.commitmentToEdit.equals(other.commitmentToEdit);
+	}
+	
+	/**
+	 * Sets the default date and time text fields to the current date and time
+	 * 
+	 * Should be only called if creating a new commitment, not when editing since edit
+	 * event already has a date and time to fill the text fields with
+	 */
+	public void setCurrentDateAndTime()
+	{
+		this.startTimeDatePicker.setDateTime(currentTime);
 	}
 }
