@@ -17,6 +17,7 @@ import org.joda.time.DateTime;
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
@@ -241,4 +242,15 @@ public class Commitment extends AbstractModel implements Displayable
 		return timeFormat.toString();
 	}
 
+	@Override
+	public String getFormattedDateRange()
+	{
+		return "";
+	}
+	
+	@Override
+	public UUID getIdentification()
+	{
+		return commitmentID;
+	}
 }

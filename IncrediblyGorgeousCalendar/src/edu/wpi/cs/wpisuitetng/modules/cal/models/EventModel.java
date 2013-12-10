@@ -68,7 +68,7 @@ public class EventModel {
 	
 	public boolean deleteEvent(Event toRemove)
 	{
-		return ServerManager.delete("cal/events", "filter-event-by-uuid", toRemove.getEventID().toString());
+		return ServerManager.delete("cal/events", "filter-event-by-uuid", toRemove.getIdentification().toString());
 	}
 	
 

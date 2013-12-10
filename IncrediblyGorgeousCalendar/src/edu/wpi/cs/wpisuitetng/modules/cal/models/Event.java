@@ -20,6 +20,7 @@ import org.joda.time.MutableDateTime;
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
@@ -138,18 +139,16 @@ public class Event extends AbstractModel implements Displayable
 	public Boolean identify(Object o)
 	{
 		if (o instanceof String)
-			return getEventID().toString().equals((String)(o));
+			return getIdentification().toString().equals((String)(o));
 		else if (o instanceof UUID)
-			return getEventID().equals((UUID)(o));
+			return getIdentification().equals((UUID)(o));
 		else if (o instanceof Event)
-			return getEventID().equals(((Event)(o)).getEventID());
+			return getIdentification().equals(((Event)(o)).getIdentification());
 		return false;
 	}
 
-	/**
-	 * @return the eventID
-	 */
-	public UUID getEventID()
+	@Override
+	public UUID getIdentification()
 	{
 		return eventID;
 	}
@@ -450,5 +449,28 @@ public class Event extends AbstractModel implements Displayable
 			.append(":")
 			.append(e.getMinuteOfHour()==0?"00":e.getMinuteOfHour());
 		return timeFormat.toString();
+	}
+	
+	@Override
+	public String getFormattedDateRange()
+	{
+		if (this.isMultiDayEvent())
+		{
+			DateTime s = new DateTime(this.start);
+			DateTime e = new DateTime(this.end);
+			StringBuilder timeFormat = new StringBuilder()
+				.append(s.monthOfYear().getAsShortText())
+				.append(", ")
+				.append(Months.getDescriptiveNumber(s.getDayOfMonth()))
+				.append(" - ")
+				.append(e.getMonthOfYear())
+				.append(", ")
+				.append(Months.getDescriptiveNumber(e.getDayOfMonth()));
+			return timeFormat.toString();
+		}
+		else
+		{
+			return "";
+		}
 	}
 }

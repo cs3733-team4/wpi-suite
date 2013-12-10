@@ -35,12 +35,14 @@ import java.awt.Font;
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.DayStyle;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.HSLColor;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
 
 /**
@@ -470,49 +472,41 @@ public class MonthCalendar extends AbstractCalendar
 				String name = dp.getName();
 				if (name != null)
 				{	
+					//get Cursor info
 					Point l = MouseInfo.getPointerInfo().getLocation();
 					Point pp = inside.getLocationOnScreen();
-					
 					int x = l.x-pp.x;
 					int y = l.y-pp.y;
 					
+					//get String properties of displayables
+					String time = dp.getFormattedHoverTextTime();
+					String days = dp.getFormattedDateRange();
 					
-					StringBuilder timeFormat = new StringBuilder()
-													.append(dp.getDate().getHourOfDay())
-													.append(":")
-													.append(dp.getDate().getMinuteOfHour());
-					if (dp instanceof Event)
-					{
-						Event e = (Event) dp;
-						timeFormat.append(" - ")
-							  .append(e.getEnd().getHourOfDay())
-							  .append(":")
-							  .append(e.getEnd().getMinuteOfHour()==0?"00":e.getEnd().getMinuteOfHour());
-					}
-					
-					String time = timeFormat.toString();
+					//get widths of stringProperties and find longest
 					int timeSize = g.getFontMetrics().stringWidth(time);
-					int width = g.getFontMetrics().stringWidth(name)+10;
+					int nameSize = g.getFontMetrics().stringWidth(name);
+					int daysSize = g.getFontMetrics().stringWidth(days);
 					
-					width = Math.max(width, timeSize+10);
+					int width = Math.max(
+							Math.max(timeSize+10, nameSize+10),
+							Math.max(daysSize+10, 60));
 					
 					
-					
+					//generate the polygon
 					Polygon dropdown = getDropTextPolygon(width, x, y);
 					
+					//HSLColor background = new HSLColor(CategoryModel.getInstance().getCategoryByUUID(dp.getIdentification()).getColor());
 					
+					//draw the polygon
 					g.setColor(new Color(255,255,255,160));
 					g.fillPolygon(dropdown);
 					g.setColor(Color.BLACK);
 					g.drawPolygon(dropdown);
 					
-					g.drawString(dp.getName(), x+5, y+90);
-					
-					
-					
-					
-					
+					//draw the text
+					g.drawString(name, x+(width-nameSize)/2, y+90);
 					g.drawString(time, x+(width-timeSize)/2, y+110);
+					g.drawString(days, x+(width-daysSize)/2, y+130);
 				}
 			}
 		}

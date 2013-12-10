@@ -326,7 +326,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	 * @param updateEvent event to update
 	 */
 	public void updateEvent(Event updateEvent){
-		if((currentSelected instanceof Event) && updateEvent.getEventID().equals(((Event) currentSelected).getEventID()))
+		if((currentSelected instanceof Event) && updateEvent.getIdentification().equals(((Event) currentSelected).getIdentification()))
 			clearSelected();
 		events.updateEvent(updateEvent);
 	}

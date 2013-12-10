@@ -9,6 +9,8 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.models;
 
+import java.util.UUID;
+
 import org.joda.time.DateTime;
 
 /**
@@ -60,5 +62,19 @@ public interface Displayable
 	 * @return a String
 	 */
 	public String getFormattedHoverTextTime();
+	
+	/**
+	 * returns the dateRange for this event (an empty string for single day events and commitments)
+	 * 
+	 * @return a String
+	 */
+	public String getFormattedDateRange();
+	
+	/**
+	 * gets the displayables identification UUID
+	 * 
+	 * @return a UUID
+	 */
+	public UUID getIdentification();
 	
 }
