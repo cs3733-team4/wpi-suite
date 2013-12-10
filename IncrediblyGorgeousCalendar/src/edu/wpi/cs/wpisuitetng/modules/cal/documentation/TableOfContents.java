@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * Copyright (c) 2013 WPI-Suite
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors: Team YOCO (You Only Compile Once)
+ ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.documentation;
 
 import java.awt.Color;
@@ -26,8 +35,6 @@ public class TableOfContents extends JPanel implements TreeSelectionListener {
     private static boolean playWithLineStyle = false;
     private static String lineStyle = "Horizontal";
     
-    //Optionally set the look and feel.
-    private static boolean useSystemLookAndFeel = false;
 
     public TableOfContents(String serverLocation) {
         super(new GridLayout(1,0));
@@ -45,14 +52,11 @@ public class TableOfContents extends JPanel implements TreeSelectionListener {
         //Listen for when the selection changes.
         tree.addTreeSelectionListener(this);
 
-        if (playWithLineStyle) {
-            System.out.println("line style = " + lineStyle);
-            tree.putClientProperty("JTree.lineStyle", lineStyle);
-        }
+        
 
         //Create the scroll pane and add the tree to it. 
         JScrollPane treeView = new JScrollPane(tree);
-
+        treeView.setBackground(Color.getColor("EFEFEF"));
 
         Dimension minimumSize = new Dimension(100, 50);
         treeView.setMinimumSize(minimumSize);

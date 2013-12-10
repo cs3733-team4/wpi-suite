@@ -15,13 +15,15 @@ public class RibbonToolbar extends DefaultToolbarView {
 	
 	public EventToolbarGroup eventButtonGroup;
 	public CategoryToolbarGroup categoryButtonGroup;
+	public HelpToolbarGroup helpButtonGroup;
 	
 	public RibbonToolbar(final MainPanel mMainPanel, boolean visible) {
-		
+		helpButtonGroup = new HelpToolbarGroup();
 		eventButtonGroup = new EventToolbarGroup(mMainPanel);
 		categoryButtonGroup = new CategoryToolbarGroup(mMainPanel);
 		this.addGroup(eventButtonGroup);
 		this.addGroup(categoryButtonGroup);
+		this.addGroup(helpButtonGroup);
 		eventButtonGroup.disableRemoveEventButton();
 	}
 }

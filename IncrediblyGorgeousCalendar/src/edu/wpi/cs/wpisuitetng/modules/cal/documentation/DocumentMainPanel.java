@@ -1,16 +1,30 @@
+/*******************************************************************************
+ * Copyright (c) 2013 WPI-Suite
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors: Team YOCO (You Only Compile Once)
+ ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.documentation;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.border.Border;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
@@ -31,10 +45,15 @@ public class DocumentMainPanel extends JFrame{
     private String serverLocation;
     private TableOfContents tableOfContents;
     private static DocumentMainPanel instance;
+    private JButton openInBrowser;
+    private JPanel tocView;
     private DocumentMainPanel()
     {
+    
     	super();
-    	
+    	tocView = new JPanel(new BorderLayout());
+    	openInBrowser = new JButton("Open In Browser");
+    	this.setTitle("YOCO Calendar Help");
     	this.setLayout(new BorderLayout());
     	
     	//serverLocation = Network.getInstance().makeRequest("docs/Calendar/", HttpMethod.GET).getUrl().toString().replace("API/", "");
@@ -65,7 +84,14 @@ public class DocumentMainPanel extends JFrame{
         scroll = new JScrollPane(webPage);
         scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        
+        openInBrowser.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				BareBonesBrowserLaunch.openURL(serverLocation + "YOCO Calendar.html? " + webPage.getPage().getPath().replace(serverLocation, ""));
+				
+			}
+		});
         //create the JTextField that shows the HTML Page
         webPage.setBackground(Color.getColor("EFEFEF"));
         webPage.addHyperlinkListener(new HyperlinkListener() {
@@ -82,7 +108,9 @@ public class DocumentMainPanel extends JFrame{
                 });//end HyperlinkListener
 
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        splitPane.add(tableOfContents);
+        tocView.add(openInBrowser, BorderLayout.NORTH);
+        tocView.add(tableOfContents, BorderLayout.CENTER);
+        splitPane.add(tocView);
         splitPane.add(scroll);
         this.add(splitPane, BorderLayout.CENTER);
     }
@@ -97,7 +125,6 @@ public class DocumentMainPanel extends JFrame{
     	
     	if (actionPath.contains("#OpenNewEventWindow"))
 		{
-			System.out.println("Action for new Event");
 			AddEventDisplay ned = new AddEventDisplay();
 			ned.setTabId(MainPanel.getInstance().addTopLevelTab(ned, "New Event", true));
 			return true;
@@ -106,7 +133,6 @@ public class DocumentMainPanel extends JFrame{
 		{
     		if (MainPanel.getInstance().getSelectedComponent() instanceof AddEventDisplay)
     		{
-    			System.out.println("Could try to save a new event!!");
     			AddEventDisplay ned = (AddEventDisplay) MainPanel.getInstance().getSelectedComponent();
     			ned.attemptSave();
     		}
@@ -114,7 +140,6 @@ public class DocumentMainPanel extends JFrame{
 		}
     	else if (actionPath.contains("#OpenNewAddCommitmentBox"))
     	{
-    		System.out.println("Action for new Commitment");
     		AddCommitmentDisplay ncm = new AddCommitmentDisplay();
     		ncm.setTabId(MainPanel.getInstance().addTopLevelTab(ncm, "New Commitment", true));
     		return true;
@@ -176,7 +201,6 @@ public class DocumentMainPanel extends JFrame{
     {
     	try {
 			webPage.setPage(new URL(serverLocation + page));
-			System.out.println(webPage.getPage().toString());
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
