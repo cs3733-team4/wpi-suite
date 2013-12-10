@@ -11,6 +11,7 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.UUID;
 
 import javax.swing.JLabel;
 import javax.swing.event.DocumentEvent;
@@ -21,13 +22,14 @@ import org.joda.time.DateTime;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.DisplayableEditorView;
 
 public class AddCommitmentDisplay extends DisplayableEditorView
 {
+	
 	private int tabid;
 	private Commitment commitmentToEdit;
+	private UUID existingCommitmentID; // UUID of event being edited
 	private boolean isEditingCommitment;
 	private DateTime currentTime;
 
@@ -65,11 +67,40 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		if (mCommitment.getAssociatedCategory()!=null)
 			this.eventCategoryPicker.setSelectedItem(mCommitment.getAssociatedCategory());
 		else
-			this.eventCategoryPicker.setSelectedItem(Category.DEFUALT_CATEGORY);
+			this.eventCategoryPicker.setSelectedItem(Category.DEFAULT_CATEGORY);
 	}
 	
-private void setUpListeners(){
 		
+
+	
+	private void init(final Commitment oldCommitment)
+	{
+		nameTextField.setText(oldCommitment.getName());
+		startTimeDatePicker.setDateTime(oldCommitment.getDate());
+		participantsTextField.setText(oldCommitment.getParticipants());
+		// TODO: categories and team/personal
+		descriptionTextArea.setText(oldCommitment.getDescription());
+		existingCommitmentID=oldCommitment.getCommitmentID();
+	}
+
+private void setUpListeners(){
+		saveButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				attemptSave();
+			}
+		});
+
+		cancelButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				MainPanel.getInstance().closeTab(tabid);
+			}
+		});
 
 		nameTextField.getDocument().addDocumentListener(new DocumentListener() {
 			
@@ -142,12 +173,37 @@ private void setUpListeners(){
 		validateDate(startTimeDatePicker.getDateTime(), dateErrorLabel);
 		saveButton.setEnabled(isSaveable());
 	}
+	public void attemptSave()
+	{
+		if(!isSaveable())
+			return;
+		Commitment e = new Commitment();
+		e.setName(nameTextField.getText().trim());
+		e.setDescription(descriptionTextArea.getText());
+		e.setDate(startTimeDatePicker.getDateTime());
+		e.setParticipants(participantsTextField.getText());
+		
+		if (isEditingCommitment)
+			e.setCommitmentID(existingCommitmentID);
+		
+		if (isEditingCommitment)
+			MainPanel.getInstance().updateCommitment(e);
+		else
+			MainPanel.getInstance().addCommitment(e);
 
+		saveButton.setEnabled(false);
+		saveButton.setText("Saved!");
+		MainPanel.getInstance().closeTab(tabid);
+		MainPanel.getInstance().refreshView();
+	}
 	public boolean isSaveable()
 	{
 		return validateText(nameTextField.getText(), nameErrorLabel) && validateDate(startTimeDatePicker.getDateTime(), dateErrorLabel);
 	}
-
+	public boolean editingCommitment()
+	{
+		return this.isEditingCommitment; 
+	}
 	/**
 	 * 
 	 * @param dueDate
