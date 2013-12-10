@@ -221,10 +221,10 @@ public class CategoryManager extends JPanel {
 		});
 		
 		if (allCategories.size() == 0){
-			JListModel.addElement(Category.DEFUALT_DISPLAY_CATEGORY);
+			JListModel.addElement(Category.DEFAULT_DISPLAY_CATEGORY);
 		} else {
-			if (JListModel.contains(Category.DEFUALT_DISPLAY_CATEGORY))
-				JListModel.removeElement(Category.DEFUALT_DISPLAY_CATEGORY);
+			if (JListModel.contains(Category.DEFAULT_DISPLAY_CATEGORY))
+				JListModel.removeElement(Category.DEFAULT_DISPLAY_CATEGORY);
 			
 			for (int i = 0; i < allCategories.size(); i++) {
 				Category temp = allCategories.get(i);
@@ -300,8 +300,8 @@ public class CategoryManager extends JPanel {
 			JListModel.addElement(c);
 		} else {
 			MainPanel.getInstance().addCategory(c);
-			if (JListModel.contains(Category.DEFUALT_DISPLAY_CATEGORY))
-				JListModel.removeElement(Category.DEFUALT_DISPLAY_CATEGORY);
+			if (JListModel.contains(Category.DEFAULT_DISPLAY_CATEGORY))
+				JListModel.removeElement(Category.DEFAULT_DISPLAY_CATEGORY);
 			JListModel.addElement(c);
 		}
 		
@@ -314,10 +314,12 @@ public class CategoryManager extends JPanel {
 	{
 		categoryName.requestFocus();
 	}
+	/**
+	 * Set up button listeners for the category manager
+	 */
 	private void setUpListeners(){
 		
 		// Update List Button
-		
 		saveCategoryButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {

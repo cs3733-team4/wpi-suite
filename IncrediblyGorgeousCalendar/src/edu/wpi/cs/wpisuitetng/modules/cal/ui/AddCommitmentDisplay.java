@@ -67,7 +67,7 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		if (mCommitment.getAssociatedCategory()!=null)
 			this.eventCategoryPicker.setSelectedItem(mCommitment.getAssociatedCategory());
 		else
-			this.eventCategoryPicker.setSelectedItem(Category.DEFUALT_CATEGORY);
+			this.eventCategoryPicker.setSelectedItem(Category.DEFAULT_CATEGORY);
 	}
 	
 		

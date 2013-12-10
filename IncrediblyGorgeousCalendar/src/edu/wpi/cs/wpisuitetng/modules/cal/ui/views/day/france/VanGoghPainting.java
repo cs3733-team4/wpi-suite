@@ -316,5 +316,9 @@ public class VanGoghPainting extends JPanel
 	{
 		lblEventTitle.setForeground(b?Color.WHITE:Color.BLACK);		
 	}
+
+	public Event getEvent() {
+		return event;
+	}
 	
 }

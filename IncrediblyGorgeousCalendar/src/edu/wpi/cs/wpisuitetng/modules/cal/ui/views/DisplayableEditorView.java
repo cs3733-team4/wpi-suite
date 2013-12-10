@@ -97,7 +97,7 @@ public class DisplayableEditorView extends JPanel
 
 		eventCategoryPicker = new JComboBox<>();
 		eventCategoryPicker.setRenderer(new CategoryComboBoxRenderer());
-		this.eventCategoryPicker.addItem(Category.DEFUALT_CATEGORY);
+		this.eventCategoryPicker.addItem(Category.DEFAULT_CATEGORY);
 		for(Category c : CategoryModel.getInstance().getAllCategories())
 		{
 			this.eventCategoryPicker.addItem(c);

@@ -75,14 +75,16 @@ public class MonthItem extends JPanel
         
         // Arrow label (for multi-day events)
         arrow.setFont(new java.awt.Font("DejaVu Sans", Font.BOLD, 12));
-        arrow.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 3));
-    	arrow.setAlignmentY(CENTER_ALIGNMENT);
-    	arrow.setAlignmentX(CENTER_ALIGNMENT);
+        arrow.setLayout(new GridLayout(1,1));
+        arrow.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 0, 1, 3));
+        arrow.setPreferredSize(new Dimension(17, 15));
+    	arrow.setMaximumSize(new Dimension(17, 15));
+    	arrow.setMinimumSize(new Dimension(17, 15));
         
         // Box for category color and arrow label
-        categoryColor.setPreferredSize(new Dimension(16, 15));
-    	categoryColor.setMaximumSize(new Dimension(16, 15));
-    	categoryColor.setMinimumSize(new Dimension(16, 15));
+        categoryColor.setPreferredSize(new Dimension(17, 15));
+    	categoryColor.setMaximumSize(new Dimension(17, 15));
+    	categoryColor.setMinimumSize(new Dimension(17, 15));
     	categoryColor.setLayout(new GridLayout(1,1));
         
     	/** Display displayable based on whether it is an event or a commitment*/
@@ -108,6 +110,7 @@ public class MonthItem extends JPanel
         	if (isStartBeforeCurrent(day, eventStart) && isEndAfterCurrent(day, eventEnd))
         	{
         		arrow.setText("\u2194");//the event goes before and after
+        		arrow.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 0, 4, 3));
         	}
         	else if ((isStartBeforeCurrent(day, eventStart)))
         	{
@@ -260,5 +263,6 @@ public class MonthItem extends JPanel
 			return true;
 		return false;
 	}
+
 }
 
