@@ -12,8 +12,10 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day;
 import java.awt.BorderLayout;
 import java.util.List;
 
+import javax.swing.BoundedRangeModel;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
@@ -80,6 +82,11 @@ public class DayCalendar extends AbstractCalendar
 
 		this.holder.add(DayGridLabel.getInstance(), BorderLayout.WEST);
 		this.holder.add(this.current, BorderLayout.CENTER);
+		BoundedRangeModel jsb = scroll.getVerticalScrollBar().getModel();
+		double day = time.getMinuteOfDay();
+		day /= time.minuteOfDay().getMaximumValue();
+		day *= (jsb.getMaximum()) - jsb.getMinimum();
+		jsb.setValue((int)day);
 		// notify mini-calendar to change
 		mainPanel.miniMove(time);
 	}
