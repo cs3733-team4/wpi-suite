@@ -7,9 +7,15 @@ import java.awt.Component;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.UUID;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
 import org.junit.Test;
@@ -163,6 +169,8 @@ public class SidebarTabbedPaneTest {
 	@Test
 	public void testInitializeSidebarWithFilteringTab() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		
+		((MockNetwork)Network.getInstance()).clearCache();
+		
 		SidebarTabbedPane sidebar = new SidebarTabbedPane();
 		
 		assertNotNull("sidebar exists", sidebar);
@@ -177,16 +185,22 @@ public class SidebarTabbedPaneTest {
 		
 		assertNotNull("Filtering tab list exists", catList.get(sidebar));
 		// note getSelectedCategories is a list of category UUIDs that correspond to each category
+		for( UUID c : sidebar.getSelectedCategories())
+			System.out.println(CategoryModel.getInstance().getCategoryByUUID(c));
+		assertEquals("The filtering tab list starts with only one categorty to filter: uncategorized", 1, sidebar.getSelectedCategories().size());
+		// Should only be one? no categories added
+		assertNull("The filtering tab list starts with only one categorty to filter: uncategorized", CategoryModel.getInstance().getCategoryByUUID((UUID) sidebar.getSelectedCategories().toArray()[1]).getName());
+		// Why doesn't this work? At this point it should return an out of bounds error, but it has the blue/red categories from below tests? Cache isn't cleared?
 		
-		((MockNetwork)Network.getInstance()).clearCache();
-		assertEquals("The filtering tab list starts with only one categorty to filter: uncategorized", 1, CategoryModel.getInstance().getCategoryByUUID((UUID) sidebar.getSelectedCategories().toArray()[1]).getName());
-		// Why doesn't this work?
-		
-		((MockNetwork)Network.getInstance()).clearCache();
+		// show commitments is also a member of the list, but isn't included in the list of getSelectedCategories. It should always be on the list, can be turned off / on like
+		// a normal category checkbox, and is turned off / on when select / deselect all is clicked
+		assertTrue("showCommitments is by default true", sidebar.showCommitments());
 	}
 	
 	@Test
 	public void testAddingCategoriesToTheList() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+		
+		((MockNetwork)Network.getInstance()).clearCache();
 		
 		Category blue=new Category();
 		blue.setName("blue");
@@ -199,12 +213,12 @@ public class SidebarTabbedPaneTest {
 		
 		assertEquals("The filtering tab list starts with all added categories as well as an uncategorized checkbox", 2, sidebar.getSelectedCategories().size());
 		assertEquals("The filtering tab list will contain the newly created category", blue.getCategoryID(), sidebar.getSelectedCategories().toArray()[1]);
-		
-		((MockNetwork)Network.getInstance()).clearCache();
 	}
 	
 	@Test
 	public void testRefreshAfterAdding() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+		
+		((MockNetwork)Network.getInstance()).clearCache();
 		
 		Category blue=new Category();
 		blue.setName("blue");
@@ -227,12 +241,45 @@ public class SidebarTabbedPaneTest {
 		assertEquals("The filtering tab list still only has the old categories,", 2, sidebar.getSelectedCategories().size());
 		sidebar.refreshFilterTab();
 		assertEquals("Until you refresh it, which is called normally in the createCategory tab", 3, sidebar.getSelectedCategories().size());
-		
-		((MockNetwork)Network.getInstance()).clearCache();
 	}
 	
 	@Test
-	public void testSelectDeselectButtons() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+	public void testViewableCategoriesChangeAfterUnselecting() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+		
+		((MockNetwork)Network.getInstance()).clearCache();
+		
+		Category blue=new Category();
+		blue.setName("blue");
+		blue.setColor(Color.blue);
+		CategoryModel.getInstance().putCategory(blue);
+		
+		Category red=new Category();
+		red.setName("red");
+		red.setColor(Color.red);
+		CategoryModel.getInstance().putCategory(red);
+		
+		SidebarTabbedPane sidebar = new SidebarTabbedPane();
+		
+		assertNotNull("sidebar exists", sidebar);
+		
+		assertEquals("The filtering tab list starts with all added categories as well as an uncategorized checkbox", 3, sidebar.getSelectedCategories().size());
+		assertTrue("The filtering tab list starts with all added categories as well as an uncategorized checkbox", sidebar.getSelectedCategories().contains(red.getCategoryID()));
+
+		
+		// insert manual unchecking of red's box here
+		Field cBoxList = sidebar.getClass().getDeclaredField("checkBoxCategoryMap");
+		cBoxList.setAccessible(true);
+		Set<Entry<JCheckBox,Category>> list=((HashMap<JCheckBox,Category>)cBoxList.get(sidebar)).entrySet();
+		// Someone more knowledgeable help me with this please
+		
+		assertEquals("When a selected category is unselected manually, it will no longer be visible, and not appear in the list of selected categories", 2, sidebar.getSelectedCategories().size());
+		assertFalse("When a selected category is unselected manually, it will no longer be visible, and not appear in the list of selected categories", sidebar.getSelectedCategories().contains(red.getCategoryID()));
+	}
+	
+	@Test
+	public void testSelectAllAndDeselectAll() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+		
+		((MockNetwork)Network.getInstance()).clearCache();
 		
 		Category blue=new Category();
 		blue.setName("blue");
@@ -252,6 +299,17 @@ public class SidebarTabbedPaneTest {
 		SidebarTabbedPane sidebar = new SidebarTabbedPane();
 		
 		assertEquals("The filtering tab list starts with all added categories as well as an uncategorized checkbox", 4, sidebar.getSelectedCategories().size());
-		((MockNetwork)Network.getInstance()).clearCache();
+		assertTrue("showCommitments is also among that list, and is by default true", sidebar.showCommitments());
+		// meaning they all start off as checked
+		
+		sidebar.deselectAllCategories();
+		
+		assertEquals("Clicking on deselect-all will cause all categories to be unselected", 0, sidebar.getSelectedCategories().size());
+		assertFalse("showCommitments will also be unselected", sidebar.showCommitments());
+		
+		sidebar.selectAllCategories();
+		
+		assertEquals("Clicking on select-all will cause all categories to be selected", 4, sidebar.getSelectedCategories().size());
+		assertTrue("showCommitments will also be selected", sidebar.showCommitments());
 	}
 }
