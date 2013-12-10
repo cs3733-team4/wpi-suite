@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 WPI-Suite
+   * Copyright (c) 2013 WPI-Suite
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,6 +33,7 @@ import org.joda.time.MutableDateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
@@ -373,5 +374,17 @@ public class YearCalendar extends AbstractCalendar
 	@Override
 	public void select(Displayable item) {
 		
+	}
+
+	@Override
+	public void addEvent(Event e)
+	{
+		//these methods dont need to do anything, because the year calendar cant update itself
+	}
+
+	@Override
+	public void addCommitment(Commitment c)
+	{
+		//these methods dont need to do anything, because the year calendar cant update itself
 	}
 }
