@@ -128,6 +128,8 @@ public class MonthDay extends JPanel
 					
 					parent.display(selected.getDate());
 				}
+				parent.setEscaped(false);
+				parent.repaint();
 			}
 
 			@Override
@@ -174,6 +176,7 @@ public class MonthDay extends JPanel
 
 			@Override
 			public void mouseDragged(MouseEvent e) {
+				parent.repaint();
 				parent.dispatchEvent(e);
 			}
 

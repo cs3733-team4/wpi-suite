@@ -12,9 +12,11 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.MouseInfo;
 import java.awt.Point;
+import java.awt.Polygon;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.HashMap;
@@ -28,7 +30,7 @@ import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
 import org.joda.time.ReadableDateTime;
 
-import com.lowagie.text.Font;
+import java.awt.Font;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.DayStyle;
@@ -61,8 +63,6 @@ public class MonthCalendar extends AbstractCalendar
 	private EventModel eventModel;
 	private CommitmentModel commitmentModel;
 	private boolean escaped;
-	
-	private JPanel draggingHoverPanel = null;
 
 	public MonthCalendar(DateTime on, EventModel emodel, CommitmentModel cmodel)
 	{
@@ -458,21 +458,83 @@ public class MonthCalendar extends AbstractCalendar
 		this.escaped = escaped;
 	}
 	
-	/**
-	 * 
-	 * @param sel the selected Displayable (or null to hide panel)
-	 */
-	public void updateDraggingHoverPanel(Displayable sel)
+	@Override
+	public void paint(Graphics g)
 	{
-		if (sel == null)
+		super.paint(g);	
+		if (escaped)
 		{
-			if (draggingHoverPanel != null)
+			Displayable dp = MainPanel.getInstance().getSelectedEvent();
+			if (dp != null)
 			{
-				draggingHoverPanel.setVisible(false);
-				draggingHoverPanel = null;
-				repaint();
+				String name = dp.getName();
+				if (name != null)
+				{	
+					Point l = MouseInfo.getPointerInfo().getLocation();
+					Point pp = inside.getLocationOnScreen();
+					
+					int x = l.x-pp.x;
+					int y = l.y-pp.y;
+					
+					
+					StringBuilder timeFormat = new StringBuilder()
+													.append(dp.getDate().getHourOfDay())
+													.append(":")
+													.append(dp.getDate().getMinuteOfHour());
+					if (dp instanceof Event)
+					{
+						Event e = (Event) dp;
+						timeFormat.append(" - ")
+							  .append(e.getEnd().getHourOfDay())
+							  .append(":")
+							  .append(e.getEnd().getMinuteOfHour()==0?"00":e.getEnd().getMinuteOfHour());
+					}
+					
+					String time = timeFormat.toString();
+					int timeSize = g.getFontMetrics().stringWidth(time);
+					int width = g.getFontMetrics().stringWidth(name)+10;
+					
+					width = Math.max(width, timeSize+10);
+					
+					
+					
+					Polygon dropdown = getDropTextPolygon(width, x, y);
+					
+					
+					g.setColor(new Color(255,255,255,160));
+					g.fillPolygon(dropdown);
+					g.setColor(Color.BLACK);
+					g.drawPolygon(dropdown);
+					
+					g.drawString(dp.getName(), x+5, y+90);
+					
+					
+					
+					
+					
+					g.drawString(time, x+(width-timeSize)/2, y+110);
+				}
 			}
 		}
+	}
+	
+	/**
+	 * 
+	 * @param width the width of the box (for text)
+	 * @param x the mouse's position (x)
+	 * @param y the mouse's position (y)
+	 * @return the drawing polygon
+	 */
+	private Polygon getDropTextPolygon(int width, int x, int y)
+	{
+		y += 40;
+		int[] xs = {
+				x+0,x+30,x+0,x+0,x+width,x+width,x+60
+		};
+		int[] ys = {
+				y+0,y+30,y+30,y+100,y+100,y+30,y+30
+		};
 		
+		return new Polygon(xs, ys, 7);
 	}
 }
