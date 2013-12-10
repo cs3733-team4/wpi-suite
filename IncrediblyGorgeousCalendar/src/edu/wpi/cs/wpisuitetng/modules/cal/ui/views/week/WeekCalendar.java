@@ -263,7 +263,7 @@ public class WeekCalendar extends AbstractCalendar
 		{
 			add(headerScroller, "cell 1 2 7 1,grow");
 		}
-		((MigLayout)getLayout()).setRowConstraints("[][][" + (rows * 23) +  "px:n:75px,grow]" + (rows > 0 ? "6" : "") + "[grow]");
+		((MigLayout)getLayout()).setRowConstraints("[][][" + (rows * 23) +  "px:n:80px,grow]" + (rows > 0 ? "6" : "") + "[grow]");
 	}
 
 	/**
