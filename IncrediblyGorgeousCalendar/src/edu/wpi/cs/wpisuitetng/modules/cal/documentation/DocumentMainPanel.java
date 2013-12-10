@@ -3,6 +3,7 @@ package edu.wpi.cs.wpisuitetng.modules.cal.documentation;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -17,9 +18,11 @@ import javax.swing.event.HyperlinkListener;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddCommitmentDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddEventDisplay;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.DisplayableEditorView;
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 
@@ -75,7 +78,7 @@ public class DocumentMainPanel extends JFrame{
                       			if (!doAction(e.getURL().toString()))
                       				webPage.setPage(e.getURL());
                             }
-                            catch(IOException ioe) {
+                            catch(IOException | IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException ioe) {
                                 JOptionPane.showMessageDialog(null,ioe);
                             }
                     }//end hyperlinkUpdate()
@@ -91,8 +94,12 @@ public class DocumentMainPanel extends JFrame{
      * doAction will return true if there is/was an action committed as a result of the link
      * @param actionPath The URL Path that is requested
      * @return if an action was completed
+     * @throws IllegalAccessException 
+     * @throws IllegalArgumentException 
+     * @throws SecurityException 
+     * @throws NoSuchFieldException 
      */
-    private boolean doAction(String actionPath)
+    private boolean doAction(String actionPath) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException
     {
     	
     	if (actionPath.contains("#OpenNewEventWindow"))
@@ -112,6 +119,16 @@ public class DocumentMainPanel extends JFrame{
     		}
 			return true;
 		}
+    	else if (actionPath.contains("#DeleteCommitmentFromDetailsPane"))
+    	{
+    		MainPanel.getInstance().deleteCurrentlySelectedDisplayable();
+    		return true;
+    	}
+    	else if (actionPath.contains("#DeleteEventFromDetailsPane"))
+    	{
+    		MainPanel.getInstance().deleteCurrentlySelectedDisplayable();
+    		return true;
+    	}
     	else if (actionPath.contains("#OpenNewAddCommitmentBox"))
     	{
     		System.out.println("Action for new Commitment");
@@ -126,18 +143,22 @@ public class DocumentMainPanel extends JFrame{
     			AddCommitmentDisplay ncm = (AddCommitmentDisplay) MainPanel.getInstance().getSelectedComponent();
     			ncm.attemptSave(new Commitment());
     		}
+    		return true;
     	}
     	else if (actionPath.contains("#SwitchToDayView"))
     	{
     		MainPanel.getInstance().viewDay();
+    		return true;
     	}
     	else if (actionPath.contains("#SwitchToMonthView"))
     	{
     		MainPanel.getInstance().viewMonth();
+    		return true;
     	}
     	else if (actionPath.contains("#SwitchToYearView"))
     	{
     		MainPanel.getInstance().viewYear();
+    		return true;
     	}
     	if (actionPath.contains("#"))
     	{

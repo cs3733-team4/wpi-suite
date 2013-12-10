@@ -564,6 +564,10 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		this.refreshView();
 	}
 	
+	public void deleteCurrentlySelectedDisplayable()
+	{
+		deleteDisplayable(this.currentSelected);
+	}
 	public void setSelectedDay(DateTime time)
 	{
 		lastTime = time;
