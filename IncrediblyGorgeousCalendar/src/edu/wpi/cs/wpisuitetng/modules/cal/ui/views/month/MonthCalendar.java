@@ -12,16 +12,17 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.GridLayout;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import org.joda.time.DateTime;
-import org.joda.time.Days;
-import org.joda.time.Duration;
 import org.joda.time.MutableDateTime;
 import org.joda.time.ReadableDateTime;
 
@@ -30,6 +31,7 @@ import com.lowagie.text.Font;
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.DayStyle;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
@@ -298,13 +300,28 @@ public class MonthCalendar extends AbstractCalendar
 
 	private List<Event> getVisibleEvents(DateTime from, DateTime to)
 	{
-		// TODO: this is where filtering should go
-		return eventModel.getEvents(from, to);
+		List<Event> visibleEvents = eventModel.getEvents(from, to);
+		
+		// Filter for selected categories
+		Collection<UUID> selectedCategories = MainPanel.getInstance().getSelectedCategories();
+		List<Event> categoryFilteredEvents = new ArrayList<Event>();
+		
+		// Else, loop through events and filter by selected categories
+		for (Event e : visibleEvents){
+			if (selectedCategories.contains(e.getCategory()))
+				categoryFilteredEvents.add(e);
+		}
+		
+		// Return list of events to be displayed
+		return categoryFilteredEvents;
 	}
 
 	private List<Commitment> getVisibleCommitments(DateTime from, DateTime to)
 	{
-		return commitmentModel.getCommitments(from, to);
+		if (MainPanel.getInstance().showCommitments())
+			return commitmentModel.getCommitments(from, to);
+		else
+			return new ArrayList<Commitment>();
 	}
 
 	/**

@@ -26,8 +26,9 @@ public class Category extends AbstractModel
         private User owner;
         private boolean isProjectCategory;
         
-        public static final Category DEFUALT_CATEGORY = new Category("Uncategorized");
-        public static final Category DEFUALT_DISPLAY_CATEGORY = new Category("No Categories");
+        public static final Category DEFAULT_CATEGORY = new Category("Uncategorized");
+        public static final Category DEFAULT_DISPLAY_CATEGORY = new Category("No Categories");
+        public static final Category COMMITMENT_CATEGORY = new Category("Commitments");
         
         private Category(String s)
         {
