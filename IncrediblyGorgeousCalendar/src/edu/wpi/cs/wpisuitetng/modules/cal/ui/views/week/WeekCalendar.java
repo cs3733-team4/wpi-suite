@@ -22,12 +22,16 @@ import javax.management.RuntimeErrorException;
 import javax.swing.BorderFactory;
 import javax.swing.BoundedRangeModel;
 import javax.swing.BoxLayout;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -213,6 +217,9 @@ public class WeekCalendar extends AbstractCalendar
 								System.out.print("currEvent Name:Name  " + currEvent.getName() + "\n");
 								JLabel multidayPanel = new JLabel(" " + currEvent.getName());
 								multidayPanel.setBackground(currEvent.getColor());
+								if (multiGrid.getComponentCount() > 0)
+									((JComponent)multiGrid.getComponents()[multiGrid.getComponentCount() - 1]).setBorder(BorderFactory.createMatteBorder(rows == 0 ? 1 : 0, (gridIndex == 1) ? 1 : 0, 1, 0, Colors.BORDER));
+								multidayPanel.setBorder(new CompoundBorder(BorderFactory.createMatteBorder(rows == 0 ? 1 : 0, 1, 1, 1, currEvent.getColor().darker()), new EmptyBorder(3, 3, 3, 3)));
 								multidayPanel.setOpaque(true);
 								multiGrid.add(multidayPanel, "cell " + gridIndex + " 0, grow");
 								firstPanel = false;
@@ -222,6 +229,7 @@ public class WeekCalendar extends AbstractCalendar
 								System.out.print("currEvent Color: " + currEvent.getName() + "\n");
 								JPanel multidayPanel = new JPanel();
 								multidayPanel.setBackground(currEvent.getColor());
+								multidayPanel.setBorder(new CompoundBorder(BorderFactory.createMatteBorder(rows == 0 ? 1 : 0, 0, 1, 1, currEvent.getColor().darker()), new EmptyBorder(3, 3, 3, 3)));
 								multiGrid.add(multidayPanel, "cell " + gridIndex + " 0, grow");
 							}
 							gridIndex++;
@@ -255,7 +263,7 @@ public class WeekCalendar extends AbstractCalendar
 		{
 			add(headerScroller, "cell 1 2 7 1,grow");
 		}
-		((MigLayout)getLayout()).setRowConstraints("[][][" + (rows * 14) +  "px:n:60px,grow][grow]");// TODO: fix " + (rows > 0 ? "gapafter 3" : "") + "
+		((MigLayout)getLayout()).setRowConstraints("[][][" + (rows * 23) +  "px:n:75px,grow]" + (rows > 0 ? "6" : "") + "[grow]");
 	}
 
 	/**
