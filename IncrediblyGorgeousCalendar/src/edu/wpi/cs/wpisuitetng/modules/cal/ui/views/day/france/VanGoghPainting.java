@@ -98,10 +98,9 @@ public class VanGoghPainting extends JPanel
 			
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				if(isBeingDragged){
+				if(isBeingDragged)
 					EventModel.getInstance().updateEvent(event);
-					getParent().dispatchEvent(e);
-				}
+				getParent().dispatchEvent(e);
 				
 			}
 			

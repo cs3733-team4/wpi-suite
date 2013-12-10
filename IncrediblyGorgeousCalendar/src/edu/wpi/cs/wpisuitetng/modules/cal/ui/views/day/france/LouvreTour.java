@@ -41,9 +41,11 @@ public class LouvreTour extends JPanel
 	private VanGoghPainting selected;
 	private boolean isSomethingDragging;
 	private DateTime displayDate;
-
+	private boolean inWeekView;
+	private int offset;
 	public LouvreTour()
 	{
+		inWeekView = false;
 		isSomethingDragging = false;
 		setLayout(null);
 		setPreferredSize(new Dimension(1, 1440));
@@ -58,7 +60,7 @@ public class LouvreTour extends JPanel
 					System.out.println("display called");
 				}
 				isSomethingDragging = false;
-					//Calendar.getInstance().
+				selected = null;
 				
 			}
 			
@@ -95,13 +97,27 @@ public class LouvreTour extends JPanel
 			
 			@Override
 			public void mouseDragged(MouseEvent arg0) {
-				LouvreTour.this.setComponentZOrder(selected, 0);
-				selected.updateTime(getTimeAtCursor());
-				isSomethingDragging = true;
-				revalidate();
-				repaint();
+				if(selected != null)
+				{
+					LouvreTour.this.setComponentZOrder(selected, 0);
+					selected.updateTime(getTimeAtCursor());
+					if(!isSomethingDragging)
+					{
+						offset = arg0.getY();
+						System.out.println(offset + " " + arg0.getY() + " " + selected.event.getStart().getMinuteOfDay());
+						isSomethingDragging = true;	
+					}
+					revalidate();
+					repaint();
+				}
 			}
 		});
+	}
+	
+	public LouvreTour(boolean inWeekView)
+	{
+		this();
+		this.inWeekView = inWeekView;
 	}
 	
 	public void setEvents(List<Event> events, DateTime displayedDay)
@@ -178,6 +194,7 @@ public class LouvreTour extends JPanel
 		Point m = MouseInfo.getPointerInfo().getLocation();
 		Point p = getLocationOnScreen();
 		MutableDateTime d = date.toMutableDateTime();
+		m.y -= offset;
 		if(m.y < p.y)
 			m.y = p.y;
 		if(m.y > 1440)
