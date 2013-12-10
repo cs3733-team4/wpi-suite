@@ -21,6 +21,7 @@ import org.joda.time.DateTime;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.DisplayableEditorView;
 
 public class AddCommitmentDisplay extends DisplayableEditorView
@@ -36,8 +37,9 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		super(false);
 		isEditingCommitment = false;
 		currentTime = new DateTime();
-		populateCommitmentFields(new Commitment());
+		//populateCommitmentFields(new Commitment());
 		setCurrentDateAndTime();
+		//populateCommitmentFields(commitmentToEdit);
 		setUpListeners();
 	}
 
@@ -61,76 +63,85 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		this.rdbtnPersonal.setSelected(!mCommitment.isProjectCommitment());
 		this.rdbtnTeam.setSelected(mCommitment.isProjectCommitment());
 		descriptionTextArea.setText(mCommitment.getDescription());
-		saveButton.setEnabled(isSaveable());
+		if (mCommitment.getAssociatedCategory()!=null)
+			this.eventCategoryPicker.setSelectedItem(mCommitment.getAssociatedCategory());
+		else
+			this.eventCategoryPicker.setSelectedItem(Category.DEFUALT_CATEGORY);
 	}
 	
-	private void setUpListeners()
-	{
-		cancelButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				MainPanel.getInstance().closeTab(tabid);
-			}
-		});
+private void setUpListeners(){
+		
 
 		nameTextField.getDocument().addDocumentListener(new DocumentListener() {
-
+			
 			@Override
-			public void removeUpdate(DocumentEvent e)
-			{
+			public void removeUpdate(DocumentEvent e) {
 				nameErrorLabel.setVisible(!validateText(nameTextField.getText(), nameErrorLabel));
 				saveButton.setEnabled(isSaveable());
 			}
-
+			
 			@Override
-			public void insertUpdate(DocumentEvent e)
-			{
+			public void insertUpdate(DocumentEvent e) {
 				nameErrorLabel.setVisible(!validateText(nameTextField.getText(), nameErrorLabel));
 				saveButton.setEnabled(isSaveable());
 			}
-
+			
 			@Override
-			public void changedUpdate(DocumentEvent e)
-			{
-				// Not triggered by plaintext fields
+			public void changedUpdate(DocumentEvent e) {
+				//Not triggered by plaintext fields
 			}
 		});
-		
-		startTimeDatePicker.addChangeListener(new DatePickerListener() {
 
+		startTimeDatePicker.addChangeListener(new DatePickerListener() {
+			
 			@Override
-			public void datePickerUpdate(DateTime mDateTime)
-			{
+			public void datePickerUpdate(DateTime mDateTime) {
 				dateErrorLabel.setVisible(!validateDate(startTimeDatePicker.getDateTime(), dateErrorLabel));
 				saveButton.setEnabled(isSaveable());
 			}
 		});
 		
 		saveButton.addActionListener(new ActionListener(){
-
 			@Override
-			public void actionPerformed(ActionEvent arg0){
-				Commitment e = commitmentToEdit;
-				e.setName(nameTextField.getText().trim());
-				e.setDescription(descriptionTextArea.getText());
-				e.setDate(startTimeDatePicker.getDateTime());
-				e.setProjectCommitment(rdbtnTeam.isSelected());
-				e.setParticipants(participantsTextField.getText().trim());
-				e.setCategory(((Category)eventCategoryPicker.getSelectedItem()).getCategoryID());
+			public void actionPerformed(ActionEvent arg0) {
 
-				if (isEditingCommitment)
-					MainPanel.getInstance().updateCommitment(e);
-				else
-					MainPanel.getInstance().addCommitment(e);
-
-				saveButton.setEnabled(false);
-				saveButton.setText("Saved!");
-				MainPanel.getInstance().closeTab(tabid);
-				MainPanel.getInstance().refreshView();
+					startTimeDatePicker.getDateTime();
+					
+					Commitment c = new Commitment();
+					c.setName(nameTextField.getText().trim());
+					c.setDescription(descriptionTextArea.getText());
+					c.setDate(startTimeDatePicker.getDateTime());
+					c.setProjectCommitment(rdbtnTeam.isSelected());
+					c.setParticipants(participantsTextField.getText().trim());
+					c.setCategory(((Category)eventCategoryPicker.getSelectedItem()).getCategoryID());
+					
+					
+					if (isEditingCommitment){
+						MainPanel.getInstance().updateCommitment(c);
+					} else {
+						MainPanel.getInstance().addCommitment(c);
+					}
+					
+					saveButton.setEnabled(false);
+					saveButton.setText("Saved!");
+					MainPanel.getInstance().closeTab(tabid);
+					MainPanel.getInstance().refreshView();
 			}
 		});
+		
+		// Cancel Button
+		cancelButton.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				MainPanel.getInstance().closeTab(tabid);
+			}
+		});
+		
+		//this should be called in updateSaveable() and thus isnt necessary here
+		//but error msg didn't start visible unless I called it directly
+		validateDate(startTimeDatePicker.getDateTime(), dateErrorLabel);
+		saveButton.setEnabled(isSaveable());
 	}
 
 	public boolean isSaveable()

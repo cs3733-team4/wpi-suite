@@ -228,7 +228,12 @@ public class Commitment extends AbstractModel implements Displayable
 	{
 		this.isProjectCommitment = isProjectCommitment;
 	}
-	 
+	
+	public Category getAssociatedCategory()
+	{
+		return CategoryModel.getInstance().getCategoryByUUID(category);
+	}
+	
 	/**
 	 * @return the owner
 	 */
