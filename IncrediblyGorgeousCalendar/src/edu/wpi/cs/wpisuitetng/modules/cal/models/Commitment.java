@@ -9,6 +9,7 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.models;
 
+import java.awt.Color;
 import java.util.Date;
 import java.util.UUID;
 
@@ -233,6 +234,22 @@ public class Commitment extends AbstractModel implements Displayable
 	{
 		return CategoryModel.getInstance().getCategoryByUUID(category);
 	}
+	
+	public Color getColor()
+	{
+		Color fallbackColor = isProjectCommitment ? new Color(125,157,227) : new Color(227,125,147);
+		Category cat = CategoryModel.getInstance().getCategoryByUUID(category);
+		if (cat == null)
+		{
+			return fallbackColor;
+		}
+		Color commitmentColor = cat.getColor();
+		if (commitmentColor != null)
+		{
+			return commitmentColor;
+		}
+		return fallbackColor;
+	}	
 	
 	/**
 	 * @return the owner

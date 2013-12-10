@@ -21,7 +21,6 @@ import org.joda.time.DateTime;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.DisplayableEditorView;
 
 public class AddCommitmentDisplay extends DisplayableEditorView
@@ -37,9 +36,7 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		super(false);
 		isEditingCommitment = false;
 		currentTime = new DateTime();
-		//populateCommitmentFields(new Commitment());
 		setCurrentDateAndTime();
-		//populateCommitmentFields(commitmentToEdit);
 		setUpListeners();
 	}
 
@@ -58,7 +55,6 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		nameTextField.setText(mCommitment.getName());
 		startTimeDatePicker.setDateTime(mCommitment.getDate());
 		participantsTextField.setText(mCommitment.getParticipants());
-		// TODO: categories
 		this.rdbtnPersonal.setSelected(!mCommitment.isProjectCommitment());
 		this.rdbtnTeam.setSelected(mCommitment.isProjectCommitment());
 		descriptionTextArea.setText(mCommitment.getDescription());
@@ -68,9 +64,7 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 			this.eventCategoryPicker.setSelectedItem(Category.DEFUALT_CATEGORY);
 	}
 	
-private void setUpListeners(){
-		
-
+	private void setUpListeners(){
 		nameTextField.getDocument().addDocumentListener(new DocumentListener() {
 			
 			@Override
