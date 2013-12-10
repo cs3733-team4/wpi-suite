@@ -320,6 +320,12 @@ public class DocumentMainPanel extends JFrame{
     		MainPanel.getInstance().viewYear();
     		return true;
     	}
+    	else if (actionPath.contains("#SwitchToWeekView"))
+    	{
+    		MainPanel.getInstance().openCalendarViewTab();
+    		MainPanel.getInstance().viewWeek();
+    		return true;
+    	}
     	else if (actionPath.contains("#PreviousArrow"))
     	{
     		MainPanel.getInstance().openCalendarViewTab();

@@ -38,8 +38,9 @@ public class HelpToolbarGroup extends ToolbarGroupView {
 		showHelp.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e){
-				DocumentMainPanel.getInstance().setVisible(true);
-				DocumentMainPanel.getInstance().goToPage("Introduction.html");
+        		DocumentMainPanel.getInstance().setVisible(true);
+        		DocumentMainPanel.getInstance().requestFocus();
+        		DocumentMainPanel.getInstance().goToPage("Introduction.html");
 				
 				
 				//TODO: use selected times. ned.display(DateTime.now());

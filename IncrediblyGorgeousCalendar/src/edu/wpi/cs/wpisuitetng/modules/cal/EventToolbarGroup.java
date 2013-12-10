@@ -53,7 +53,8 @@ public class EventToolbarGroup extends ToolbarGroupView {
 			        JButton button = new JButton("Get Help");  
 			        button.addActionListener(new ActionListener() {  
 			        	public void actionPerformed(ActionEvent e) {  
-			        		DocumentMainPanel.getInstance().setVisible(!DocumentMainPanel.getInstance().isVisible());
+			        		DocumentMainPanel.getInstance().setVisible(true);
+			        		DocumentMainPanel.getInstance().requestFocus();
 			        		DocumentMainPanel.getInstance().goToPage("CreateanEvent.html");  
 			            }  
 			        });  
@@ -100,8 +101,9 @@ public class EventToolbarGroup extends ToolbarGroupView {
 					JLabel label = new JLabel("<html> Lets you make a new commitment in<br>the calendar</html>");
 			        JButton button = new JButton("Get Help");  
 			        button.addActionListener(new ActionListener() {  
-			        	public void actionPerformed(ActionEvent e) {  
-			        		DocumentMainPanel.getInstance().setVisible(!DocumentMainPanel.getInstance().isVisible());
+			        	public void actionPerformed(ActionEvent e) { 
+			        		DocumentMainPanel.getInstance().setVisible(true);
+			        		DocumentMainPanel.getInstance().requestFocus();
 			        		DocumentMainPanel.getInstance().goToPage("CreateaCommitment.html");  
 			            }  
 			        });  
