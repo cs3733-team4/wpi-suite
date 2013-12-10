@@ -72,7 +72,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 	private JButton selectAllButton;
 	private JButton clearAllButton;
 	private boolean showCommitments;
-	private boolean showUncategorized;
+	private boolean isUser = true; // Avoid extra db calls when selecting/unselecting all
 	private JScrollPane categoryScroll;
 	private HashMap<JCheckBox, Category> checkBoxCategoryMap = new HashMap<JCheckBox, Category>();
 	private Collection<UUID> selectedCategories = new ArrayList<UUID>();
@@ -215,6 +215,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 		categoryFilterTab.setLayout(new BorderLayout());
 		categoryFilterTab.setBorder(BorderFactory.createEmptyBorder(3, 0, 0, 0));
 		categoryFilterTab.setBackground(Colors.TABLE_BACKGROUND);
+		categoryFilterTab.putClientProperty("html.disable", true);
 		categoryFilterTab.setAlignmentY(LEFT_ALIGNMENT);
 		
 		// Set up panel with categories
@@ -223,13 +224,15 @@ public class SidebarTabbedPane extends JTabbedPane{
 		categoryList.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		categoryList.setBackground(Colors.TABLE_BACKGROUND);
 		categoryList.putClientProperty("html.disable", true);
-		categoryList.setAlignmentY(LEFT_ALIGNMENT);
+		categoryList.setAlignmentX(TOP_ALIGNMENT);
+		categoryList.setAlignmentY(TOP_ALIGNMENT);
 		
 		// Add categories to panel
 		populateCategoryList(categoryList);
 
 		// Set up scroll panel
 		categoryScroll = new JScrollPane(categoryList);
+		categoryScroll.putClientProperty("html.disable", true);
 		categoryScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 	    categoryScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		categoryScroll.setBorder(new EmptyBorder(5,5,5,5));
@@ -244,6 +247,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 		categoryButtonPanel.putClientProperty("html.disable", true);
 		
 		selectAllButton = new JButton("Select All");
+		selectAllButton.putClientProperty("html.disable", true);
 		selectAllButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -252,6 +256,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 		});
 		
 		clearAllButton = new JButton("Clear");
+		clearAllButton.putClientProperty("html.disable", true);
 		clearAllButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -374,12 +379,14 @@ public class SidebarTabbedPane extends JTabbedPane{
 			categoryCheckBox.setAlignmentX(BOTTOM_ALIGNMENT);
 			categoryCheckBox.setFocusable(false);
 			categoryCheckBox.setSelected(true);
+			categoryCheckBox.putClientProperty("html.disable", true);
 			categoryCheckBox.addItemListener(new CheckBoxListener(c));
 			
 			// Category color indicator for current category
 			JPanel categoryColor = new JPanel();
 			categoryColor.setPreferredSize(new Dimension(16, 15));
 	    	categoryColor.setMaximumSize(new Dimension(16, 15));
+	    	categoryColor.putClientProperty("html.disable", true);
 	    	categoryColor.setMinimumSize(new Dimension(16, 15));
 	    	categoryColor.setLayout(new GridLayout(1,1));
 	    	categoryColor.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
@@ -395,10 +402,13 @@ public class SidebarTabbedPane extends JTabbedPane{
 	    	{
 	    		// Show both colors (team and personal events)
 	    		JPanel doubleColor = new JPanel();
+	    		doubleColor.putClientProperty("html.disable", true);
 	    		doubleColor.setLayout(new GridLayout(1,2));
 	    		JPanel blue = new JPanel();
+	    		blue.putClientProperty("html.disable", true);
 	    		blue.setBackground(new Color(125,157,227));
 	    		JPanel red = new JPanel();
+	    		red.putClientProperty("html.disable", true);
 	    		red.setBackground(new Color(227,125,147));
 	    		doubleColor.add(blue);
 	    		doubleColor.add(red);
@@ -412,6 +422,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 			// Container for category color and check box
 			JPanel container = new JPanel();
 			container.setLayout(new BoxLayout(container, BoxLayout.X_AXIS));
+			container.putClientProperty("html.disable", true);
 			container.setAlignmentY(LEFT_ALIGNMENT);
 			container.setAlignmentX(BOTTOM_ALIGNMENT);
 			container.setBackground(Colors.TABLE_BACKGROUND);
@@ -481,7 +492,8 @@ public class SidebarTabbedPane extends JTabbedPane{
 						selectedCategories.remove(referencedCategory.getCategoryID());
 				}
 			}
-			MainPanel.getInstance().refreshView(); //Update view for selected filters
+			if (isUser)
+				MainPanel.getInstance().refreshView(); //Update view for selected filters
 		}
 	}
 	
@@ -490,6 +502,8 @@ public class SidebarTabbedPane extends JTabbedPane{
 	 */
 	public void selectAllCategories()
 	{
+		isUser = false; // Do not call db upon single each check and uncheck
+		
 		// Iterate over check boxes and categories, checking them and adding to list
 		for (Map.Entry<JCheckBox, Category> entry : checkBoxCategoryMap.entrySet()){
 			JCheckBox key = entry.getKey();
@@ -504,6 +518,9 @@ public class SidebarTabbedPane extends JTabbedPane{
 		}
 		
 		showCommitments = true;
+		
+		MainPanel.getInstance().refreshView(); //Update all events	
+		isUser = true; // set is user back to true
 	}
 	
 	/**
@@ -514,12 +531,16 @@ public class SidebarTabbedPane extends JTabbedPane{
 		// Clear previous selected categories
 		selectedCategories.clear();
 		
+		isUser = false; // Do not call db upon single each check and uncheck
+		
 		// Iterate over check boxes and uncheck them
 		for (JCheckBox key : checkBoxCategoryMap.keySet())
 			key.setSelected(false);
 		
 		showCommitments = false;
-
+		
+		MainPanel.getInstance().refreshView(); //Update all events	
+		isUser = true; // set is user back to true
 	}
 	
 	/**
