@@ -84,6 +84,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 		
 		//setup
 		this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+		this.setFocusable(false);
 		
 		setupTextStyles();
 		setupDetailTab();
@@ -139,6 +140,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 		detailTab = new JPanel();
 		detailTab.setLayout(new BorderLayout());
 		detailTab.setBorder(BorderFactory.createEmptyBorder(3, 0, 0, 0));
+		detailTab.setFocusable(false);
 		
 		// setup text area
 		detailTextPane = new JTextArea();
@@ -166,6 +168,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 		
 	    // setup buttons and listeners
 	    detailEditButton = new JButton("Edit");
+	    detailEditButton.setFocusable(false);
 	    detailEditButton.addActionListener(new ActionListener() {
 			
 			@Override
@@ -191,6 +194,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 	    detailButtonPane = new JPanel();
 	    detailButtonPane.setLayout(new FlowLayout());
 	    detailButtonPane.add(detailEditButton);
+	    detailButtonPane.setFocusable(false);
 	    detailButtonPane.add(detailDeleteButton);
 	    
 	    // put entire tab into a scroll pane
