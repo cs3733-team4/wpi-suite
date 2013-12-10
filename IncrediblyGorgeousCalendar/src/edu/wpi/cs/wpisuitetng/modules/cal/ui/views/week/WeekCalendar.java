@@ -482,14 +482,4 @@ public class WeekCalendar extends AbstractCalendar
 
 		return (s.isBefore(e) && mInterval.contains(s));
 	}
-	
-	public void addEvent(Event e)
-	{
-		EventModel.getInstance().putEvent(e);
-	}
-	
-	public void addCommitment(Commitment c)
-	{
-		CommitmentModel.getInstance().putCommitment(c);
-	}
 }
