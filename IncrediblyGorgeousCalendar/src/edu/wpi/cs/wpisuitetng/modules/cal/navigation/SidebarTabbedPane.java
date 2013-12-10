@@ -83,6 +83,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 	private boolean showCommitments;
 	private boolean isUser = true; // Avoid extra db calls when selecting/unselecting all
 	private JScrollPane categoryScroll;
+	private List<Category> allPlusDefault = new ArrayList<Category>();
 	private HashMap<JCheckBox, Category> checkBoxCategoryMap = new HashMap<JCheckBox, Category>();
 	private Collection<UUID> selectedCategories = new ArrayList<UUID>();
 	
@@ -378,10 +379,11 @@ public class SidebarTabbedPane extends JTabbedPane{
 		checkBoxCategoryMap.clear();
 		
 		List<Category> allCategories = CategoryModel.getInstance().getAllCategories();
-		allCategories.add(0, Category.COMMITMENT_CATEGORY);
-		allCategories.add(1, Category.DEFAULT_CATEGORY);
+		allPlusDefault.add(Category.COMMITMENT_CATEGORY);
+		allPlusDefault.add(Category.DEFAULT_CATEGORY);
+		allPlusDefault.addAll(allCategories);
 		
-		for(Category c : allCategories)
+		for(Category c : allPlusDefault)
 		{
 			// Check box for current category
 			JCheckBox categoryCheckBox = new JCheckBox(c.getName());

@@ -13,21 +13,13 @@ package edu.wpi.cs.wpisuitetng.modules.cal.navigation;
 import static org.junit.Assert.*;
 
 import java.awt.Color;
-import java.awt.Component;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.Collection;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 import java.util.HashMap;
-import java.util.Map;
-
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JPanel;
-
 import org.junit.Test;
 import org.junit.BeforeClass;
 
@@ -39,7 +31,6 @@ import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.MockNetwork;
 import edu.wpi.cs.wpisuitetng.network.Network;
-import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
 
 /**
  * Tests for SidebarTabbedPane class
