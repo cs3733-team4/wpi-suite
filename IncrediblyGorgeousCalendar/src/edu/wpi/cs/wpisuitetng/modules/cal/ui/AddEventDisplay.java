@@ -260,4 +260,9 @@ public class AddEventDisplay extends DisplayableEditorView
 		this.startTimeDatePicker.setDateTime(currentTime);
 		this.endTimeDatePicker.setDateTime(currentTime.plusHours(1));
 	}
+	
+	public boolean editingEvent()
+	{
+		return this.isEditingEvent;
+	}
 }

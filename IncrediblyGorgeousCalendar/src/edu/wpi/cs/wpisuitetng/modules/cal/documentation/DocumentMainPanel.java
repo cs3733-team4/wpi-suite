@@ -119,15 +119,26 @@ public class DocumentMainPanel extends JFrame{
     		}
 			return true;
 		}
-    	else if (actionPath.contains("#DeleteCommitmentFromDetailsPane"))
-    	{
-    		MainPanel.getInstance().deleteCurrentlySelectedCommitment();
-    		return true;
-    	}
     	else if (actionPath.contains("#DeleteEventFromDetailsPane") || actionPath.contains("#DeleteSelectedEvent"))
     	{
     		MainPanel.getInstance().deleteCurrentlySelectedEvent();
     		return true;
+    	}
+    	else if (actionPath.contains("#EditSelectedEvent"))
+    	{
+    		AddEventDisplay ned = new AddEventDisplay(MainPanel.getInstance().returnSelectedEvent());
+    		ned.setTabId(MainPanel.getInstance().addTopLevelTab(ned, "Edit Event", true));
+    	}
+    	else if (actionPath.contains("#SaveEditingEvent"))
+    	{
+    		if (MainPanel.getInstance().getSelectedComponent() instanceof AddEventDisplay)
+    		{
+    			AddEventDisplay ned = (AddEventDisplay) MainPanel.getInstance().getSelectedComponent();
+    			if (ned.editingEvent())
+    			{
+    				ned.attemptSave();
+    			}
+    		}
     	}
     	else if (actionPath.contains("#OpenNewAddCommitmentBox"))
     	{
@@ -143,6 +154,11 @@ public class DocumentMainPanel extends JFrame{
     			AddCommitmentDisplay ncm = (AddCommitmentDisplay) MainPanel.getInstance().getSelectedComponent();
     			ncm.attemptSave(new Commitment());
     		}
+    		return true;
+    	}
+    	else if (actionPath.contains("#DeleteCommitmentFromDetailsPane"))
+    	{
+    		MainPanel.getInstance().deleteCurrentlySelectedCommitment();
     		return true;
     	}
     	else if (actionPath.contains("#SwitchToDayView"))
