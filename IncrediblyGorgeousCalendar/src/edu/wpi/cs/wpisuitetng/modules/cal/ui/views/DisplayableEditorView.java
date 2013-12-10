@@ -13,6 +13,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 
+import javax.swing.Box;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -73,9 +74,10 @@ public class DisplayableEditorView extends JPanel
 
 		if (showEnd)
 		{
-			lblUntil = new JLabel("  until  ");
+			lblUntil = new JLabel("until");
+			this.add(Box.createHorizontalStrut(6));
 			this.add(lblUntil, "flowx,cell 1 1,alignx left,growy");
-
+			this.add(Box.createHorizontalStrut(7));
 			this.add(endTimeDatePicker, "flowx,cell 1 1,alignx left,growy");
 		}
 
