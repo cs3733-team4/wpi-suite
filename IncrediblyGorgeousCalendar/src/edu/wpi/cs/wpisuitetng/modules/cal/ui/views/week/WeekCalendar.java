@@ -10,6 +10,7 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.week;
 
 import java.awt.BorderLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,16 +22,17 @@ import javax.swing.BoundedRangeModel;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
+
+import net.miginfocom.swing.MigLayout;
 
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.MutableDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-
-import com.lowagie.text.Font;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
@@ -60,22 +62,16 @@ public class WeekCalendar extends AbstractCalendar
 	private LouvreTour[] daysOfWeekArray = new LouvreTour[7];
 	private List<Event> eventList;
 
-	private JPanel multidayEventGridContainer = new JPanel();
-	private JPanel dayTitleAndMultidayContainer = new JPanel();
-
-	private JPanel dayHolderPanel = new JPanel();
-	private JPanel dayGrid = new JPanel();
-	private JPanel dayGridContainer = new JPanel();
-
-	private JPanel dayTitleGrid = new JPanel();
-	private JPanel dayTitlesContainer = new JPanel();
-
-	private JScrollPane scroll = new JScrollPane(dayGridContainer);
-
 	private DateTimeFormatter monthDayFmt = DateTimeFormat.forPattern("MMM d");
 	private DateTimeFormatter dayYearFmt = DateTimeFormat.forPattern("d, yyyy");
 	private DateTimeFormatter monthDayYearFmt = DateTimeFormat.forPattern("MMM d, yyyy");
 	private DateTimeFormatter dayTitleFmt = DateTimeFormat.forPattern("E M/d");
+	private JLabel weekTitle = new JLabel();
+	private JScrollPane headerScroller = new JScrollPane();
+	private JPanel headerBox = new JPanel();
+	private JScrollPane smithsonianScroller = new JScrollPane();
+	private JPanel smithsonian = new JPanel();
+	private JLabel dayHeaders[] = new JLabel[7];
 
 	/**
 	 * 
@@ -87,22 +83,35 @@ public class WeekCalendar extends AbstractCalendar
 		this.mainPanel = MainPanel.getInstance();
 		this.time = on;
 		updateWeekStartAndEnd(time);
+		
+		// ui layout
+		setLayout(new MigLayout("insets 0,gap 0", "[100px][grow][grow][grow][grow][grow][grow][grow][" + (new JScrollBar().getPreferredSize().width) + "px]", "[][][::100px,grow][grow]"));
+		
+		weekTitle.setFont(new Font("DejaVu Sans", Font.BOLD, 25));
+		add(weekTitle, "cell 0 0 9 1,alignx center");
+		
+		for (int i = 0; i < 7; i++)
+		{
+			add(dayHeaders[i] = new JLabel("", JLabel.CENTER), "cell " + (i+1) + " 1,alignx center");
+		}
+		
+		headerScroller.setBorder(null);
+		add(headerScroller, "cell 1 2 7 1,grow"); // default to 7 as no scrollbars
+		
+		headerBox.setBorder(null);
+		headerScroller.setViewportView(headerBox);
+		headerBox.setLayout(new BoxLayout(headerBox, BoxLayout.Y_AXIS));
+		
 
-		scroll.setBackground(Colors.TABLE_BACKGROUND);
-		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		scroll.getVerticalScrollBar().setUnitIncrement(20);
-		dayGrid.setBackground(Colors.TABLE_BACKGROUND);
+		smithsonianScroller.setBorder(null);
+		smithsonianScroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		smithsonianScroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		smithsonianScroller.getVerticalScrollBar().setUnitIncrement(20);
+		add(smithsonianScroller, "cell 0 3 9 1,grow");
 
-		this.setLayout(new BorderLayout());
-		this.multidayEventGridContainer.setLayout(new BoxLayout(multidayEventGridContainer, BoxLayout.Y_AXIS));
-		this.dayTitleAndMultidayContainer.setLayout(new BoxLayout(dayTitleAndMultidayContainer, BoxLayout.Y_AXIS));
-		this.dayHolderPanel.setLayout(new BorderLayout());
-		this.dayGrid.setLayout(new GridLayout(1, 7));
-		this.dayTitleGrid.setLayout(new GridLayout(1, 7));
-		this.dayTitlesContainer.setLayout(new BoxLayout(dayTitlesContainer, BoxLayout.X_AXIS));
-		this.dayGridContainer.setLayout(new BorderLayout());
-
+		smithsonianScroller.setViewportView(smithsonian);
+		smithsonian.setLayout(new MigLayout("insets 0,gap 0", "[100px][grow][grow][grow][grow][grow][grow][grow]", "[grow]"));
+		
 		generateDay();
 	}
 
@@ -111,65 +120,39 @@ public class WeekCalendar extends AbstractCalendar
 	 */
 	private void generateDay()
 	{
-		this.removeAll();
-		this.dayGrid.removeAll();
-		this.dayTitleGrid.removeAll();
-		this.dayTitlesContainer.removeAll();
+		// clear out the specifics
+		smithsonian.removeAll();
+		headerBox.removeAll();
+		
+		// add the day grid back in
+		smithsonian.add(new DayGridLabel(), "cell 0 0,grow");
 
 		MutableDateTime increment = new MutableDateTime(weekStartTime);
 		increment.setMillisOfDay(0);
 
 		eventList = getVisibleEvents(increment.toDateTime());
 
-		for (int index = 0; index < 7; index++)
+		for (int i = 0; i < 7; i++)
 		{
-
 			// add day views to the day grid
-			this.daysOfWeekArray[index] = new LouvreTour();
-			this.daysOfWeekArray[index].setEvents(getEventsInInterval(increment.toDateTime(), increment.toDateTime().plusDays(1)), increment.toDateTime());
-			this.daysOfWeekArray[index].setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, Colors.BORDER));
-			this.dayGrid.add(this.daysOfWeekArray[index]);
+			this.daysOfWeekArray[i] = new LouvreTour();
+			this.daysOfWeekArray[i].setEvents(getEventsInInterval(increment.toDateTime(), increment.toDateTime().plusDays(1)), increment.toDateTime());
+			if (i < 6)
+				this.daysOfWeekArray[i].setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, Colors.BORDER));
+			
+			this.smithsonian.add(this.daysOfWeekArray[i], "cell " + (i+1) + " 0,grow");
 
 			// add day titles to the title grid
-			JLabel currDayTitle = new JLabel(increment.toDateTime().toString(dayTitleFmt), JLabel.CENTER);
-			this.dayTitleGrid.add(currDayTitle);
+			dayHeaders[i].setText(increment.toDateTime().toString(dayTitleFmt));
 
 			increment.addDays(1);
 		}
 
-		// initialize spacer label to offset dayGridLabel
-		JLabel spacerLabel = new JLabel(" 10:00 PM ");
-		spacerLabel.setForeground(spacerLabel.getBackground());
-		spacerLabel.setBorder(BorderFactory.createLineBorder(spacerLabel.getBackground()));
-		this.dayTitlesContainer.add(spacerLabel);
-
-		// initialize spacer label to offset scroll bar
-		spacerLabel = new JLabel("     ");
-		spacerLabel.setForeground(spacerLabel.getBackground());
-		spacerLabel.setBorder(BorderFactory.createLineBorder(spacerLabel.getBackground()));
-
 		// populate and set up the multiDayEventGrid
 		populateMultidayEventGrid();
 
-		// put multiday event handling and day title grid in a container
-		dayTitleAndMultidayContainer.add(dayTitleGrid);
-		dayTitleAndMultidayContainer.add(multidayEventGridContainer);
-
-		// add grids to box container
-		this.dayTitlesContainer.add(dayTitleAndMultidayContainer);
-		this.dayTitlesContainer.add(spacerLabel);
-
-		// add spacer and time labels to container
-		this.dayGridContainer.add(DayGridLabel.getInstance(), BorderLayout.WEST);
-		this.dayGridContainer.add(dayGrid, BorderLayout.CENTER);
-
-		// add the sidebar and the day grid to the container panel
-		this.dayHolderPanel.add(dayTitlesContainer, BorderLayout.NORTH);
-		this.dayHolderPanel.add(scroll, BorderLayout.CENTER);
-
 		// setup week title
 		increment.addDays(-1);
-		JLabel weekTitle = new JLabel();
 
 		// smart titles
 		if (weekStartTime.getYear() != increment.getYear())
@@ -179,13 +162,6 @@ public class WeekCalendar extends AbstractCalendar
 		else
 			weekTitle.setText(weekStartTime.toString(monthDayFmt) + " - " + increment.toString(dayYearFmt));
 
-		weekTitle.setFont(new java.awt.Font("DejaVu Sans", Font.BOLD, 25));
-		weekTitle.setHorizontalAlignment(SwingConstants.CENTER);
-
-		// add title and week view to this
-		this.add(weekTitle, BorderLayout.NORTH);
-		this.add(dayHolderPanel, BorderLayout.CENTER);
-
 		// notify mini-calendar to change
 		mainPanel.miniMove(time);
 	}
@@ -193,8 +169,6 @@ public class WeekCalendar extends AbstractCalendar
 	private void populateMultidayEventGrid()
 	{
 		System.out.print("\n\nStart of Popultation: \n\n");
-
-		multidayEventGridContainer.removeAll();
 
 		List<Event> multidayEvents = getMultidayEvents();
 		Collections.sort(multidayEvents, new Comparator<Event>() {
@@ -207,12 +181,13 @@ public class WeekCalendar extends AbstractCalendar
 			}
 
 		});
+		
 
 		while (!multidayEvents.isEmpty())
 		{
-			System.out.print("multiGridContainer Comp Count: " + multidayEventGridContainer.getComponentCount() + "\n");
+			System.out.print("multiGridContainer Comp Count: " + headerBox.getComponentCount() + "\n");
 
-			JLabel multiGrid = new JLabel();
+			JPanel multiGrid = new JPanel();
 			multiGrid.setLayout(new GridLayout(1, 7));
 
 			int gridIndex = 0;
@@ -232,13 +207,16 @@ public class WeekCalendar extends AbstractCalendar
 						{
 							if (firstPanel)
 							{
-								JLabel multidayPanel = new JLabel(currEvent.getName());
+								System.out.print("currEvent Name:Name  " + currEvent.getName() + "\n");
+								JLabel multidayPanel = new JLabel(" " + currEvent.getName());
 								multidayPanel.setBackground(currEvent.getColor());
+								multidayPanel.setOpaque(true);
 								multiGrid.add(multidayPanel);
 								firstPanel = false;
 							}
 							else
 							{
+								System.out.print("currEvent Color: " + currEvent.getName() + "\n");
 								JPanel multidayPanel = new JPanel();
 								multidayPanel.setBackground(currEvent.getColor());
 								multiGrid.add(multidayPanel);
@@ -258,7 +236,8 @@ public class WeekCalendar extends AbstractCalendar
 
 			System.out.print("multiGrid Comp Count: " + multiGrid.getComponentCount() + "\n");
 			if (multiGrid.getComponentCount() > 0)
-				multidayEventGridContainer.add(multiGrid);
+				headerBox.add(multiGrid);
+			System.out.println(headerBox);
 		}
 	}
 
@@ -296,11 +275,12 @@ public class WeekCalendar extends AbstractCalendar
 		this.generateDay();
 
 		// Scroll to now
-		BoundedRangeModel jsb = scroll.getVerticalScrollBar().getModel();
+		BoundedRangeModel jsb = smithsonianScroller.getVerticalScrollBar().getModel();
 		double day = time.getMinuteOfDay();
 		day /= time.minuteOfDay().getMaximumValue();
 		day *= (jsb.getMaximum()) - jsb.getMinimum();
 		jsb.setValue((int) day);
+		System.out.println("Scrolling recomb from " + jsb.getMaximum() + " y " + (int)day);
 
 		// repaint
 		mainPanel.revalidate();
