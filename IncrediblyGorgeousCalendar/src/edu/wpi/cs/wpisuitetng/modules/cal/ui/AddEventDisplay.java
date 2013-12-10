@@ -38,7 +38,7 @@ public class AddEventDisplay extends DisplayableEditorView
 		super(true);
 		this.eventToEdit = mEvent;
 		this.isEditingEvent = true;
-		this.existingEventID = eventToEdit.getEventID();
+		this.existingEventID = eventToEdit.getIdentification();
 		populateEventFields(eventToEdit);
 		setUpListeners();
 		

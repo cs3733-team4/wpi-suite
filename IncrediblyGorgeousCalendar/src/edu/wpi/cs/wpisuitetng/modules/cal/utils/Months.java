@@ -155,5 +155,37 @@ public class Months
 		t.addDays(0 - d.getDayOfWeek());
 		return t.toDateTime();
 	}
+	
+	/**
+	 * adds descriptive letters to numbers:
+	 * 	1 -> 1st
+	 *  2 -> 2nd
+	 *  11 -> 11th
+	 *  etc
+	 * 
+	 * @param i the number to convert
+	 * @return a String
+	 */
+	public static String getDescriptiveNumber(int i)
+	{
+		if (i%100 < 20 && i%100 > 10)
+		{
+			return i+"th";
+		}
+		
+		if (i%10 == 1)
+		{
+			return i+"st";
+		}
+		if (i%10 == 2)
+		{
+			return i+"nd";
+		}
+		if (i%10 == 3){
+			return i+"rd";
+		}
+		
+		return i+"th";
+	}
 
 }

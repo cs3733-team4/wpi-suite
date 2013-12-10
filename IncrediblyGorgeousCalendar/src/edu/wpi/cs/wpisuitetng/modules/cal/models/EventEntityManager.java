@@ -216,7 +216,7 @@ public class EventEntityManager implements EntityManager<Event> {
 		 * We have to get the original defect from db4o, copy properties from updatedEvent,
 		 * then save the original Event again.
 		 */
-		List<Model> oldEvents = db.retrieve(Event.class, "eventID", updatedEvent.getEventID(), session.getProject());
+		List<Model> oldEvents = db.retrieve(Event.class, "eventID", updatedEvent.getIdentification(), session.getProject());
 		if(oldEvents.size() < 1 || oldEvents.get(0) == null) {
 			throw new BadRequestException("Event with ID does not exist.");
 		}
