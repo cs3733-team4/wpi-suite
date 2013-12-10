@@ -10,6 +10,7 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.week;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.util.ArrayList;
@@ -84,7 +85,7 @@ public class WeekCalendar extends AbstractCalendar
 		this.time = on;
 		updateWeekStartAndEnd(time);
 		
-		// ui layout
+		// ui layout //100px:n:100px,grow
 		setLayout(new MigLayout("insets 0,gap 0", "[100px][grow][grow][grow][grow][grow][grow][grow][" + (new JScrollBar().getPreferredSize().width) + "px]", "[][][::100px,grow][grow]"));
 		
 		weekTitle.setFont(new Font("DejaVu Sans", Font.BOLD, 25));
@@ -95,10 +96,10 @@ public class WeekCalendar extends AbstractCalendar
 			add(dayHeaders[i] = new JLabel("", JLabel.CENTER), "cell " + (i+1) + " 1,alignx center");
 		}
 		
-		headerScroller.setBorder(null);
+		headerScroller.setBorder(BorderFactory.createEmptyBorder());
 		add(headerScroller, "cell 1 2 7 1,grow"); // default to 7 as no scrollbars
 		
-		headerBox.setBorder(null);
+		headerBox.setBorder(BorderFactory.createEmptyBorder());
 		headerScroller.setViewportView(headerBox);
 		headerBox.setLayout(new BoxLayout(headerBox, BoxLayout.Y_AXIS));
 		
@@ -188,6 +189,8 @@ public class WeekCalendar extends AbstractCalendar
 			System.out.print("multiGridContainer Comp Count: " + headerBox.getComponentCount() + "\n");
 
 			JPanel multiGrid = new JPanel();
+			multiGrid.setBackground(Colors.TABLE_BACKGROUND);
+			multiGrid.setBorder(null);
 			multiGrid.setLayout(new GridLayout(1, 7));
 
 			int gridIndex = 0;
@@ -231,7 +234,10 @@ public class WeekCalendar extends AbstractCalendar
 
 				// if we don't find anything, add spacer and go to next day
 				gridIndex++;
-				multiGrid.add(new JPanel());
+				JPanel spacer = new JPanel();
+				spacer.setBackground(Colors.TABLE_BACKGROUND);
+				spacer.setBorder(BorderFactory.createMatteBorder(1, (gridIndex == 1) ? 1 : 0, 1, 1, Colors.BORDER));
+				multiGrid.add(spacer);
 			}
 
 			System.out.print("multiGrid Comp Count: " + multiGrid.getComponentCount() + "\n");
@@ -453,6 +459,6 @@ public class WeekCalendar extends AbstractCalendar
 	{
 		DateTime s = mEvent.getStart(), e = mEvent.getEnd();
 
-		return (s.isBefore(e) && mInterval.overlaps(new Interval(s, e)));
+		return (s.isBefore(e) && mInterval.contains(s));
 	}
 }
