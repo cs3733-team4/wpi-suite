@@ -14,7 +14,6 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -35,6 +34,8 @@ import edu.wpi.cs.wpisuitetng.modules.cal.models.SelectableField;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddCommitmentDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddEventDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.CategoryManager;
+import edu.wpi.cs.wpisuitetng.network.Network;
+import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 
 public class DocumentMainPanel extends JFrame{
 
@@ -48,8 +49,27 @@ public class DocumentMainPanel extends JFrame{
     private JPanel tocView;
     private DocumentMainPanel()
     {
-    
     	super();
+    }
+    private String extractPage(String sIn)
+    {
+    	String sOut="";
+    	int index=0;
+    	for (int i=sIn.length()-1; i>-1; i--)
+    	{
+    		if (sIn.charAt(i) == '/')
+    		{
+    			index=i;
+    			break;
+    		}
+    	}
+    	sOut=sIn.substring(index +1, sIn.length());
+    	return sOut;
+    }
+    
+    public void init()
+    {
+
     	tocView = new JPanel(new BorderLayout());
     	openInBrowser = new JButton("Open In Browser");
     	this.setTitle("YOCO Calendar Help");
@@ -57,7 +77,7 @@ public class DocumentMainPanel extends JFrame{
     	
     	//serverLocation = Network.getInstance().makeRequest("docs/Calendar/", HttpMethod.GET).getUrl().toString().replace("API/", "");
         serverLocation = "http://www.wpi.edu/~bkmcleod/newDocs/";
-
+    	System.out.println(serverLocation);
     	tableOfContents=new TableOfContents(serverLocation);
     	try
         {
@@ -120,21 +140,6 @@ public class DocumentMainPanel extends JFrame{
         splitPane.add(tocView);
         splitPane.add(scroll);
         this.add(splitPane, BorderLayout.CENTER);
-    }
-    private String extractPage(String sIn)
-    {
-    	String sOut="";
-    	int index=0;
-    	for (int i=sIn.length()-1; i>-1; i--)
-    	{
-    		if (sIn.charAt(i) == '/')
-    		{
-    			index=i;
-    			break;
-    		}
-    	}
-    	sOut=sIn.substring(index +1, sIn.length());
-    	return sOut;
     }
     /**
      * doAction will return true if there is/was an action committed as a result of the link

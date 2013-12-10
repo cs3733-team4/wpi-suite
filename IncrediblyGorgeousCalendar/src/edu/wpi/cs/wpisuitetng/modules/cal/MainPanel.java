@@ -117,7 +117,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	 */
 	void finishInit()
 	{
-		
+		DocumentMainPanel.getInstance().init();
 		if (mTabbedPane == this)
 			return;
 		mTabbedPane = this;
