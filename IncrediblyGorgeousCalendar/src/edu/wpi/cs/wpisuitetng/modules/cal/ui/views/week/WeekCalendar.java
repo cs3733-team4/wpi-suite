@@ -88,7 +88,7 @@ public class WeekCalendar extends AbstractCalendar
 		updateWeekStartAndEnd(time);
 		
 		// ui layout //100px:n:100px,grow
-		setLayout(new MigLayout("insets 0,gap 0", "[100px][grow][grow][grow][grow][grow][grow][grow][" + (new JScrollBar().getPreferredSize().width) + "px]", "[][][::100px,grow][grow]"));
+		setLayout(new MigLayout("insets 0,gap 0", "[100px][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][" + (new JScrollBar().getPreferredSize().width) + "px]", "[][][::100px,grow][grow]"));
 		
 		weekTitle.setFont(new Font("DejaVu Sans", Font.BOLD, 25));
 		add(weekTitle, "cell 0 0 9 1,alignx center");
@@ -114,7 +114,7 @@ public class WeekCalendar extends AbstractCalendar
 		add(smithsonianScroller, "cell 0 3 9 1,grow");
 
 		smithsonianScroller.setViewportView(smithsonian);
-		smithsonian.setLayout(new MigLayout("insets 0,gap 0", "[100px][grow][grow][grow][grow][grow][grow][grow]", "[grow]"));
+		smithsonian.setLayout(new MigLayout("insets 0,gap 0", "[100px][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow]", "[grow]"));
 		
 		generateDay();
 	}
@@ -183,15 +183,15 @@ public class WeekCalendar extends AbstractCalendar
 			}
 
 		});
+		int rows = 0;
 		
-
 		while (!multidayEvents.isEmpty())
 		{
 			System.out.print("multiGridContainer Comp Count: " + headerBox.getComponentCount() + "\n");
 
 			JPanel multiGrid = new JPanel();
 			multiGrid.setBorder(BorderFactory.createEmptyBorder());
-			multiGrid.setLayout(new GridLayout(1, 7));
+			multiGrid.setLayout(new MigLayout("insets 0,gap 0", "[sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow]", "[]"));
 
 			int gridIndex = 0;
 
@@ -214,7 +214,7 @@ public class WeekCalendar extends AbstractCalendar
 								JLabel multidayPanel = new JLabel(" " + currEvent.getName());
 								multidayPanel.setBackground(currEvent.getColor());
 								multidayPanel.setOpaque(true);
-								multiGrid.add(multidayPanel);
+								multiGrid.add(multidayPanel, "cell " + gridIndex + " 0, grow");
 								firstPanel = false;
 							}
 							else
@@ -222,7 +222,7 @@ public class WeekCalendar extends AbstractCalendar
 								System.out.print("currEvent Color: " + currEvent.getName() + "\n");
 								JPanel multidayPanel = new JPanel();
 								multidayPanel.setBackground(currEvent.getColor());
-								multiGrid.add(multidayPanel);
+								multiGrid.add(multidayPanel, "cell " + gridIndex + " 0, grow");
 							}
 							gridIndex++;
 						} while (gridIndex < 7 && daysOfWeekArray[gridIndex].getDisplayDate().isBefore(currEvent.getEnd()));
@@ -236,15 +236,26 @@ public class WeekCalendar extends AbstractCalendar
 				gridIndex++;
 				JPanel spacer = new JPanel();
 				spacer.setBackground(Colors.TABLE_BACKGROUND);
-				spacer.setBorder(BorderFactory.createMatteBorder(1, (gridIndex == 1) ? 1 : 0, 1, 1, Colors.BORDER));
-				multiGrid.add(spacer);
+				spacer.setBorder(BorderFactory.createMatteBorder(rows == 0 ? 1 : 0, (gridIndex == 1) ? 1 : 0, 1, 1, Colors.BORDER));
+				multiGrid.add(spacer, "cell " + (gridIndex-1) + " 0, grow");
 			}
 
 			System.out.print("multiGrid Comp Count: " + multiGrid.getComponentCount() + "\n");
 			if (multiGrid.getComponentCount() > 0)
 				headerBox.add(multiGrid);
-			System.out.println(headerBox);
+			rows++;
 		}
+		// need to set this manually, silly because scrollpanes are silly and don't resize
+		if (rows > 3)
+		{
+			add(headerScroller, "cell 1 2 8 1,grow");
+			rows = 3;
+		}
+		else
+		{
+			add(headerScroller, "cell 1 2 7 1,grow");
+		}
+		((MigLayout)getLayout()).setRowConstraints("[][][" + (rows * 14) +  "px:n:60px,grow][grow]");// TODO: fix " + (rows > 0 ? "gapafter 3" : "") + "
 	}
 
 	/**
@@ -464,6 +475,8 @@ public class WeekCalendar extends AbstractCalendar
 	private boolean isEventInInterval(Event mEvent, Interval mInterval)
 	{
 		DateTime s = mEvent.getStart(), e = mEvent.getEnd();
+		if (this.weekStartTime.isAfter(s))
+			s = weekStartTime;
 
 		return (s.isBefore(e) && mInterval.contains(s));
 	}
