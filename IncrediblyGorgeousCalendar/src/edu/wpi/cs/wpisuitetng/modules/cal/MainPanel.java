@@ -89,7 +89,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	
 	//TODO: "make this better" -Patrick
 	public boolean showPersonal = true;
-	public boolean showTeam = false;
+	public boolean showTeam = true;
 
 	/** Tabbed main panel to display in the calendar module. This pane will contain
 	 *  the rest of the elements in the calendar module, including the calendar view,
@@ -209,6 +209,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 				{
 					removeTabAt(1);
 					MainPanel.getInstance().mainCalendarNavigationPanel.grabFocus();
+					tabs.clear();
 				}
 			}
 		});

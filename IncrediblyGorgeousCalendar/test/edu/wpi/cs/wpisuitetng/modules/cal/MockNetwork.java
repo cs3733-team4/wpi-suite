@@ -5,7 +5,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors: Team Rolling Thunder
+ * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal;
 
@@ -22,8 +22,8 @@ import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 
 /**
- * @author justinhess
- * @version $Revision: 1.0 $
+ * Allows testing of network things without having a real network to test on.
+ * 
  */
 public class MockNetwork extends Network {
 	

@@ -1,5 +1,3 @@
-package edu.wpi.cs.wpisuitetng.modules.cal;
-
 /*******************************************************************************
  * Copyright (c) 2013 WPI-Suite
  * All rights reserved. This program and the accompanying materials
@@ -7,30 +5,25 @@ package edu.wpi.cs.wpisuitetng.modules.cal;
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors: Team Rolling Thunder
+ * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-
-import java.util.HashSet;
+package edu.wpi.cs.wpisuitetng.modules.cal;
 
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.Session;
-import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryEntityManager;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentEntityManager;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventEntityManager;
-import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
-import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
 import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 import edu.wpi.cs.wpisuitetng.network.models.ResponseModel;
 
 /**
- * @author justinhess
- * @version $Revision: 1.0 $
+ * Enables fake requests to actually contact the right EM
  */
 public class MockRequest extends Request
 {
