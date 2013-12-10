@@ -375,16 +375,4 @@ public class YearCalendar extends AbstractCalendar
 	public void select(Displayable item) {
 		
 	}
-
-	@Override
-	public void addEvent(Event e)
-	{
-		//these methods dont need to do anything, because the year calendar cant update itself
-	}
-
-	@Override
-	public void addCommitment(Commitment c)
-	{
-		//these methods dont need to do anything, because the year calendar cant update itself
-	}
 }

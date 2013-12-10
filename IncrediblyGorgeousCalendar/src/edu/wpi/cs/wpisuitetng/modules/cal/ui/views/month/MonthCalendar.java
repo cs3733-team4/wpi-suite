@@ -138,7 +138,7 @@ public class MonthCalendar extends AbstractCalendar
 		}
 	}
 
-	@Override
+	
 	public void addEvent(Event e)
 	{
 		
@@ -168,7 +168,7 @@ public class MonthCalendar extends AbstractCalendar
 		}
 	}
 
-	@Override
+	
 	public void addCommitment(Commitment c)
 	{
 		MonthDay md = this.days.get(c.getDate().getDayOfYear());

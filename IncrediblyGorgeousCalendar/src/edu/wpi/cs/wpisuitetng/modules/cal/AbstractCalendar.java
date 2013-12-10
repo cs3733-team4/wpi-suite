@@ -57,18 +57,4 @@ public abstract class AbstractCalendar extends JComponent
 	 * @param item the event to select
 	 */
 	public abstract void select(Displayable item);
-	
-	/**
-	 * adds an event to the calendar
-	 * 
-	 * @param e an Event
-	 */
-	public abstract void addEvent(Event e);
-	
-	/**
-	 * adds a commitment to the calendar
-	 * 
-	 * @param c a Commitment
-	 */
-	public abstract void addCommitment(Commitment c);
 }
