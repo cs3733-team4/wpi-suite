@@ -111,18 +111,16 @@ public class DocumentMainPanel extends JFrame{
     		}
 			return true;
 		}
-<<<<<<< HEAD
-    	
-    	if (actionPath.contains("#"))
-    	{
-    		System.out.println("Action: " + actionPath + " not yet implemented!");
-=======
     	else if (actionPath.contains("#OpenNewAddCommitmentBox"))
     	{
     		System.out.println("Action for new Commitment");
     		AddCommitmentDisplay ncm = new AddCommitmentDisplay();
     		ncm.setTabId(MainPanel.getInstance().addTopLevelTab(ncm, "New Commitment", true));
->>>>>>> ab1e37637de8af04f7abe22f35e8f5ca044eb41d
+    		return true;
+    	}
+    	if (actionPath.contains("#"))
+    	{
+    		System.out.println("Action: " + actionPath + " not yet implemented!");
     		return true;
     	}
     	return false;
