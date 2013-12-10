@@ -70,7 +70,7 @@ public class AddEventDisplay extends DisplayableEditorView
 		if (eventToEdit.getAssociatedCategory()!=null)
 			this.eventCategoryPicker.setSelectedItem(eventToEdit.getAssociatedCategory());
 		else
-			this.eventCategoryPicker.setSelectedItem(Category.DEFUALT_CATEGORY);
+			this.eventCategoryPicker.setSelectedItem(Category.DEFAULT_CATEGORY);
 	}
 	
 	/**

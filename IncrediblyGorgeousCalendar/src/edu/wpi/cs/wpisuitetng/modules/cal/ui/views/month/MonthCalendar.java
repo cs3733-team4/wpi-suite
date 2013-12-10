@@ -308,8 +308,7 @@ public class MonthCalendar extends AbstractCalendar
 		
 		// Else, loop through events and filter by selected categories
 		for (Event e : visibleEvents){
-			if (selectedCategories.contains(e.getCategory()) || 
-					e.getCategory().equals(Category.DEFUALT_CATEGORY.getCategoryID()))
+			if (selectedCategories.contains(e.getCategory()))
 				categoryFilteredEvents.add(e);
 		}
 		
@@ -319,7 +318,10 @@ public class MonthCalendar extends AbstractCalendar
 
 	private List<Commitment> getVisibleCommitments(DateTime from, DateTime to)
 	{
-		return commitmentModel.getCommitments(from, to);
+		if (MainPanel.getInstance().showCommitments())
+			return commitmentModel.getCommitments(from, to);
+		else
+			return new ArrayList<Commitment>();
 	}
 
 	/**

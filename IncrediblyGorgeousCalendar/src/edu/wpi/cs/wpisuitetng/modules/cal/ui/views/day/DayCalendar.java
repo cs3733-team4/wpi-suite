@@ -112,7 +112,7 @@ public class DayCalendar extends AbstractCalendar
 		// Else, loop through events and filter by selected categories
 		for (Event e : visibleEvents){
 			if (selectedCategories.contains(e.getCategory()) || 
-					e.getCategory().equals(Category.DEFUALT_CATEGORY.getCategoryID()))
+					e.getCategory().equals(Category.DEFAULT_CATEGORY.getCategoryID()))
 				categoryFilteredEvents.add(e);
 		}
 		

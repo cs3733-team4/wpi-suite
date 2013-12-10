@@ -13,6 +13,7 @@ import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -70,6 +71,8 @@ public class SidebarTabbedPane extends JTabbedPane{
 	private JPanel categoryButtonPanel;
 	private JButton selectAllButton;
 	private JButton clearAllButton;
+	private boolean showCommitments;
+	private boolean showUncategorized;
 	private JScrollPane categoryScroll;
 	private HashMap<JCheckBox, Category> checkBoxCategoryMap = new HashMap<JCheckBox, Category>();
 	private Collection<UUID> selectedCategories = new ArrayList<UUID>();
@@ -360,7 +363,11 @@ public class SidebarTabbedPane extends JTabbedPane{
 		selectedCategories.clear();
 		checkBoxCategoryMap.clear();
 		
-		for(Category c : CategoryModel.getInstance().getAllCategories())
+		List<Category> allCategories = CategoryModel.getInstance().getAllCategories();
+		allCategories.add(0, Category.COMMITMENT_CATEGORY);
+		allCategories.add(1, Category.DEFAULT_CATEGORY);
+		
+		for(Category c : allCategories)
 		{
 			// Check box for current category
 			JCheckBox categoryCheckBox = new JCheckBox(c.getName());
@@ -376,7 +383,30 @@ public class SidebarTabbedPane extends JTabbedPane{
 	    	categoryColor.setMinimumSize(new Dimension(16, 15));
 	    	categoryColor.setLayout(new GridLayout(1,1));
 	    	categoryColor.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-	    	categoryColor.setBackground(c.getColor());
+	    	
+	    	// If commitments, set exclamation mark
+	    	if (c.getName().equals("Commitments"))
+	    	{
+	    		categoryColor.setBackground(Colors.TABLE_BACKGROUND);
+	    		JLabel commitmentMark = new JLabel("\uFF01");
+	    		commitmentMark.setForeground(Colors.COMMITMENT_NOTIFICATION);
+	    		categoryColor.add(commitmentMark);
+	    	} else if (c.getName().equals("Uncategorized")) // If uncategorized
+	    	{
+	    		// Show both colors (team and personal events)
+	    		JPanel doubleColor = new JPanel();
+	    		doubleColor.setLayout(new GridLayout(1,2));
+	    		JPanel blue = new JPanel();
+	    		blue.setBackground(new Color(125,157,227));
+	    		JPanel red = new JPanel();
+	    		red.setBackground(new Color(227,125,147));
+	    		doubleColor.add(blue);
+	    		doubleColor.add(red);
+	    		categoryColor.add(doubleColor);
+	    	}
+	    	else // If not, get category color
+	    		categoryColor.setBackground(c.getColor());
+	    	
 	    	categoryColor.setAlignmentX(BOTTOM_ALIGNMENT);
 			
 			// Container for category color and check box
@@ -388,7 +418,12 @@ public class SidebarTabbedPane extends JTabbedPane{
 			
 			// Store reference to check boxes and categories
 			if (categoryCheckBox.isSelected() && !(selectedCategories.contains(c.getCategoryID())))
-				selectedCategories.add(c.getCategoryID());
+			{
+				if (c.getName().equals("Commitments"))
+					showCommitments = true;
+				else
+					selectedCategories.add(c.getCategoryID());
+			}
 			
 			if (!checkBoxCategoryMap.containsKey(categoryCheckBox))
 				checkBoxCategoryMap.put(categoryCheckBox, c);
@@ -429,12 +464,22 @@ public class SidebarTabbedPane extends JTabbedPane{
 		public void itemStateChanged(ItemEvent e) {
 			if(((JCheckBox)e.getSource()).isSelected())
 			{
-				if (! selectedCategories.contains(referencedCategory.getCategoryID()))
-					selectedCategories.add(referencedCategory.getCategoryID());
+				if (referencedCategory.getName().equals("Commitments"))
+					showCommitments = true;
+				else
+				{
+					if (! selectedCategories.contains(referencedCategory.getCategoryID()))
+						selectedCategories.add(referencedCategory.getCategoryID());
+				}
 			} else
 			{
-				if (selectedCategories.contains(referencedCategory.getCategoryID()))
-					selectedCategories.remove(referencedCategory.getCategoryID());
+				if (referencedCategory.getName().equals("Commitments"))
+					showCommitments = false;
+				else 
+				{
+					if (selectedCategories.contains(referencedCategory.getCategoryID()))
+						selectedCategories.remove(referencedCategory.getCategoryID());
+				}
 			}
 			MainPanel.getInstance().refreshView(); //Update view for selected filters
 		}
@@ -457,6 +502,8 @@ public class SidebarTabbedPane extends JTabbedPane{
 					selectedCategories.add(value.getCategoryID());
 			}
 		}
+		
+		showCommitments = true;
 	}
 	
 	/**
@@ -470,7 +517,17 @@ public class SidebarTabbedPane extends JTabbedPane{
 		// Iterate over check boxes and uncheck them
 		for (JCheckBox key : checkBoxCategoryMap.keySet())
 			key.setSelected(false);
+		
+		showCommitments = false;
+
 	}
 	
+	/**
+	 * Returns whether commitments should be shown or not
+	 * @return boolean indicating whether commitments should be shown in current calendar view
+	 */
+	public boolean showCommitments(){
+		return this.showCommitments;
+	}
 	
 }

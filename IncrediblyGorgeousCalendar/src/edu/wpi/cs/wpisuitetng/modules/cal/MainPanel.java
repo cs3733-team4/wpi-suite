@@ -587,4 +587,13 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	public Collection<UUID> getSelectedCategories(){
 		return this.sideTabbedPanel.getSelectedCategories();
 	}
+	
+	
+	/**
+	 * Determines whether commitments should be displayed or not
+	 * @return boolean indicating whether or not to display commitments
+	 */
+	public boolean showCommitments(){
+		return this.sideTabbedPanel.showCommitments();
+	}
 }
