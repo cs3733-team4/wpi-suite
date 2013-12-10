@@ -69,10 +69,7 @@ public class DocumentMainPanel extends JFrame{
                 if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED)
                       	try {
                       			if (!doAction(e.getURL().toString()))
-                      			{
                       				webPage.setPage(e.getURL());
-                      				System.out.println(e.getURL().toString());
-                      			}
                             }
                             catch(IOException ioe) {
                                 JOptionPane.showMessageDialog(null,ioe);
@@ -93,6 +90,7 @@ public class DocumentMainPanel extends JFrame{
      */
     private boolean doAction(String actionPath)
     {
+    	
     	if (actionPath.contains("#OpenNewEventWindow"))
 		{
 			System.out.println("Action for new Event");
@@ -106,6 +104,12 @@ public class DocumentMainPanel extends JFrame{
     			System.out.println("Could try to save a new event!!");
 			return true;
 		}
+    	
+    	if (actionPath.contains("#"))
+    	{
+    		System.out.println("Action: " + actionPath + " not yet implemented!");
+    		return true;
+    	}
     	return false;
     }
     
