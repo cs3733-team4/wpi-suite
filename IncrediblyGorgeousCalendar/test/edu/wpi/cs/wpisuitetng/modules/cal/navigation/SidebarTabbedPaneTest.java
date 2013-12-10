@@ -7,6 +7,7 @@ import java.awt.Component;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.UUID;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -176,7 +177,10 @@ public class SidebarTabbedPaneTest {
 		
 		assertNotNull("Filtering tab list exists", catList.get(sidebar));
 		// note getSelectedCategories is a list of category UUIDs that correspond to each category
-		assertEquals("The filtering tab list starts with only one categorty to filter: uncategorized", 1, sidebar.getSelectedCategories().size()); // THis was 3 at first
+		
+		((MockNetwork)Network.getInstance()).clearCache();
+		assertEquals("The filtering tab list starts with only one categorty to filter: uncategorized", 1, CategoryModel.getInstance().getCategoryByUUID((UUID) sidebar.getSelectedCategories().toArray()[1]).getName());
+		// Why doesn't this work?
 		
 		((MockNetwork)Network.getInstance()).clearCache();
 	}
@@ -228,30 +232,26 @@ public class SidebarTabbedPaneTest {
 	}
 	
 	@Test
-	public void testRefresh() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+	public void testSelectDeselectButtons() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		
 		Category blue=new Category();
 		blue.setName("blue");
 		blue.setColor(Color.blue);
 		CategoryModel.getInstance().putCategory(blue);
 		
-		SidebarTabbedPane sidebar = new SidebarTabbedPane();
-		
-		assertNotNull("sidebar exists", sidebar);
-		
-		assertEquals("The filtering tab list starts with all added categories as well as an uncategorized checkbox", 2, sidebar.getSelectedCategories().size());
-		
-		// If a new category is created and added to the database,
-		
 		Category red=new Category();
 		red.setName("red");
 		red.setColor(Color.red);
 		CategoryModel.getInstance().putCategory(red);
 		
-		assertEquals("The filtering tab list still only has the old categories,", 2, sidebar.getSelectedCategories().size());
-		sidebar.refreshFilterTab();
-		assertEquals("Until you refresh it, which is called normally in the createCategory tab", 3, sidebar.getSelectedCategories().size());
+		Category green=new Category();
+		green.setName("green");
+		green.setColor(Color.green);
+		CategoryModel.getInstance().putCategory(green);
 		
+		SidebarTabbedPane sidebar = new SidebarTabbedPane();
+		
+		assertEquals("The filtering tab list starts with all added categories as well as an uncategorized checkbox", 4, sidebar.getSelectedCategories().size());
 		((MockNetwork)Network.getInstance()).clearCache();
 	}
 }
