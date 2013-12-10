@@ -379,6 +379,9 @@ public class SidebarTabbedPane extends JTabbedPane{
 		checkBoxCategoryMap.clear();
 		
 		List<Category> allCategories = CategoryModel.getInstance().getAllCategories();
+		
+		// Use different list to avoid commitment and uncategorized from displaying in other places
+		// since the allCategories list is passed by reference
 		allPlusDefault.add(Category.COMMITMENT_CATEGORY);
 		allPlusDefault.add(Category.DEFAULT_CATEGORY);
 		allPlusDefault.addAll(allCategories);

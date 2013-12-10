@@ -12,6 +12,7 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -19,6 +20,7 @@ import java.awt.event.MouseListener;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
 import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
@@ -75,17 +77,24 @@ public class MonthItem extends JPanel
         
         // Arrow label (for multi-day events)
         arrow.setFont(new java.awt.Font("DejaVu Sans", Font.BOLD, 12));
-        arrow.setLayout(new GridLayout(1,1));
-        arrow.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 0, 1, 3));
-        arrow.setPreferredSize(new Dimension(17, 15));
-    	arrow.setMaximumSize(new Dimension(17, 15));
-    	arrow.setMinimumSize(new Dimension(17, 15));
+        arrow.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        arrow.setHorizontalAlignment(JLabel.CENTER);
+        arrow.setVerticalAlignment(JLabel.CENTER);
+        
+        // Get the appropriate size for the arrow container based on the max possible value
+        FontMetrics arrowMetrics = getFontMetrics(arrow.getFont()); 
+        int width = arrowMetrics.stringWidth("\u2194");
+        int height = arrowMetrics.getHeight();
+        
+        arrow.setPreferredSize(new Dimension(width, height));
+    	arrow.setMaximumSize(new Dimension(width, height));
+    	arrow.setMinimumSize(new Dimension(width, height));
         
         // Box for category color and arrow label
-        categoryColor.setPreferredSize(new Dimension(17, 15));
-    	categoryColor.setMaximumSize(new Dimension(17, 15));
-    	categoryColor.setMinimumSize(new Dimension(17, 15));
     	categoryColor.setLayout(new GridLayout(1,1));
+        categoryColor.setPreferredSize(new Dimension(width + 3, height));
+    	categoryColor.setMaximumSize(new Dimension(width + 3, height));
+    	categoryColor.setMinimumSize(new Dimension(width + 3, height));
         
     	/** Display displayable based on whether it is an event or a commitment*/
     	
@@ -110,7 +119,6 @@ public class MonthItem extends JPanel
         	if (isStartBeforeCurrent(day, eventStart) && isEndAfterCurrent(day, eventEnd))
         	{
         		arrow.setText("\u2194");//the event goes before and after
-        		arrow.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 0, 4, 3));
         	}
         	else if ((isStartBeforeCurrent(day, eventStart)))
         	{
