@@ -121,12 +121,12 @@ public class DocumentMainPanel extends JFrame{
 		}
     	else if (actionPath.contains("#DeleteCommitmentFromDetailsPane"))
     	{
-    		MainPanel.getInstance().deleteCurrentlySelectedDisplayable();
+    		MainPanel.getInstance().deleteCurrentlySelectedCommitment();
     		return true;
     	}
-    	else if (actionPath.contains("#DeleteEventFromDetailsPane"))
+    	else if (actionPath.contains("#DeleteEventFromDetailsPane") || actionPath.contains("#DeleteSelectedEvent"))
     	{
-    		MainPanel.getInstance().deleteCurrentlySelectedDisplayable();
+    		MainPanel.getInstance().deleteCurrentlySelectedEvent();
     		return true;
     	}
     	else if (actionPath.contains("#OpenNewAddCommitmentBox"))
