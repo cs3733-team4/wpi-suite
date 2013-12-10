@@ -11,11 +11,14 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.france;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.JPanel;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 
 import org.joda.time.DateTime;
@@ -29,16 +32,51 @@ import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 public class LouvreTour extends JPanel
 {
 	HashMap<Event, VanGoghPainting> guides = new HashMap<>();
+	private DateTime displayDate;
+	
 	public LouvreTour()
 	{
 		setLayout(null);
 		setPreferredSize(new Dimension(1, 1440));
 		setBackground(Colors.TABLE_BACKGROUND);
+		this.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				MainPanel.getInstance().setSelectedDay(displayDate);
+				MainPanel.getInstance().clearSelected();
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 	}
 	
 	public void setEvents(List<Event> events, DateTime displayedDay)
 	{
 		List<VanGoghPainting> gallery = CERN.createEventsReallyNicely(events, displayedDay);
+		this.displayDate = displayedDay;
 		removeAll();
 		guides.clear();
 		for (VanGoghPainting vanGoghPainting : gallery)
@@ -83,6 +121,8 @@ public class LouvreTour extends JPanel
 	{
 		for (VanGoghPainting v : guides.values())
 		{
+			if(item instanceof Event && v.getEvent().getEventID().equals(((Event) item).getEventID()))
+				item = v.getEvent();
 			v.setSelected(false);
 		}
 		if (item instanceof Event)
@@ -92,8 +132,11 @@ public class LouvreTour extends JPanel
 			{
 				mona.setSelected(true);
 			}
-		}
-		
+		}		
+	}
+
+	public DateTime getDisplayDate() {
+		return displayDate;
 	}
 	
 // //TODO: fix so that we can easily re-compute a part of the events stack	
