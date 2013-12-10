@@ -16,6 +16,8 @@ import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
@@ -99,6 +101,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 			throw new RuntimeException("Trying to create more than one calendar panel!");
 
 		instance = this; // Variable for creating new tabs in addTopLevelTab
+
 	}
 	
 	@Override
@@ -107,6 +110,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		// call finish init always, it has a if to prevent multiple calls. see below comment on why
 		finishInit();
 		super.paint(g);
+		this.mainCalendarNavigationPanel.grabFocus();
 	}
 	
 	/**
@@ -204,13 +208,14 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 				while (getTabCount() > 1)
 				{
 					removeTabAt(1);
+					MainPanel.getInstance().mainCalendarNavigationPanel.grabFocus();
 					tabs.clear();
-
 				}
 			}
 		});
 		
-		
+		// Get focus for arrow key input
+		mainCalendarNavigationPanel.grabFocus();
 		
 	}
 	
@@ -269,6 +274,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 					int ID = ((Title)e.getSource()).ID;
 					mTabbedPane.remove(tabs.get(ID));
 					tabs.remove(ID);
+					MainPanel.getInstance().mainCalendarNavigationPanel.grabFocus();
 				}
 			};
 			
@@ -417,6 +423,8 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		centerPanelBottom.add(mCalendar, BorderLayout.CENTER);
 		mCalendar.display(lastTime);
 		
+		mainCalendarNavigationPanel.grabFocus();
+		
 		revalidate();
 		repaint();
 	}
@@ -437,6 +445,16 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	public ViewSize getView()
 	{
 		return view;
+	}
+	
+	/**
+	 * Get calendar navigation panel
+	 * Used to give focus back to arrow key listeners
+	 * 
+	 * @return the calendar navigation panel
+	 */
+	public MainCalendarNavigation getCalNav(){
+		return this.mainCalendarNavigationPanel;
 	}
 	
 	/**
@@ -522,6 +540,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	{
 		updateSelectedDisplayable(null);
 		sideTabbedPanel.clearDetails();
+		this.mainCalendarNavigationPanel.grabFocus();
 	}
 	
 	public CategoryManager getCategoryManagerTab()
