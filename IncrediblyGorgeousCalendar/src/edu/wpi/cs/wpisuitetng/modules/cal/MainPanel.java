@@ -336,7 +336,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	 * @param updateEvent event to update
 	 */
 	public void updateEvent(Event updateEvent){
-		if((currentSelected instanceof Event) && updateEvent.getEventID().equals(((Event) currentSelected).getEventID()))
+		if((currentSelected instanceof Event) && updateEvent.getIdentification().equals(((Event) currentSelected).getIdentification()))
 			clearSelected();
 		events.updateEvent(updateEvent);
 	}
@@ -637,5 +637,22 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	 */
 	public boolean showCommitments(){
 		return this.sideTabbedPanel.showCommitments();
+	}
+	/**
+	 * 
+	 * @return the currently selected displayable
+	 */
+	public Displayable getSelectedEvent()
+	{
+		return this.currentSelected;
+	}
+	
+	/**
+	 * 
+	 * @return the currently selected day
+	 */
+	public DateTime getSelectedDay()
+	{
+		return this.lastTime;
 	}
 }

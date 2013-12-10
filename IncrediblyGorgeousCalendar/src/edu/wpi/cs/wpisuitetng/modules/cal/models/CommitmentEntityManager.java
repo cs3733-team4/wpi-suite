@@ -209,7 +209,7 @@ public class CommitmentEntityManager implements EntityManager<Commitment> {
 		 * We have to get the original defect from db4o, copy properties from updatedCommitments,
 		 * then save the original Commitment again.
 		 */
-		List<Model> oldCommitments = db.retrieve(Commitment.class, "commitmentID", updatedCommitment.getCommitmentID(), session.getProject());
+		List<Model> oldCommitments = db.retrieve(Commitment.class, "commitmentID", updatedCommitment.getIdentification(), session.getProject());
 		if(oldCommitments.size() < 1 || oldCommitments.get(0) == null) {
 			throw new BadRequestException("Commitment with ID does not exist.");
 		}
