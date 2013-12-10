@@ -120,35 +120,7 @@ public class AddEventDisplay extends DisplayableEditorView
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 
-					startTimeDatePicker.getDateTime();
-					endTimeDatePicker.getDateTime();
-					
-					Event e = new Event();
-					e.setName(nameTextField.getText().trim());
-					e.setDescription(descriptionTextArea.getText());
-					e.setStart(startTimeDatePicker.getDateTime());
-					e.setEnd(endTimeDatePicker.getDateTime());
-					e.setProjectEvent(rdbtnTeam.isSelected());
-					e.setParticipants(participantsTextField.getText().trim());
-					e.setCategory(((Category)eventCategoryPicker.getSelectedItem()).getCategoryID());
-					
-					
-					if (isEditingEvent){
-						e.setEventID(existingEventID);
-						MainPanel.getInstance().updateEvent(e);
-					} else {
-						MainPanel.getInstance().addEvent(e);
-					}
-					
-					saveButton.setEnabled(false);
-					saveButton.setText("Saved!");
-					MainPanel.getInstance().closeTab(tabid);
-					MainPanel.getInstance().refreshView();
-				
-				saveButton.setEnabled(false);
-				saveButton.setText("Saved!");
-				MainPanel.getInstance().closeTab(tabid);
-				MainPanel.getInstance().refreshView();
+					attemptSave();
 			}
 		});
 		
@@ -168,7 +140,41 @@ public class AddEventDisplay extends DisplayableEditorView
 		
 		saveButton.setEnabled(isSaveable());
 	}
+	public void attemptSave()
+	{
+		if (!isSaveable())
+			return;
+		startTimeDatePicker.getDateTime();
+		endTimeDatePicker.getDateTime();
+		
+		Event e = new Event();
+		e.setName(nameTextField.getText().trim());
+		e.setDescription(descriptionTextArea.getText());
+		e.setStart(startTimeDatePicker.getDateTime());
+		e.setEnd(endTimeDatePicker.getDateTime());
+		e.setProjectEvent(rdbtnTeam.isSelected());
+		e.setParticipants(participantsTextField.getText().trim());
+		e.setCategory(((Category)eventCategoryPicker.getSelectedItem()).getCategoryID());
+		
+		
+		if (isEditingEvent){
+			e.setEventID(existingEventID);
+			MainPanel.getInstance().updateEvent(e);
+		} else {
+			MainPanel.getInstance().addEvent(e);
+		}
+		
+		saveButton.setEnabled(false);
+		saveButton.setText("Saved!");
+		MainPanel.getInstance().closeTab(tabid);
+		MainPanel.getInstance().refreshView();
 	
+	saveButton.setEnabled(false);
+	saveButton.setText("Saved!");
+	MainPanel.getInstance().closeTab(tabid);
+
+	MainPanel.getInstance().refreshView();
+	}
 	/**
 	 * Set tab id for the created event view
 	 * @param id value to set id to
