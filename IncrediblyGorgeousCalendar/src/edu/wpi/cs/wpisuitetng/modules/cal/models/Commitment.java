@@ -9,6 +9,7 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.models;
 
+import java.awt.Color;
 import java.util.Date;
 import java.util.UUID;
 
@@ -17,7 +18,6 @@ import org.joda.time.DateTime;
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
-import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
@@ -69,9 +69,7 @@ public class Commitment extends AbstractModel implements Displayable
 		return this;
 	}
 	
-	/**
-	 * @return the category
-	 */
+	@Override
 	public UUID getCategory()
 	{
 		return category;
@@ -169,6 +167,23 @@ public class Commitment extends AbstractModel implements Displayable
 	public String getDescription()
 	{
 		return description;
+	}
+	
+	@Override
+	public Color getColor()
+	{
+		Color fallbackColor = isProjectCommitment ? new Color(125,157,227) : new Color(227,125,147);
+		Category cat = CategoryModel.getInstance().getCategoryByUUID(category);
+		if (cat == null)
+		{
+			return fallbackColor;
+		}
+		Color eventColor = cat.getColor();
+		if (eventColor != null)
+		{
+			return eventColor;
+		}
+		return fallbackColor;
 	}
 
 	/**

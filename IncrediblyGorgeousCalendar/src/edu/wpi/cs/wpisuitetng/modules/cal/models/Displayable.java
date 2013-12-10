@@ -9,6 +9,7 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.models;
 
+import java.awt.Color;
 import java.util.UUID;
 
 import org.joda.time.DateTime;
@@ -76,5 +77,16 @@ public interface Displayable
 	 * @return a UUID
 	 */
 	public UUID getIdentification();
+	
+	/**
+	 * @return the category
+	 */
+	public UUID getCategory();
+	
+	/**
+	 * get the color that this event wants to be drawn
+	 * @return a Color Object
+	 */
+	public Color getColor();
 	
 }

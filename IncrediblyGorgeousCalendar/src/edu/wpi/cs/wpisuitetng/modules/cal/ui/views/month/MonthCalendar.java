@@ -495,10 +495,12 @@ public class MonthCalendar extends AbstractCalendar
 					//generate the polygon
 					Polygon dropdown = getDropTextPolygon(width, x, y);
 					
-					//HSLColor background = new HSLColor(CategoryModel.getInstance().getCategoryByUUID(dp.getIdentification()).getColor());
+					HSLColor background = new HSLColor(dp.getColor());
+					Color c = background.adjustLuminance(90);
 					
 					//draw the polygon
-					g.setColor(new Color(255,255,255,160));
+					//g.setColor(new Color(255,255,255,160));
+					g.setColor(c);
 					g.fillPolygon(dropdown);
 					g.setColor(Color.BLACK);
 					g.drawPolygon(dropdown);

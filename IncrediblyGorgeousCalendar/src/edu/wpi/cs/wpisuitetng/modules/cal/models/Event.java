@@ -247,9 +247,7 @@ public class Event extends AbstractModel implements Displayable
 		this.isProjectEvent = isProjectEvent;
 	}
 
-	/**
-	 * @return the category
-	 */
+	@Override
 	public UUID getCategory()
 	{
 		return category;
@@ -326,10 +324,7 @@ public class Event extends AbstractModel implements Displayable
 		return CategoryModel.getInstance().getCategoryByUUID(category);
 	}
 	
-	/**
-	 * get the color that this event wants to be drawn
-	 * @return a Color Object
-	 */
+	@Override
 	public Color getColor()
 	{
 		Color fallbackColor = isProjectEvent ? new Color(125,157,227) : new Color(227,125,147);
