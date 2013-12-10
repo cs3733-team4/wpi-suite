@@ -39,25 +39,28 @@ public class MainCalendarNavigation extends JPanel {
 		// Set current calendar
 		this.currentCalendar = mAbstractCalendar;
 		
-		nextButton.addActionListener(new ActionListener() {
-			
+		nextButton.addActionListener(new ActionListener()
+		{	
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 				currentCalendar.next();
 			}
 		});
-		previousButton.addActionListener(new ActionListener() {
-			
+		previousButton.addActionListener(new ActionListener()
+		{
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 				currentCalendar.previous();
 				
 			}
 		});
-		todayButton.addActionListener(new ActionListener() {
-			
+		todayButton.addActionListener(new ActionListener()
+		{	
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 				currentCalendar.display(DateTime.now());
 			}
 		});

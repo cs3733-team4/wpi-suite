@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.UUID;
 
 import org.joda.time.DateTime;
+import org.joda.time.Interval;
 import org.joda.time.MutableDateTime;
 
 import com.google.gson.Gson;
@@ -350,5 +351,35 @@ public class Event extends AbstractModel implements Displayable
 		}
 		else
 			return this.getEnd();
+	}
+
+	@Override
+	public void setTime(DateTime newTime) {
+		if (new Interval(new DateTime(this.start), new DateTime(this.end)).contains(newTime))
+		{
+			return;
+		}
+		
+		Interval i;
+		int daysBetween = 0;
+		if (new DateTime(this.start).isAfter(newTime))
+		{
+			i = new Interval(newTime, new DateTime(this.start));
+			daysBetween = 0 - (int) i.toDuration().getStandardDays();
+		}
+		else
+		{
+			i = new Interval(new DateTime(this.start), newTime);
+			daysBetween = (int) i.toDuration().getStandardDays();
+		}
+		
+		
+		
+		MutableDateTime newEnd = new MutableDateTime(this.end);
+		newEnd.addDays(daysBetween);
+		
+		this.end = newEnd.toDate();
+		this.start = newTime.toDate();
+		
 	}
 }

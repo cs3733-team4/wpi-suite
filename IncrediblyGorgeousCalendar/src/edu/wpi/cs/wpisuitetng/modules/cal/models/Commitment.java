@@ -215,4 +215,9 @@ public class Commitment extends AbstractModel implements Displayable
 		this.owner = owner;
 	}
 
+	@Override
+	public void setTime(DateTime newTime) {
+		this.duedate = newTime.toDate();
+	}
+
 }

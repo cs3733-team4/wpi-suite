@@ -43,4 +43,9 @@ public interface Displayable
 	 * deletes this Displayable
 	 */
 	public void delete();
+	
+	/**
+	 * sets the time (for easy updating)
+	 */
+	public void setTime(DateTime newTime);
 }

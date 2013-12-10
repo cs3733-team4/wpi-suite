@@ -24,12 +24,15 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.joda.time.DateTime;
+import org.joda.time.MutableDateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.DayStyle;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 
 /**
@@ -91,6 +94,7 @@ public class MonthDay extends JPanel
 				parent.dispatchEvent(e);
 				MainPanel.getInstance().setSelectedDay(day);
 				MainPanel.getInstance().clearSelected();
+				parent.setEscaped(false);
 			}
 
 			@Override
@@ -102,7 +106,28 @@ public class MonthDay extends JPanel
 			@Override
 			public void mouseReleased(MouseEvent e)
 			{
-
+				if (parent.isEscaped())
+				{
+					MonthDay releasedDay = parent.getMonthDayAtCursor();
+					Displayable selected = MainPanel.getInstance().getSelectedEvent();
+					MutableDateTime newTime = new MutableDateTime(selected.getDate());
+					
+					newTime.setYear(releasedDay.day.getYear());
+					newTime.setDayOfYear(releasedDay.day.getDayOfYear());
+					
+					selected.setTime(newTime.toDateTime());
+					
+					if (selected instanceof Event)
+					{
+						EventModel.getInstance().updateEvent((Event) selected);
+					}
+					else if (selected instanceof Commitment)
+					{
+						CommitmentModel.getInstance().updateCommitment((Commitment) selected);
+					}
+					
+					parent.display(selected.getDate());
+				}
 			}
 
 			@Override
@@ -115,6 +140,8 @@ public class MonthDay extends JPanel
 			public void mouseExited(MouseEvent e)
 			{
 				setBackground(Colors.TABLE_BACKGROUND);
+				parent.setEscaped(true);
+				
 			}
 		});
 		

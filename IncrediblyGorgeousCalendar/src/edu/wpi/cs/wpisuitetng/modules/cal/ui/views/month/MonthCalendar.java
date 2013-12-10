@@ -60,6 +60,9 @@ public class MonthCalendar extends AbstractCalendar
 
 	private EventModel eventModel;
 	private CommitmentModel commitmentModel;
+	private boolean escaped;
+	
+	private JPanel draggingHoverPanel = null;
 
 	public MonthCalendar(DateTime on, EventModel emodel, CommitmentModel cmodel)
 	{
@@ -74,27 +77,19 @@ public class MonthCalendar extends AbstractCalendar
 		generateDays(new MutableDateTime(on));
 		generateHeaders(new MutableDateTime(on));
 		
-		addMouseMotionListener(new MouseMotionListener(){
-
+		addMouseMotionListener(new MouseMotionListener()
+		{
 			@Override
-			public void mouseDragged(MouseEvent e) {
-				System.out.println("dragged!");
-				
+			public void mouseDragged(MouseEvent e)
+			{	
 				MainPanel p = MainPanel.getInstance();
 				Displayable d = p.getSelectedEvent();
 				
-				Point l = MouseInfo.getPointerInfo().getLocation();
-				Point pp = inside.getLocationOnScreen();
+				MonthDay md = getMonthDayAtCursor();
 				
-				int x = l.x-pp.x;
-				int y = l.y-pp.y;
-				
-				Component jc = inside.getComponentAt(x, y);
-				if (d != null && jc instanceof MonthDay)//&& !d.getDate().dayOfYear().equals(day.dayOfYear()))
+				if (d != null && md != null)
 				{
-					MonthDay draggedOnDay = (MonthDay) jc;
-					System.out.println(d.getName());
-					draggedOnDay.setBackground(Color.yellow);
+					md.setBackground(new Color(255, 255, 200));
 				}
 			}
 
@@ -102,6 +97,23 @@ public class MonthCalendar extends AbstractCalendar
 			public void mouseMoved(MouseEvent e) {}
 			
 		});
+	}
+	
+	public MonthDay getMonthDayAtCursor()
+	{
+		Point l = MouseInfo.getPointerInfo().getLocation();
+		Point pp = inside.getLocationOnScreen();
+		
+		int x = l.x-pp.x;
+		int y = l.y-pp.y;
+		
+		Component jc = inside.getComponentAt(x, y);
+		if (jc instanceof MonthDay)
+		{
+			return (MonthDay) jc;
+		}
+		return null;
+		
 	}
 
 	/**
@@ -430,5 +442,37 @@ public class MonthCalendar extends AbstractCalendar
 			startDay.addDays(1);
 		
 		}
+	}
+
+	/**
+	 * @return the escaped
+	 */
+	public boolean isEscaped() {
+		return escaped;
+	}
+
+	/**
+	 * @param escaped the escaped to set
+	 */
+	public void setEscaped(boolean escaped) {
+		this.escaped = escaped;
+	}
+	
+	/**
+	 * 
+	 * @param sel the selected Displayable (or null to hide panel)
+	 */
+	public void updateDraggingHoverPanel(Displayable sel)
+	{
+		if (sel == null)
+		{
+			if (draggingHoverPanel != null)
+			{
+				draggingHoverPanel.setVisible(false);
+				draggingHoverPanel = null;
+				repaint();
+			}
+		}
+		
 	}
 }

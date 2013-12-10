@@ -137,6 +137,7 @@ public class MonthItem extends JPanel
 			
 			@Override
 			public void mouseReleased(MouseEvent e) {
+				parent.dispatchEvent(e);
 			}
 			
 			@Override
@@ -152,6 +153,7 @@ public class MonthItem extends JPanel
 			
 			@Override
 			public void mouseExited(MouseEvent e) {
+				parent.dispatchEvent(e);
 			}
 			
 			@Override
