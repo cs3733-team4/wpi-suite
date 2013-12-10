@@ -398,7 +398,8 @@ public class Event extends AbstractModel implements Displayable
 	{
 		if (new Interval(new DateTime(this.start), new DateTime(this.end)).contains(newTime))
 		{
-			return;
+			//this is what stops the events from being dragged to the next day. leaving it in case we might want it later
+			//return;
 		}
 		
 		Interval i;
