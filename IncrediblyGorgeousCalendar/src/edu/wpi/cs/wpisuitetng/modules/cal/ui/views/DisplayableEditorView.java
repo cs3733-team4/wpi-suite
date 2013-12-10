@@ -28,6 +28,7 @@ import javax.swing.Box.Filler;
 import net.miginfocom.swing.MigLayout;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.SelectableField;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.DatePicker;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.RequestFocusListener;
@@ -131,7 +132,16 @@ public class DisplayableEditorView extends JPanel
 		saveButton.setMinimumSize(new Dimension(80, 0));
 		this.add(saveButton, "cell 1 7,alignx right,aligny bottom,tag ok");
 	}
-
+	
+	public void setSelected(SelectableField field)
+	{
+		if (field==SelectableField.NAME)
+		{
+			nameTextField.requestFocus();
+			System.out.println("name Requsted focus");
+		}
+	}
+	
 	private class CategoryComboBoxRenderer implements ListCellRenderer<Category>
 	{
 		@Override

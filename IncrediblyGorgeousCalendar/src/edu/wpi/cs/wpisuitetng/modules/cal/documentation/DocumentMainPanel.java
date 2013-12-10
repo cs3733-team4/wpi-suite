@@ -34,6 +34,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.SelectableField;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddCommitmentDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddEventDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.DisplayableEditorView;
@@ -91,7 +92,7 @@ public class DocumentMainPanel extends JFrame{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				BareBonesBrowserLaunch.openURL(serverLocation + "YOCO Calendar.html? " + webPage.getPage().getPath().replace(serverLocation, ""));
+				BareBonesBrowserLaunch.openURL(serverLocation + "YOCO Calendar.html?" + extractPage(webPage.getPage().getPath()));
 				
 			}
 		});
@@ -101,7 +102,15 @@ public class DocumentMainPanel extends JFrame{
             public void hyperlinkUpdate(HyperlinkEvent e) {
                 if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED)
                       	try {
-                      			if (!doAction(e.getURL().toString()))
+                      		System.out.println(e.getURL().toString());
+                      			if (doAction(e.getURL().toString()))
+                      				return;
+                      			else if (!e.getURL().toString().contains("html"))
+                      			{
+                      				BareBonesBrowserLaunch.openURL(e.getURL().toString());
+                      				return;
+                      			}
+                      			else
                       				webPage.setPage(e.getURL());
                             }
                             catch(IOException | IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException ioe) {
@@ -117,7 +126,21 @@ public class DocumentMainPanel extends JFrame{
         splitPane.add(scroll);
         this.add(splitPane, BorderLayout.CENTER);
     }
-    
+    private String extractPage(String sIn)
+    {
+    	String sOut="";
+    	int index=0;
+    	for (int i=sIn.length()-1; i>-1; i--)
+    	{
+    		if (sIn.charAt(i) == '/')
+    		{
+    			index=i;
+    			break;
+    		}
+    	}
+    	sOut=sIn.substring(index +1, sIn.length());
+    	return sOut;
+    }
     /**
      * doAction will return true if there is/was an action committed as a result of the link
      * @param actionPath The URL Path that is requested
@@ -136,6 +159,12 @@ public class DocumentMainPanel extends JFrame{
 			ned.setTabId(MainPanel.getInstance().addTopLevelTab(ned, "New Event", true));
 			return true;
 		}
+    	else if (actionPath.contains("#OpenNewAddCommitmentBox"))
+    	{
+    		AddCommitmentDisplay ncm = new AddCommitmentDisplay();
+    		ncm.setTabId(MainPanel.getInstance().addTopLevelTab(ncm, "New Commitment", true));
+    		return true;
+    	}
     	else if (actionPath.contains("#SaveNewEvent"))
 		{
     		if (MainPanel.getInstance().getSelectedComponent() instanceof AddEventDisplay)
@@ -145,15 +174,37 @@ public class DocumentMainPanel extends JFrame{
     		}
 			return true;
 		}
+    	else if (actionPath.contains("#SaveNewCommitment"))
+    	{
+    		if (MainPanel.getInstance().getSelectedComponent() instanceof AddCommitmentDisplay)
+    		{
+    			AddCommitmentDisplay ncm = (AddCommitmentDisplay) MainPanel.getInstance().getSelectedComponent();
+  			
+    			ncm.attemptSave();
+    		}
+    		return true;
+    	}
     	else if (actionPath.contains("#DeleteEventFromDetailsPane") || actionPath.contains("#DeleteSelectedEvent"))
     	{
-    		MainPanel.getInstance().deleteCurrentlySelectedEvent();
+    		if (MainPanel.getInstance().getSelectedDisplayable() instanceof Event)
+    			MainPanel.getInstance().deleteDisplayable(MainPanel.getInstance().getSelectedDisplayable());
+    		return true;
+    	}
+    	else if (actionPath.contains("#DeleteCommitmentFromDetailsPane"))
+    	{
+    		if (MainPanel.getInstance().getSelectedDisplayable() instanceof Commitment)
+    			MainPanel.getInstance().deleteDisplayable(MainPanel.getInstance().getSelectedDisplayable());
     		return true;
     	}
     	else if (actionPath.contains("#EditSelectedEvent"))
     	{
-    		AddEventDisplay ned = new AddEventDisplay(MainPanel.getInstance().returnSelectedEvent());
-    		ned.setTabId(MainPanel.getInstance().addTopLevelTab(ned, "Edit Event", true));
+    		if (MainPanel.getInstance().getSelectedDisplayable() instanceof Event)
+    		{
+	    		AddEventDisplay ned = new AddEventDisplay((Event)MainPanel.getInstance().getSelectedDisplayable());
+	    		if (ned!=null)
+	    			ned.setTabId(MainPanel.getInstance().addTopLevelTab(ned, "Edit Event", true));
+    		}
+    		return true;
     	}
     	else if (actionPath.contains("#SaveEditingEvent"))
     	{
@@ -165,25 +216,6 @@ public class DocumentMainPanel extends JFrame{
     				ned.attemptSave();
     			}
     		}
-    	}
-    	else if (actionPath.contains("#OpenNewAddCommitmentBox"))
-    	{
-    		AddCommitmentDisplay ncm = new AddCommitmentDisplay();
-    		ncm.setTabId(MainPanel.getInstance().addTopLevelTab(ncm, "New Commitment", true));
-    		return true;
-    	}
-    	else if (actionPath.contains("#SaveNewCommitment"))
-    	{
-    		if (MainPanel.getInstance().getSelectedComponent() instanceof AddCommitmentDisplay)
-    		{
-    			AddCommitmentDisplay ncm = (AddCommitmentDisplay) MainPanel.getInstance().getSelectedComponent();
-    			ncm.attemptSave(new Commitment());
-    		}
-    		return true;
-    	}
-    	else if (actionPath.contains("#DeleteCommitmentFromDetailsPane"))
-    	{
-    		MainPanel.getInstance().deleteCurrentlySelectedCommitment();
     		return true;
     	}
     	else if (actionPath.contains("#SwitchToDayView"))
@@ -200,6 +232,15 @@ public class DocumentMainPanel extends JFrame{
     	{
     		MainPanel.getInstance().viewYear();
     		return true;
+    	}
+    	else if (actionPath.contains("#SelectNameInNewEvent"))
+    	{
+    		if (MainPanel.getInstance().getSelectedComponent() instanceof AddEventDisplay)
+    		{
+    			AddEventDisplay ned = (AddEventDisplay) MainPanel.getInstance().getSelectedComponent();
+    			ned.setSelected(SelectableField.NAME);
+    		}
+			return true;
     	}
     	if (actionPath.contains("#"))
     	{

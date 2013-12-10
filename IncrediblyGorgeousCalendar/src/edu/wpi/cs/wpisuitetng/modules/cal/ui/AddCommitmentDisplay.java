@@ -12,19 +12,24 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.JLabel;
+
 import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.SelectableField;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.DisplayableEditorView;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.UUID;
 
 public class AddCommitmentDisplay extends DisplayableEditorView
 {
+	
 	private int tabid;
 	private Commitment commitmentToEdit;
+	private UUID existingCommitmentID; // UUID of event being edited
 	private boolean isEditingCommitment;
 
 	public AddCommitmentDisplay()
@@ -42,6 +47,7 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		init(commitmentToEdit);
 	}
 
+	
 	private void init(final Commitment oldCommitment)
 	{
 		nameTextField.setText(oldCommitment.getName());
@@ -49,13 +55,13 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		participantsTextField.setText(oldCommitment.getParticipants());
 		// TODO: categories and team/personal
 		descriptionTextArea.setText(oldCommitment.getDescription());
-
+		existingCommitmentID=oldCommitment.getCommitmentID();
 		saveButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
-				attemptSave(oldCommitment);
+				attemptSave();
 			}
 		});
 
@@ -102,15 +108,19 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 
 		saveButton.setEnabled(isSaveable());
 	}
-	public void attemptSave(Commitment oldCommitment)
+	public void attemptSave()
 	{
 		if(!isSaveable())
 			return;
-		Commitment e = oldCommitment;
+		Commitment e = new Commitment();
 		e.setName(nameTextField.getText().trim());
 		e.setDescription(descriptionTextArea.getText());
 		e.setDate(startTimeDatePicker.getDateTime());
-
+		e.setParticipants(participantsTextField.getText());
+		
+		if (isEditingCommitment)
+			e.setCommitmentID(existingCommitmentID);
+		
 		if (isEditingCommitment)
 			MainPanel.getInstance().updateCommitment(e);
 		else
