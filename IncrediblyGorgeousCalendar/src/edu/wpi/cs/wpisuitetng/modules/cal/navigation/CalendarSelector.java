@@ -115,6 +115,7 @@ public class CalendarSelector extends JPanel
 		month.setFocusable(false);
 		day.setFocusable(false);
 		year.setFocusable(false);
+		week.setFocusable(false);
 		
 	}
 

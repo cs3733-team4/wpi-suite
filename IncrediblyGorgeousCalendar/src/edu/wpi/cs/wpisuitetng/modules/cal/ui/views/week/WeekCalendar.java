@@ -11,7 +11,10 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.week;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -180,8 +183,22 @@ public class WeekCalendar extends AbstractCalendar
 		DateTime from = f.toDateTime();
 		f.addDays(1);
 		DateTime to = f.toDateTime();
-		// TODO: this is where filtering should go
-		return EventModel.getInstance().getEvents(from, to);
+		
+		// Filter events by date
+		List<Event> visibleEvents = EventModel.getInstance().getEvents(from, to);
+		
+		// Filter for selected categories
+		Collection<UUID> selectedCategories = MainPanel.getInstance().getSelectedCategories();
+		List<Event> categoryFilteredEvents = new ArrayList<Event>();
+		
+		// Else, loop through events and filter by selected categories
+		for (Event e : visibleEvents){
+			if (selectedCategories.contains(e.getCategory()))
+				categoryFilteredEvents.add(e);
+		}
+		
+		// Return list of events to be displayed
+		return categoryFilteredEvents;
 	}
 
 	@Override
