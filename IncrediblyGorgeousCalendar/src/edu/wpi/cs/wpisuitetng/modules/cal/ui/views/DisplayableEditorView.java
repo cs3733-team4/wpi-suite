@@ -73,7 +73,7 @@ public class DisplayableEditorView extends JPanel
 
 		if (showEnd)
 		{
-			lblUntil = new JLabel("until");
+			lblUntil = new JLabel("  until  ");
 			this.add(lblUntil, "flowx,cell 1 1,alignx left,growy");
 
 			this.add(endTimeDatePicker, "flowx,cell 1 1,alignx left,growy");
