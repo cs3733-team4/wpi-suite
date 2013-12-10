@@ -95,8 +95,6 @@ public class LouvreTour extends JPanel
 			
 			@Override
 			public void mouseDragged(MouseEvent arg0) {
-				LouvreTour.this.remove(selected);
-				LouvreTour.this.add(selected, -1);
 				LouvreTour.this.setComponentZOrder(selected, 0);
 				selected.updateTime(getTimeAtCursor());
 				isSomethingDragging = true;
@@ -190,7 +188,7 @@ public class LouvreTour extends JPanel
 			min = 30;
 		if(min >= 38 && min < 55)
 			min = 45;
-		if(min > 55)
+		if(min >= 55)
 		{
 			min = 0;
 			d.addHours(1);

@@ -66,12 +66,12 @@ public class VanGoghPainting extends JPanel
 	private boolean isBeingDragged;
 	public VanGoghPainting(TimeTraveller traveller, DateTime displayedDay)
 	{
-		length = new Interval(event.getStart(), event.getEnd());
 		isBeingDragged = false;
 		this.displayedDay=displayedDay;
 		this.traveller = traveller;
 		height = 25;
 		event = traveller.getEvent();
+		length = new Interval(event.getStart(), event.getEnd());
 		Color bg = event.getColor();
 		setBorder(new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new LineBorder(bg.darker()), new EmptyBorder(6, 6, 6, 6))));
 		setBackground(bg);
@@ -81,7 +81,7 @@ public class VanGoghPainting extends JPanel
 		lblEventTitle.setFont(new Font("Tahoma", Font.BOLD, 14));
 		lblEventTitle.putClientProperty("html.disable", true); //prevents html parsing
 		lblEventTitle.setText(event.getName());
-		
+		lblTimeInfo = new JLabel();
 		putTimeOn();
 		lblTimeInfo.setBorder(new EmptyBorder(0,0,3,0));
 		lblTimeInfo.setMaximumSize(new Dimension(32767, 20));
@@ -171,8 +171,8 @@ public class VanGoghPainting extends JPanel
 			int parentWidth = this.getParent().getWidth();
 			recalcBounds(parentWidth, getParent().getHeight());
 			super.doLayout();
-			lblEventTitle.validate();
-			lblTimeInfo.validate();
+			lblEventTitle.revalidate();
+			lblTimeInfo.revalidate();
 			
 			return;
 		}
@@ -339,22 +339,26 @@ public class VanGoghPainting extends JPanel
 	
 	public void updateTime(DateTime t)
 	{
-		this.event.setStart(t);;
-		this.event.setEnd(t.plus(this.length.toDuration()));
+		if(!this.event.getStart().equals(t))
+		{
+			this.event.setStart(t);;
+			this.event.setEnd(t.plus(this.length.toDuration()));
+			putTimeOn();
+		}
 	}
 	private void putTimeOn()
 	{
 		if (event.isMultiDayEvent())
 		{
 			if (event.getStart().compareTo(event.getStartTimeOnDay(displayedDay))==0)//if their the same time, its the first day
-				lblTimeInfo = new JLabel(formatTime(event.getStart()) + " \u2192");
+				lblTimeInfo.setText(formatTime(event.getStart()) + " \u2192");
 			else if (event.getEnd().compareTo(event.getEndTimeOnDay(displayedDay))==0)
-				lblTimeInfo = new JLabel("\u2190 " + formatTime(event.getEnd()));
+				lblTimeInfo.setText("\u2190 " + formatTime(event.getEnd()));
 			else
-				lblTimeInfo = new JLabel("\u2190 \u2192");
+				lblTimeInfo.setText("\u2190 \u2192");
 				
 		}
 		else
-			lblTimeInfo = new JLabel(formatTime(event.getStart()) + " - " + formatTime(event.getEnd()));
+			lblTimeInfo.setText(formatTime(event.getStart()) + " - " + formatTime(event.getEnd()));
 	}
 }
