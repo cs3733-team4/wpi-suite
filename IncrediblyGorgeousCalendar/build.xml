@@ -41,8 +41,10 @@
 		<copy todir="build">
 		    <fileset dir="src" includes="**/*.png" />
 		</copy>
+		<copy todir="../WPISuite/WebContent/docs/Calendar" >  
+			<fileset dir="documentation_html" includes="**"/>  
+		</copy>
 	</target>
-	
 	<target name="compile-test" depends="compile">
 		<mkdir dir="build-test" />
 		<javac srcdir="test" destdir="build-test" includeJavaRuntime="yes" debug="true" target="${java-version}" debuglevel="lines,vars,source" includeantruntime="false">
@@ -59,6 +61,9 @@
 		</jar>
 	</target>
 
+	<target name="moveDirs">
+		
+	</target>
 	<target name="core-jar" depends="compile-base">
 		<jar destfile="${core-jar-dest}">
 			<fileset dir="build"/>
@@ -85,5 +90,4 @@
 	<target name="dist" depends="compile">
 		<copy file="${janeway-jar-dest}" todir="${dist}/janeway/modules" overwrite="true"/>
 	</target>
-
 </project>

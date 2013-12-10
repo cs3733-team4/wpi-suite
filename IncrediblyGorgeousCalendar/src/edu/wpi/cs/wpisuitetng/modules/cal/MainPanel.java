@@ -121,7 +121,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	 */
 	void finishInit()
 	{
-		
+		DocumentMainPanel.getInstance().init();
 		if (mTabbedPane == this)
 			return;
 		mTabbedPane = this;
@@ -411,7 +411,10 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		view = ViewSize.Month;
 		refreshView(yearCal);
 	}
-	
+	public Displayable getSelectedDisplayable()
+	{
+		return currentSelected;
+	}
 	/**
 	 * Updates calendar in view and sets navigation panel to act on the active view
 	 * @param absCalendar
@@ -544,7 +547,9 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		sideTabbedPanel.clearDetails();
 		this.mainCalendarNavigationPanel.grabFocus();
 	}
-	
+	/**
+	 * Will set the currently viewed tab to the category tab
+	 */
 	public CategoryManager getCategoryManagerTab()
 	{
 		for(JComponent c : tabs.values())
@@ -557,6 +562,13 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		return null;
 	}
 
+	/**
+	 * Will set the currently viewed tab to the calendar tab
+	 */
+	public void openCalendarViewTab()
+	{
+		mTabbedPane.setSelectedComponent(mainPaneContainer);
+	}
 	public void setSelectedTab(JComponent tabToFocus)
 	{
 		try

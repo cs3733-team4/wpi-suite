@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * Copyright (c) 2013 WPI-Suite
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors: Team YOCO (You Only Compile Once)
+ ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.documentation;
 
 import java.awt.Color;
@@ -14,20 +23,14 @@ import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeSelectionModel;
 
 
 public class TableOfContents extends JPanel implements TreeSelectionListener {
     private JTree tree;
-    private static boolean DEBUG = false;
 
-    //Optionally play with line styles.  Possible values are
-    //"Angled" (the default), "Horizontal", and "None".
-    private static boolean playWithLineStyle = false;
-    private static String lineStyle = "Horizontal";
     
-    //Optionally set the look and feel.
-    private static boolean useSystemLookAndFeel = false;
 
     public TableOfContents(String serverLocation) {
         super(new GridLayout(1,0));
@@ -37,22 +40,23 @@ public class TableOfContents extends JPanel implements TreeSelectionListener {
         DefaultMutableTreeNode top = new DefaultMutableTreeNode("Team YOCO Calendar");
         populateFromTOC(top, serverLocation);
         
-
+        
         //Create a tree that allows one selection at a time.
         tree = new JTree(top);
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-
+        tree.setBackground(Color.getColor("EFEFEF"));
         //Listen for when the selection changes.
         tree.addTreeSelectionListener(this);
 
-        if (playWithLineStyle) {
-            System.out.println("line style = " + lineStyle);
-            tree.putClientProperty("JTree.lineStyle", lineStyle);
+        if (tree.getCellRenderer() instanceof DefaultTreeCellRenderer)
+        {
+            final DefaultTreeCellRenderer renderer = (DefaultTreeCellRenderer)(tree.getCellRenderer());
+            renderer.setBackgroundNonSelectionColor(Color.getColor("EFEFEF"));
         }
 
         //Create the scroll pane and add the tree to it. 
         JScrollPane treeView = new JScrollPane(tree);
-
+        treeView.setBackground(Color.getColor("EFEFEF"));
 
         Dimension minimumSize = new Dimension(100, 50);
         treeView.setMinimumSize(minimumSize);
@@ -63,6 +67,7 @@ public class TableOfContents extends JPanel implements TreeSelectionListener {
     public void valueChanged(TreeSelectionEvent e) {
 
         DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+        
         if (node.getUserObject() instanceof ListInfo)
         	DocumentMainPanel.getInstance().goToPage(((ListInfo)node.getUserObject()).getPageName());
   }
