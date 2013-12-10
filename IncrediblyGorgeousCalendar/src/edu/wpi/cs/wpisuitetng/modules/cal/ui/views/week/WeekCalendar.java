@@ -54,7 +54,7 @@ public class WeekCalendar extends AbstractCalendar
 	private LouvreTour[] daysOfWeekArray = new LouvreTour[7];
 	private List<Event> eventList;
 	
-	private JPanel multidayEventGrid = new JPanel();
+	private JPanel multidayEventGridContainer = new JPanel();
 	private JPanel dayTitleAndMultidayContainer = new JPanel();
 	
 	private JPanel dayHolderPanel = new JPanel();
@@ -88,7 +88,7 @@ public class WeekCalendar extends AbstractCalendar
 		dayGrid.setBackground(Colors.TABLE_BACKGROUND);
 		
 		this.setLayout(new BorderLayout());
-		this.multidayEventGrid.setLayout(new BoxLayout(multidayEventGrid, BoxLayout.Y_AXIS));
+		this.multidayEventGridContainer.setLayout(new BoxLayout(multidayEventGridContainer, BoxLayout.Y_AXIS));
 		this.dayTitleAndMultidayContainer.setLayout(new BoxLayout(dayTitleAndMultidayContainer, BoxLayout.Y_AXIS));
 		this.dayHolderPanel.setLayout(new BorderLayout());
 		this.dayGrid.setLayout(new GridLayout(1, 7));
@@ -139,11 +139,11 @@ public class WeekCalendar extends AbstractCalendar
 		spacerLabel.setBorder(BorderFactory.createLineBorder(spacerLabel.getBackground()));
 		
 		//populate and set up the multiDayEventGrid
-		//populateMultidayEventGrid();		
+		populateMultidayEventGrid();		
 		
 		//put multiday event handling and day title grid in a container
 		dayTitleAndMultidayContainer.add(dayTitleGrid);
-		dayTitleAndMultidayContainer.add(multidayEventGrid);
+		dayTitleAndMultidayContainer.add(multidayEventGridContainer);
 
 		//add grids to box container
 		this.dayTitlesContainer.add(dayTitleAndMultidayContainer);
@@ -183,13 +183,18 @@ public class WeekCalendar extends AbstractCalendar
 	}
 	
 	private void populateMultidayEventGrid() {
+		System.out.print("\n\nStart of Popultation: \n\n");
+
+		multidayEventGridContainer.removeAll();
 		
 		List<Event> multidayEvents = getMultidayEvents();
 		
 		while(!multidayEvents.isEmpty())
 		{
-			JLabel multiItem = new JLabel();
-			multiItem.setLayout(new GridLayout(1, 7));
+			System.out.print("multiGridContainer Comp Count: " + multidayEventGridContainer.getComponentCount() + "\n");
+
+			JLabel multiGrid = new JLabel();
+			multiGrid.setLayout(new GridLayout(1, 7));
 			
 			int gridIndex=0;
 			Interval mInterval;
@@ -197,8 +202,11 @@ public class WeekCalendar extends AbstractCalendar
 			
 			while(gridIndex<7)
 			{
+				System.out.print("Current grid index: " + gridIndex + "\n");
 				mInterval = new Interval(daysOfWeekArray[gridIndex].getDisplayDate(), 
 						daysOfWeekArray[gridIndex].getDisplayDate().plusDays(1));
+				
+				currEvent = null;
 				
 				for(Event e: multidayEvents)
 				{
@@ -210,16 +218,37 @@ public class WeekCalendar extends AbstractCalendar
 				}
 				
 				if(currEvent==null)
-					gridIndex++;
-				else
 				{
-					while(gridIndex < 7 || daysOfWeekArray[gridIndex].getDisplayDate().isBefore(currEvent.getEnd()))
+					gridIndex++;
+					multiGrid.add(new JPanel());
+				} else
+				{
+					boolean firstPanel = true;
+					System.out.print("currEvent Name: " + currEvent.getName() + "\n");
+					do
 					{
-						
-					}
+						if(firstPanel)
+						{
+							JLabel multidayPanel = new JLabel(currEvent.getName());
+							multidayPanel.setBackground(currEvent.getColor());
+							multiGrid.add(multidayPanel);
+							firstPanel = false;
+						}else
+						{
+							JPanel multidayPanel = new JPanel();
+							multidayPanel.setBackground(currEvent.getColor());
+							multiGrid.add(multidayPanel);
+						}
+						gridIndex++;
+					}while(gridIndex < 7 && daysOfWeekArray[gridIndex].getDisplayDate().isBefore(currEvent.getEnd()));
+					
+					multidayEvents.remove(currEvent);
 				}
-				
 			}
+			
+			System.out.print("multiGrid Comp Count: " + multiGrid.getComponentCount() + "\n");
+			if(multiGrid.getComponentCount()>0)
+				multidayEventGridContainer.add(multiGrid);
 		}
 	}
 
