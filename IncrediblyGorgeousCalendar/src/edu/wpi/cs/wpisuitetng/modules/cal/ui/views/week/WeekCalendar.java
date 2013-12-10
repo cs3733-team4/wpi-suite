@@ -99,6 +99,7 @@ public class WeekCalendar extends AbstractCalendar
 		}
 		
 		headerScroller.setBorder(BorderFactory.createEmptyBorder());
+		headerScroller.setViewportBorder(BorderFactory.createEmptyBorder());
 		add(headerScroller, "cell 1 2 7 1,grow"); // default to 7 as no scrollbars
 		
 		headerBox.setBorder(BorderFactory.createEmptyBorder());
@@ -189,8 +190,7 @@ public class WeekCalendar extends AbstractCalendar
 			System.out.print("multiGridContainer Comp Count: " + headerBox.getComponentCount() + "\n");
 
 			JPanel multiGrid = new JPanel();
-			multiGrid.setBackground(Colors.TABLE_BACKGROUND);
-			multiGrid.setBorder(null);
+			multiGrid.setBorder(BorderFactory.createEmptyBorder());
 			multiGrid.setLayout(new GridLayout(1, 7));
 
 			int gridIndex = 0;
