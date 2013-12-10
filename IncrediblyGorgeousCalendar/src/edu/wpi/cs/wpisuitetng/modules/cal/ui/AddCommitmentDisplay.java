@@ -58,8 +58,7 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		nameTextField.setText(mCommitment.getName());
 		startTimeDatePicker.setDateTime(mCommitment.getDate());
 		participantsTextField.setText(mCommitment.getParticipants());
-		// TODO: categories and team/personal
-		System.out.println("Project Commitment: " + mCommitment.isProjectCommitment());
+		// TODO: categories
 		this.rdbtnPersonal.setSelected(!mCommitment.isProjectCommitment());
 		this.rdbtnTeam.setSelected(mCommitment.isProjectCommitment());
 		descriptionTextArea.setText(mCommitment.getDescription());
