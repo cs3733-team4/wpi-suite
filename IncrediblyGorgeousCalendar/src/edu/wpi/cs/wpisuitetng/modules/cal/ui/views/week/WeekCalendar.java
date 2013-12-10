@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import javax.management.RuntimeErrorException;
 import javax.swing.BorderFactory;
 import javax.swing.BoundedRangeModel;
 import javax.swing.BoxLayout;
@@ -26,6 +27,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -169,8 +171,6 @@ public class WeekCalendar extends AbstractCalendar
 
 	private void populateMultidayEventGrid()
 	{
-		System.out.print("\n\nStart of Popultation: \n\n");
-
 		List<Event> multidayEvents = getMultidayEvents();
 		Collections.sort(multidayEvents, new Comparator<Event>() {
 
@@ -280,14 +280,20 @@ public class WeekCalendar extends AbstractCalendar
 
 		this.generateDay();
 
-		// Scroll to now
-		BoundedRangeModel jsb = smithsonianScroller.getVerticalScrollBar().getModel();
-		double day = time.getMinuteOfDay();
-		day /= time.minuteOfDay().getMaximumValue();
-		day *= (jsb.getMaximum()) - jsb.getMinimum();
-		jsb.setValue((int) day);
-		System.out.println("Scrolling recomb from " + jsb.getMaximum() + " y " + (int)day);
-
+		SwingUtilities.invokeLater(new Runnable() {
+			
+			@Override
+			public void run()
+			{
+				// Scroll to now
+				BoundedRangeModel jsb = smithsonianScroller.getVerticalScrollBar().getModel();
+				double day = time.getMinuteOfDay();
+				day /= time.minuteOfDay().getMaximumValue();
+				day *= (jsb.getMaximum()) - jsb.getMinimum();
+				jsb.setValue((int) day);
+			}
+		});
+		
 		// repaint
 		mainPanel.revalidate();
 		mainPanel.repaint();
