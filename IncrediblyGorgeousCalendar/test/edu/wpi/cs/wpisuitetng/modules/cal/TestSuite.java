@@ -17,6 +17,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthCalendarTest;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryEntityManagerTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventEntityManagerTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentEntityManagerTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthDayTest;
@@ -40,7 +41,7 @@ import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
 @RunWith(Suite.class)
 @SuiteClasses({
 	MonthsTest.class,
-	CommitmentEntityManagerTest.class, EventEntityManagerTest.class,
+	CommitmentEntityManagerTest.class, EventEntityManagerTest.class, CategoryEntityManagerTest.class,
 	CalendarNavigationModuleTest.class, GoToPanelTest.class, SidebarTabbedPaneTest.class,
 	MonthCalendarTest.class, MonthDayTest.class, MonthItemTest.class,
 	CommitmentUIValidationTest.class, DatePickerTest.class,
