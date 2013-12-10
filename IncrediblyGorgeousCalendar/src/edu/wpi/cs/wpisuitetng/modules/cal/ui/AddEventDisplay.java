@@ -144,11 +144,6 @@ public class AddEventDisplay extends DisplayableEditorView
 					saveButton.setText("Saved!");
 					MainPanel.getInstance().closeTab(tabid);
 					MainPanel.getInstance().refreshView();
-				
-				saveButton.setEnabled(false);
-				saveButton.setText("Saved!");
-				MainPanel.getInstance().closeTab(tabid);
-				MainPanel.getInstance().refreshView();
 			}
 		});
 		
@@ -165,7 +160,6 @@ public class AddEventDisplay extends DisplayableEditorView
 		//this should be called in updateSaveable() and thus isnt necessary here
 		//but error msg didn't start visible unless I called it directly
 		validateDate(startTimeDatePicker.getDateTime(), endTimeDatePicker.getDateTime(), dateErrorLabel);
-		
 		saveButton.setEnabled(isSaveable());
 	}
 	

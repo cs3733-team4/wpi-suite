@@ -31,7 +31,9 @@ public class Commitment extends AbstractModel implements Displayable
 	private String name;
 	private String description;
 	private Date duedate;
+	private UUID category;
 	private String participants;
+	private boolean isProjectCommitment;
 	private User owner;
 
 	/**
@@ -65,6 +67,23 @@ public class Commitment extends AbstractModel implements Displayable
 	{
 		setDate(date);
 		return this;
+	}
+	
+	/**
+	 * @return the category
+	 */
+	public UUID getCategory()
+	{
+		return category;
+	}
+
+	/**
+	 * @param category
+	 *            the category to set
+	 */
+	public void setCategory(UUID category)
+	{
+		this.category = category;
 	}
 	
 	/**
@@ -110,20 +129,12 @@ public class Commitment extends AbstractModel implements Displayable
 	public Boolean identify(Object o)
 	{
 		if (o instanceof String)
-			return getCommitmentID().toString().equals((String)(o));
+			return getIdentification().toString().equals((String)(o));
 		else if (o instanceof UUID)
-			return getCommitmentID().equals((UUID)(o));
+			return getIdentification().equals((UUID)(o));
 		else if (o instanceof Commitment)
-			return getCommitmentID().equals(((Commitment)(o)).getCommitmentID());
+			return getIdentification().equals(((Commitment)(o)).getIdentification());
 		return false;
-	}
-
-	/**
-	 * @return the eventID
-	 */
-	public UUID getCommitmentID()
-	{
-		return commitmentID;
 	}
 
 	/**
@@ -202,7 +213,26 @@ public class Commitment extends AbstractModel implements Displayable
 	{
 		this.participants = participants;
 	}
-
+	
+	public boolean isProjectCommitment()
+	{
+		return isProjectCommitment;
+	}
+	
+	/**
+	 * @param isProjectCommitment
+	 *            the isProjectCommitment to set
+	 */
+	public void setProjectCommitment(boolean isProjectCommitment)
+	{
+		this.isProjectCommitment = isProjectCommitment;
+	}
+	
+	public Category getAssociatedCategory()
+	{
+		return CategoryModel.getInstance().getCategoryByUUID(category);
+	}
+	
 	/**
 	 * @return the owner
 	 */

@@ -10,11 +10,14 @@
 
 package edu.wpi.cs.wpisuitetng.modules.cal.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
+
+import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 
 public class CommitmentModel {
 
@@ -47,10 +50,28 @@ public class CommitmentModel {
 	 * @return all commitments within this range
 	 */
 	public List<Commitment> getCommitments(DateTime from, DateTime to) {
-		return ServerManager.get("cal/commitments/", Commitment[].class, "filter-commitments-by-range", 
+		/*return ServerManager.get("cal/commitments/", Commitment[].class, "filter-commitments-by-range", 
 				from.toString(serializer),
+				to.toString(serializer));*/
+		final List<Commitment> commitments = ServerManager.get("cal/commitments/", Commitment[].class, "filter-commitments-by-range", from.toString(serializer),
 				to.toString(serializer));
-	}
+		
+		//set up to filter events based on booleans in MainPanel
+		List<Commitment> filteredCommitments = new ArrayList<Commitment>();
+		boolean showPersonal = MainPanel.getInstance().showPersonal;
+		boolean showTeam = MainPanel.getInstance().showTeam;
+		
+		//loop through and add only if isProjectEvent() matches corresponding boolean
+		for(Commitment e: commitments){
+			if(e.isProjectCommitment()&&showTeam){
+				filteredCommitments.add(e);
+			}
+			if(!e.isProjectCommitment()&&showPersonal){
+				filteredCommitments.add(e);
+			}
+		}
+		return filteredCommitments;
+		}
 
 	/**
 	 * 
@@ -86,7 +107,7 @@ public class CommitmentModel {
 	 */
 	public boolean deleteCommitment(Commitment toDelete)
 	{
-		return ServerManager.delete("cal/commitments", "filter-commitment-by-uuid", toDelete.getCommitmentID().toString());
+		return ServerManager.delete("cal/commitments", "filter-commitment-by-uuid", toDelete.getIdentification().toString());
 	}
 
 }
