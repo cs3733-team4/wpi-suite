@@ -468,4 +468,8 @@ public class Event extends AbstractModel implements Displayable
 			return "";
 		}
 	}
+
+	public UUID getEventID() {
+		return this.eventID;
+	}
 }

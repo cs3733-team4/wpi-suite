@@ -298,4 +298,13 @@ public class Commitment extends AbstractModel implements Displayable
 	{
 		return commitmentID;
 	}
+	
+	/**
+	 * a getter for GSON
+	 * @return
+	 */
+	public UUID getCommitmentID()
+	{
+		return commitmentID;
+	}
 }

@@ -107,7 +107,7 @@ public class CommitmentModel {
 	 */
 	public boolean deleteCommitment(Commitment toDelete)
 	{
-		return ServerManager.delete("cal/commitments", "filter-commitment-by-uuid", toDelete.getIdentification().toString());
+		return ServerManager.delete("cal/commitments", "filter-commitment-by-uuid", toDelete.getCommitmentID().toString());
 	}
 
 }
