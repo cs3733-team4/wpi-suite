@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoundedRangeModel;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -40,8 +41,8 @@ import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
 
 /**
- * Calendar to display the 7 days of the selected week. A timetable and 
- * 7 day views are scaled to fit in the current window size. 
+ * Calendar to display the 7 days of the selected week. A timetable and 7 day
+ * views are scaled to fit in the current window size.
  */
 public class WeekCalendar extends AbstractCalendar
 {
@@ -49,49 +50,48 @@ public class WeekCalendar extends AbstractCalendar
 	private DateTime time;
 	private DateTime weekStartTime;
 	private DateTime weekEndTime;
-	
+
 	private MainPanel mainPanel;
-	
+
 	private Displayable lastSelection;
-	
+
 	private LouvreTour[] daysOfWeekArray = new LouvreTour[7];
 	private List<Event> eventList;
-	
+
 	private JPanel multidayEventGrid = new JPanel();
 	private JPanel dayTitleAndMultidayContainer = new JPanel();
-	
+
 	private JPanel dayHolderPanel = new JPanel();
 	private JPanel dayGrid = new JPanel();
 	private JPanel dayGridContainer = new JPanel();
-	
+
 	private JPanel dayTitleGrid = new JPanel();
 	private JPanel dayTitlesContainer = new JPanel();
-	
+
 	private JScrollPane scroll = new JScrollPane(dayGridContainer);
 
 	private DateTimeFormatter monthDayFmt = DateTimeFormat.forPattern("MMM d");
 	private DateTimeFormatter dayYearFmt = DateTimeFormat.forPattern("d, yyyy");
 	private DateTimeFormatter monthDayYearFmt = DateTimeFormat.forPattern("MMM d, yyyy");
 	private DateTimeFormatter dayTitleFmt = DateTimeFormat.forPattern("E M/d");
-	
+
 	/**
 	 * 
 	 * @param on
-	 * 			the DateTime that the Week Calendar is focused/centered on
+	 *            the DateTime that the Week Calendar is focused/centered on
 	 */
 	public WeekCalendar(DateTime on)
 	{
 		this.mainPanel = MainPanel.getInstance();
 		this.time = on;
 		updateWeekStartAndEnd(time);
-		
+
 		scroll.setBackground(Colors.TABLE_BACKGROUND);
 		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scroll.getVerticalScrollBar().setUnitIncrement(20);
 		dayGrid.setBackground(Colors.TABLE_BACKGROUND);
-		
-		
+
 		this.setLayout(new BorderLayout());
 		this.multidayEventGrid.setLayout(new BoxLayout(multidayEventGrid, BoxLayout.Y_AXIS));
 		this.dayTitleAndMultidayContainer.setLayout(new BoxLayout(dayTitleAndMultidayContainer, BoxLayout.Y_AXIS));
@@ -100,7 +100,7 @@ public class WeekCalendar extends AbstractCalendar
 		this.dayTitleGrid.setLayout(new GridLayout(1, 7));
 		this.dayTitlesContainer.setLayout(new BoxLayout(dayTitlesContainer, BoxLayout.X_AXIS));
 		this.dayGridContainer.setLayout(new BorderLayout());
-		
+
 		generateDay();
 	}
 
@@ -113,130 +113,126 @@ public class WeekCalendar extends AbstractCalendar
 		this.dayGrid.removeAll();
 		this.dayTitleGrid.removeAll();
 		this.dayTitlesContainer.removeAll();
-		
-		MutableDateTime increment=new MutableDateTime(weekStartTime);
+
+		MutableDateTime increment = new MutableDateTime(weekStartTime);
 		increment.setMillisOfDay(0);
-		
+
 		eventList = getVisibleEvents(increment.toDateTime());
-		
-		for(int index=0;index<7;index++)
+
+		for (int index = 0; index < 7; index++)
 		{
-			
-			//add day views to the day grid
+
+			// add day views to the day grid
 			this.daysOfWeekArray[index] = new LouvreTour();
 			this.daysOfWeekArray[index].setEvents(getEventsInInterval(increment.toDateTime(), increment.toDateTime().plusDays(1)), increment.toDateTime());
 			this.daysOfWeekArray[index].setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, Colors.BORDER));
 			this.dayGrid.add(this.daysOfWeekArray[index]);
-			
-			//add day titles to the title grid
+
+			// add day titles to the title grid
 			JLabel currDayTitle = new JLabel(increment.toDateTime().toString(dayTitleFmt), JLabel.CENTER);
 			this.dayTitleGrid.add(currDayTitle);
-			
+
 			increment.addDays(1);
 		}
 
-		//initialize spacer label to offset dayGridLabel
+		// initialize spacer label to offset dayGridLabel
 		JLabel spacerLabel = new JLabel(" 10:00 PM ");
 		spacerLabel.setForeground(spacerLabel.getBackground());
 		spacerLabel.setBorder(BorderFactory.createLineBorder(spacerLabel.getBackground()));
 		this.dayTitlesContainer.add(spacerLabel);
-		
-		//initialize spacer label to offset scroll bar
+
+		// initialize spacer label to offset scroll bar
 		spacerLabel = new JLabel("     ");
 		spacerLabel.setForeground(spacerLabel.getBackground());
 		spacerLabel.setBorder(BorderFactory.createLineBorder(spacerLabel.getBackground()));
-		
-		//populate and set up the multiDayEventGrid
-		//populateMultidayEventGrid();		
-		
-		//put multiday event handling and day title grid in a container
+
+		// populate and set up the multiDayEventGrid
+		// populateMultidayEventGrid();
+
+		// put multiday event handling and day title grid in a container
 		dayTitleAndMultidayContainer.add(dayTitleGrid);
 		dayTitleAndMultidayContainer.add(multidayEventGrid);
 
-		//add grids to box container
+		// add grids to box container
 		this.dayTitlesContainer.add(dayTitleAndMultidayContainer);
 		this.dayTitlesContainer.add(spacerLabel);
 
-		//add spacer and time labels to container
+		// add spacer and time labels to container
 		this.dayGridContainer.add(DayGridLabel.getInstance(), BorderLayout.WEST);
 		this.dayGridContainer.add(dayGrid, BorderLayout.CENTER);
-		
-		//add the sidebar and the day grid to the container panel
+
+		// add the sidebar and the day grid to the container panel
 		this.dayHolderPanel.add(dayTitlesContainer, BorderLayout.NORTH);
 		this.dayHolderPanel.add(scroll, BorderLayout.CENTER);
-		
-		//setup week title
+
+		// setup week title
 		increment.addDays(-1);
 		JLabel weekTitle = new JLabel();
-		
-		if(weekStartTime.getYear() != increment.getYear())
-			weekTitle.setText(weekStartTime.toString(monthDayYearFmt) + " - " +
-							increment.toString(monthDayYearFmt));
-		else if(weekStartTime.getMonthOfYear() != increment.getMonthOfYear())
-			weekTitle.setText(weekStartTime.toString(monthDayFmt) + " - " +
-							increment.toString(monthDayYearFmt));
+
+		if (weekStartTime.getYear() != increment.getYear())
+			weekTitle.setText(weekStartTime.toString(monthDayYearFmt) + " - " + increment.toString(monthDayYearFmt));
+		else if (weekStartTime.getMonthOfYear() != increment.getMonthOfYear())
+			weekTitle.setText(weekStartTime.toString(monthDayFmt) + " - " + increment.toString(monthDayYearFmt));
 		else
-			weekTitle.setText(weekStartTime.toString(monthDayFmt) + " - " +
-							increment.toString(dayYearFmt));
-			
+			weekTitle.setText(weekStartTime.toString(monthDayFmt) + " - " + increment.toString(dayYearFmt));
+
 		weekTitle.setFont(new java.awt.Font("DejaVu Sans", Font.BOLD, 25));
 		weekTitle.setHorizontalAlignment(SwingConstants.CENTER);
-		
-		//add title and week view to this
+
+		// add title and week view to this
 		this.add(weekTitle, BorderLayout.NORTH);
 		this.add(dayHolderPanel, BorderLayout.CENTER);
-		
+
 		// notify mini-calendar to change
 		mainPanel.miniMove(time);
 	}
-	
-	private void populateMultidayEventGrid() {
-		
+
+	private void populateMultidayEventGrid()
+	{
+
 		List<Event> multidayEvents = getMultidayEvents();
-		
-		while(!multidayEvents.isEmpty())
+
+		while (!multidayEvents.isEmpty())
 		{
 			JLabel multiItem = new JLabel();
 			multiItem.setLayout(new GridLayout(1, 7));
-			
-			int gridIndex=0;
+
+			int gridIndex = 0;
 			Interval mInterval;
 			Event currEvent = null;
-			
-			while(gridIndex<7)
+
+			while (gridIndex < 7)
 			{
-				mInterval = new Interval(daysOfWeekArray[gridIndex].getDisplayDate(), 
-						daysOfWeekArray[gridIndex].getDisplayDate().plusDays(1));
-				
-				for(Event e: multidayEvents)
+				mInterval = new Interval(daysOfWeekArray[gridIndex].getDisplayDate(), daysOfWeekArray[gridIndex].getDisplayDate().plusDays(1));
+
+				for (Event e : multidayEvents)
 				{
-					if(isEventInInterval(e, mInterval))
+					if (isEventInInterval(e, mInterval))
 					{
 						currEvent = e;
 						break;
 					}
 				}
-				
-				if(currEvent==null)
+
+				if (currEvent == null)
 					gridIndex++;
 				else
 				{
-					while(gridIndex < 7 || daysOfWeekArray[gridIndex].getDisplayDate().isBefore(currEvent.getEnd()))
+					while (gridIndex < 7 || daysOfWeekArray[gridIndex].getDisplayDate().isBefore(currEvent.getEnd()))
 					{
-						
+
 					}
 				}
-				
+
 			}
 		}
 	}
-
 
 	/**
 	 * Get a list of Events for the current day
 	 * 
 	 * @param curDay
-	 * 				DateTime that the calendar is focused on
+	 *            DateTime that the calendar is focused on
 	 * @return
 	 */
 	private List<Event> getVisibleEvents(DateTime curDay)
@@ -253,18 +249,13 @@ public class WeekCalendar extends AbstractCalendar
 	@Override
 	public void next()
 	{
-		this.time = Months.nextWeek(this.time);
-		updateWeekStartAndEnd(time);
-		this.generateDay();
+		display(Months.nextWeek(this.time));
 	}
 
 	@Override
 	public void previous()
 	{
-		this.time = Months.prevWeek(this.time);
-		updateWeekStartAndEnd(time);
-		this.generateDay();
-
+		display(Months.prevWeek(this.time));
 	}
 
 	@Override
@@ -272,19 +263,23 @@ public class WeekCalendar extends AbstractCalendar
 	{
 		this.time = newTime;
 		updateWeekStartAndEnd(time);
-		
-		this.generateDay();
 
-		for(int index=0;index<7;index++)
-		{
-			this.daysOfWeekArray[index].repaint();
-		}
+		this.generateDay();
 		
+		// Scroll to now
+		BoundedRangeModel jsb = scroll.getVerticalScrollBar().getModel();
+		double day = time.getMinuteOfDay();
+		day /= time.minuteOfDay().getMaximumValue();
+		day *= (jsb.getMaximum()) - jsb.getMinimum();
+		jsb.setValue((int) day);
+
+		// repaint
 		mainPanel.revalidate();
 		mainPanel.repaint();
 	}
 
-	private void updateWeekStartAndEnd(DateTime time) {
+	private void updateWeekStartAndEnd(DateTime time)
+	{
 		MutableDateTime mdt = Months.getWeekStart(time).toMutableDateTime();
 		mdt.setMillisOfDay(0);
 		this.weekStartTime = mdt.toDateTime();
@@ -295,7 +290,8 @@ public class WeekCalendar extends AbstractCalendar
 	@Override
 	public void updateEvents(Event events, boolean added)
 	{
-		// at the moment, we don't care, and just re-pull from the DB. TODO: this should change
+		// at the moment, we don't care, and just re-pull from the DB. TODO:
+		// this should change
 		this.generateDay();
 	}
 
@@ -308,17 +304,17 @@ public class WeekCalendar extends AbstractCalendar
 			return;
 		if (item == null)
 			oitem = lastSelection;
-		
+
 		if (lastSelection != null)
 		{
 			if (lastSelection instanceof Event)
-				selectEvents((Event)lastSelection, null);
+				selectEvents((Event) lastSelection, null);
 			else
 			{
 				day = null;
-				for(LouvreTour lt : daysOfWeekArray)
+				for (LouvreTour lt : daysOfWeekArray)
 				{
-					if(lastSelection.getDate().getDayOfYear()==lt.getDisplayDate().getDayOfYear())
+					if (lastSelection.getDate().getDayOfYear() == lt.getDisplayDate().getDayOfYear())
 					{
 						day = lt;
 						break;
@@ -333,13 +329,13 @@ public class WeekCalendar extends AbstractCalendar
 		}
 
 		if (item != null && item instanceof Event)
-			selectEvents((Event)item, item);
+			selectEvents((Event) item, item);
 		else
 		{
 			day = null;
-			for(LouvreTour lt : daysOfWeekArray)
+			for (LouvreTour lt : daysOfWeekArray)
 			{
-				if(oitem.getDate().getDayOfYear()==lt.getDisplayDate().getDayOfYear())
+				if (oitem.getDate().getDayOfYear() == lt.getDisplayDate().getDayOfYear())
 				{
 					day = lt;
 					break;
@@ -353,14 +349,14 @@ public class WeekCalendar extends AbstractCalendar
 		}
 		lastSelection = item;
 	}
-	
+
 	/**
 	 * Selects an event's corresponding Displayable
 	 * 
 	 * @param on
-	 * 			Event being selected
+	 *            Event being selected
 	 * @param setTo
-	 * 			Displayable of Event being selected
+	 *            Displayable of Event being selected
 	 */
 	private void selectEvents(Event on, Displayable setTo)
 	{
@@ -368,31 +364,31 @@ public class WeekCalendar extends AbstractCalendar
 		LouvreTour mLouvreTour;
 		MutableDateTime startDay = new MutableDateTime(on.getStart());
 		MutableDateTime endDay = new MutableDateTime(on.getEnd());
-		
+
 		endDay.setMillisOfDay(0);
 		endDay.addDays(1);
 		endDay.addMillis(-1);
 		startDay.setMillisOfDay(0);
-		
+
 		int index = 0;
-		
-		for(int i = 0; i< 7; i++)
+
+		for (int i = 0; i < 7; i++)
 		{
-			if(startDay.getDayOfYear()==daysOfWeekArray[i].getDisplayDate().getDayOfYear())
+			if (startDay.getDayOfYear() == daysOfWeekArray[i].getDisplayDate().getDayOfYear())
 			{
 				index = i;
 				break;
 			}
 		}
-		
-		while (index<7 && !endDay.isBefore(daysOfWeekArray[index].getDisplayDate()))
+
+		while (index < 7 && !endDay.isBefore(daysOfWeekArray[index].getDisplayDate()))
 		{
 			mLouvreTour = daysOfWeekArray[index];
 			try
 			{
 				mLouvreTour.select(setTo);
 			}
-			catch(NullPointerException ex)
+			catch (NullPointerException ex)
 			{
 				// silently ignore
 			}
@@ -405,55 +401,54 @@ public class WeekCalendar extends AbstractCalendar
 	 * 
 	 * @return
 	 */
-	public DateTime getTime() {
+	public DateTime getTime()
+	{
 		return time;
 	}
-	
+
 	private List<Event> getEventsInInterval(DateTime intervalStart, DateTime intervalEnd)
 	{
 		List<Event> retrievedEvents = new ArrayList<>();
 		Interval mInterval = new Interval(intervalStart, intervalEnd);
-		
-		for(Event event : eventList)
+
+		for (Event event : eventList)
 		{
-			if(event.getStart().getDayOfYear() != event.getEnd().getDayOfYear() || 
-					event.getStart().getYear() != event.getEnd().getYear())
+			if (event.getStart().getDayOfYear() != event.getEnd().getDayOfYear() || event.getStart().getYear() != event.getEnd().getYear())
 				continue;
-			
+
 			if (isEventInInterval(event, mInterval))
 			{
 				retrievedEvents.add(event);
 			}
 		}
-		
+
 		return retrievedEvents;
 	}
-	
+
 	private List<Event> getMultidayEvents()
 	{
 		List<Event> retrievedEvents = new ArrayList<>();
-		
-		for(Event event : eventList)
+
+		for (Event event : eventList)
 		{
 			DateTime s = event.getStart(), e = event.getEnd();
-			
-			if(s.getDayOfYear() != e.getDayOfYear() || 
-					event.getStart().getYear() != event.getEnd().getYear())
+
+			if (s.getDayOfYear() != e.getDayOfYear() || event.getStart().getYear() != event.getEnd().getYear())
 				retrievedEvents.add(event);
 		}
-		
+
 		return retrievedEvents;
 	}
-	
+
 	private boolean isEventInInterval(Event mEvent, Interval mInterval)
 	{
 		DateTime s = mEvent.getStart(), e = mEvent.getEnd();
-		
+
 		if (s.isBefore(e) && mInterval.overlaps(new Interval(s, e)))
 		{
 			return true;
 		}
-		
+
 		return false;
 	}
 }
