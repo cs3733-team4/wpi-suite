@@ -131,11 +131,14 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		MainPanel.getInstance().closeTab(tabid);
 		MainPanel.getInstance().refreshView();
 	}
-	public boolean isSaveable()
+	private boolean isSaveable()
 	{
 		return validateText(nameTextField.getText(), nameErrorLabel) && validateDate(startTimeDatePicker.getDateTime(), dateErrorLabel);
 	}
-
+	public boolean editingCommitment()
+	{
+		return this.isEditingCommitment; 
+	}
 	/**
 	 * 
 	 * @param dueDate

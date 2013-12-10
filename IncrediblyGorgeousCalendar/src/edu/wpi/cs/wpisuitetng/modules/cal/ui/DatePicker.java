@@ -257,6 +257,14 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 		changeListeners.add(newListener);
 	}
 	
+	public void requestDateFocus()
+	{
+		date.requestFocus();
+	}
+	public void requestTimeFocus()
+	{
+		time.requestFocus();
+	}
 	public void notifyListeners()
 	{
 		for(DatePickerListener d : changeListeners)

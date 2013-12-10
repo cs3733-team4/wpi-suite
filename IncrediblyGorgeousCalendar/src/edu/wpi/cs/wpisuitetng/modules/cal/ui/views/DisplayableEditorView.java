@@ -136,10 +136,21 @@ public class DisplayableEditorView extends JPanel
 	public void setSelected(SelectableField field)
 	{
 		if (field==SelectableField.NAME)
-		{
 			nameTextField.requestFocus();
-			System.out.println("name Requsted focus");
-		}
+		else if ((field == SelectableField.START_DATE) || (field==SelectableField.DATE))
+			startTimeDatePicker.requestDateFocus();
+		else if (field == SelectableField.END_DATE)
+			endTimeDatePicker.requestDateFocus();
+		else if ((field == SelectableField.START_TIME) || (field==SelectableField.TIME))
+			startTimeDatePicker.requestTimeFocus();
+		else if (field == SelectableField.END_TIME)
+			endTimeDatePicker.requestDateFocus();
+		else if (field == SelectableField.DESCRIPTION)
+			descriptionTextArea.requestFocus();
+		else if (field == SelectableField.PARTICIPANTS)
+			participantsTextField.requestFocus();
+		else if (field == SelectableField.CATEGORY)
+			eventCategoryPicker.requestFocus();
 	}
 	
 	private class CategoryComboBoxRenderer implements ListCellRenderer<Category>

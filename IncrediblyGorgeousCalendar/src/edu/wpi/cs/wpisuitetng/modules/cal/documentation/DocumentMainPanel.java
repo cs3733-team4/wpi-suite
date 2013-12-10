@@ -113,8 +113,8 @@ public class DocumentMainPanel extends JFrame{
                       			else
                       				webPage.setPage(e.getURL());
                             }
-                            catch(IOException | IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException ioe) {
-                                JOptionPane.showMessageDialog(null,ioe);
+                            catch(IOException ex) {
+                               
                             }
                     }//end hyperlinkUpdate()
                 });//end HyperlinkListener
@@ -145,12 +145,8 @@ public class DocumentMainPanel extends JFrame{
      * doAction will return true if there is/was an action committed as a result of the link
      * @param actionPath The URL Path that is requested
      * @return if an action was completed
-     * @throws IllegalAccessException 
-     * @throws IllegalArgumentException 
-     * @throws SecurityException 
-     * @throws NoSuchFieldException 
      */
-    private boolean doAction(String actionPath) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException
+    private boolean doAction(String actionPath)
     {
     	
     	if (actionPath.contains("#OpenNewEventWindow"))
@@ -206,6 +202,16 @@ public class DocumentMainPanel extends JFrame{
     		}
     		return true;
     	}
+    	else if (actionPath.contains("#EditSelectedCommitment"))
+    	{
+    		if (MainPanel.getInstance().getSelectedDisplayable() instanceof Commitment)
+    		{
+	    		AddCommitmentDisplay ned = new AddCommitmentDisplay((Commitment)MainPanel.getInstance().getSelectedDisplayable());
+	    		if (ned!=null)
+	    			ned.setTabId(MainPanel.getInstance().addTopLevelTab(ned, "Edit Commitment", true));
+    		}
+    		return true;
+    	}
     	else if (actionPath.contains("#SaveEditingEvent"))
     	{
     		if (MainPanel.getInstance().getSelectedComponent() instanceof AddEventDisplay)
@@ -218,30 +224,97 @@ public class DocumentMainPanel extends JFrame{
     		}
     		return true;
     	}
-    	else if (actionPath.contains("#SwitchToDayView"))
+    	else if (actionPath.contains("#SaveEditingCommitment"))
     	{
-    		MainPanel.getInstance().viewDay();
-    		return true;
-    	}
-    	else if (actionPath.contains("#SwitchToMonthView"))
-    	{
-    		MainPanel.getInstance().viewMonth();
-    		return true;
-    	}
-    	else if (actionPath.contains("#SwitchToYearView"))
-    	{
-    		MainPanel.getInstance().viewYear();
+    		if (MainPanel.getInstance().getSelectedComponent() instanceof AddCommitmentDisplay)
+    		{
+    			AddCommitmentDisplay ncd = (AddCommitmentDisplay) MainPanel.getInstance().getSelectedComponent();
+    			if (ncd.editingCommitment())
+    			{
+    				ncd.attemptSave();
+    			}
+    		}
     		return true;
     	}
     	else if (actionPath.contains("#SelectNameInNewEvent"))
     	{
-    		if (MainPanel.getInstance().getSelectedComponent() instanceof AddEventDisplay)
-    		{
-    			AddEventDisplay ned = (AddEventDisplay) MainPanel.getInstance().getSelectedComponent();
-    			ned.setSelected(SelectableField.NAME);
-    		}
+    		setSelectedForEvent(SelectableField.NAME);
 			return true;
     	}
+    	else if (actionPath.contains("#SetStartDateInNewEvent"))
+    	{
+    		setSelectedForEvent(SelectableField.START_DATE);
+			return true;
+    	}
+    	else if (actionPath.contains("#SetStartTimeInNewEvent"))
+    	{
+    		setSelectedForEvent(SelectableField.START_TIME);
+			return true;
+    	}
+    	else if (actionPath.contains("#SetEndDateInNewEvent"))
+    	{
+    		setSelectedForEvent(SelectableField.END_DATE);
+			return true;
+    	}
+    	else if (actionPath.contains("#SetEndTimeInNewEvent"))
+    	{
+    		setSelectedForEvent(SelectableField.END_TIME);
+			return true;
+    	}
+    	else if (actionPath.contains("#SetDescriptionInNewEvent"))
+    	{
+    		setSelectedForEvent(SelectableField.DESCRIPTION);
+			return true;
+    	}
+    	else if (actionPath.contains("#SetCategoryInNewEvent"))
+    	{
+    		setSelectedForEvent(SelectableField.CATEGORY);
+			return true;
+    	}
+    	else if (actionPath.contains("#SetParticipantsInNewEvent"))
+    	{
+    		setSelectedForEvent(SelectableField.PARTICIPANTS);
+			return true;
+    	}
+    	else if (actionPath.contains("#SelectNameInNewComitment"))
+    	{
+    		setSelectedForCommitment(SelectableField.NAME);
+			return true;
+    	}
+    	else if (actionPath.contains("#SelectDateInNewCommitment"))
+    	{
+    		setSelectedForCommitment(SelectableField.DATE);
+			return true;
+    	}
+    	else if (actionPath.contains("#SelectTimeInNewCommitment"))
+    	{
+    		setSelectedForCommitment(SelectableField.TIME);
+			return true;
+    	}
+    	else if (actionPath.contains("#SelectParticipantsInNewCommitment"))
+    	{
+    		setSelectedForCommitment(SelectableField.PARTICIPANTS);
+			return true;
+    	}
+    	else if (actionPath.contains("#SelectDescriptionInNewCommitment"))
+    	{
+    		setSelectedForCommitment(SelectableField.DESCRIPTION);
+			return true;
+    	}
+    	else if (actionPath.contains("#PreviousArrow"))
+    	{
+    		MainPanel.getInstance().getMOCA().previous();
+    		return true;
+    	}
+    	else if (actionPath.contains("#NextArrow"))
+    	{
+    		MainPanel.getInstance().getMOCA().next();
+    		return true;
+    	}
+    	
+    	
+    	
+    	
     	if (actionPath.contains("#"))
     	{
     		System.out.println("Action: " + actionPath + " not yet implemented!");
@@ -250,6 +323,22 @@ public class DocumentMainPanel extends JFrame{
     	return false;
     }
     
+    private void setSelectedForCommitment(SelectableField field)
+    {
+    	if (MainPanel.getInstance().getSelectedComponent() instanceof AddCommitmentDisplay)
+		{
+			AddCommitmentDisplay ned = (AddCommitmentDisplay) MainPanel.getInstance().getSelectedComponent();
+			ned.setSelected(field);
+		}
+    }
+    private void setSelectedForEvent(SelectableField field)
+    {
+    	if (MainPanel.getInstance().getSelectedComponent() instanceof AddEventDisplay)
+		{
+			AddEventDisplay ned = (AddEventDisplay) MainPanel.getInstance().getSelectedComponent();
+			ned.setSelected(field);
+		}
+    }
     /**
      * Allows for singleton of DocumentMainPanel
      * @return the only existing instance of DocumentMainPanel
