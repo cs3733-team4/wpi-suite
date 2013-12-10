@@ -22,6 +22,7 @@ public class RibbonToolbar extends DefaultToolbarView {
 		categoryButtonGroup = new CategoryToolbarGroup(mMainPanel);
 		this.addGroup(eventButtonGroup);
 		this.addGroup(categoryButtonGroup);
+		this.setFocusable(false);
 		eventButtonGroup.disableRemoveEventButton();
 	}
 }

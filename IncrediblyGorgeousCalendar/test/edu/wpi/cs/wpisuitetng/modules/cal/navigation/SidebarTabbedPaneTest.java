@@ -176,7 +176,7 @@ public class SidebarTabbedPaneTest {
 		
 		assertNotNull("Filtering tab list exists", catList.get(sidebar));
 		// note getSelectedCategories is a list of category UUIDs that correspond to each category
-		assertEquals("The filtering tab list starts with only one categorty to filter: uncategorized", 1, sidebar.getSelectedCategories().size());
+		assertEquals("The filtering tab list starts with only one categorty to filter: uncategorized", 1, sidebar.getSelectedCategories().size()); // THis was 3 at first
 		
 		((MockNetwork)Network.getInstance()).clearCache();
 	}

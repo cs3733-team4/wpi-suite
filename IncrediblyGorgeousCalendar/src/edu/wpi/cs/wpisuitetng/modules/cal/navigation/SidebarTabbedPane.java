@@ -84,6 +84,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 		
 		//setup
 		this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+		this.setFocusable(false);
 		
 		setupTextStyles();
 		setupDetailTab();
@@ -139,6 +140,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 		detailTab = new JPanel();
 		detailTab.setLayout(new BorderLayout());
 		detailTab.setBorder(BorderFactory.createEmptyBorder(3, 0, 0, 0));
+		detailTab.setFocusable(false);
 		
 		// setup text area
 		detailTextPane = new JTextArea();
@@ -166,6 +168,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 		
 	    // setup buttons and listeners
 	    detailEditButton = new JButton("Edit");
+	    detailEditButton.setFocusable(false);
 	    detailEditButton.addActionListener(new ActionListener() {
 			
 			@Override
@@ -191,6 +194,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 	    detailButtonPane = new JPanel();
 	    detailButtonPane.setLayout(new FlowLayout());
 	    detailButtonPane.add(detailEditButton);
+	    detailButtonPane.setFocusable(false);
 	    detailButtonPane.add(detailDeleteButton);
 	    
 	    // put entire tab into a scroll pane
@@ -214,7 +218,6 @@ public class SidebarTabbedPane extends JTabbedPane{
 		categoryFilterTab = new JPanel();
 		categoryFilterTab.setLayout(new BorderLayout());
 		categoryFilterTab.setBorder(BorderFactory.createEmptyBorder(3, 0, 0, 0));
-		categoryFilterTab.setBackground(Colors.TABLE_BACKGROUND);
 		categoryFilterTab.putClientProperty("html.disable", true);
 		categoryFilterTab.setAlignmentY(LEFT_ALIGNMENT);
 		
@@ -222,7 +225,6 @@ public class SidebarTabbedPane extends JTabbedPane{
 		categoryList = new JPanel();
 		categoryList.setLayout(new BoxLayout(categoryList, BoxLayout.Y_AXIS));
 		categoryList.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-		categoryList.setBackground(Colors.TABLE_BACKGROUND);
 		categoryList.putClientProperty("html.disable", true);
 		categoryList.setAlignmentX(TOP_ALIGNMENT);
 		categoryList.setAlignmentY(TOP_ALIGNMENT);
@@ -236,14 +238,12 @@ public class SidebarTabbedPane extends JTabbedPane{
 		categoryScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 	    categoryScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		categoryScroll.setBorder(new EmptyBorder(5,5,5,5));
-		categoryScroll.setBackground(Colors.TABLE_BACKGROUND);
 		categoryScroll.setAlignmentY(LEFT_ALIGNMENT);
 		
 		// Set up selection buttons
 		categoryButtonPanel = new JPanel();
 		categoryButtonPanel.setLayout(new GridLayout());
 		categoryButtonPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-		categoryButtonPanel.setBackground(Colors.TABLE_BACKGROUND);
 		categoryButtonPanel.putClientProperty("html.disable", true);
 		
 		selectAllButton = new JButton("Select All");
@@ -425,7 +425,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 			container.putClientProperty("html.disable", true);
 			container.setAlignmentY(LEFT_ALIGNMENT);
 			container.setAlignmentX(BOTTOM_ALIGNMENT);
-			container.setBackground(Colors.TABLE_BACKGROUND);
+			container.setMaximumSize(new Dimension(10000, 20));
 			
 			// Store reference to check boxes and categories
 			if (categoryCheckBox.isSelected() && !(selectedCategories.contains(c.getCategoryID())))
@@ -448,6 +448,8 @@ public class SidebarTabbedPane extends JTabbedPane{
 			// Add container to category list holder
 			categoryListHolder.add(container);
 		}
+		
+		categoryListHolder.add(Box.createVerticalGlue());
 	}
 	
 	/**
