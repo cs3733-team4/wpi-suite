@@ -55,20 +55,7 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
-				Commitment e = oldCommitment;
-				e.setName(nameTextField.getText().trim());
-				e.setDescription(descriptionTextArea.getText());
-				e.setDate(startTimeDatePicker.getDateTime());
-
-				if (isEditingCommitment)
-					MainPanel.getInstance().updateCommitment(e);
-				else
-					MainPanel.getInstance().addCommitment(e);
-
-				saveButton.setEnabled(false);
-				saveButton.setText("Saved!");
-				MainPanel.getInstance().closeTab(tabid);
-				MainPanel.getInstance().refreshView();
+				attemptSave(oldCommitment);
 			}
 		});
 
@@ -115,7 +102,25 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 
 		saveButton.setEnabled(isSaveable());
 	}
+	public void attemptSave(Commitment oldCommitment)
+	{
+		if(!isSaveable())
+			return;
+		Commitment e = oldCommitment;
+		e.setName(nameTextField.getText().trim());
+		e.setDescription(descriptionTextArea.getText());
+		e.setDate(startTimeDatePicker.getDateTime());
 
+		if (isEditingCommitment)
+			MainPanel.getInstance().updateCommitment(e);
+		else
+			MainPanel.getInstance().addCommitment(e);
+
+		saveButton.setEnabled(false);
+		saveButton.setText("Saved!");
+		MainPanel.getInstance().closeTab(tabid);
+		MainPanel.getInstance().refreshView();
+	}
 	public boolean isSaveable()
 	{
 		return validateText(nameTextField.getText(), nameErrorLabel) && validateDate(startTimeDatePicker.getDateTime(), dateErrorLabel);

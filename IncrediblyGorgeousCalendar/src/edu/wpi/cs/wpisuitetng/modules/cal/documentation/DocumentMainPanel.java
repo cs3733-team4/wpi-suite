@@ -16,6 +16,7 @@ import javax.swing.event.HyperlinkListener;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddCommitmentDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddEventDisplay;
@@ -117,6 +118,14 @@ public class DocumentMainPanel extends JFrame{
     		AddCommitmentDisplay ncm = new AddCommitmentDisplay();
     		ncm.setTabId(MainPanel.getInstance().addTopLevelTab(ncm, "New Commitment", true));
     		return true;
+    	}
+    	else if (actionPath.contains("#SaveNewCommitment"))
+    	{
+    		if (MainPanel.getInstance().getSelectedComponent() instanceof AddCommitmentDisplay)
+    		{
+    			AddCommitmentDisplay ncm = (AddCommitmentDisplay) MainPanel.getInstance().getSelectedComponent();
+    			ncm.attemptSave(new Commitment());
+    		}
     	}
     	else if (actionPath.contains("#SwitchToDayView"))
     	{
