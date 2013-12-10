@@ -458,7 +458,7 @@ public class Event extends AbstractModel implements Displayable
 				.append(", ")
 				.append(Months.getDescriptiveNumber(s.getDayOfMonth()))
 				.append(" - ")
-				.append(e.getMonthOfYear())
+				.append(e.monthOfYear().getAsShortText())
 				.append(", ")
 				.append(Months.getDescriptiveNumber(e.getDayOfMonth()));
 			return timeFormat.toString();
