@@ -37,6 +37,10 @@ import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.france.LouvreTour;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
 
+/**
+ * Calendar to display the 7 days of the selected week. A timetable and 
+ * 7 day views are scaled to fit in the current window size. 
+ */
 public class WeekCalendar extends AbstractCalendar
 {
 
@@ -56,23 +60,26 @@ public class WeekCalendar extends AbstractCalendar
 	
 	private JScrollPane scroll = new JScrollPane(dayGridContainer);
 
-	private EventModel eventModel;
-
 	private DateTimeFormatter monthDayFmt = DateTimeFormat.forPattern("MMM d");
 	private DateTimeFormatter dayYearFmt = DateTimeFormat.forPattern("d, yyyy");
 	private DateTimeFormatter monthDayYearFmt = DateTimeFormat.forPattern("MMM d, yyyy");
 	private DateTimeFormatter dayTitleFmt = DateTimeFormat.forPattern("E M/d");
 	
-	public WeekCalendar(DateTime on, EventModel emodel)
+	/**
+	 * 
+	 * @param on
+	 * 			the DateTime that the Week Calendar is focused/centered on
+	 */
+	public WeekCalendar(DateTime on)
 	{
 		this.mainPanel = MainPanel.getInstance();
 		this.time = on;
-		eventModel = emodel;
 		scroll.setBackground(Colors.TABLE_BACKGROUND);
 		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scroll.getVerticalScrollBar().setUnitIncrement(20);
 		dayGrid.setBackground(Colors.TABLE_BACKGROUND);
+		
 		
 		this.setLayout(new BorderLayout());
 		this.dayHolderPanel.setLayout(new BorderLayout());
@@ -84,6 +91,9 @@ public class WeekCalendar extends AbstractCalendar
 		generateDay();
 	}
 
+	/**
+	 * Generates the day displays in the week panel
+	 */
 	private void generateDay()
 	{
 		this.removeAll();
@@ -114,7 +124,7 @@ public class WeekCalendar extends AbstractCalendar
 		spacerLabel.setBorder(BorderFactory.createLineBorder(spacerLabel.getBackground()));
 		this.dayTitlesContainer.add(spacerLabel);
 		
-		//initialize spacer label to offset scrollbar
+		//initialize spacer label to offset scroll bar
 		spacerLabel = new JLabel("     ");
 		spacerLabel.setForeground(spacerLabel.getBackground());
 		spacerLabel.setBorder(BorderFactory.createLineBorder(spacerLabel.getBackground()));
@@ -156,6 +166,13 @@ public class WeekCalendar extends AbstractCalendar
 		mainPanel.miniMove(time);
 	}
 	
+	/**
+	 * Get a list of Events for the current day
+	 * 
+	 * @param curDay
+	 * 				DateTime that the calendar is focused on
+	 * @return
+	 */
 	private List<Event> getVisibleEvents(DateTime curDay)
 	{
 		MutableDateTime f = new MutableDateTime(curDay);
@@ -164,7 +181,7 @@ public class WeekCalendar extends AbstractCalendar
 		f.addDays(1);
 		DateTime to = f.toDateTime();
 		// TODO: this is where filtering should go
-		return eventModel.getEvents(from, to);
+		return EventModel.getInstance().getEvents(from, to);
 	}
 
 	@Override
@@ -259,6 +276,14 @@ public class WeekCalendar extends AbstractCalendar
 		lastSelection = item;
 	}
 	
+	/**
+	 * Selects an event's corresponding Displayable
+	 * 
+	 * @param on
+	 * 			Event being selected
+	 * @param setTo
+	 * 			Displayable of Event being selected
+	 */
 	private void selectEvents(Event on, Displayable setTo)
 	{
 		// TODO: refactor this pattern
@@ -297,6 +322,11 @@ public class WeekCalendar extends AbstractCalendar
 		}
 	}
 
+	/**
+	 * Get the time from a Date Time
+	 * 
+	 * @return
+	 */
 	public DateTime getTime() {
 		return time;
 	}

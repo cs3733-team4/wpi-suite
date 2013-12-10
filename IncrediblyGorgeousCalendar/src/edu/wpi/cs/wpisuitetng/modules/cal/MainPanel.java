@@ -140,7 +140,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		
 		this.dayCal = new DayCalendar(DateTime.now(), events); // Day calendar (hidden)
 		this.yearCal = new YearCalendar(DateTime.now(), events); // Year calendar (hidden)
-		this.weekCal = new WeekCalendar(DateTime.now(), events); // Year calendar (hidden)
+		this.weekCal = new WeekCalendar(DateTime.now()); // Year calendar (hidden)
 		
 		this.mainCalendarNavigationPanel = new MainCalendarNavigation(this, mCalendar); // Navigation bar 
 		

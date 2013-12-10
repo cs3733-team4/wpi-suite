@@ -37,41 +37,41 @@ public class WeekCalendarTest{
 	
 	@Test
 	public void testgetTimeReturnsProvidedTime() {
-		WeekCalendar mCal = new WeekCalendar(time, dummyModel);
+		WeekCalendar mCal = new WeekCalendar(time);
 		assertEquals("Function should return current time", time, mCal.getTime());
 	}
 	
 	@Test
 	public void testNextReturnsNextWeek() {
-		WeekCalendar mCal = new WeekCalendar(time, dummyModel);
+		WeekCalendar mCal = new WeekCalendar(time);
 		mCal.next();
 		assertEquals("Function should return current time plus 1 month", timePlusOneWeek, mCal.getTime());
 	}
 	
 	@Test
 	public void testNextReturnsNextMonthDecemberToJanuary() {
-		WeekCalendar mCal = new WeekCalendar(timeDecember, dummyModel);
+		WeekCalendar mCal = new WeekCalendar(timeDecember);
 		mCal.next();
 		assertEquals("Function should return January 2013", timeJanuary, mCal.getTime());
 	}
 	
 	@Test
 	public void testPreviousReturnsNextMonthJanuaryToDecember() {
-		WeekCalendar mCal = new WeekCalendar(timeJanuary, dummyModel);
+		WeekCalendar mCal = new WeekCalendar(timeJanuary);
 		mCal.previous();
 		assertEquals("Function should return December 2012", timeDecember, mCal.getTime());
 	}
 	
 	@Test
 	public void testIsTodayDaylightSavingsTime() {
-		WeekCalendar mCal = new WeekCalendar(timeOneHourThirtyMinutesBeforeDST, dummyModel);
+		WeekCalendar mCal = new WeekCalendar(timeOneHourThirtyMinutesBeforeDST);
 		mCal.next();
 		assertEquals("Next month should be the same even if DST happened", timeOneHourThirtyMinutesBeforeDSTPlusOneWeek, mCal.getTime());
 	}
 	
 	@Test
 	public void testNextPrevious() {
-		WeekCalendar mCal = new WeekCalendar(timeOneHourThirtyMinutesBeforeDST, dummyModel);
+		WeekCalendar mCal = new WeekCalendar(timeOneHourThirtyMinutesBeforeDST);
 		mCal.next();
 		mCal.previous();
 		assertEquals("Time should be the same", timeOneHourThirtyMinutesBeforeDST, mCal.getTime());
@@ -79,7 +79,7 @@ public class WeekCalendarTest{
 	
 	@Test
 	public void testNextPreviousIsToday() {
-		WeekCalendar mCal = new WeekCalendar(time, dummyModel);
+		WeekCalendar mCal = new WeekCalendar(time);
 		mCal.next();
 		mCal.previous();
 		assertEquals("Time should be the same", time, mCal.getTime());
