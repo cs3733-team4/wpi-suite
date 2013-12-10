@@ -118,6 +118,11 @@ public class DocumentMainPanel extends JFrame{
     		ncm.setTabId(MainPanel.getInstance().addTopLevelTab(ncm, "New Commitment", true));
     		return true;
     	}
+    	if (actionPath.contains("#"))
+    	{
+    		System.out.println("Action: " + actionPath + " not yet implemented!");
+    		return true;
+    	}
     	return false;
     }
     
