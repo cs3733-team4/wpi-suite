@@ -119,7 +119,6 @@ public class DocumentMainPanel extends JFrame{
             public void hyperlinkUpdate(HyperlinkEvent e) {
                 if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED)
                       	try {
-                      		System.out.println(e.getURL().toString());
                       			if (doAction(e.getURL().toString()))
                       				return;
                       			else if (!e.getURL().toString().contains("html"))

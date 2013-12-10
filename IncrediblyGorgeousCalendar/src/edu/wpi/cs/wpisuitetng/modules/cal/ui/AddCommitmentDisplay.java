@@ -196,7 +196,7 @@ private void setUpListeners(){
 		MainPanel.getInstance().closeTab(tabid);
 		MainPanel.getInstance().refreshView();
 	}
-	private boolean isSaveable()
+	public boolean isSaveable()
 	{
 		return validateText(nameTextField.getText(), nameErrorLabel) && validateDate(startTimeDatePicker.getDateTime(), dateErrorLabel);
 	}
