@@ -15,6 +15,9 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddCommitmentDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddEventDisplay;
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
@@ -103,9 +106,20 @@ public class DocumentMainPanel extends JFrame{
     	else if (actionPath.contains("#SaveNewEvent"))
 		{
     		if (MainPanel.getInstance().getSelectedComponent() instanceof AddEventDisplay)
+    		{
     			System.out.println("Could try to save a new event!!");
+    			AddEventDisplay ned = (AddEventDisplay) MainPanel.getInstance().getSelectedComponent();
+    			ned.attemptSave();
+    		}
 			return true;
 		}
+    	else if (actionPath.contains("#OpenNewAddCommitmentBox"))
+    	{
+    		System.out.println("Action for new Commitment");
+    		AddCommitmentDisplay ncm = new AddCommitmentDisplay();
+    		ncm.setTabId(MainPanel.getInstance().addTopLevelTab(ncm, "New Commitment", true));
+    		return true;
+    	}
     	return false;
     }
     
