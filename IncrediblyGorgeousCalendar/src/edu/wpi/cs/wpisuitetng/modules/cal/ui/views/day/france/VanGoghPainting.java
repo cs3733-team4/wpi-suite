@@ -34,6 +34,7 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -61,9 +62,10 @@ public class VanGoghPainting extends JPanel
 	private static final int FIXED_HEIGHT = 1440;
 	private TimeTraveller traveller;
 	private DateTime displayedDay;
+	private boolean isBeingDragged;
 	public VanGoghPainting(TimeTraveller traveller, DateTime displayedDay)
 	{
-		
+		isBeingDragged = false;
 		this.displayedDay=displayedDay;
 		this.traveller = traveller;
 		height = 25;
@@ -138,7 +140,20 @@ public class VanGoghPainting extends JPanel
 				
 			}
 		});
-		
+		this.addMouseMotionListener(new MouseMotionListener() {
+			
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseDragged(MouseEvent arg0) {
+				isBeingDragged = true;
+				getParent().dispatchEvent(arg0);
+			}
+		});
 		Width = new Rational(((traveller.getCollisions() > 1) ? 2 : 1), 1 + traveller.getCollisions());
 		X = traveller.getXpos();
 		description = Arrays.asList(traveller.getEvent().getDescription().split(" "));
