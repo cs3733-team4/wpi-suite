@@ -421,6 +421,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 			container.putClientProperty("html.disable", true);
 			container.setAlignmentY(LEFT_ALIGNMENT);
 			container.setAlignmentX(BOTTOM_ALIGNMENT);
+			container.setMaximumSize(new Dimension(10000, 20));
 			
 			// Store reference to check boxes and categories
 			if (categoryCheckBox.isSelected() && !(selectedCategories.contains(c.getCategoryID())))
