@@ -268,13 +268,8 @@ public class WeekCalendar extends AbstractCalendar
 	 */
 	private List<Event> getVisibleEvents(DateTime curDay)
 	{
-		MutableDateTime f = new MutableDateTime(curDay);
-		f.setMillisOfDay(0);
-		DateTime from = f.toDateTime();
-		f.addDays(7);
-		DateTime to = f.toDateTime();
 		// TODO: this is where filtering should go
-		return EventModel.getInstance().getEvents(from, to);
+		return EventModel.getInstance().getEvents(weekStartTime, weekEndTime);
 	}
 
 	@Override
@@ -311,7 +306,8 @@ public class WeekCalendar extends AbstractCalendar
 
 	private void updateWeekStartAndEnd(DateTime time)
 	{
-		MutableDateTime mdt = Months.getWeekStart(time).toMutableDateTime();
+		MutableDateTime mdt = new MutableDateTime(time);
+		mdt.addDays(-(time.getDayOfWeek()%7));
 		mdt.setMillisOfDay(0);
 		this.weekStartTime = mdt.toDateTime();
 		mdt.addDays(7);
@@ -421,7 +417,7 @@ public class WeekCalendar extends AbstractCalendar
 			}
 			catch (NullPointerException ex)
 			{
-				// silently ignore
+				// silently ignore as this is apparently not in the view
 			}
 			index++;
 		}
@@ -475,11 +471,6 @@ public class WeekCalendar extends AbstractCalendar
 	{
 		DateTime s = mEvent.getStart(), e = mEvent.getEnd();
 
-		if (s.isBefore(e) && mInterval.overlaps(new Interval(s, e)))
-		{
-			return true;
-		}
-
-		return false;
+		return (s.isBefore(e) && mInterval.overlaps(new Interval(s, e)));
 	}
 }
