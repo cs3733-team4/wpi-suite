@@ -40,6 +40,8 @@ public class LouvreTour extends JPanel
 	private DateTime date;
 	private VanGoghPainting selected;
 	private boolean isSomethingDragging;
+	private DateTime displayDate;
+
 	public LouvreTour()
 	{
 		isSomethingDragging = false;
@@ -61,12 +63,7 @@ public class LouvreTour extends JPanel
 			}
 			
 			@Override
-			public void mousePressed(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
+
 			public void mouseExited(MouseEvent arg0) {
 				// TODO Auto-generated method stub
 				
@@ -74,8 +71,11 @@ public class LouvreTour extends JPanel
 			
 			@Override
 			public void mouseEntered(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
+
+			}
+			public void mousePressed(MouseEvent e) {
+				MainPanel.getInstance().setSelectedDay(displayDate);
+				MainPanel.getInstance().clearSelected();
 			}
 			
 			@Override
@@ -108,6 +108,7 @@ public class LouvreTour extends JPanel
 	{
 		this.date = displayedDay;
 		List<VanGoghPainting> gallery = CERN.createEventsReallyNicely(events, displayedDay);
+		this.displayDate = displayedDay;
 		removeAll();
 		guides.clear();
 		int i = 2;
@@ -154,6 +155,8 @@ public class LouvreTour extends JPanel
 	{
 		for (VanGoghPainting v : guides.values())
 		{
+			if(item instanceof Event && v.getEvent().getEventID().equals(((Event) item).getEventID()))
+				item = v.getEvent();
 			v.setSelected(false);
 		}
 		if (item instanceof Event)
@@ -163,8 +166,11 @@ public class LouvreTour extends JPanel
 			{
 				selected.setSelected(true);
 			}
-		}
-		
+		}		
+	}
+
+	public DateTime getDisplayDate() {
+		return displayDate;
 	}
 	
 	private DateTime getTimeAtCursor()
