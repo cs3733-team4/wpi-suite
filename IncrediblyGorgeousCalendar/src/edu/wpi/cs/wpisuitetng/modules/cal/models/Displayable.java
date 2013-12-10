@@ -54,4 +54,11 @@ public interface Displayable
 	 */
 	public void update();
 	
+	/**
+	 * gets the duration of this event as a string
+	 * 
+	 * @return a String
+	 */
+	public String getFormattedHoverTextTime();
+	
 }

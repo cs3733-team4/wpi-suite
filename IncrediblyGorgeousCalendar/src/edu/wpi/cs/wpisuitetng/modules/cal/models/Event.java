@@ -400,7 +400,8 @@ public class Event extends AbstractModel implements Displayable
 	}
 
 	@Override
-	public void setTime(DateTime newTime) {
+	public void setTime(DateTime newTime)
+	{
 		if (new Interval(new DateTime(this.start), new DateTime(this.end)).contains(newTime))
 		{
 			return;
@@ -430,7 +431,24 @@ public class Event extends AbstractModel implements Displayable
 	}
 
 	@Override
-	public void update() {
+	public void update()
+	{
 		EventModel.getInstance().updateEvent(this);
+	}
+	
+	@Override
+	public String getFormattedHoverTextTime()
+	{
+		DateTime s = new DateTime(this.start);
+		DateTime e = new DateTime(this.end);
+		StringBuilder timeFormat = new StringBuilder()
+			.append(s.getHourOfDay())
+			.append(":")
+			.append(s.getMinuteOfHour())
+			.append(" - ")
+			.append(e.getHourOfDay())
+			.append(":")
+			.append(e.getMinuteOfHour()==0?"00":e.getMinuteOfHour());
+		return timeFormat.toString();
 	}
 }

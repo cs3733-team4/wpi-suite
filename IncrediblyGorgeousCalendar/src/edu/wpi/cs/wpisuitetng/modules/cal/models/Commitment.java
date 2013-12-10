@@ -219,13 +219,26 @@ public class Commitment extends AbstractModel implements Displayable
 	}
 
 	@Override
-	public void setTime(DateTime newTime) {
+	public void setTime(DateTime newTime)
+	{
 		this.duedate = newTime.toDate();
 	}
 
 	@Override
-	public void update() {
+	public void update()
+	{
 		CommitmentModel.getInstance().updateCommitment(this);
+	}
+	
+	@Override
+	public String getFormattedHoverTextTime()
+	{
+		DateTime s = new DateTime(this.duedate);
+		StringBuilder timeFormat = new StringBuilder()
+			.append(s.getHourOfDay())
+			.append(":")
+			.append(s.getMinuteOfHour());
+		return timeFormat.toString();
 	}
 
 }
