@@ -51,8 +51,9 @@ public class CategoryToolbarGroup extends ToolbarGroupView {
 					JLabel label = new JLabel(" Lets you manage your categories");
 			        JButton button = new JButton("Get Help");  
 			        button.addActionListener(new ActionListener() {  
-			        	public void actionPerformed(ActionEvent e) {  
-			        		DocumentMainPanel.getInstance().setVisible(!DocumentMainPanel.getInstance().isVisible());
+			        	public void actionPerformed(ActionEvent e) {
+			        		DocumentMainPanel.getInstance().setVisible(true);
+			        		DocumentMainPanel.getInstance().requestFocus();
 			        		DocumentMainPanel.getInstance().goToPage("CreateaCategory.html");  
 			            }  
 			        });  

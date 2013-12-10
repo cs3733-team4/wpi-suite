@@ -154,12 +154,14 @@ public class DocumentMainPanel extends JFrame{
 		{
 			AddEventDisplay ned = new AddEventDisplay();
 			ned.setTabId(MainPanel.getInstance().addTopLevelTab(ned, "New Event", true));
+    		MainPanel.getInstance().requestFocus();
 			return true;
 		}
     	else if (actionPath.contains("#OpenNewAddCommitmentBox"))
     	{
     		AddCommitmentDisplay ncm = new AddCommitmentDisplay();
     		ncm.setTabId(MainPanel.getInstance().addTopLevelTab(ncm, "New Commitment", true));
+    		MainPanel.getInstance().requestFocus();
     		return true;
     	}
     	else if (actionPath.contains("#SaveNewEvent"))
@@ -168,6 +170,7 @@ public class DocumentMainPanel extends JFrame{
     		{
     			AddEventDisplay ned = (AddEventDisplay) MainPanel.getInstance().getSelectedComponent();
     			ned.attemptSave();
+        		MainPanel.getInstance().requestFocus();
     		}
 			return true;
 		}
@@ -178,6 +181,7 @@ public class DocumentMainPanel extends JFrame{
     			AddCommitmentDisplay ncm = (AddCommitmentDisplay) MainPanel.getInstance().getSelectedComponent();
   			
     			ncm.attemptSave();
+        		MainPanel.getInstance().requestFocus();
     		}
     		return true;
     	}
@@ -190,7 +194,10 @@ public class DocumentMainPanel extends JFrame{
     	else if (actionPath.contains("#DeleteCommitmentFromDetailsPane"))
     	{
     		if (MainPanel.getInstance().getSelectedDisplayable() instanceof Commitment)
+    		{
     			MainPanel.getInstance().deleteDisplayable(MainPanel.getInstance().getSelectedDisplayable());
+        		MainPanel.getInstance().requestFocus();
+    		}
     		return true;
     	}
     	else if (actionPath.contains("#EditSelectedEvent"))
@@ -199,7 +206,10 @@ public class DocumentMainPanel extends JFrame{
     		{
 	    		AddEventDisplay ned = new AddEventDisplay((Event)MainPanel.getInstance().getSelectedDisplayable());
 	    		if (ned!=null)
+	    		{
 	    			ned.setTabId(MainPanel.getInstance().addTopLevelTab(ned, "Edit Event", true));
+	        		MainPanel.getInstance().requestFocus();
+	    		}	
     		}
     		return true;
     	}
@@ -209,7 +219,10 @@ public class DocumentMainPanel extends JFrame{
     		{
 	    		AddCommitmentDisplay ned = new AddCommitmentDisplay((Commitment)MainPanel.getInstance().getSelectedDisplayable());
 	    		if (ned!=null)
+	    		{
 	    			ned.setTabId(MainPanel.getInstance().addTopLevelTab(ned, "Edit Commitment", true));
+	        		MainPanel.getInstance().requestFocus();
+	    		}
     		}
     		return true;
     	}
@@ -221,6 +234,7 @@ public class DocumentMainPanel extends JFrame{
     			if (ned.editingEvent())
     			{
     				ned.attemptSave();
+    	    		MainPanel.getInstance().requestFocus();
     			}
     		}
     		return true;
@@ -233,6 +247,7 @@ public class DocumentMainPanel extends JFrame{
     			if (ncd.editingCommitment())
     			{
     				ncd.attemptSave();
+    	    		MainPanel.getInstance().requestFocus();
     			}
     		}
     		return true;
@@ -330,12 +345,14 @@ public class DocumentMainPanel extends JFrame{
     	{
     		MainPanel.getInstance().openCalendarViewTab();
     		MainPanel.getInstance().getMOCA().previous();
+    		MainPanel.getInstance().requestFocus();
     		return true;
     	}
     	else if (actionPath.contains("#NextArrow"))
     	{
     		MainPanel.getInstance().openCalendarViewTab();
     		MainPanel.getInstance().getMOCA().next();
+    		MainPanel.getInstance().requestFocus();
     		return true;
     	}
     	else if (actionPath.contains("#OpenManageCategories"))
@@ -347,6 +364,7 @@ public class DocumentMainPanel extends JFrame{
 			}
 			else
 				MainPanel.getInstance().setSelectedTab(cat);
+    		MainPanel.getInstance().requestFocus();
     		return true;
     	}
     	else if (actionPath.contains("#SaveNewCategory"))
@@ -356,6 +374,7 @@ public class DocumentMainPanel extends JFrame{
     		{
     			CategoryManager cat = MainPanel.getInstance().getCategoryManagerTab();
     			cat.attemptSave();
+        		MainPanel.getInstance().requestFocus();
     		}
     		return true;
     	}
