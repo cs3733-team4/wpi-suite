@@ -41,9 +41,10 @@
 		<copy todir="build">
 		    <fileset dir="src" includes="**/*.png" />
 		</copy>
-		<copy todir="../WPISuite/WebContent/docs/Calendar" >  
+		<copy todir="../Core/WPISuite/WebContent/docs/Calendar" >  
 			<fileset dir="documentation_html" includes="**"/>  
 		</copy>
+		<copy file="documentation_html/YOCO Calendar.html" tofile="../Core/WPISuite/WebContent/docs/Calendar/index.html" />
 	</target>
 	<target name="compile-test" depends="compile">
 		<mkdir dir="build-test" />
@@ -85,6 +86,7 @@
 		<delete dir="build-test"/>
 		<delete file="${core-jar-dest}"/>
 		<delete file="${janeway-jar-dest}"/>
+		<delete dir="../Core/WPISuite/WebContent/docs/Calendar" />
 	</target>
 	
 	<target name="dist" depends="compile">

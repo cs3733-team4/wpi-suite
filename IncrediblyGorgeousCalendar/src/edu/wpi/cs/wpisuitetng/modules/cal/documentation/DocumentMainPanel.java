@@ -77,8 +77,8 @@ public class DocumentMainPanel extends JFrame{
     	this.setTitle("YOCO Calendar Help");
     	this.setLayout(new BorderLayout());
     	
-    	//serverLocation = Network.getInstance().makeRequest("docs/Calendar/", HttpMethod.GET).getUrl().toString().replace("API/", "");
-        serverLocation = "http://www.wpi.edu/~bkmcleod/newDocs/";
+    	serverLocation = Network.getInstance().makeRequest("docs/Calendar/", HttpMethod.GET).getUrl().toString().replace("API/", "");
+        //serverLocation = "http://www.wpi.edu/~bkmcleod/newDocs/";
     	System.out.println(serverLocation);
     	tableOfContents=new TableOfContents(serverLocation);
     	try
