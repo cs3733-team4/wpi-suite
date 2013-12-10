@@ -67,8 +67,11 @@ public class LouvreTour extends JPanel
 			@Override
 
 			public void mouseExited(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
+				if(selected != null)
+				{
+					//if(arg0.getXOnScreen() > LouvreTour.this.getX() + LouvreTour.this.getWidth() && selected.event.getStart().getDayOfWeek() == DateTime.)
+						
+				}	
 			}
 			
 			@Override

@@ -39,6 +39,8 @@ import org.joda.time.format.DateTimeFormatter;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
@@ -479,5 +481,15 @@ public class WeekCalendar extends AbstractCalendar
 			s = weekStartTime;
 
 		return (s.isBefore(e) && mInterval.contains(s));
+	}
+	
+	public void addEvent(Event e)
+	{
+		EventModel.getInstance().putEvent(e);
+	}
+	
+	public void addCommitment(Commitment c)
+	{
+		CommitmentModel.getInstance().putCommitment(c);
 	}
 }

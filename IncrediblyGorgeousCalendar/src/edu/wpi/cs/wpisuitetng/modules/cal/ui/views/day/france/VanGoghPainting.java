@@ -166,6 +166,7 @@ public class VanGoghPainting extends JPanel
 		if(isBeingDragged)
 		{
 			Width = new Rational(1,1);
+			X = new Rational(0,1);
 			this.setBackground(new Color(getBackground().getRed(), getBackground().getGreen(),getBackground().getBlue(), 150));
 			int parentWidth = this.getParent().getWidth();
 			recalcBounds(parentWidth, getParent().getHeight());
