@@ -48,6 +48,8 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		startTimeDatePicker.setDateTime(oldCommitment.getDate());
 		participantsTextField.setText(oldCommitment.getParticipants());
 		// TODO: categories and team/personal
+		this.rdbtnPersonal.setSelected(!oldCommitment.isProjectCommitment());
+		this.rdbtnTeam.setSelected(oldCommitment.isProjectCommitment());
 		descriptionTextArea.setText(oldCommitment.getDescription());
 
 		saveButton.addActionListener(new ActionListener() {

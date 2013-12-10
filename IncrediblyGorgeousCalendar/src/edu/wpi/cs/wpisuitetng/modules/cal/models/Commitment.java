@@ -31,6 +31,7 @@ public class Commitment extends AbstractModel implements Displayable
 	private String description;
 	private Date duedate;
 	private String participants;
+	private boolean isProjectCommitment;
 	private User owner;
 
 	/**
@@ -196,8 +197,20 @@ public class Commitment extends AbstractModel implements Displayable
 	{
 		this.participants = participants;
 	}
-
-
+	
+	public boolean isProjectCommitment()
+	{
+		return isProjectCommitment;
+	}
+	
+	/**
+	 * @param isProjectCommitment
+	 *            the isProjectCommitment to set
+	 */
+	public void setProjectCommitment(boolean isProjectCommitment)
+	{
+		this.isProjectCommitment = isProjectCommitment;
+	}
 	 
 	/**
 	 * @return the owner
