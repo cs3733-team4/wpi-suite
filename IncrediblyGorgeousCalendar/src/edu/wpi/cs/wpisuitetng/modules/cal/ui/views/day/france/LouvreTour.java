@@ -14,12 +14,15 @@ import java.awt.Graphics;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.JPanel;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 
 import org.joda.time.DateTime;
@@ -35,12 +38,53 @@ public class LouvreTour extends JPanel
 {
 	HashMap<Event, VanGoghPainting> guides = new HashMap<>();
 	private DateTime date;
-	
+	private VanGoghPainting selected;
+	private boolean isSomethingDragging;
 	public LouvreTour()
 	{
+		isSomethingDragging = false;
 		setLayout(null);
 		setPreferredSize(new Dimension(1, 1440));
 		setBackground(Colors.TABLE_BACKGROUND);
+		this.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				if(isSomethingDragging)
+				{
+					MainPanel.getInstance().display(selected.event.getStart());
+					System.out.println("display called");
+				}
+				isSomethingDragging = false;
+					//Calendar.getInstance().
+				
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
 		this.addMouseMotionListener(new MouseMotionListener() {
 			
 			@Override
@@ -51,7 +95,13 @@ public class LouvreTour extends JPanel
 			
 			@Override
 			public void mouseDragged(MouseEvent arg0) {
-				
+				LouvreTour.this.remove(selected);
+				LouvreTour.this.add(selected, -1);
+				LouvreTour.this.setComponentZOrder(selected, 0);
+				selected.updateTime(getTimeAtCursor());
+				isSomethingDragging = true;
+				revalidate();
+				repaint();
 			}
 		});
 	}
@@ -62,10 +112,12 @@ public class LouvreTour extends JPanel
 		List<VanGoghPainting> gallery = CERN.createEventsReallyNicely(events, displayedDay);
 		removeAll();
 		guides.clear();
+		int i = 2;
 		for (VanGoghPainting vanGoghPainting : gallery)
 		{
 			guides.put(vanGoghPainting.event, vanGoghPainting);
 			add(vanGoghPainting); // priceless
+			//this.setComponentZOrder(vanGoghPainting, i++);
 		}
 		revalidate();
 	}
@@ -108,10 +160,10 @@ public class LouvreTour extends JPanel
 		}
 		if (item instanceof Event)
 		{
-			VanGoghPainting mona = guides.get(item);
-			if(mona != null)
+			selected = guides.get(item);
+			if(selected != null)
 			{
-				mona.setSelected(true);
+				selected.setSelected(true);
 			}
 		}
 		
@@ -122,8 +174,28 @@ public class LouvreTour extends JPanel
 		Point m = MouseInfo.getPointerInfo().getLocation();
 		Point p = getLocationOnScreen();
 		MutableDateTime d = date.toMutableDateTime();
+		if(m.y < p.y)
+			m.y = p.y;
+		if(m.y > 1440)
+			m.y = 1440;
+		
 		d.setHourOfDay((m.y - p.y)/60);
-		d.setMinuteOfDay((m.y - p.y)%60);
+		int min = (m.y - p.y)%60;
+		
+		if(min >= 7 && min < 23)
+			min = 15;
+		if(min < 7)
+			min = 0;
+		if(min >= 23 && min < 38)
+			min = 30;
+		if(min >= 38 && min < 55)
+			min = 45;
+		if(min > 55)
+		{
+			min = 0;
+			d.addHours(1);
+		}
+		d.setMinuteOfHour(min);
 		return d.toDateTime();
 	}
 	

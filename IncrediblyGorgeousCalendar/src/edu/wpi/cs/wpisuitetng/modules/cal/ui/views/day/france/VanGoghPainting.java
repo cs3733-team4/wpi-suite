@@ -19,12 +19,12 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
-import org.jfree.util.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 
 import javax.swing.JLabel;
@@ -62,9 +62,11 @@ public class VanGoghPainting extends JPanel
 	private static final int FIXED_HEIGHT = 1440;
 	private TimeTraveller traveller;
 	private DateTime displayedDay;
+	private Interval length;
 	private boolean isBeingDragged;
 	public VanGoghPainting(TimeTraveller traveller, DateTime displayedDay)
 	{
+		length = new Interval(event.getStart(), event.getEnd());
 		isBeingDragged = false;
 		this.displayedDay=displayedDay;
 		this.traveller = traveller;
@@ -80,19 +82,7 @@ public class VanGoghPainting extends JPanel
 		lblEventTitle.putClientProperty("html.disable", true); //prevents html parsing
 		lblEventTitle.setText(event.getName());
 		
-		if (event.isMultiDayEvent())
-		{
-			if (event.getStart().compareTo(event.getStartTimeOnDay(displayedDay))==0)//if their the same time, its the first day
-				lblTimeInfo = new JLabel(formatTime(event.getStart()) + " \u2192");
-			else if (event.getEnd().compareTo(event.getEndTimeOnDay(displayedDay))==0)
-				lblTimeInfo = new JLabel("\u2190 " + formatTime(event.getEnd()));
-			else
-				lblTimeInfo = new JLabel("\u2190 \u2192");
-				
-		}
-		else
-			lblTimeInfo = new JLabel(formatTime(event.getStart()) + " - " + formatTime(event.getEnd()));
-		
+		putTimeOn();
 		lblTimeInfo.setBorder(new EmptyBorder(0,0,3,0));
 		lblTimeInfo.setMaximumSize(new Dimension(32767, 20));
 		lblTimeInfo.setFont(new Font("DejaVu Sans", Font.ITALIC, 14));
@@ -108,7 +98,10 @@ public class VanGoghPainting extends JPanel
 			
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
+				if(isBeingDragged){
+					EventModel.getInstance().updateEvent(event);
+					getParent().dispatchEvent(e);
+				}
 				
 			}
 			
@@ -119,7 +112,6 @@ public class VanGoghPainting extends JPanel
 				} else {
 					MainPanel.getInstance().updateSelectedDisplayable(event);
 				}
-				
 			}
 			
 			@Override
@@ -172,6 +164,18 @@ public class VanGoghPainting extends JPanel
 	@Override
 	public void doLayout()
 	{
+		if(isBeingDragged)
+		{
+			Width = new Rational(1,1);
+			this.setBackground(new Color(getBackground().getRed(), getBackground().getGreen(),getBackground().getBlue(), 150));
+			int parentWidth = this.getParent().getWidth();
+			recalcBounds(parentWidth, getParent().getHeight());
+			super.doLayout();
+			lblEventTitle.validate();
+			lblTimeInfo.validate();
+			
+			return;
+		}
 		if(firstDraw)
 		{
 			height = (int) map(new Interval(event.getStartTimeOnDay(displayedDay), event.getEndTimeOnDay(displayedDay)).toDurationMillis(), this.getParent().getHeight());
@@ -193,6 +197,7 @@ public class VanGoghPainting extends JPanel
 		int parentWidth = this.getParent().getWidth();
 		if (recalcBounds(parentWidth, getParent().getHeight()))
 			super.doLayout();
+
 	}
 	
 	private boolean recalcBounds(int parentWidth, int parentHeight)
@@ -332,4 +337,24 @@ public class VanGoghPainting extends JPanel
 		lblEventTitle.setForeground(b?Color.WHITE:Color.BLACK);		
 	}
 	
+	public void updateTime(DateTime t)
+	{
+		this.event.setStart(t);;
+		this.event.setEnd(t.plus(this.length.toDuration()));
+	}
+	private void putTimeOn()
+	{
+		if (event.isMultiDayEvent())
+		{
+			if (event.getStart().compareTo(event.getStartTimeOnDay(displayedDay))==0)//if their the same time, its the first day
+				lblTimeInfo = new JLabel(formatTime(event.getStart()) + " \u2192");
+			else if (event.getEnd().compareTo(event.getEndTimeOnDay(displayedDay))==0)
+				lblTimeInfo = new JLabel("\u2190 " + formatTime(event.getEnd()));
+			else
+				lblTimeInfo = new JLabel("\u2190 \u2192");
+				
+		}
+		else
+			lblTimeInfo = new JLabel(formatTime(event.getStart()) + " - " + formatTime(event.getEnd()));
+	}
 }
