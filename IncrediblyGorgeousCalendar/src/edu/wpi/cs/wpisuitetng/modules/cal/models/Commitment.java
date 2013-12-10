@@ -140,8 +140,8 @@ public class Commitment extends AbstractModel implements Displayable
 	}
 
 	/**
-	 * @param eventID
-	 *            the eventID to set
+	 * @param CommitmentID
+	 *            the CommitmentID to set
 	 */
 	public void setCommitmentID(UUID commitmentID)
 	{

@@ -11,6 +11,7 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.UUID;
 
 import javax.swing.JLabel;
 import javax.swing.event.DocumentEvent;
@@ -28,14 +29,15 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 	private int tabid;
 	private Commitment commitmentToEdit;
 	private boolean isEditingCommitment;
+	private UUID existingCommtimentID; // UUID of event being edited
 	private DateTime currentTime;
 
 	// For a new commitment.
 	public AddCommitmentDisplay()
 	{
 		super(false);
-		isEditingCommitment = false;
-		currentTime = new DateTime();
+		this.isEditingCommitment = false;
+		this.currentTime = new DateTime();
 		setCurrentDateAndTime();
 		setUpListeners();
 	}
@@ -44,8 +46,9 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 	public AddCommitmentDisplay(Commitment mCommitment)
 	{
 		super(false);
-		isEditingCommitment = true;
-		commitmentToEdit = mCommitment;
+		this.isEditingCommitment = true;
+		this.commitmentToEdit = mCommitment;
+		this.existingCommtimentID = commitmentToEdit.getCommitmentID();
 		populateCommitmentFields(commitmentToEdit);
 		setUpListeners();
 	}
@@ -94,7 +97,7 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 			}
 		});
 		
-		saveButton.addActionListener(new ActionListener(){
+		saveButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 
@@ -108,8 +111,8 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 					c.setParticipants(participantsTextField.getText().trim());
 					c.setCategory(((Category)eventCategoryPicker.getSelectedItem()).getCategoryID());
 					
-					
-					if (isEditingCommitment){
+					if (isEditingCommitment) {
+						c.setCommitmentID(existingCommtimentID);
 						MainPanel.getInstance().updateCommitment(c);
 					} else {
 						MainPanel.getInstance().addCommitment(c);
