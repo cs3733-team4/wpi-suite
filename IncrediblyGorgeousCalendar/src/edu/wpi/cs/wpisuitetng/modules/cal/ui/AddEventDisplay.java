@@ -239,7 +239,7 @@ public class AddEventDisplay extends DisplayableEditorView
 	 */
 	public boolean matchingEvent(AddEventDisplay other)
 	{
-		return this.eventToEdit != null && this.eventToEdit.equals(other.eventToEdit);
+		return this.eventToEdit != null && this.eventToEdit.getEventID().equals(other.eventToEdit.getEventID());
 	}
 	
 	
