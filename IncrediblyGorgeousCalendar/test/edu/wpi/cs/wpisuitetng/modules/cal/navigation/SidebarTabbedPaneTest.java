@@ -8,6 +8,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import javax.swing.JButton;
+import javax.swing.JPanel;
 
 import org.junit.Test;
 
@@ -138,4 +139,43 @@ public class SidebarTabbedPaneTest {
         	e.printStackTrace();
         }
 	}
+	
+	@Test
+	public void testSidePaneIsNotFocused() {
+		SidebarTabbedPane sidebar = new SidebarTabbedPane();
+		assertFalse(sidebar.isFocusable());
+	}
+	
+	@Test
+	public void testDetailTabIsNotFocused() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+		SidebarTabbedPane sidebar = new SidebarTabbedPane();
+		Field f = sidebar.getClass().getDeclaredField("detailTab");
+		f.setAccessible(true);
+		assertFalse(((JPanel)f.get(sidebar)).isFocusable());
+	}
+	
+	@Test
+	public void testDetailButtonPaneIsNotFocused() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+		SidebarTabbedPane sidebar = new SidebarTabbedPane();
+		Field f = sidebar.getClass().getDeclaredField("detailButtonPane");
+		f.setAccessible(true);
+		assertFalse(((JPanel)f.get(sidebar)).isFocusable());
+	}
+	
+	@Test
+	public void testDetailEditButtonIsNotFocused() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+		SidebarTabbedPane sidebar = new SidebarTabbedPane();
+		Field f = sidebar.getClass().getDeclaredField("detailEditButton");
+		f.setAccessible(true);
+		assertFalse(((JButton)f.get(sidebar)).isFocusable());
+	}
+	
+/*	TODO: Uncomment when detailDeleteButton is implemented.
+ * @Test
+	public void testDetailDeleteButtonIsNotFocused() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+		SidebarTabbedPane sidebar = new SidebarTabbedPane();
+		Field f = sidebar.getClass().getDeclaredField("detailDeleteButton");
+		f.setAccessible(true);
+		assertFalse(((JButton)f.get(sidebar)).isFocusable());
+	} */
 }

@@ -121,6 +121,14 @@ public class EventToolbarGroup extends ToolbarGroupView {
 		    removeEventButton.setIcon(new ImageIcon(img));
 		} catch (IOException ex) {}
 
+		// Disable focus to allow arrow keys to respond to navigation requests
+		addEventButton.setFocusable(false);
+		addCommitmentButton.setFocusable(false);
+		removeEventButton.setFocusable(false);
+		
+		
+		//eventContentPanel.add(addEventButton);
+		//eventContentPanel.add(removeEventButton);
 		this.getContent().add(addEventButton);
 		this.getContent().add(addCommitmentButton);
 	}

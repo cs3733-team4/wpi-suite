@@ -59,6 +59,9 @@ public class CategoryToolbarGroup extends ToolbarGroupView {
 		    editCategory.setIcon(new ImageIcon(img));
 		} catch (IOException ex) {}
 
+		// Disable focus to allow arrow keys to respond to navigation requests
+		editCategory.setFocusable(false);
+		
 		this.getContent().add(editCategory);
 	}
 }
