@@ -285,6 +285,35 @@ public class CategoryManager extends JPanel {
 		tabid = id;
 	}
 	
+	public void attemptSave()
+	{
+		if (!isSaveable())
+			return;
+		Category c = new Category();
+		c.setName(categoryName.getText().trim());
+		c.setColor(colorPicker.getCurrentColorState()); // Get color from color picker
+
+		if (editCategory){
+			c.setCategoryID(selectedCategoryUUID);
+			MainPanel.getInstance().updateCategory(c);
+			JListModel.removeElement(selectedCategory);
+			JListModel.addElement(c);
+		} else {
+			MainPanel.getInstance().addCategory(c);
+			if (JListModel.contains(Category.DEFUALT_DISPLAY_CATEGORY))
+				JListModel.removeElement(Category.DEFUALT_DISPLAY_CATEGORY);
+			JListModel.addElement(c);
+		}
+		
+		categoryName.setText(""); // Clear category name text field upon addition
+		selectedCategory = null; // Clear selection
+		
+		saveCategoryButton.setEnabled(false);
+	}
+	public void focusOnName()
+	{
+		categoryName.requestFocus();
+	}
 	private void setUpListeners(){
 		
 		// Update List Button
@@ -292,26 +321,7 @@ public class CategoryManager extends JPanel {
 		saveCategoryButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				Category c = new Category();
-				c.setName(categoryName.getText().trim());
-				c.setColor(colorPicker.getCurrentColorState()); // Get color from color picker
-
-				if (editCategory){
-					c.setCategoryID(selectedCategoryUUID);
-					MainPanel.getInstance().updateCategory(c);
-					JListModel.removeElement(selectedCategory);
-					JListModel.addElement(c);
-				} else {
-					MainPanel.getInstance().addCategory(c);
-					if (JListModel.contains(Category.DEFUALT_DISPLAY_CATEGORY))
-						JListModel.removeElement(Category.DEFUALT_DISPLAY_CATEGORY);
-					JListModel.addElement(c);
-				}
-				
-				categoryName.setText(""); // Clear category name text field upon addition
-				selectedCategory = null; // Clear selection
-				
-				saveCategoryButton.setEnabled(false);
+				attemptSave();
 			}
 		});
 		

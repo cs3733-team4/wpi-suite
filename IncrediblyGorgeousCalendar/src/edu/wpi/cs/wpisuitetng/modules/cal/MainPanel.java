@@ -528,7 +528,9 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		updateSelectedDisplayable(null);
 		sideTabbedPanel.clearDetails();
 	}
-	
+	/**
+	 * Will set the currently viewed tab to the category tab
+	 */
 	public CategoryManager getCategoryManagerTab()
 	{
 		for(JComponent c : tabs.values())
@@ -541,6 +543,13 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		return null;
 	}
 
+	/**
+	 * Will set the currently viewed tab to the calendar tab
+	 */
+	public void openCalendarViewTab()
+	{
+		mTabbedPane.setSelectedComponent(mainPaneContainer);
+	}
 	public void setSelectedTab(JComponent tabToFocus)
 	{
 		try

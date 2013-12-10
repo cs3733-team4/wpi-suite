@@ -23,17 +23,13 @@ import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeSelectionModel;
 
 
 public class TableOfContents extends JPanel implements TreeSelectionListener {
     private JTree tree;
-    private static boolean DEBUG = false;
 
-    //Optionally play with line styles.  Possible values are
-    //"Angled" (the default), "Horizontal", and "None".
-    private static boolean playWithLineStyle = false;
-    private static String lineStyle = "Horizontal";
     
 
     public TableOfContents(String serverLocation) {
@@ -44,15 +40,19 @@ public class TableOfContents extends JPanel implements TreeSelectionListener {
         DefaultMutableTreeNode top = new DefaultMutableTreeNode("Team YOCO Calendar");
         populateFromTOC(top, serverLocation);
         
-
+        
         //Create a tree that allows one selection at a time.
         tree = new JTree(top);
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-
+        tree.setBackground(Color.getColor("EFEFEF"));
         //Listen for when the selection changes.
         tree.addTreeSelectionListener(this);
 
-        
+        if (tree.getCellRenderer() instanceof DefaultTreeCellRenderer)
+        {
+            final DefaultTreeCellRenderer renderer = (DefaultTreeCellRenderer)(tree.getCellRenderer());
+            renderer.setBackgroundNonSelectionColor(Color.getColor("EFEFEF"));
+        }
 
         //Create the scroll pane and add the tree to it. 
         JScrollPane treeView = new JScrollPane(tree);
@@ -67,6 +67,7 @@ public class TableOfContents extends JPanel implements TreeSelectionListener {
     public void valueChanged(TreeSelectionEvent e) {
 
         DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+        
         if (node.getUserObject() instanceof ListInfo)
         	DocumentMainPanel.getInstance().goToPage(((ListInfo)node.getUserObject()).getPageName());
   }

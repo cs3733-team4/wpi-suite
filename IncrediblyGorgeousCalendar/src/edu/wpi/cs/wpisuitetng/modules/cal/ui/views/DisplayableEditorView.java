@@ -144,13 +144,13 @@ public class DisplayableEditorView extends JPanel
 		else if ((field == SelectableField.START_TIME) || (field==SelectableField.TIME))
 			startTimeDatePicker.requestTimeFocus();
 		else if (field == SelectableField.END_TIME)
-			endTimeDatePicker.requestDateFocus();
+			endTimeDatePicker.requestTimeFocus();
 		else if (field == SelectableField.DESCRIPTION)
 			descriptionTextArea.requestFocus();
 		else if (field == SelectableField.PARTICIPANTS)
 			participantsTextField.requestFocus();
 		else if (field == SelectableField.CATEGORY)
-			eventCategoryPicker.requestFocus();
+			eventCategoryPicker.showPopup();
 	}
 	
 	private class CategoryComboBoxRenderer implements ListCellRenderer<Category>

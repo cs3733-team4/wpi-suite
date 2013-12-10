@@ -25,21 +25,16 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.border.Border;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.SelectableField;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddCommitmentDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddEventDisplay;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.DisplayableEditorView;
-import edu.wpi.cs.wpisuitetng.network.Network;
-import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.CategoryManager;
 
 public class DocumentMainPanel extends JFrame{
 
@@ -113,8 +108,8 @@ public class DocumentMainPanel extends JFrame{
                       			else
                       				webPage.setPage(e.getURL());
                             }
-                            catch(IOException ex) {
-                               
+                            catch(IOException | IllegalArgumentException ioe) {
+                                JOptionPane.showMessageDialog(null,ioe);
                             }
                     }//end hyperlinkUpdate()
                 });//end HyperlinkListener
@@ -146,7 +141,7 @@ public class DocumentMainPanel extends JFrame{
      * @param actionPath The URL Path that is requested
      * @return if an action was completed
      */
-    private boolean doAction(String actionPath)
+    private boolean doAction(String actionPath) 
     {
     	
     	if (actionPath.contains("#OpenNewEventWindow"))
@@ -275,7 +270,7 @@ public class DocumentMainPanel extends JFrame{
     	{
     		setSelectedForEvent(SelectableField.PARTICIPANTS);
 			return true;
-    	}
+    	}/////
     	else if (actionPath.contains("#SelectNameInNewComitment"))
     	{
     		setSelectedForCommitment(SelectableField.NAME);
@@ -301,16 +296,68 @@ public class DocumentMainPanel extends JFrame{
     		setSelectedForCommitment(SelectableField.DESCRIPTION);
 			return true;
     	}
+    	else if (actionPath.contains("#SwitchToDayView"))
+    	{
+    		MainPanel.getInstance().openCalendarViewTab();
+    		MainPanel.getInstance().viewDay();
+    		return true;
+    	}
+    	else if (actionPath.contains("#SwitchToMonthView"))
+    	{
+    		MainPanel.getInstance().openCalendarViewTab();
+    		MainPanel.getInstance().viewMonth();
+    		return true;
+    	}
+    	else if (actionPath.contains("#SwitchToYearView"))
+    	{
+    		MainPanel.getInstance().openCalendarViewTab();
+    		MainPanel.getInstance().viewYear();
+    		return true;
+    	}
     	else if (actionPath.contains("#PreviousArrow"))
     	{
+    		MainPanel.getInstance().openCalendarViewTab();
     		MainPanel.getInstance().getMOCA().previous();
     		return true;
     	}
     	else if (actionPath.contains("#NextArrow"))
     	{
+    		MainPanel.getInstance().openCalendarViewTab();
     		MainPanel.getInstance().getMOCA().next();
     		return true;
     	}
+    	else if (actionPath.contains("#OpenManageCategories"))
+    	{
+    		CategoryManager cat = MainPanel.getInstance().getCategoryManagerTab();
+			if(cat==null){
+				cat = new CategoryManager();
+				cat.setTabId(MainPanel.getInstance().addTopLevelTab(cat, "Manage Categories", true));
+			}
+			else
+				MainPanel.getInstance().setSelectedTab(cat);
+    		return true;
+    	}
+    	else if (actionPath.contains("#SaveNewCategory"))
+    	{
+
+    		if (MainPanel.getInstance().getSelectedComponent() instanceof CategoryManager)
+    		{
+    			CategoryManager cat = MainPanel.getInstance().getCategoryManagerTab();
+    			cat.attemptSave();
+    		}
+    		return true;
+    	}
+    	else if (actionPath.contains("#SelectNameInNewCategory"))
+    	{
+
+    		if (MainPanel.getInstance().getSelectedComponent() instanceof CategoryManager)
+    		{
+    			CategoryManager cat = MainPanel.getInstance().getCategoryManagerTab();
+    			cat.focusOnName();
+    		}
+    		return true;
+    	}
+    	
     	
     	
     	
@@ -322,7 +369,10 @@ public class DocumentMainPanel extends JFrame{
     	}
     	return false;
     }
-    
+    /**
+     * Just a little helper function to re-use some code, it just pulls the open tab and relays the requested focus
+     * @param field the field to focus on
+     */
     private void setSelectedForCommitment(SelectableField field)
     {
     	if (MainPanel.getInstance().getSelectedComponent() instanceof AddCommitmentDisplay)
@@ -331,6 +381,11 @@ public class DocumentMainPanel extends JFrame{
 			ned.setSelected(field);
 		}
     }
+
+    /**
+     * Just a little helper function to re-use some code, it just pulls the open tab and relays the requested focus
+     * @param field the field to focus on
+     */
     private void setSelectedForEvent(SelectableField field)
     {
     	if (MainPanel.getInstance().getSelectedComponent() instanceof AddEventDisplay)
@@ -361,7 +416,7 @@ public class DocumentMainPanel extends JFrame{
     }
     
     /**
-     * Navigates the documentation view to a specific page
+     * Navigates the documentation view to a specific page.  Will not work for link outside of the documentation
      * @param page the HTML page to navigate to. DO NOT INCLUDE THE SERVER PATH!!!!
      */
     public void goToPage(String page)
