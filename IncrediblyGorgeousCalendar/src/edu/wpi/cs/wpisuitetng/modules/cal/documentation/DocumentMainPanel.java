@@ -118,6 +118,18 @@ public class DocumentMainPanel extends JFrame{
     		ncm.setTabId(MainPanel.getInstance().addTopLevelTab(ncm, "New Commitment", true));
     		return true;
     	}
+    	else if (actionPath.contains("#SwitchToDayView"))
+    	{
+    		MainPanel.getInstance().viewDay();
+    	}
+    	else if (actionPath.contains("#SwitchToMonthView"))
+    	{
+    		MainPanel.getInstance().viewMonth();
+    	}
+    	else if (actionPath.contains("#SwitchToYearView"))
+    	{
+    		MainPanel.getInstance().viewYear();
+    	}
     	if (actionPath.contains("#"))
     	{
     		System.out.println("Action: " + actionPath + " not yet implemented!");
