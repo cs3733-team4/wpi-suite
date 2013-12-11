@@ -12,6 +12,7 @@ package edu.wpi.cs.wpisuitetng.modules.cal.models;
 
 import static org.junit.Assert.*;
 
+import java.awt.Color;
 import java.util.HashSet;
 
 import org.junit.After;
@@ -36,17 +37,17 @@ public class EventEntityManagerTest {
         DateTime three=new DateTime(2000,1,3,3,30, DateTimeZone.UTC); // Datetime at Jan 3rd, 2000: 3:30
         DateTime four=new DateTime(2000,1,4,4,30, DateTimeZone.UTC);  // Datetime at Jan 4th, 2000: 4:30
         
-        
-        
-        Event e = new Event().addStartTime(one).addEndTime(two).addName("First");
+        Category cat1 = new Category().addName("work").addColor(Color.BLACK);
+        Category cat2 = new Category().addName("test").addColor(Color.WHITE);
+                
+        Event e = new Event().addStartTime(one).addEndTime(two).addName("First").addCategory(cat1.getCategoryID());
         String eString=e.toJSON();
         
-        Event ee=new Event().addStartTime(two).addEndTime(three).addName("Second");
+        Event ee=new Event().addStartTime(two).addEndTime(three).addName("Second").addCategory(cat2.getCategoryID());
         String eeString=ee.toJSON();
         
-        Event eee=new Event().addStartTime(three).addEndTime(four).addName("Third");
+        Event eee=new Event().addStartTime(three).addEndTime(four).addName("Third").addCategory(cat2.getCategoryID());
         String eeeString=eee.toJSON();
-        
         
         Project p=new Project("p","26");
         User u1 = new User("User1", "U1", null, 0);
@@ -267,6 +268,18 @@ public class EventEntityManagerTest {
                 assertEquals("At this point, there should be 3 events in the database", 3, eem.Count());											
                 eem.deleteAll(ses1);
                 assertEquals("At this point, there should be no events for session 1 in the database", 0, eem.Count());
+        }
+        
+        @Test
+        public void testGetEntityByCategory() throws WPISuiteException {        	
+        	EventEntityManager eem = new EventEntityManager(db);
+        	eem.makeEntity(ses1, eString);
+            eem.makeEntity(ses1, eeString);
+            eem.makeEntity(ses1, eeeString);
+            
+            Event[] elist = eem.getEntity(ses1, "filter-events-by-category, "+cat1.getCategoryID().toString());
+            assertEquals("GetEventsByCategory, if given a category that only one event has, *should* return only that event", 1, elist.length);
+
         }
         
 }

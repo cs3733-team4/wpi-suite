@@ -42,6 +42,17 @@ public class Category extends AbstractModel
         public Category(){}
         
         /**
+         * 
+         * @param name the name of the category
+         * @return the category after name has been set
+         */
+        public Category addName(String name)
+        {
+        	setName(name);
+        	return this;
+        }
+        
+        /**
          * Sets the name of the category
          * @param name the name to set to the category        
          */
@@ -57,6 +68,17 @@ public class Category extends AbstractModel
         public String getName()
         {
                 return this.name;
+        }
+        
+        /**
+         * 
+         * @param color the color of the category
+         * @return the category after color has been set
+         */
+        public Category addColor(Color color)
+        {
+        	setColor(color);
+        	return this;
         }
         
         /**
@@ -117,7 +139,6 @@ public class Category extends AbstractModel
          * Sets the owner of the category
          * @param user tracks the user ID of the person signed into the module
          */
-        
         public void setOwner(User user) {
                 this.owner = user;
         }

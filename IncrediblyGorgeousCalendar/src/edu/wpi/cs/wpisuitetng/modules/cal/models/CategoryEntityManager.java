@@ -80,7 +80,7 @@ public class CategoryEntityManager implements EntityManager<Category> {
                         case "get-team-categories":
                                 return getTeamCategories(s);
                         case "get-category-by-name":
-                                return         getCategoryByName(s, args[1]);        
+                                return getCategoryByName(s, args[1]);        
                         case "get-category-by-id":
                                 return getCategoryByID(s, args[1]);
                         case "get-category-by-color":
