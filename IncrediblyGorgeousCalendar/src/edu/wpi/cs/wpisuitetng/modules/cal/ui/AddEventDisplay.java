@@ -12,6 +12,7 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.JLabel;
+
 import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
@@ -21,6 +22,8 @@ import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.DisplayableEditorView;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.util.UUID;
 
 public class AddEventDisplay extends DisplayableEditorView
@@ -78,6 +81,22 @@ public class AddEventDisplay extends DisplayableEditorView
 	 */
 	private void setUpListeners(){
 		
+		nameTextField.addFocusListener(new FocusListener() {
+			
+			@Override
+			public void focusLost(FocusEvent e)
+			{
+				nameErrorLabel.setVisible(!validateText(nameTextField.getText(), nameErrorLabel));
+				saveButton.setEnabled(isSaveable());
+			}
+			
+			@Override
+			public void focusGained(FocusEvent e)
+			{
+				// TODO Auto-generated method stub
+				
+			}
+		});
 
 		nameTextField.getDocument().addDocumentListener(new DocumentListener() {
 			
@@ -154,7 +173,6 @@ public class AddEventDisplay extends DisplayableEditorView
 		e.setParticipants(participantsTextField.getText().trim());
 		e.setCategory(((Category)eventCategoryPicker.getSelectedItem()).getCategoryID());
 		
-		
 		if (isEditingEvent){
 			e.setEventID(existingEventID);
 			MainPanel.getInstance().updateEvent(e);
@@ -167,11 +185,11 @@ public class AddEventDisplay extends DisplayableEditorView
 		MainPanel.getInstance().closeTab(tabid);
 		MainPanel.getInstance().refreshView();
 	
-	saveButton.setEnabled(false);
-	saveButton.setText("Saved!");
-	MainPanel.getInstance().closeTab(tabid);
-
-	MainPanel.getInstance().refreshView();
+		saveButton.setEnabled(false);
+		saveButton.setText("Saved!");
+		MainPanel.getInstance().closeTab(tabid);
+	
+		MainPanel.getInstance().refreshView();
 	}
 	/**
 	 * Set tab id for the created event view

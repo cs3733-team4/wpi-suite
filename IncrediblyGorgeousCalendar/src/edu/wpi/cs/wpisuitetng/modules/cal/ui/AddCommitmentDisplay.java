@@ -11,6 +11,8 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.util.UUID;
 
 import javax.swing.JLabel;
@@ -97,6 +99,23 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 			public void actionPerformed(ActionEvent e)
 			{
 				MainPanel.getInstance().closeTab(tabid);
+			}
+		});
+		
+		nameTextField.addFocusListener(new FocusListener() {
+			
+			@Override
+			public void focusLost(FocusEvent e)
+			{
+				nameErrorLabel.setVisible(!validateText(nameTextField.getText(), nameErrorLabel));
+				saveButton.setEnabled(isSaveable());
+			}
+			
+			@Override
+			public void focusGained(FocusEvent e)
+			{
+				// TODO Auto-generated method stub
+				
 			}
 		});
 
