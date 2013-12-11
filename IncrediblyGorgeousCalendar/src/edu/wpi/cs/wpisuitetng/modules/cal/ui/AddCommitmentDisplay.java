@@ -31,17 +31,16 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 	private Commitment commitmentToEdit;
 	private UUID existingCommitmentID; // UUID of event being edited
 	private boolean isEditingCommitment;
+	private UUID existingCommtimentID; // UUID of event being edited
 	private DateTime currentTime;
 
 	// For a new commitment.
 	public AddCommitmentDisplay()
 	{
 		super(false);
-		isEditingCommitment = false;
-		currentTime = new DateTime();
-		//populateCommitmentFields(new Commitment());
+		this.isEditingCommitment = false;
+		this.currentTime = new DateTime();
 		setCurrentDateAndTime();
-		//populateCommitmentFields(commitmentToEdit);
 		setUpListeners();
 	}
 
@@ -49,8 +48,9 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 	public AddCommitmentDisplay(Commitment mCommitment)
 	{
 		super(false);
-		isEditingCommitment = true;
-		commitmentToEdit = mCommitment;
+		this.isEditingCommitment = true;
+		this.commitmentToEdit = mCommitment;
+		this.existingCommtimentID = commitmentToEdit.getCommitmentID();
 		populateCommitmentFields(commitmentToEdit);
 		setUpListeners();
 	}
@@ -61,7 +61,6 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		nameTextField.setText(mCommitment.getName());
 		startTimeDatePicker.setDateTime(mCommitment.getDate());
 		participantsTextField.setText(mCommitment.getParticipants());
-		// TODO: categories
 		this.rdbtnPersonal.setSelected(!mCommitment.isProjectCommitment());
 		this.rdbtnTeam.setSelected(mCommitment.isProjectCommitment());
 		descriptionTextArea.setText(mCommitment.getDescription());
@@ -70,7 +69,27 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		else
 			this.eventCategoryPicker.setSelectedItem(Category.DEFAULT_CATEGORY);
 	}
+		
+
+	
 	private void setUpListeners(){
+		saveButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				attemptSave();
+			}
+		});
+
+		cancelButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				MainPanel.getInstance().closeTab(tabid);
+			}
+		});
 
 		nameTextField.getDocument().addDocumentListener(new DocumentListener() {
 			
@@ -100,23 +119,7 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 				saveButton.setEnabled(isSaveable());
 			}
 		});
-		
-		saveButton.addActionListener(new ActionListener(){
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-
-					attemptSave();
-			}
-		});
-		
-		// Cancel Button
-		cancelButton.addActionListener(new ActionListener(){
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				MainPanel.getInstance().closeTab(tabid);
-			}
-		});
+				
 		
 		//this should be called in updateSaveable() and thus isnt necessary here
 		//but error msg didn't start visible unless I called it directly
