@@ -107,6 +107,16 @@ public class CalendarSelector extends JPanel
 				mp.refreshView();
 			}
 		});
+	
+		// Disable focus to allow arrow keys to respond to navigation requests
+		personalCalendar.setFocusable(false);
+		teamCalendar.setFocusable(false);
+		bothCalendar.setFocusable(false);
+		month.setFocusable(false);
+		day.setFocusable(false);
+		year.setFocusable(false);
+		week.setFocusable(false);
+		
 	}
 
 }

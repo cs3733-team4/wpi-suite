@@ -12,9 +12,11 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.week;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoundedRangeModel;
@@ -26,6 +28,7 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
+
 import net.miginfocom.swing.MigLayout;
 
 import org.joda.time.DateTime;
@@ -271,7 +274,20 @@ public class WeekCalendar extends AbstractCalendar
 	private List<Event> getVisibleEvents(DateTime curDay)
 	{
 		// TODO: this is where filtering should go
-		return EventModel.getInstance().getEvents(weekStartTime, weekEndTime);
+		List<Event> visibleEvents =  EventModel.getInstance().getEvents(weekStartTime, weekEndTime);
+		
+		// Filter for selected categories
+		Collection<UUID> selectedCategories = MainPanel.getInstance().getSelectedCategories();
+		List<Event> categoryFilteredEvents = new ArrayList<Event>();
+		
+		// Else, loop through events and filter by selected categories
+		for (Event e : visibleEvents){
+			if (selectedCategories.contains(e.getCategory()))
+				categoryFilteredEvents.add(e);
+		}
+		
+		// Return list of events to be displayed
+		return categoryFilteredEvents;
 	}
 
 	@Override

@@ -14,6 +14,7 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -23,12 +24,15 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.joda.time.DateTime;
+import org.joda.time.MutableDateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.DayStyle;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 
 /**
@@ -42,11 +46,13 @@ public class MonthDay extends JPanel
 	private List<Event> events = new ArrayList<Event>();
 	private List<Commitment> commitments = new ArrayList<Commitment>();
 	private DateTime day;
+	private MonthCalendar parent;
 
 	
-	public MonthDay(DateTime initDay, DayStyle style)
+	public MonthDay(DateTime initDay, DayStyle style, final MonthCalendar parent)
 	{
-		this.day=initDay;
+		this.day = initDay;
+		this.parent = parent;
 		Color grayit, textit = Colors.TABLE_TEXT, bg = Colors.TABLE_BACKGROUND;
 		switch (style)
 		{
@@ -85,8 +91,10 @@ public class MonthDay extends JPanel
 			@Override
 			public void mousePressed(MouseEvent e)
 			{
+				parent.dispatchEvent(e);
 				MainPanel.getInstance().setSelectedDay(day);
 				MainPanel.getInstance().clearSelected();
+				parent.setEscaped(false);
 			}
 
 			@Override
@@ -98,20 +106,79 @@ public class MonthDay extends JPanel
 			@Override
 			public void mouseReleased(MouseEvent e)
 			{
-
+				if (parent.isEscaped())
+				{
+					MonthDay releasedDay = parent.getMonthDayAtCursor();
+					Displayable selected = MainPanel.getInstance().getSelectedEvent();
+					if (selected != null)
+					{
+						MutableDateTime newTime = new MutableDateTime(selected.getDate());
+						
+						newTime.setYear(releasedDay.day.getYear());
+						newTime.setDayOfYear(releasedDay.day.getDayOfYear());
+						
+						selected.setTime(newTime.toDateTime());
+						
+						selected.update();
+						
+						parent.display(selected.getDate());
+					}
+				}
+				parent.setEscaped(false);
+				parent.repaint();
 			}
 
 			@Override
 			public void mouseEntered(MouseEvent e)
 			{
-
+				
 			}
 
 			@Override
 			public void mouseExited(MouseEvent e)
 			{
-
+				setBackground(Colors.TABLE_BACKGROUND);
+				parent.setEscaped(true);
+				
 			}
+		});
+		
+		header.addMouseListener(new MouseListener(){
+			
+			@Override
+			public void mousePressed(MouseEvent e)
+			{}
+
+			@Override
+			public void mouseClicked(MouseEvent e)
+			{}
+
+			@Override
+			public void mouseReleased(MouseEvent e)
+			{}
+
+			@Override
+			public void mouseEntered(MouseEvent e)
+			{}
+
+			@Override
+			public void mouseExited(MouseEvent e)
+			{
+				setBackground(Colors.TABLE_BACKGROUND);
+			}
+		});
+		
+		addMouseMotionListener(new MouseMotionListener(){
+
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				parent.repaint();
+				parent.dispatchEvent(e);
+			}
+
+			@Override
+			public void mouseMoved(MouseEvent e) {}
+			
 		});
 	}
 
@@ -155,6 +222,11 @@ public class MonthDay extends JPanel
 		revalidate();
 	}
 
+	/**
+	 * removes a commitment from this monthday
+	 * 
+	 * @param c the commitment to remove
+	 */
 	public void removeCommitment(Commitment c)
 	{
 		this.commitments.remove(c);
@@ -214,14 +286,14 @@ public class MonthDay extends JPanel
 				}
 				else
 				{
-					this.add(MonthItem.generateFrom(elt, selected, day));
+					this.add(MonthItem.generateFrom(elt, selected, day, this));
 				}
 			}
 		}
 
 		if (hidden == 1) // silly, add it anyway
 		{
-			this.add(MonthItem.generateFrom(allitems.get(allitems.size() - 1), selected, day));
+			this.add(MonthItem.generateFrom(allitems.get(allitems.size() - 1), selected, day, this));
 		}
 		else if (hidden > 1)
 		{
@@ -231,18 +303,29 @@ public class MonthDay extends JPanel
 		super.doLayout();
 	}
 
-	public void clear()
+	/**
+	 * remove all events from the monthday
+	 */
+	public void clearEvents()
 	{
 		events.clear();
 		revalidate();
 	}
 
+	/**
+	 * remove all commitments from the monthday
+	 */
 	public void clearComms()
 	{
 		commitments.clear();
 		revalidate();
 	}
 
+	/**
+	 * "selects" an item by keeping a special reference to and and highlighting it
+	 * 
+	 * @param item the displayable item that the user has clicked on to select
+	 */
 	public void select(Displayable item)
 	{
 		selected = item;
@@ -255,4 +338,15 @@ public class MonthDay extends JPanel
 			}
 		}
 	}
+	
+	/**
+	 * gets this DateTime's day
+	 * 
+	 * @return a DateTime
+	 */
+	public DateTime getDay()
+	{
+		return this.day;
+	}
+	
 }

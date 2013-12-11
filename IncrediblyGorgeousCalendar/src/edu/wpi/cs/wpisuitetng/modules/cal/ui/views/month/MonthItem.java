@@ -15,10 +15,12 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
 import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
@@ -42,9 +44,9 @@ public class MonthItem extends JPanel
 	 * Month Item constructor. When called without time, set time to current time
 	 * @param ndisp displayable to show on month item
 	 */
-	public MonthItem(Displayable ndisp)
+	public MonthItem(Displayable ndisp, MonthDay parent)
 	{
-		this(ndisp, DateTime.now());
+		this(ndisp, DateTime.now(), parent);
 	}
 	
 	/**
@@ -52,7 +54,7 @@ public class MonthItem extends JPanel
 	 * @param ndisp displayable to display
 	 * @param day time of month item
 	 */
-	public MonthItem(Displayable ndisp, DateTime day)
+	public MonthItem(Displayable ndisp, DateTime day, final MonthDay parent)
 	{
 		currentTime = day;
         this.mDisplayable = ndisp;
@@ -75,14 +77,16 @@ public class MonthItem extends JPanel
         
         // Arrow label (for multi-day events)
         arrow.setFont(new java.awt.Font("DejaVu Sans", Font.BOLD, 12));
-        arrow.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 3));
-    	arrow.setAlignmentY(CENTER_ALIGNMENT);
-    	arrow.setAlignmentX(CENTER_ALIGNMENT);
+        arrow.setLayout(new GridLayout(1,1));
+        arrow.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 0, 1, 3));
+        arrow.setPreferredSize(new Dimension(17, 15));
+    	arrow.setMaximumSize(new Dimension(17, 15));
+    	arrow.setMinimumSize(new Dimension(17, 15));
         
         // Box for category color and arrow label
-        categoryColor.setPreferredSize(new Dimension(16, 15));
-    	categoryColor.setMaximumSize(new Dimension(16, 15));
-    	categoryColor.setMinimumSize(new Dimension(16, 15));
+        categoryColor.setPreferredSize(new Dimension(17, 15));
+    	categoryColor.setMaximumSize(new Dimension(17, 15));
+    	categoryColor.setMinimumSize(new Dimension(17, 15));
     	categoryColor.setLayout(new GridLayout(1,1));
         
     	/** Display displayable based on whether it is an event or a commitment*/
@@ -108,6 +112,7 @@ public class MonthItem extends JPanel
         	if (isStartBeforeCurrent(day, eventStart) && isEndAfterCurrent(day, eventEnd))
         	{
         		arrow.setText("\u2194");//the event goes before and after
+        		arrow.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 0, 4, 3));
         	}
         	else if ((isStartBeforeCurrent(day, eventStart)))
         	{
@@ -135,21 +140,23 @@ public class MonthItem extends JPanel
 			
 			@Override
 			public void mouseReleased(MouseEvent e) {
+				parent.dispatchEvent(e);
 			}
 			
 			@Override
 			public void mousePressed(MouseEvent e) {
+				parent.dispatchEvent(e);
 				MainPanel.getInstance().setSelectedDay(currentTime);
 				if (e.getClickCount() > 1){
 					MainPanel.getInstance().editSelectedDisplayable(mDisplayable);
 				} else {
 					MainPanel.getInstance().updateSelectedDisplayable(mDisplayable);
 				}
-				
 			}
 			
 			@Override
 			public void mouseExited(MouseEvent e) {
+				parent.dispatchEvent(e);
 			}
 			
 			@Override
@@ -159,6 +166,20 @@ public class MonthItem extends JPanel
 			@Override
 			public void mouseClicked(MouseEvent e) {				
 			}
+		});
+		
+		addMouseMotionListener(new MouseMotionListener(){
+
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				parent.dispatchEvent(e);
+			}
+
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				parent.dispatchEvent(e);
+			}
+			
 		});
 	}
 
@@ -199,9 +220,9 @@ public class MonthItem extends JPanel
 	 * @param day current date
 	 * @return month item
 	 */
-	public static Component generateFrom(Displayable elt, Displayable selected, DateTime day)
+	public static Component generateFrom(Displayable elt, Displayable selected, DateTime day, MonthDay parent)
 	{
-		MonthItem mi = new MonthItem(elt, day);
+		MonthItem mi = new MonthItem(elt, day, parent);
 		mi.setSelected(elt, selected);
 		return mi;
 	}
@@ -260,5 +281,6 @@ public class MonthItem extends JPanel
 			return true;
 		return false;
 	}
+
 }
 

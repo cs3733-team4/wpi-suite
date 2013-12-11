@@ -14,11 +14,13 @@ import java.util.Date;
 import java.util.UUID;
 
 import org.joda.time.DateTime;
+import org.joda.time.Interval;
 import org.joda.time.MutableDateTime;
 
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
@@ -103,6 +105,12 @@ public class Event extends AbstractModel implements Displayable
 		super();
 	}
 
+	/**
+	 * make an event from JSON
+	 * 
+	 * @param json the JSON string that represents this object
+	 * @return an Event instance represented by the provided JSON
+	 */
 	public static Event fromJson(String json)
 	{
 		final Gson parser = new Gson();
@@ -121,6 +129,7 @@ public class Event extends AbstractModel implements Displayable
 		EventModel.getInstance().deleteEvent(this);
 	}
 
+	@Override
 	public String toJSON()
 	{
 		return new Gson().toJson(this, Event.class);
@@ -130,18 +139,16 @@ public class Event extends AbstractModel implements Displayable
 	public Boolean identify(Object o)
 	{
 		if (o instanceof String)
-			return getEventID().toString().equals((String)(o));
+			return getIdentification().toString().equals((String)(o));
 		else if (o instanceof UUID)
-			return getEventID().equals((UUID)(o));
+			return getIdentification().equals((UUID)(o));
 		else if (o instanceof Event)
-			return getEventID().equals(((Event)(o)).getEventID());
+			return getIdentification().equals(((Event)(o)).getIdentification());
 		return false;
 	}
 
-	/**
-	 * @return the eventID
-	 */
-	public UUID getEventID()
+	@Override
+	public UUID getIdentification()
 	{
 		return eventID;
 	}
@@ -240,9 +247,7 @@ public class Event extends AbstractModel implements Displayable
 		this.isProjectEvent = isProjectEvent;
 	}
 
-	/**
-	 * @return the category
-	 */
+	@Override
 	public UUID getCategory()
 	{
 		return category;
@@ -274,11 +279,20 @@ public class Event extends AbstractModel implements Displayable
 		this.participants = participants;
 	}
 
+	/**
+	 * 
+	 * @return whether this is an all day event or not
+	 */
 	boolean isAllDay()
 	{
 		return isAllDay;
 	}
 
+	/**
+	 * set this event to be all day or not all day
+	 * 
+	 * @param isAllDay a boolean representing whether this event is all day
+	 */
 	void setAllDay(boolean isAllDay)
 	{
 		this.isAllDay = isAllDay;
@@ -299,10 +313,18 @@ public class Event extends AbstractModel implements Displayable
 	{
 		this.owner = owner;
 	}
+	
+	/**
+	 * returns the category that this event is associated with
+	 * 
+	 * @return a Category Object
+	 */
 	public Category getAssociatedCategory()
 	{
 		return CategoryModel.getInstance().getCategoryByUUID(category);
 	}
+	
+	@Override
 	public Color getColor()
 	{
 		Color fallbackColor = isProjectEvent ? new Color(125,157,227) : new Color(227,125,147);
@@ -318,16 +340,28 @@ public class Event extends AbstractModel implements Displayable
 		}
 		return fallbackColor;
 	}
+	
+	/**
+	 * 
+	 * @return whether this day is a multiday event
+	 */
 	public boolean isMultiDayEvent()
 	{
-		return (getEnd().getYear()!=getStart().getYear() || getEnd().getDayOfYear()!=getStart().getDayOfYear());
-			
+		return (getEnd().getYear()!=getStart().getYear() || getEnd().getDayOfYear()!=getStart().getDayOfYear());		
 	}
+	
 	@Override
 	public DateTime getDate()
 	{
 		return this.getStart();
 	}
+	
+	/**
+	 * this is primarily used for multiday events
+	 * 
+	 * @param givenDay gets the time that this event starts on a given day
+	 * @return when this event starts
+	 */
 	public DateTime getStartTimeOnDay(DateTime givenDay)
 	{
 		MutableDateTime mDisplayedDay = new MutableDateTime(givenDay);
@@ -340,6 +374,13 @@ public class Event extends AbstractModel implements Displayable
 		else
 			return this.getStart();
 	}
+	
+	/**
+	 * this is primarily used for multiday events
+	 * 
+	 * @param givenDay gets the time that this event ends on a given day
+	 * @return when this event ends
+	 */
 	public DateTime getEndTimeOnDay(DateTime givenDay)
 	{
 		MutableDateTime mDisplayedDay = new MutableDateTime(givenDay);;
@@ -350,5 +391,94 @@ public class Event extends AbstractModel implements Displayable
 		}
 		else
 			return this.getEnd();
+	}
+
+	@Override
+	public void setTime(DateTime newTime)
+	{
+		if (new Interval(new DateTime(this.start), new DateTime(this.end)).contains(newTime))
+		{
+			//this is what stops the events from being dragged to the next day. leaving it in case we might want it later
+			//return;
+		}
+		
+		Interval i;
+		int daysBetween = 0;
+		if (new DateTime(this.start).isAfter(newTime))
+		{
+			i = new Interval(newTime, new DateTime(this.start));
+			daysBetween = 0 - (int) i.toDuration().getStandardDays();
+		}
+		else
+		{
+			i = new Interval(new DateTime(this.start), newTime);
+			daysBetween = (int) i.toDuration().getStandardDays();
+		}
+		
+		
+		
+		MutableDateTime newEnd = new MutableDateTime(this.end);
+		newEnd.addDays(daysBetween);
+		
+		MutableDateTime newStart = new MutableDateTime(this.start);
+		newStart.addDays(daysBetween);
+		
+		this.end = newEnd.toDate();
+		this.start = newStart.toDate();
+		
+	}
+
+	@Override
+	public void update()
+	{
+		EventModel.getInstance().updateEvent(this);
+	}
+	
+	@Override
+	public String getFormattedHoverTextTime()
+	{
+		DateTime s = new DateTime(this.start);
+		DateTime e = new DateTime(this.end);
+		StringBuilder timeFormat = new StringBuilder()
+			.append(s.getHourOfDay())
+			.append(":")
+			.append(s.getMinuteOfHour())
+			.append(" - ")
+			.append(e.getHourOfDay())
+			.append(":")
+			.append(e.getMinuteOfHour()==0?"00":e.getMinuteOfHour());
+		return timeFormat.toString();
+	}
+	
+	@Override
+	public String getFormattedDateRange()
+	{
+		if (this.isMultiDayEvent())
+		{
+			DateTime s = new DateTime(this.start);
+			DateTime e = new DateTime(this.end);
+			StringBuilder timeFormat = new StringBuilder()
+				.append(s.monthOfYear().getAsShortText())
+				.append(", ")
+				.append(Months.getDescriptiveNumber(s.getDayOfMonth()))
+				.append(" - ")
+				.append(e.monthOfYear().getAsShortText())
+				.append(", ")
+				.append(Months.getDescriptiveNumber(e.getDayOfMonth()));
+			return timeFormat.toString();
+		}
+		else
+		{
+			DateTime s = new DateTime(this.start);
+			StringBuilder timeFormat = new StringBuilder()
+				.append(s.monthOfYear().getAsShortText())
+				.append(", ")
+				.append(Months.getDescriptiveNumber(s.getDayOfMonth()));
+			return timeFormat.toString();
+		}
+	}
+
+	public UUID getEventID() {
+		return this.eventID;
 	}
 }

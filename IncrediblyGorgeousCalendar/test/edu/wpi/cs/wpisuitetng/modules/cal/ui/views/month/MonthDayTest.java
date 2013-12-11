@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * Copyright (c) 2013 WPI-Suite
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors: Team YOCO (You Only Compile Once)
+ ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month;
 
 import static org.junit.Assert.*;
@@ -6,9 +15,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthDay;
 import edu.wpi.cs.wpisuitetng.modules.cal.DayStyle;
 
-import java.awt.Component;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -20,13 +27,13 @@ public class MonthDayTest {
 	
 	@Test
 	public void testExists() {
-		MonthDay MD = new MonthDay(now, DayStyle.Normal);
+		MonthDay MD = new MonthDay(now, DayStyle.Normal, null);
 		assertNotNull("A MonthDay can be created", MD);
 	}
 	
 	@Test
 	public void testAddEvents() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		MonthDay MD = new MonthDay(now, DayStyle.Normal);
+		MonthDay MD = new MonthDay(now, DayStyle.Normal, null);
 		Event eatIcecream=new Event().addName("Eat icecream")
 									 .addDescription("Yummy!")
 									 .addStartTime(new DateTime(2000, 10, 10, 0, 0))
@@ -49,7 +56,7 @@ public class MonthDayTest {
 	
 	@Test
 	public void testRemoveEvents() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		MonthDay MD = new MonthDay(now, DayStyle.Normal);
+		MonthDay MD = new MonthDay(now, DayStyle.Normal, null);
 		Event eatIcecream=new Event().addName("Eat icecream")
 				 					 .addDescription("Yummy!")
 				 					 .addStartTime(new DateTime(2000, 10, 10, 0, 0))
@@ -69,7 +76,7 @@ public class MonthDayTest {
 	
 	@Test
 	public void testRemoveEventsMultiple() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		MonthDay MD = new MonthDay(now, DayStyle.Normal);
+		MonthDay MD = new MonthDay(now, DayStyle.Normal, null);
 		Event eatIcecream=new Event().addName("Eat icecream")
 				 					 .addDescription("Yummy!")
 				 					 .addStartTime(new DateTime(2000, 10, 10, 0, 0))
@@ -108,7 +115,7 @@ public class MonthDayTest {
 	
 	@Test
 	public void testAddCommitments() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		MonthDay MD = new MonthDay(now, DayStyle.Normal);
+		MonthDay MD = new MonthDay(now, DayStyle.Normal, null);
 		Commitment icecreamDay=new Commitment().addName("Icecream day")
 									 .addDescription("Eat icecream by today!")
 									 .setDueDate(new DateTime(2000, 10, 10, 0, 0));
@@ -131,7 +138,7 @@ public class MonthDayTest {
 	
 	@Test
 	public void testRemoveCommitments() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		MonthDay MD = new MonthDay(now, DayStyle.Normal);
+		MonthDay MD = new MonthDay(now, DayStyle.Normal, null);
 		Commitment icecreamDay=new Commitment().addName("Icecream day")
 				 					 .addDescription("Eat icecream by today!")
 				 					 .setDueDate(new DateTime(2000, 10, 10, 0, 0));
@@ -150,7 +157,7 @@ public class MonthDayTest {
 	
 	@Test
 	public void testRemoveCommitmentsMultiple() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		MonthDay MD = new MonthDay(now, DayStyle.Normal);
+		MonthDay MD = new MonthDay(now, DayStyle.Normal, null);
 		Commitment icecreamDay=new Commitment().addName("Icecream day")
 				 					 .addDescription("Eat icecream by today!")
 				 					 .setDueDate(new DateTime(2000, 10, 10, 0, 0));
