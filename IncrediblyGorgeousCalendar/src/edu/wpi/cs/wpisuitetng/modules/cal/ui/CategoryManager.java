@@ -303,6 +303,8 @@ public class CategoryManager extends JPanel {
 			JListModel.addElement(c);
 		}
 		
+		MainPanel.getInstance().refreshCategoryFilterTab(); // Update created/edited category filters
+		
 		categoryName.setText(""); // Clear category name text field upon addition
 		selectedCategory = null; // Clear selection
 		

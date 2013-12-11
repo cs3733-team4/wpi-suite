@@ -78,9 +78,11 @@ public class SidebarTabbedPane extends JTabbedPane{
 	private JPanel categoryFilterTab;
 	private JPanel categoryList;
 	private JPanel categoryButtonPanel;
+	private JPanel eventCommitmentTab;
 	private JButton selectAllButton;
 	private JButton clearAllButton;
-	private boolean showCommitments;
+	private boolean showCommitments = true; // Show events and commitments by default
+	private boolean showEvents = true;
 	private boolean isUser = true; // Avoid extra db calls when selecting/unselecting all
 	private JScrollPane categoryScroll;
 	private List<Category> allPlusDefault = new ArrayList<Category>();
@@ -226,10 +228,31 @@ public class SidebarTabbedPane extends JTabbedPane{
 
 		// Set up container panel
 		categoryFilterTab = new JPanel();
-		categoryFilterTab.setLayout(new BorderLayout());
+		categoryFilterTab.setLayout(new BoxLayout(categoryFilterTab, BoxLayout.Y_AXIS));
 		categoryFilterTab.setBorder(BorderFactory.createEmptyBorder(3, 0, 0, 0));
 		categoryFilterTab.putClientProperty("html.disable", true);
 		categoryFilterTab.setAlignmentY(LEFT_ALIGNMENT);
+		
+		// Set up panel with selecition for events and commitments
+		eventCommitmentTab = new JPanel();
+		eventCommitmentTab.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
+		eventCommitmentTab.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+		eventCommitmentTab.putClientProperty("html.disable", true);
+		eventCommitmentTab.setAlignmentY(CENTER_ALIGNMENT);
+		eventCommitmentTab.setAlignmentX(CENTER_ALIGNMENT);
+		
+		JCheckBox showEvent = new JCheckBox("Events");
+		showEvent.setSelected(true);
+		showEvent.addItemListener(new CheckBoxListener(null));
+		showEvent.setMinimumSize(getPreferredSize());
+		
+		JCheckBox showCommitments = new JCheckBox("Commits");
+		showCommitments.setSelected(true);
+		showCommitments.addItemListener(new CheckBoxListener(null));
+		showCommitments.setMinimumSize(getPreferredSize());
+		
+		eventCommitmentTab.add(showEvent);
+		eventCommitmentTab.add(showCommitments);
 		
 		// Set up panel with categories
 		categoryList = new JPanel();
@@ -278,7 +301,9 @@ public class SidebarTabbedPane extends JTabbedPane{
 		categoryButtonPanel.add(clearAllButton);
 		
 		// Set up UI
-		categoryFilterTab.add(categoryButtonPanel, BorderLayout.NORTH);
+		categoryFilterTab.add(eventCommitmentTab);
+		categoryFilterTab.add(Box.createVerticalStrut(3));
+		categoryFilterTab.add(categoryButtonPanel);
 		categoryFilterTab.add(categoryScroll);
 		categoryFilterTab.setFocusable(false); // Keep tab form grabbing focus from arrow keys
 		
@@ -382,7 +407,6 @@ public class SidebarTabbedPane extends JTabbedPane{
 		
 		// Use different list to avoid commitment and uncategorized from displaying in other places
 		// since the allCategories list is passed by reference
-		allPlusDefault.add(Category.COMMITMENT_CATEGORY);
 		allPlusDefault.add(Category.DEFAULT_CATEGORY);
 		allPlusDefault.addAll(allCategories);
 		
@@ -405,14 +429,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 	    	categoryColor.setLayout(new GridLayout(1,1));
 	    	categoryColor.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 	    	
-	    	// If commitments, set exclamation mark
-	    	if (c.getName().equals("Commitments"))
-	    	{
-	    		categoryColor.setBackground(Colors.TABLE_BACKGROUND);
-	    		JLabel commitmentMark = new JLabel("\uFF01");
-	    		commitmentMark.setForeground(Colors.COMMITMENT_NOTIFICATION);
-	    		categoryColor.add(commitmentMark);
-	    	} else if (c.getName().equals("Uncategorized")) // If uncategorized
+	    	if (c.getName().equals("Uncategorized")) // If uncategorized
 	    	{
 	    		// Show both colors (team and personal events)
 	    		JPanel doubleColor = new JPanel();
@@ -444,9 +461,6 @@ public class SidebarTabbedPane extends JTabbedPane{
 			// Store reference to check boxes and categories
 			if (categoryCheckBox.isSelected() && !(selectedCategories.contains(c.getCategoryID())))
 			{
-				if (c.getName().equals("Commitments"))
-					showCommitments = true;
-				else
 					selectedCategories.add(c.getCategoryID());
 			}
 			
@@ -489,9 +503,13 @@ public class SidebarTabbedPane extends JTabbedPane{
 		}
 		
 		public void itemStateChanged(ItemEvent e) {
-			if(((JCheckBox)e.getSource()).isSelected())
+			JCheckBox tmp = ((JCheckBox)e.getSource());
+			
+			if(tmp.isSelected())
 			{
-				if (referencedCategory.getName().equals("Commitments"))
+				if (referencedCategory == null && tmp.getText().equals("Events"))
+					showEvents = true;
+				else if (referencedCategory == null && tmp.getText().equals("Commits"))
 					showCommitments = true;
 				else
 				{
@@ -500,9 +518,11 @@ public class SidebarTabbedPane extends JTabbedPane{
 				}
 			} else
 			{
-				if (referencedCategory.getName().equals("Commitments"))
+				if (referencedCategory == null && tmp.getText().equals("Events"))
+					showEvents = false;
+				else if (referencedCategory == null && tmp.getText().equals("Commits"))
 					showCommitments = false;
-				else 
+				else
 				{
 					if (selectedCategories.contains(referencedCategory.getCategoryID()))
 						selectedCategories.remove(referencedCategory.getCategoryID());
@@ -533,8 +553,6 @@ public class SidebarTabbedPane extends JTabbedPane{
 			}
 		}
 		
-		showCommitments = true;
-		
 		MainPanel.getInstance().refreshView(); //Update all events	
 		isUser = true; // set is user back to true
 	}
@@ -553,8 +571,6 @@ public class SidebarTabbedPane extends JTabbedPane{
 		for (JCheckBox key : checkBoxCategoryMap.keySet())
 			key.setSelected(false);
 		
-		showCommitments = false;
-		
 		MainPanel.getInstance().refreshView(); //Update all events	
 		isUser = true; // set is user back to true
 	}
@@ -565,6 +581,14 @@ public class SidebarTabbedPane extends JTabbedPane{
 	 */
 	public boolean showCommitments(){
 		return this.showCommitments;
+	}
+	
+	/**
+	 * Returns whether events should be shown or not
+	 * @return boolean indicating whether events should be shown in current calendar view
+	 */
+	public boolean showEvents(){
+		return this.showEvents;
 	}
 	
 }

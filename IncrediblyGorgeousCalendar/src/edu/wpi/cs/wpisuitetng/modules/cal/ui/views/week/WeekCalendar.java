@@ -273,21 +273,24 @@ public class WeekCalendar extends AbstractCalendar
 	 */
 	private List<Event> getVisibleEvents(DateTime curDay)
 	{
-		// TODO: this is where filtering should go
-		List<Event> visibleEvents =  EventModel.getInstance().getEvents(weekStartTime, weekEndTime);
 		
-		// Filter for selected categories
-		Collection<UUID> selectedCategories = MainPanel.getInstance().getSelectedCategories();
-		List<Event> categoryFilteredEvents = new ArrayList<Event>();
-		
-		// Else, loop through events and filter by selected categories
-		for (Event e : visibleEvents){
-			if (selectedCategories.contains(e.getCategory()))
-				categoryFilteredEvents.add(e);
-		}
-		
-		// Return list of events to be displayed
-		return categoryFilteredEvents;
+		if (MainPanel.getInstance().showEvents()){
+			List<Event> visibleEvents =  EventModel.getInstance().getEvents(weekStartTime, weekEndTime);
+			
+			// Filter for selected categories
+			Collection<UUID> selectedCategories = MainPanel.getInstance().getSelectedCategories();
+			List<Event> categoryFilteredEvents = new ArrayList<Event>();
+			
+			// Else, loop through events and filter by selected categories
+			for (Event e : visibleEvents){
+				if (selectedCategories.contains(e.getCategory()))
+					categoryFilteredEvents.add(e);
+			}
+			
+			// Return list of events to be displayed
+			return categoryFilteredEvents;
+		} else
+			return new ArrayList<Event>();
 	}
 
 	@Override
