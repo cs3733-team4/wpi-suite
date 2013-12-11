@@ -85,6 +85,8 @@ public class EventEntityManager implements EntityManager<Event> {
 				return getEventsByRange(s, args[1], args[2]);
 			case "filter-event-by-uuid":
 				return getEventByUUID(s, args[1]);
+			case "filter-event-by-category":
+				return getEventByCategory(s, args[1]);
 			default:
 				throw new NotFoundException("Error: " + args[0] + " not a valid method");
 		}
@@ -112,6 +114,32 @@ public class EventEntityManager implements EntityManager<Event> {
 			throw new NotFoundException(uuid);
 		}
 		
+	}
+	
+	/**
+	 * gets events with specified category
+	 * 
+	 * @param ses the session
+	 * @param categoryUUID the category's UUID to get
+	 * @return an array containing all events with that category
+	 * @throws NotFoundException
+	 */
+	private Event[] getEventByCategory(Session ses, String categoryUUID) throws NotFoundException
+	{
+		List<Event> retrievedEvents = new ArrayList<>();
+
+		Event[] all = getAll(ses);
+		UUID cat = UUID.fromString(categoryUUID);
+		
+		for (Event e: all)
+		{
+			if (e.getCategory() == cat)
+			{
+				retrievedEvents.add(e);
+			}
+		}
+		
+		return retrievedEvents.toArray(new Event[0]);
 	}
 
 	/**
