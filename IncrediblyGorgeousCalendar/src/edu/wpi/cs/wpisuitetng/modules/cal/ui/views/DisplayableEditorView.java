@@ -76,9 +76,9 @@ public class DisplayableEditorView extends JPanel
 		if (showEnd)
 		{
 			lblUntil = new JLabel("until");
-			this.add(Box.createHorizontalStrut(6));
+			this.add(Box.createHorizontalStrut(6), "flowx,cell 1 1,alignx left,growy");
 			this.add(lblUntil, "flowx,cell 1 1,alignx left,growy");
-			this.add(Box.createHorizontalStrut(7));
+			this.add(Box.createHorizontalStrut(7), "flowx,cell 1 1,alignx left,growy");
 			this.add(endTimeDatePicker, "flowx,cell 1 1,alignx left,growy");
 		}
 
