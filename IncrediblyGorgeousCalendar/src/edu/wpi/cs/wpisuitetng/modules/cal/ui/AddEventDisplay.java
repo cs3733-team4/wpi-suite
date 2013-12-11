@@ -166,12 +166,6 @@ public class AddEventDisplay extends DisplayableEditorView
 		saveButton.setText("Saved!");
 		MainPanel.getInstance().closeTab(tabid);
 		MainPanel.getInstance().refreshView();
-	
-	saveButton.setEnabled(false);
-	saveButton.setText("Saved!");
-	MainPanel.getInstance().closeTab(tabid);
-
-	MainPanel.getInstance().refreshView();
 	}
 	/**
 	 * Set tab id for the created event view
