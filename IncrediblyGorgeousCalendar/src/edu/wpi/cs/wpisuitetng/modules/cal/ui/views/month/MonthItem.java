@@ -230,7 +230,7 @@ public class MonthItem extends JPanel
 	public static Component generateFrom(Displayable elt, Displayable selected, DateTime day, MonthDay parent)
 	{
 		MonthItem mi = new MonthItem(elt, day, parent);
-		mi.setSelected(elt, selected);
+		mi.setSelected(elt == selected);
 		return mi;
 	}
 	
@@ -244,11 +244,10 @@ public class MonthItem extends JPanel
 	
 	/**
 	 * Sets selected month item in month view
-	 * @param elt displayable to check
-	 * @param item selected displayable
+	 * @param selected whether this is a selected event
 	 */
-	public void setSelected(Displayable elt, Displayable item){
-		if(elt == item)
+	public void setSelected(boolean selected){
+		if(selected)
 			this.setBackground(Colors.SELECTED_BACKGROUND);
 		else
 			this.setBackground(Colors.TABLE_BACKGROUND);

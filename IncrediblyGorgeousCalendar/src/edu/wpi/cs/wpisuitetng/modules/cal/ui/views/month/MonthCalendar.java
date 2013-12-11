@@ -39,8 +39,6 @@ import java.awt.Font;
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.DayStyle;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
@@ -69,7 +67,9 @@ public class MonthCalendar extends AbstractCalendar
 
 	private EventModel eventModel;
 	private CommitmentModel commitmentModel;
-	private boolean escaped;
+	private boolean escaped; //has the user dragged an event off it's starting day?
+	private boolean external; //has the user dragged an event off of the calendar?
+	private boolean tooltip;
 
 	public MonthCalendar(DateTime on, EventModel emodel, CommitmentModel cmodel)
 	{
@@ -108,7 +108,14 @@ public class MonthCalendar extends AbstractCalendar
 			}
 
 			@Override
-			public void mouseMoved(MouseEvent e) {}
+			public void mouseMoved(MouseEvent e)
+			{
+				if (tooltip)
+				{
+					repaint();
+				}
+				setEscaped(false);
+			}
 			
 		});
 		
@@ -119,18 +126,35 @@ public class MonthCalendar extends AbstractCalendar
 			public void mouseClicked(MouseEvent arg0) {}
 
 			@Override
-			public void mouseEntered(MouseEvent arg0) {}
+			public void mouseEntered(MouseEvent arg0)
+			{
+				external = false;
+			}
 
 			@Override
-			public void mouseExited(MouseEvent arg0) {
-				setEscaped(false);
+			public void mouseExited(MouseEvent arg0)
+			{
+				external = true;
 			}
 
 			@Override
 			public void mousePressed(MouseEvent arg0) {}
 
 			@Override
-			public void mouseReleased(MouseEvent arg0) {}
+			public void mouseReleased(MouseEvent arg0)
+			{
+				if (external)
+				{
+					display(null);
+					repaint();
+					setEscaped(false);
+				}
+				else
+				{
+					Displayable selected = MainPanel.getInstance().getSelectedEvent();
+					display(selected.getDate());
+				}
+			}
 			
 		});
 	}
@@ -428,11 +452,12 @@ public class MonthCalendar extends AbstractCalendar
 	 */
 	protected DayStyle getMarker(ReadableDateTime date)
 	{
-		if (date.getMonthOfYear() == time.getMonthOfYear())
+		if (date != null && date.getMonthOfYear() == time.getMonthOfYear())
 		{
 			return (isToday(date) ? DayStyle.Today : DayStyle.Normal);
-		} else
-			return DayStyle.OutOfMonth;
+		}
+		
+		return DayStyle.OutOfMonth;
 	}
 
 	// Added for testing purposes
@@ -450,46 +475,27 @@ public class MonthCalendar extends AbstractCalendar
 	@Override
 	public void select(Displayable item)
 	{
-		Displayable oitem = item;
-		MonthDay day;
-		if (item == null && lastSelection == null)
-			return;
-		if (item == null)
-			oitem = lastSelection;
+		if (this.lastSelection != null)
+		{
+			this.lastSelection.deselect(this);
+		}
 		
-		if (lastSelection != null)
+		if (item != null)
 		{
-			if (lastSelection instanceof Event)
-				selectEvents((Event)lastSelection, null);
-			else
-			{
-				day = days.get(lastSelection.getDate().getDayOfYear());
-				if (day != null)
-				{
-					day.select(null);
-				}
-			}
+			item.select(this);
+			lastSelection = item;
 		}
-
-		if (item != null && item instanceof Event)
-			selectEvents((Event)item, item);
-		else
-		{
-			day = days.get(oitem.getDate().getDayOfYear());
-			if (day != null)
-			{
-				day.select(item);
-			}
-		}
-		lastSelection = item;
 	}
 
-	private void selectEvents(Event on, Displayable setTo)
+	/**
+	 * 
+	 * @param e
+	 */
+	public void select(Event e)
 	{
-		// TODO: refactor this pattern
 		MonthDay md;
-		MutableDateTime startDay = new MutableDateTime(on.getStart());
-		MutableDateTime endDay = new MutableDateTime(on.getEnd());
+		MutableDateTime startDay = new MutableDateTime(e.getStart());
+		MutableDateTime endDay = new MutableDateTime(e.getEnd());
 		endDay.setMillisOfDay(0);
 		startDay.setMillisOfDay(0);
 		
@@ -501,16 +507,65 @@ public class MonthCalendar extends AbstractCalendar
 		while (!endDay.isBefore(startDay))
 		{
 			md = this.days.get(startDay.getDayOfYear());
-			try
+			if (md != null)
 			{
-				md.select(setTo);
-			}
-			catch(NullPointerException ex)
-			{
-				// silently ignore
+				md.select(e);
 			}
 			startDay.addDays(1);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param m
+	 */
+	public void select(Commitment m)
+	{
+		MonthDay md = this.days.get(m.getDate().getDayOfYear());
+		if (md != null)
+		{
+			md.select(m);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param e
+	 */
+	public void deselect(Event e)
+	{
+		MonthDay md;
+		MutableDateTime startDay = new MutableDateTime(e.getStart());
+		MutableDateTime endDay = new MutableDateTime(e.getEnd());
+		endDay.setMillisOfDay(0);
+		startDay.setMillisOfDay(0);
 		
+		if (startDay.isBefore(firstOnMonth))
+			startDay=new MutableDateTime(firstOnMonth);
+		if (endDay.isAfter(lastOnMonth))
+			endDay= new MutableDateTime(lastOnMonth);
+			
+		while (!endDay.isBefore(startDay))
+		{
+			md = this.days.get(startDay.getDayOfYear());
+			if (md != null)
+			{
+				md.clearSelected();
+			}
+			startDay.addDays(1);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param m
+	 */
+	public void deselect(Commitment m)
+	{
+		MonthDay md = this.days.get(m.getDate().getDayOfYear());
+		if (md != null)
+		{
+			md.clearSelected();
 		}
 	}
 
@@ -531,7 +586,8 @@ public class MonthCalendar extends AbstractCalendar
 	@Override
 	public void paint(Graphics g)
 	{
-		super.paint(g);	
+		super.paint(g);
+		tooltip = escaped;
 		if (escaped)
 		{
 			Displayable dp = MainPanel.getInstance().getSelectedEvent();
