@@ -28,9 +28,11 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToolTip;
+import javax.swing.ToolTipManager;
 
 import edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar.ToolbarGroupView;
 import edu.wpi.cs.wpisuitetng.modules.cal.documentation.DocumentMainPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.ToolTipListener;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddEventDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.CategoryManager;
 
@@ -52,6 +54,7 @@ public class CategoryToolbarGroup extends ToolbarGroupView {
 			        JButton button = new JButton("Get Help");  
 			        button.addActionListener(new ActionListener() {  
 			        	public void actionPerformed(ActionEvent e) {
+			        		ToolTipManager.sharedInstance().setEnabled(false);
 			        		DocumentMainPanel.getInstance().setVisible(true);
 			        		DocumentMainPanel.getInstance().requestFocus();
 			        		DocumentMainPanel.getInstance().goToPage("CreateaCategory.html");  
@@ -79,6 +82,7 @@ public class CategoryToolbarGroup extends ToolbarGroupView {
 			}
 		};
 		editCategory.setToolTipText(" ");
+		editCategory.addMouseListener(new ToolTipListener());
 		editCategory.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e){

@@ -18,6 +18,7 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -28,9 +29,11 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToolTip;
+import javax.swing.ToolTipManager;
 
 import edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar.ToolbarGroupView;
 import edu.wpi.cs.wpisuitetng.modules.cal.documentation.DocumentMainPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.ToolTipListener;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddCommitmentDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddEventDisplay;
 
@@ -44,15 +47,16 @@ public class EventToolbarGroup extends ToolbarGroupView {
 		this.content.setLayout(new BoxLayout(content, BoxLayout.X_AXIS));
 		
 		addEventButton = new JButton("<html>Add<br/>Event</html>"){
-			JToolTip toolTip;  
-			@Override  
+			private JToolTip toolTip;
+			@Override
 		    public JToolTip createToolTip() {  
 				if (toolTip == null) {  
 					JPanel panel = new JPanel(new GridLayout(0, 1));  
 					JLabel label = new JLabel("<html> Lets you make a new event in<br>the calendar</html>");
 			        JButton button = new JButton("Get Help");  
 			        button.addActionListener(new ActionListener() {  
-			        	public void actionPerformed(ActionEvent e) {  
+			        	public void actionPerformed(ActionEvent e) { 
+			        		ToolTipManager.sharedInstance().setEnabled(false);
 			        		DocumentMainPanel.getInstance().setVisible(true);
 			        		DocumentMainPanel.getInstance().requestFocus();
 			        		DocumentMainPanel.getInstance().goToPage("CreateanEvent.html");  
@@ -79,6 +83,7 @@ public class EventToolbarGroup extends ToolbarGroupView {
 				return new Point(95, 40);
 			}
 		};
+		addEventButton.addMouseListener(new ToolTipListener());
 		addEventButton.setToolTipText(" ");
 		    
 		addEventButton.addActionListener(new ActionListener(){
@@ -102,6 +107,7 @@ public class EventToolbarGroup extends ToolbarGroupView {
 			        JButton button = new JButton("Get Help");  
 			        button.addActionListener(new ActionListener() {  
 			        	public void actionPerformed(ActionEvent e) { 
+			        		ToolTipManager.sharedInstance().setEnabled(false);
 			        		DocumentMainPanel.getInstance().setVisible(true);
 			        		DocumentMainPanel.getInstance().requestFocus();
 			        		DocumentMainPanel.getInstance().goToPage("CreateaCommitment.html");  
@@ -138,7 +144,7 @@ public class EventToolbarGroup extends ToolbarGroupView {
 				//TODO: use selected times. ned.display(DateTime.now());
 			}
 		});
-		
+		addCommitmentButton.addMouseListener(new ToolTipListener());
 		removeEventButton = new JButton("<html>Remove<br/>Event</html>");
 		removeEventButton.addActionListener(new ActionListener(){
 			@Override

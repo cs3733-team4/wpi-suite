@@ -339,4 +339,14 @@ public class MonthDay extends JPanel
 		}
 	}
 	
+	/**
+	 * gets this DateTime's day
+	 * 
+	 * @return a DateTime
+	 */
+	public DateTime getDay()
+	{
+		return this.day;
+	}
+	
 }

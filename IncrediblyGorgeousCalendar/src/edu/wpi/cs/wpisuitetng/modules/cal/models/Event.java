@@ -420,8 +420,11 @@ public class Event extends AbstractModel implements Displayable
 		MutableDateTime newEnd = new MutableDateTime(this.end);
 		newEnd.addDays(daysBetween);
 		
+		MutableDateTime newStart = new MutableDateTime(this.start);
+		newStart.addDays(daysBetween);
+		
 		this.end = newEnd.toDate();
-		this.start = newTime.toDate();
+		this.start = newStart.toDate();
 		
 	}
 
@@ -466,7 +469,12 @@ public class Event extends AbstractModel implements Displayable
 		}
 		else
 		{
-			return "";
+			DateTime s = new DateTime(this.start);
+			StringBuilder timeFormat = new StringBuilder()
+				.append(s.monthOfYear().getAsShortText())
+				.append(", ")
+				.append(Months.getDescriptiveNumber(s.getDayOfMonth()));
+			return timeFormat.toString();
 		}
 	}
 

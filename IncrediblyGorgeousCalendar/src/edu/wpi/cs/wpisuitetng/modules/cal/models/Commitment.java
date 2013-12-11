@@ -14,10 +14,12 @@ import java.util.Date;
 import java.util.UUID;
 
 import org.joda.time.DateTime;
+import org.joda.time.MutableDateTime;
 
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
@@ -267,7 +269,10 @@ public class Commitment extends AbstractModel implements Displayable
 	@Override
 	public void setTime(DateTime newTime)
 	{
-		this.duedate = newTime.toDate();
+		MutableDateTime mdt = new MutableDateTime(this.duedate);
+		mdt.setDayOfYear(newTime.getDayOfYear());
+		mdt.setYear(newTime.getYear());
+		this.duedate = mdt.toDate();
 	}
 
 	@Override
@@ -290,7 +295,12 @@ public class Commitment extends AbstractModel implements Displayable
 	@Override
 	public String getFormattedDateRange()
 	{
-		return "";
+		DateTime s = new DateTime(this.duedate);
+		StringBuilder timeFormat = new StringBuilder()
+			.append(s.monthOfYear().getAsShortText())
+			.append(", ")
+			.append(Months.getDescriptiveNumber(s.getDayOfMonth()));
+		return timeFormat.toString();
 	}
 	
 	@Override
