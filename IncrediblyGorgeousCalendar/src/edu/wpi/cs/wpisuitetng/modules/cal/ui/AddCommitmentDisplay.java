@@ -57,6 +57,7 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 	
 	private void populateCommitmentFields(Commitment mCommitment)
 	{
+		existingCommitmentID = mCommitment.getCommitmentID();
 		nameTextField.setText(mCommitment.getName());
 		startTimeDatePicker.setDateTime(mCommitment.getDate());
 		participantsTextField.setText(mCommitment.getParticipants());
@@ -69,38 +70,7 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		else
 			this.eventCategoryPicker.setSelectedItem(Category.DEFAULT_CATEGORY);
 	}
-	
-		
-
-	
-	private void init(final Commitment oldCommitment)
-	{
-		nameTextField.setText(oldCommitment.getName());
-		startTimeDatePicker.setDateTime(oldCommitment.getDate());
-		participantsTextField.setText(oldCommitment.getParticipants());
-		// TODO: categories and team/personal
-		descriptionTextArea.setText(oldCommitment.getDescription());
-		existingCommitmentID=oldCommitment.getCommitmentID();
-	}
-
-private void setUpListeners(){
-		saveButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0)
-			{
-				attemptSave();
-			}
-		});
-
-		cancelButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				MainPanel.getInstance().closeTab(tabid);
-			}
-		});
+	private void setUpListeners(){
 
 		nameTextField.getDocument().addDocumentListener(new DocumentListener() {
 			
@@ -135,27 +105,7 @@ private void setUpListeners(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 
-					startTimeDatePicker.getDateTime();
-					
-					Commitment c = new Commitment();
-					c.setName(nameTextField.getText().trim());
-					c.setDescription(descriptionTextArea.getText());
-					c.setDate(startTimeDatePicker.getDateTime());
-					c.setProjectCommitment(rdbtnTeam.isSelected());
-					c.setParticipants(participantsTextField.getText().trim());
-					c.setCategory(((Category)eventCategoryPicker.getSelectedItem()).getCategoryID());
-					
-					
-					if (isEditingCommitment){
-						MainPanel.getInstance().updateCommitment(c);
-					} else {
-						MainPanel.getInstance().addCommitment(c);
-					}
-					
-					saveButton.setEnabled(false);
-					saveButton.setText("Saved!");
-					MainPanel.getInstance().closeTab(tabid);
-					MainPanel.getInstance().refreshView();
+					attemptSave();
 			}
 		});
 		
@@ -181,6 +131,8 @@ private void setUpListeners(){
 		e.setName(nameTextField.getText().trim());
 		e.setDescription(descriptionTextArea.getText());
 		e.setDate(startTimeDatePicker.getDateTime());
+		e.setProjectCommitment(rdbtnTeam.isSelected());
+		e.setCategory(((Category)eventCategoryPicker.getSelectedItem()).getCategoryID());
 		e.setParticipants(participantsTextField.getText());
 		
 		if (isEditingCommitment)
