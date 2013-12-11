@@ -9,16 +9,21 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal;
 
+import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.print.attribute.standard.JobPrioritySupported;
 import javax.swing.ImageIcon;
+import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 
 import edu.wpi.cs.wpisuitetng.janeway.modules.IJanewayModule;
 import edu.wpi.cs.wpisuitetng.janeway.modules.JanewayTabModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.documentation.DocumentMainPanel;
 
 /**
- * Calendar class. This is the main Jainway entry point for our calendar.
+ * Calendar class. This is the main Janeway entry point for our calendar.
  */
 public class Calendar implements IJanewayModule
 {
@@ -35,6 +40,10 @@ public class Calendar implements IJanewayModule
 		// Setup button panel
 		RibbonToolbar buttonPanel = new RibbonToolbar(mMainPanel, true);
 		buttonPanel.setFloatable(false);
+
+		
+
+		DocumentMainPanel.getInstance().setVisible(false);
 
 		tabs = new ArrayList<JanewayTabModel>();
 		JanewayTabModel tab = new JanewayTabModel(getName(), new ImageIcon(),

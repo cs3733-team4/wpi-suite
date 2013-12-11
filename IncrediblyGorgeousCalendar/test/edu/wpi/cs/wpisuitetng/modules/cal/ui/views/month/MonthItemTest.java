@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * Copyright (c) 2013 WPI-Suite
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors: Team YOCO (You Only Compile Once)
+ ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month;
 
 import static org.junit.Assert.*;
@@ -6,10 +15,6 @@ import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthItem;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
-
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthItem;
 
 /**
  * Tests for MonthItem class
@@ -33,7 +38,7 @@ public class MonthItemTest {
 	
 	@Test
 	public void testSimpleTimeAM() {
-		MonthItem mItem = new MonthItem(e);
+		MonthItem mItem = new MonthItem(e, null);
 		assertEquals("simpleTime should return in hour:minute", "1:01", mItem.simpleTime(timeForSimpleTime));
 		assertEquals("simpleTime should return in hour:minute", "12:01", mItem.simpleTime(timeForSimpleTime2));
 		assertEquals("simpleTime should return in hour:minute", "11:59", mItem.simpleTime(timeForSimpleTime3));
@@ -41,7 +46,7 @@ public class MonthItemTest {
 	
 	@Test
 	public void testSimpleTimePM() {
-		MonthItem mItem = new MonthItem(e);
+		MonthItem mItem = new MonthItem(e, null);
 		assertEquals("simpleTime should return in hour:minute. If time is past 12:00, a p should be appended to the end", "10:01p", mItem.simpleTime(timeForSimpleTimePM));
 		assertEquals("simpleTime should return in hour:minute. If time is past 12:00, a p should be appended to the end", "12:01p", mItem.simpleTime(timeForSimpleTimePM2));
 		assertEquals("simpleTime should return in hour:minute. If time is past 12:00, a p should be appended to the end", "11:59p", mItem.simpleTime(timeForSimpleTimePM3));

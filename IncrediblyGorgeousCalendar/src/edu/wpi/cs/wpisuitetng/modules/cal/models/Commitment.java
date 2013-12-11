@@ -14,10 +14,12 @@ import java.util.Date;
 import java.util.UUID;
 
 import org.joda.time.DateTime;
+import org.joda.time.MutableDateTime;
 
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
@@ -69,9 +71,7 @@ public class Commitment extends AbstractModel implements Displayable
 		return this;
 	}
 	
-	/**
-	 * @return the category
-	 */
+	@Override
 	public UUID getCategory()
 	{
 		return category;
@@ -85,8 +85,6 @@ public class Commitment extends AbstractModel implements Displayable
 	{
 		this.category = category;
 	}
-
-	
 	
 	/**
 	 * Create an event with the default characteristics.
@@ -96,6 +94,11 @@ public class Commitment extends AbstractModel implements Displayable
 		super();
 	}
 
+	/**
+	 * 
+	 * @param json the JSON string that represents this object
+	 * @return a commitment with fields matching the JSON
+	 */
 	public static Commitment fromJson(String json)
 	{
 		final Gson parser = new Gson();
@@ -114,6 +117,9 @@ public class Commitment extends AbstractModel implements Displayable
 		CommitmentModel.getInstance().deleteCommitment(this);
 	}
 
+	/**
+	 * @return this object in JSON form
+	 */
 	public String toJSON()
 	{
 		return new Gson().toJson(this, Commitment.class);
@@ -123,16 +129,16 @@ public class Commitment extends AbstractModel implements Displayable
 	public Boolean identify(Object o)
 	{
 		if (o instanceof String)
-			return getCommitmentID().toString().equals((String)(o));
+			return getIdentification().toString().equals((String)(o));
 		else if (o instanceof UUID)
-			return getCommitmentID().equals((UUID)(o));
+			return getIdentification().equals((UUID)(o));
 		else if (o instanceof Commitment)
-			return getCommitmentID().equals(((Commitment)(o)).getCommitmentID());
+			return getIdentification().equals(((Commitment)(o)).getIdentification());
 		return false;
 	}
 
 	/**
-	 * @return the eventID
+	 * @return the commitmentID
 	 */
 	public UUID getCommitmentID()
 	{
@@ -171,6 +177,23 @@ public class Commitment extends AbstractModel implements Displayable
 	public String getDescription()
 	{
 		return description;
+	}
+	
+	@Override
+	public Color getColor()
+	{
+		Color fallbackColor = isProjectCommitment ? new Color(125,157,227) : new Color(227,125,147);
+		Category cat = CategoryModel.getInstance().getCategoryByUUID(category);
+		if (cat == null)
+		{
+			return fallbackColor;
+		}
+		Color eventColor = cat.getColor();
+		if (eventColor != null)
+		{
+			return eventColor;
+		}
+		return fallbackColor;
 	}
 
 	/**
@@ -267,4 +290,55 @@ public class Commitment extends AbstractModel implements Displayable
 		this.owner = owner;
 	}
 
+	@Override
+	public void setTime(DateTime newTime)
+	{
+		MutableDateTime mdt = new MutableDateTime(this.duedate);
+		mdt.setDayOfYear(newTime.getDayOfYear());
+		mdt.setYear(newTime.getYear());
+		this.duedate = mdt.toDate();
+	}
+
+	@Override
+	public void update()
+	{
+		CommitmentModel.getInstance().updateCommitment(this);
+	}
+	
+	@Override
+	public String getFormattedHoverTextTime()
+	{
+		DateTime s = new DateTime(this.duedate);
+		StringBuilder timeFormat = new StringBuilder()
+			.append(s.getHourOfDay())
+			.append(":")
+			.append(s.getMinuteOfHour());
+		return timeFormat.toString();
+	}
+
+	@Override
+	public String getFormattedDateRange()
+	{
+		DateTime s = new DateTime(this.duedate);
+		StringBuilder timeFormat = new StringBuilder()
+			.append(s.monthOfYear().getAsShortText())
+			.append(", ")
+			.append(Months.getDescriptiveNumber(s.getDayOfMonth()));
+		return timeFormat.toString();
+	}
+	
+	@Override
+	public UUID getIdentification()
+	{
+		return commitmentID;
+	}
+	
+	/**
+	 * a getter for GSON
+	 * @return
+	 */
+	public UUID getCommitmentID()
+	{
+		return commitmentID;
+	}
 }

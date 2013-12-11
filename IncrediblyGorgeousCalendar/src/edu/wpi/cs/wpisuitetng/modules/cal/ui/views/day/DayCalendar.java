@@ -10,7 +10,10 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day;
 
 import java.awt.BorderLayout;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -26,6 +29,7 @@ import com.lowagie.text.Font;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
@@ -78,21 +82,41 @@ public class DayCalendar extends AbstractCalendar
 		this.current = new LouvreTour();
 		this.current.setEvents(getVisibleEvents(), time);
 
-		this.holder.add(DayGridLabel.getInstance(), BorderLayout.WEST);
+		this.holder.add(new DayGridLabel(), BorderLayout.WEST);
 		this.holder.add(this.current, BorderLayout.CENTER);
 		// notify mini-calendar to change
 		mainPanel.miniMove(time);
 	}
 	
+	/**
+	 * Get visible events for the current day view
+	 * @return returns the list of events to display
+	 */
 	private List<Event> getVisibleEvents()
 	{
+		
+		// Set up from and to datetime for search
 		MutableDateTime f = new MutableDateTime(time);
 		f.setMillisOfDay(0);
 		DateTime from = f.toDateTime();
 		f.addDays(1);
 		DateTime to = f.toDateTime();
-		// TODO: this is where filtering should go
-		return eventModel.getEvents(from, to);
+		
+		// Filter events by date
+		List<Event> visibleEvents = eventModel.getEvents(from, to);
+		
+		// Filter for selected categories
+		Collection<UUID> selectedCategories = MainPanel.getInstance().getSelectedCategories();
+		List<Event> categoryFilteredEvents = new ArrayList<Event>();
+		
+		// Else, loop through events and filter by selected categories
+		for (Event e : visibleEvents){
+			if (selectedCategories.contains(e.getCategory()))
+				categoryFilteredEvents.add(e);
+		}
+		
+		// Return list of events to be displayed
+		return categoryFilteredEvents;
 	}
 
 	@Override

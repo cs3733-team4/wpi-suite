@@ -11,6 +11,7 @@ package edu.wpi.cs.wpisuitetng.modules.cal.utils;
 
 import java.awt.Color;
 
+import javax.swing.JPanel;
 import javax.swing.UIManager;
 
 /**
@@ -18,7 +19,8 @@ import javax.swing.UIManager;
  */
 public class Colors
 {
-	public static final Color TABLE_BACKGROUND = UIManager.getDefaults().getColor("Table.background"),
+	public static final Color 
+			TABLE_BACKGROUND = UIManager.getDefaults().getColor("Table.background"),
 			SELECTED_BACKGROUND = UIManager.getDefaults().getColor("textHighlight"),
 			SELECTED_TEXT = UIManager.getDefaults().getColor("textHighlightText"),
 			BORDER = UIManager.getDefaults().getColor("Separator.foreground"),
@@ -26,8 +28,10 @@ public class Colors
 			COMMITMENT_NOTIFICATION = Color.RED,
 			TABLE_TEXT = UIManager.getDefaults().getColor("Label.foreground");
 	
-	public static final Color TABLE_GRAY_HEADER = getTableGrayHeader();
 	
+	public static final Color TABLE_GRAY_HEADER = UIManager.getColor("Panel.background");  // For same color as default panel bg
+
+
 	/**
 	 * Computes the proper color for the gray header. Annoying on Mac OS X native & Nimbus LAF.
 	 */
