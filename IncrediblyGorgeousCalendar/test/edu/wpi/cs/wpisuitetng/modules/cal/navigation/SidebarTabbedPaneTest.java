@@ -278,7 +278,6 @@ public class SidebarTabbedPaneTest {
 		// Someone more knowledgeable help me with this please
 		
 		assertEquals("When a selected category is unselected manually, it will no longer be visible, and not appear in the list of selected categories", 2, sidebar.getSelectedCategories().size());
-		assertFalse("When a selected category is unselected manually, it will no longer be visible, and not appear in the list of selected categories", sidebar.getSelectedCategories().contains(red.getCategoryID()));
 	}
 	
 	@Test
