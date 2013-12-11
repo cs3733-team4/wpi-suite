@@ -138,13 +138,16 @@ public class MonthCalendar extends AbstractCalendar
 			}
 
 			@Override
-			public void mousePressed(MouseEvent arg0) {}
+			public void mousePressed(MouseEvent arg0) {
+				external = false;
+			}
 
 			@Override
 			public void mouseReleased(MouseEvent arg0)
 			{
 				if (external)
 				{
+					System.out.println("drop the events");
 					display(null);
 					repaint();
 					setEscaped(false);
@@ -152,7 +155,10 @@ public class MonthCalendar extends AbstractCalendar
 				else
 				{
 					Displayable selected = MainPanel.getInstance().getSelectedEvent();
-					display(selected.getDate());
+					if (selected != null && escaped)
+					{
+						display(selected.getDate());
+					}
 				}
 			}
 			
@@ -319,6 +325,7 @@ public class MonthCalendar extends AbstractCalendar
 
 	public void display(DateTime newTime)
 	{
+		this.escaped = false;
 		time = newTime;
 		generateDays(new MutableDateTime(time));
 		mainPanel.miniMove(time);
@@ -444,7 +451,7 @@ public class MonthCalendar extends AbstractCalendar
 	 */
 	protected DayStyle getMarker(ReadableDateTime date)
 	{
-		if (date != null && date.getMonthOfYear() == time.getMonthOfYear())
+		if (date != null && time != null && date.getMonthOfYear() == time.getMonthOfYear())
 		{
 			return (isToday(date) ? DayStyle.Today : DayStyle.Normal);
 		}
