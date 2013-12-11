@@ -17,28 +17,19 @@ import javax.swing.JPanel;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 
-public class DayGridLabel extends JPanel{
-	
-	private static DayGridLabel instance;
-	
-	public static DayGridLabel getInstance()
-	{
-		if(instance == null)
-			instance = new DayGridLabel();
-		return instance;
-	}
-	
-	private DayGridLabel()
+public class DayGridLabel extends JPanel
+{
+	public DayGridLabel()
 	{
 		this.setLayout(new GridLayout(24, 1));
 		this.setBackground(Colors.TABLE_BACKGROUND);
-		
-		for(int i = 0; i < 24; i++)
+
+		for (int i = 0; i < 24; i++)
 		{
-			int hour = i%12==0?12:i%12;
+			int hour = i % 12 == 0 ? 12 : i % 12;
 			String padding = (hour < 10) ? "    " : "   ";
 			StringBuilder currtime = new StringBuilder();
-			currtime.append(" ").append(hour).append(":00");
+			currtime.append(" ").append(hour);
 			if (i <= 11)
 				currtime.append("am");
 			else
@@ -49,5 +40,4 @@ public class DayGridLabel extends JPanel{
 			this.add(text);
 		}
 	}
-	
 }

@@ -11,6 +11,8 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.util.UUID;
 
 import javax.swing.JLabel;
@@ -37,11 +39,9 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 	public AddCommitmentDisplay()
 	{
 		super(false);
-		isEditingCommitment = false;
-		currentTime = new DateTime();
-		//populateCommitmentFields(new Commitment());
+		this.isEditingCommitment = false;
+		this.currentTime = new DateTime();
 		setCurrentDateAndTime();
-		//populateCommitmentFields(commitmentToEdit);
 		setUpListeners();
 	}
 
@@ -49,8 +49,9 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 	public AddCommitmentDisplay(Commitment mCommitment)
 	{
 		super(false);
-		isEditingCommitment = true;
-		commitmentToEdit = mCommitment;
+		this.isEditingCommitment = true;
+		this.commitmentToEdit = mCommitment;
+		this.existingCommitmentID = commitmentToEdit.getCommitmentID();
 		populateCommitmentFields(commitmentToEdit);
 		setUpListeners();
 	}
@@ -60,7 +61,6 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		nameTextField.setText(mCommitment.getName());
 		startTimeDatePicker.setDateTime(mCommitment.getDate());
 		participantsTextField.setText(mCommitment.getParticipants());
-		// TODO: categories
 		this.rdbtnPersonal.setSelected(!mCommitment.isProjectCommitment());
 		this.rdbtnTeam.setSelected(mCommitment.isProjectCommitment());
 		descriptionTextArea.setText(mCommitment.getDescription());
@@ -69,36 +69,39 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		else
 			this.eventCategoryPicker.setSelectedItem(Category.DEFAULT_CATEGORY);
 	}
-	
-		
 
-	
-	private void init(final Commitment oldCommitment)
-	{
-		nameTextField.setText(oldCommitment.getName());
-		startTimeDatePicker.setDateTime(oldCommitment.getDate());
-		participantsTextField.setText(oldCommitment.getParticipants());
-		// TODO: categories and team/personal
-		descriptionTextArea.setText(oldCommitment.getDescription());
-		existingCommitmentID=oldCommitment.getCommitmentID();
-	}
-
-private void setUpListeners(){
+	private void setUpListeners(){
 		saveButton.addActionListener(new ActionListener() {
-
+			
 			@Override
-			public void actionPerformed(ActionEvent arg0)
-			{
+			public void actionPerformed(ActionEvent e) {
 				attemptSave();
+				
 			}
 		});
-
 		cancelButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
 				MainPanel.getInstance().closeTab(tabid);
+			}
+		});
+		
+		nameTextField.addFocusListener(new FocusListener() {
+			
+			@Override
+			public void focusLost(FocusEvent e)
+			{
+				nameErrorLabel.setVisible(!validateText(nameTextField.getText(), nameErrorLabel));
+				saveButton.setEnabled(isSaveable());
+			}
+			
+			@Override
+			public void focusGained(FocusEvent e)
+			{
+				// TODO Auto-generated method stub
+				
 			}
 		});
 
@@ -130,43 +133,7 @@ private void setUpListeners(){
 				saveButton.setEnabled(isSaveable());
 			}
 		});
-		
-		saveButton.addActionListener(new ActionListener(){
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-
-					startTimeDatePicker.getDateTime();
-					
-					Commitment c = new Commitment();
-					c.setName(nameTextField.getText().trim());
-					c.setDescription(descriptionTextArea.getText());
-					c.setDate(startTimeDatePicker.getDateTime());
-					c.setProjectCommitment(rdbtnTeam.isSelected());
-					c.setParticipants(participantsTextField.getText().trim());
-					c.setCategory(((Category)eventCategoryPicker.getSelectedItem()).getCategoryID());
-					
-					
-					if (isEditingCommitment){
-						MainPanel.getInstance().updateCommitment(c);
-					} else {
-						MainPanel.getInstance().addCommitment(c);
-					}
-					
-					saveButton.setEnabled(false);
-					saveButton.setText("Saved!");
-					MainPanel.getInstance().closeTab(tabid);
-					MainPanel.getInstance().refreshView();
-			}
-		});
-		
-		// Cancel Button
-		cancelButton.addActionListener(new ActionListener(){
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				MainPanel.getInstance().closeTab(tabid);
-			}
-		});
+				
 		
 		//this should be called in updateSaveable() and thus isnt necessary here
 		//but error msg didn't start visible unless I called it directly
@@ -181,14 +148,14 @@ private void setUpListeners(){
 		e.setName(nameTextField.getText().trim());
 		e.setDescription(descriptionTextArea.getText());
 		e.setDate(startTimeDatePicker.getDateTime());
-		e.setParticipants(participantsTextField.getText());
+		e.setProjectCommitment(rdbtnTeam.isSelected());
+		e.setParticipants(participantsTextField.getText().trim());
+		e.setCategory(((Category)eventCategoryPicker.getSelectedItem()).getCategoryID());
 		
-		if (isEditingCommitment)
+		if (isEditingCommitment) {
 			e.setCommitmentID(existingCommitmentID);
-		
-		if (isEditingCommitment)
 			MainPanel.getInstance().updateCommitment(e);
-		else
+		} else
 			MainPanel.getInstance().addCommitment(e);
 
 		saveButton.setEnabled(false);

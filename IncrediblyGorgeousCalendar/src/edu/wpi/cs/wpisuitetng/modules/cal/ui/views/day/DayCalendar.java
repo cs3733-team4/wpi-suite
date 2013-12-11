@@ -15,8 +15,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
+import javax.swing.BoundedRangeModel;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
@@ -82,8 +84,13 @@ public class DayCalendar extends AbstractCalendar
 		this.current = new LouvreTour();
 		this.current.setEvents(getVisibleEvents(), time);
 
-		this.holder.add(DayGridLabel.getInstance(), BorderLayout.WEST);
+		this.holder.add(new DayGridLabel(), BorderLayout.WEST);
 		this.holder.add(this.current, BorderLayout.CENTER);
+		BoundedRangeModel jsb = scroll.getVerticalScrollBar().getModel();
+		double day = time.getMinuteOfDay();
+		day /= time.minuteOfDay().getMaximumValue();
+		day *= (jsb.getMaximum()) - jsb.getMinimum();
+		jsb.setValue((int)day);
 		// notify mini-calendar to change
 		mainPanel.miniMove(time);
 	}
@@ -95,28 +102,32 @@ public class DayCalendar extends AbstractCalendar
 	private List<Event> getVisibleEvents()
 	{
 		
-		// Set up from and to datetime for search
-		MutableDateTime f = new MutableDateTime(time);
-		f.setMillisOfDay(0);
-		DateTime from = f.toDateTime();
-		f.addDays(1);
-		DateTime to = f.toDateTime();
-		
-		// Filter events by date
-		List<Event> visibleEvents = eventModel.getEvents(from, to);
-		
-		// Filter for selected categories
-		Collection<UUID> selectedCategories = MainPanel.getInstance().getSelectedCategories();
-		List<Event> categoryFilteredEvents = new ArrayList<Event>();
-		
-		// Else, loop through events and filter by selected categories
-		for (Event e : visibleEvents){
-			if (selectedCategories.contains(e.getCategory()))
-				categoryFilteredEvents.add(e);
+		if (MainPanel.getInstance().showEvents()){
+			// Set up from and to datetime for search
+			MutableDateTime f = new MutableDateTime(time);
+			f.setMillisOfDay(0);
+			DateTime from = f.toDateTime();
+			f.addDays(1);
+			DateTime to = f.toDateTime();
+			
+			// Filter events by date
+			List<Event> visibleEvents = eventModel.getEvents(from, to);
+			
+			// Filter for selected categories
+			Collection<UUID> selectedCategories = MainPanel.getInstance().getSelectedCategories();
+			List<Event> categoryFilteredEvents = new ArrayList<Event>();
+			
+			// Else, loop through events and filter by selected categories
+			for (Event e : visibleEvents){
+				if (selectedCategories.contains(e.getCategory()))
+					categoryFilteredEvents.add(e);
+			}
+			
+			// Return list of events to be displayed
+			return categoryFilteredEvents;
+		} else {
+			return new ArrayList<Event>();
 		}
-		
-		// Return list of events to be displayed
-		return categoryFilteredEvents;
 	}
 
 	@Override

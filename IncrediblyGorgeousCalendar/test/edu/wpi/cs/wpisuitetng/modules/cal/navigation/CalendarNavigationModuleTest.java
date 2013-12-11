@@ -23,8 +23,8 @@ public class CalendarNavigationModuleTest {
 	
 	@Test
 	public void testGetPrevious() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		CalendarNavigationModule mCalYearModuleTimeOne = new CalendarNavigationModule(timeOne, null);
-		CalendarNavigationModule mCalYearModuleTimeTwo = new CalendarNavigationModule(timeTwo, null);
+		CalendarNavigationModule mCalYearModuleTimeOne = new CalendarNavigationModule(timeOne, null, false);
+		CalendarNavigationModule mCalYearModuleTimeTwo = new CalendarNavigationModule(timeTwo, null, false);
 		CalendarNavigationModule Result = mCalYearModuleTimeTwo.getPrevious();
 		Field f= mCalYearModuleTimeOne.getClass().getDeclaredField("time");
 		f.setAccessible(true);
@@ -33,8 +33,8 @@ public class CalendarNavigationModuleTest {
 	
 	@Test
 	public void testGetFollowing() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		CalendarNavigationModule mCalYearModuleTimeThree = new CalendarNavigationModule(timeThree, null);
-		CalendarNavigationModule mCalYearModuleTimeTwo = new CalendarNavigationModule(timeTwo, null);
+		CalendarNavigationModule mCalYearModuleTimeThree = new CalendarNavigationModule(timeThree, null, false);
+		CalendarNavigationModule mCalYearModuleTimeTwo = new CalendarNavigationModule(timeTwo, null, false);
 		CalendarNavigationModule Result = mCalYearModuleTimeTwo.getFollowing();
 		
 		Field f= mCalYearModuleTimeTwo.getClass().getDeclaredField("time");
@@ -45,8 +45,8 @@ public class CalendarNavigationModuleTest {
 	
 	@Test
 	public void testGetFollowingThenGetPreviousTwice() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		CalendarNavigationModule mCalYearModuleTimeOne = new CalendarNavigationModule(timeOne, null);
-		CalendarNavigationModule mCalYearModuleTimeTwo = new CalendarNavigationModule(timeTwo, null);
+		CalendarNavigationModule mCalYearModuleTimeOne = new CalendarNavigationModule(timeOne, null, false);
+		CalendarNavigationModule mCalYearModuleTimeTwo = new CalendarNavigationModule(timeTwo, null, false);
 		CalendarNavigationModule Result = mCalYearModuleTimeTwo.getFollowing().getPrevious().getPrevious();
 		
 		Field f= mCalYearModuleTimeOne.getClass().getDeclaredField("time");

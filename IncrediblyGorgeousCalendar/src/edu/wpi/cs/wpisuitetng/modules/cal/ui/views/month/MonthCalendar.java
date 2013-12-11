@@ -377,26 +377,45 @@ public class MonthCalendar extends AbstractCalendar
 
 	private List<Event> getVisibleEvents(DateTime from, DateTime to)
 	{
-		List<Event> visibleEvents = eventModel.getEvents(from, to);
-		
-		// Filter for selected categories
-		Collection<UUID> selectedCategories = MainPanel.getInstance().getSelectedCategories();
-		List<Event> categoryFilteredEvents = new ArrayList<Event>();
-		
-		// Else, loop through events and filter by selected categories
-		for (Event e : visibleEvents){
-			if (selectedCategories.contains(e.getCategory()))
-				categoryFilteredEvents.add(e);
-		}
-		
-		// Return list of events to be displayed
-		return categoryFilteredEvents;
+		if (MainPanel.getInstance().showEvents())
+		{
+			List<Event> visibleEvents = eventModel.getEvents(from, to);
+			
+			// Filter for selected categories
+			Collection<UUID> selectedCategories = MainPanel.getInstance().getSelectedCategories();
+			List<Event> categoryFilteredEvents = new ArrayList<Event>();
+			
+			// Else, loop through events and filter by selected categories
+			for (Event e : visibleEvents){
+				if (selectedCategories.contains(e.getCategory()))
+					categoryFilteredEvents.add(e);
+			}
+			
+			// Return list of events to be displayed
+			return categoryFilteredEvents;
+		} else
+			return new ArrayList<Event>();
 	}
 
 	private List<Commitment> getVisibleCommitments(DateTime from, DateTime to)
-	{
+	{	
 		if (MainPanel.getInstance().showCommitments())
-			return commitmentModel.getCommitments(from, to);
+		{
+			List<Commitment> visibleCommitments = commitmentModel.getCommitments(from, to);
+			
+			// Filter for selected categories
+			Collection<UUID> selectedCategories = MainPanel.getInstance().getSelectedCategories();
+			List<Commitment> categoryFilteredCommitments = new ArrayList<Commitment>();
+			
+			// Else, loop through events and filter by selected categories
+			for (Commitment c : visibleCommitments){
+				if (selectedCategories.contains(c.getCategory()))
+					categoryFilteredCommitments.add(c);
+			}
+			
+			// Return list of events to be displayed
+			return categoryFilteredCommitments;
+		}
 		else
 			return new ArrayList<Commitment>();
 	}

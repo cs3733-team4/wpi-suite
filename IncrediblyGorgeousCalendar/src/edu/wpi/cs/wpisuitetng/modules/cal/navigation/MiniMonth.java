@@ -35,7 +35,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
  */
 public class MiniMonth extends JPanel
 {
-	public MiniMonth(DateTime time, final MiniCalendarHostIface mc) {
+	public MiniMonth(DateTime time, final MiniCalendarHostIface mc, boolean monthOnly) {
 		this.setLayout(new GridLayout(7, 7));
 		MutableDateTime prevMonth = new MutableDateTime(time);
 		prevMonth.setDayOfMonth(1);
@@ -84,7 +84,7 @@ public class MiniMonth extends JPanel
 		for (int i = 0; i < (6 * 7); i++)
 		{
 			DayLabel day;
-			if (MainPanel.getInstance().getView() == ViewSize.Month)
+			if (monthOnly || MainPanel.getInstance().getView() == ViewSize.Month)
 			{
 				if (referenceDay.getDayOfMonth() == 1)
 					flipFlop ^= true; // flops the flip flop flappity flip

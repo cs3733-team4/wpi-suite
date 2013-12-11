@@ -34,9 +34,17 @@ public class MiniCalendarPanel extends JPanel
 	private JLabel monthName;
 	private DateTime currentDate;
 	private MiniCalendarHostIface mainPanel;
+	private boolean monthOnly = false;
 
+
+	public MiniCalendarPanel(DateTime date, MiniCalendarHostIface mainPanel)
+	{
+		init(date, mainPanel);
+	}
 	
-	public MiniCalendarPanel(DateTime date, MiniCalendarHostIface mainPanel) {
+	public MiniCalendarPanel(DateTime date, MiniCalendarHostIface mainPanel, boolean monthonly)
+	{
+		monthOnly = monthonly;
 		init(date, mainPanel);
 	}
 	
@@ -77,7 +85,7 @@ public class MiniCalendarPanel extends JPanel
 		
 		titlePane.add(monthName);
 		
-		calendarPreloader = new CalendarNavigationModule(date, mainPanel);
+		calendarPreloader = new CalendarNavigationModule(date, mainPanel, monthOnly);
 		this.miniCalendar = this.calendarPreloader.renderComponent();
 		
 		this.add(miniCalendar, BorderLayout.CENTER);
