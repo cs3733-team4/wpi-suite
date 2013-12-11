@@ -70,11 +70,7 @@ public class LouvreTour extends JPanel
 			@Override
 
 			public void mouseExited(MouseEvent arg0) {
-				if(selected != null)
-				{
-					inWeek.passTo(selected.event.getStart().getDayOfWeek(),selected);
-					getParent().dispatchEvent(arg0);
-				}
+				
 			}
 			
 			@Override
@@ -97,7 +93,8 @@ public class LouvreTour extends JPanel
 			
 			@Override
 			public void mouseMoved(MouseEvent arg0) {
-				inWeek.mouseOverDay(displayDate.getDayOfWeek());
+				if(inWeekView)
+					inWeek.mouseOverDay(displayDate.getDayOfWeek());
 			}
 			
 			@Override
