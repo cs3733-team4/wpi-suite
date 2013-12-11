@@ -38,7 +38,7 @@ public class AddEventDisplay extends DisplayableEditorView
 		super(true);
 		this.eventToEdit = mEvent;
 		this.isEditingEvent = true;
-		this.existingEventID = eventToEdit.getEventID();
+		this.existingEventID = eventToEdit.getIdentification();
 		populateEventFields(eventToEdit);
 		setUpListeners();
 		
@@ -70,7 +70,7 @@ public class AddEventDisplay extends DisplayableEditorView
 		if (eventToEdit.getAssociatedCategory()!=null)
 			this.eventCategoryPicker.setSelectedItem(eventToEdit.getAssociatedCategory());
 		else
-			this.eventCategoryPicker.setSelectedItem(Category.DEFUALT_CATEGORY);
+			this.eventCategoryPicker.setSelectedItem(Category.DEFAULT_CATEGORY);
 	}
 	
 	/**
@@ -119,31 +119,7 @@ public class AddEventDisplay extends DisplayableEditorView
 		saveButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-
-					startTimeDatePicker.getDateTime();
-					endTimeDatePicker.getDateTime();
-					
-					Event e = new Event();
-					e.setName(nameTextField.getText().trim());
-					e.setDescription(descriptionTextArea.getText());
-					e.setStart(startTimeDatePicker.getDateTime());
-					e.setEnd(endTimeDatePicker.getDateTime());
-					e.setProjectEvent(rdbtnTeam.isSelected());
-					e.setParticipants(participantsTextField.getText().trim());
-					e.setCategory(((Category)eventCategoryPicker.getSelectedItem()).getCategoryID());
-					
-					
-					if (isEditingEvent){
-						e.setEventID(existingEventID);
-						MainPanel.getInstance().updateEvent(e);
-					} else {
-						MainPanel.getInstance().addEvent(e);
-					}
-					
-					saveButton.setEnabled(false);
-					saveButton.setText("Saved!");
-					MainPanel.getInstance().closeTab(tabid);
-					MainPanel.getInstance().refreshView();
+					attemptSave();
 			}
 		});
 		
@@ -162,7 +138,41 @@ public class AddEventDisplay extends DisplayableEditorView
 		validateDate(startTimeDatePicker.getDateTime(), endTimeDatePicker.getDateTime(), dateErrorLabel);
 		saveButton.setEnabled(isSaveable());
 	}
+	public void attemptSave()
+	{
+		if (!isSaveable())
+			return;
+		startTimeDatePicker.getDateTime();
+		endTimeDatePicker.getDateTime();
+		
+		Event e = new Event();
+		e.setName(nameTextField.getText().trim());
+		e.setDescription(descriptionTextArea.getText());
+		e.setStart(startTimeDatePicker.getDateTime());
+		e.setEnd(endTimeDatePicker.getDateTime());
+		e.setProjectEvent(rdbtnTeam.isSelected());
+		e.setParticipants(participantsTextField.getText().trim());
+		e.setCategory(((Category)eventCategoryPicker.getSelectedItem()).getCategoryID());
+		
+		
+		if (isEditingEvent){
+			e.setEventID(existingEventID);
+			MainPanel.getInstance().updateEvent(e);
+		} else {
+			MainPanel.getInstance().addEvent(e);
+		}
+		
+		saveButton.setEnabled(false);
+		saveButton.setText("Saved!");
+		MainPanel.getInstance().closeTab(tabid);
+		MainPanel.getInstance().refreshView();
 	
+	saveButton.setEnabled(false);
+	saveButton.setText("Saved!");
+	MainPanel.getInstance().closeTab(tabid);
+
+	MainPanel.getInstance().refreshView();
+	}
 	/**
 	 * Set tab id for the created event view
 	 * @param id value to set id to
@@ -247,5 +257,10 @@ public class AddEventDisplay extends DisplayableEditorView
 	{
 		this.startTimeDatePicker.setDateTime(currentTime);
 		this.endTimeDatePicker.setDateTime(currentTime.plusHours(1));
+	}
+	
+	public boolean editingEvent()
+	{
+		return this.isEditingEvent;
 	}
 }

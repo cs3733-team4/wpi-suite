@@ -175,7 +175,16 @@ public class YearCalendar extends AbstractCalendar
 			Integer eventCount = events.get(start.getDayOfYear());
 			eventCount = eventCount==null?0:eventCount;
 			
-			YearlyDayHolder day = new YearlyDayHolder(start.toDateTime(), dayBackground, eventCount>0);
+			YearlyDayHolder day = new YearlyDayHolder(start.toDateTime(), dayBackground);
+			MutableDateTime today = new MutableDateTime(DateTime.now());
+			today.setMillisOfDay(0);
+			MutableDateTime checking = new MutableDateTime(start);
+			start.setMillisOfDay(0);
+			if (checking.toDateTime().isEqual(today))
+			{
+				day.setBackground(Colors.SELECTED_BACKGROUND);
+				day.setForeground(Colors.SELECTED_TEXT);
+			}
 			JLabel dayLabel = new JLabel(start.getDayOfMonth()+"");
 			dayLabel.setHorizontalAlignment(SwingConstants.CENTER);
 			
@@ -194,14 +203,10 @@ public class YearCalendar extends AbstractCalendar
 				@Override
 				public void mouseEntered(MouseEvent me) {
 					// this is just a demo of what it can do
-					JPanel event = (JPanel)(me.getSource());
-					event.setBackground(Colors.SELECTED_BACKGROUND);
 				}
 
 				@Override
 				public void mouseExited(MouseEvent me) {
-					YearlyDayHolder event = (YearlyDayHolder)(me.getSource());
-					event.resetColor();
 				}
 
 				@Override
@@ -242,7 +247,6 @@ public class YearCalendar extends AbstractCalendar
 	{
 		private DateTime dt;
 		private Color defaultBackground;
-		private boolean hasEvent;
 		
 		/**
 		 * 
@@ -250,11 +254,10 @@ public class YearCalendar extends AbstractCalendar
 		 * @param dayBackground the background color (alternates by month)
 		 * @param hasEvent whether to draw the dot signifying an event
 		 */
-		public YearlyDayHolder(DateTime dt, Color dayBackground, boolean hasEvent)
+		public YearlyDayHolder(DateTime dt, Color dayBackground)
 		{
 			this.dt = dt;
 			this.defaultBackground = dayBackground;
-			this.hasEvent = hasEvent;
 			this.resetColor();
 		}
 		
@@ -281,16 +284,6 @@ public class YearCalendar extends AbstractCalendar
 		public void paintComponent(Graphics g)
 		{
 			super.paintComponent(g);
-			
-			if (this.hasEvent && this.getHeight() > 30)
-			{
-				g.setColor(defaultBackground.darker());
-				int dotX = this.getWidth()/2-3;
-				int dotY = this.getHeight()-10;
-				g.fillOval(dotX, dotY, 6, 6);
-				g.setColor(defaultBackground.darker().darker());
-				g.drawOval(dotX, dotY, 6, 6);
-			}
 		}
 	}
 

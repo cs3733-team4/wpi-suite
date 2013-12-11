@@ -10,32 +10,43 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.awt.MouseInfo;
+import java.awt.Point;
+import java.awt.Polygon;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import org.joda.time.DateTime;
-import org.joda.time.Days;
-import org.joda.time.Duration;
 import org.joda.time.MutableDateTime;
 import org.joda.time.ReadableDateTime;
 
-import com.lowagie.text.Font;
+import java.awt.Font;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.DayStyle;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.HSLColor;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
 
 /**
@@ -57,6 +68,7 @@ public class MonthCalendar extends AbstractCalendar
 
 	private EventModel eventModel;
 	private CommitmentModel commitmentModel;
+	private boolean escaped;
 
 	public MonthCalendar(DateTime on, EventModel emodel, CommitmentModel cmodel)
 	{
@@ -70,7 +82,45 @@ public class MonthCalendar extends AbstractCalendar
 
 		generateDays(new MutableDateTime(on));
 		generateHeaders(new MutableDateTime(on));
+		
+		addMouseMotionListener(new MouseMotionListener()
+		{
+			@Override
+			public void mouseDragged(MouseEvent e)
+			{	
+				MainPanel p = MainPanel.getInstance();
+				Displayable d = p.getSelectedEvent();
+				
+				MonthDay md = getMonthDayAtCursor();
+				
+				if (d != null && md != null)
+				{
+					md.setBackground(new Color(255, 255, 200));
+					d.setTime(md.getDay());
+				}
+			}
 
+			@Override
+			public void mouseMoved(MouseEvent e) {}
+			
+		});
+	}
+	
+	public MonthDay getMonthDayAtCursor()
+	{
+		Point l = MouseInfo.getPointerInfo().getLocation();
+		Point pp = inside.getLocationOnScreen();
+		
+		int x = l.x-pp.x;
+		int y = l.y-pp.y;
+		
+		Component jc = inside.getComponentAt(x, y);
+		if (jc instanceof MonthDay)
+		{
+			return (MonthDay) jc;
+		}
+		return null;
+		
 	}
 
 	/**
@@ -196,7 +246,7 @@ public class MonthCalendar extends AbstractCalendar
 	{
 		for (Component i : inside.getComponents())
 		{
-			((MonthDay)i).clear();
+			((MonthDay)i).clearEvents();
 		}
 	}
 
@@ -266,7 +316,7 @@ public class MonthCalendar extends AbstractCalendar
 		// through and add each day
 		for (int i = 0; i < (weeks * 7); i++)
 		{
-			MonthDay md = new MonthDay(referenceDay.toDateTime(), getMarker(referenceDay));
+			MonthDay md = new MonthDay(referenceDay.toDateTime(), getMarker(referenceDay), this);
 			inside.add(md);
 			md.reBorder(i < 7, (i % 7) == 0, i >= (weeks - 1) * 7);
 			this.days.put(referenceDay.getDayOfYear(), md);
@@ -290,13 +340,28 @@ public class MonthCalendar extends AbstractCalendar
 
 	private List<Event> getVisibleEvents(DateTime from, DateTime to)
 	{
-		// TODO: this is where filtering should go
-		return eventModel.getEvents(from, to);
+		List<Event> visibleEvents = eventModel.getEvents(from, to);
+		
+		// Filter for selected categories
+		Collection<UUID> selectedCategories = MainPanel.getInstance().getSelectedCategories();
+		List<Event> categoryFilteredEvents = new ArrayList<Event>();
+		
+		// Else, loop through events and filter by selected categories
+		for (Event e : visibleEvents){
+			if (selectedCategories.contains(e.getCategory()))
+				categoryFilteredEvents.add(e);
+		}
+		
+		// Return list of events to be displayed
+		return categoryFilteredEvents;
 	}
 
 	private List<Commitment> getVisibleCommitments(DateTime from, DateTime to)
 	{
-		return commitmentModel.getCommitments(from, to);
+		if (MainPanel.getInstance().showCommitments())
+			return commitmentModel.getCommitments(from, to);
+		else
+			return new ArrayList<Commitment>();
 	}
 
 	/**
@@ -391,5 +456,93 @@ public class MonthCalendar extends AbstractCalendar
 			startDay.addDays(1);
 		
 		}
+	}
+
+	/**
+	 * @return the escaped
+	 */
+	public boolean isEscaped() {
+		return escaped;
+	}
+
+	/**
+	 * @param escaped the escaped to set
+	 */
+	public void setEscaped(boolean escaped) {
+		this.escaped = escaped;
+	}
+	
+	@Override
+	public void paint(Graphics g)
+	{
+		super.paint(g);	
+		if (escaped)
+		{
+			Displayable dp = MainPanel.getInstance().getSelectedEvent();
+			if (dp != null)
+			{
+				String name = dp.getName();
+				if (name != null)
+				{	
+					//get Cursor info
+					Point l = MouseInfo.getPointerInfo().getLocation();
+					Point pp = inside.getLocationOnScreen();
+					int x = l.x-pp.x;
+					int y = l.y-pp.y;
+					
+					//get String properties of displayables
+					String time = dp.getFormattedHoverTextTime();
+					String days = dp.getFormattedDateRange();
+					
+					//get widths of stringProperties and find longest
+					int timeSize = g.getFontMetrics().stringWidth(time);
+					int nameSize = g.getFontMetrics().stringWidth(name);
+					int daysSize = g.getFontMetrics().stringWidth(days);
+					
+					int width = Math.max(
+							Math.max(timeSize+10, nameSize+10),
+							Math.max(daysSize+10, 60));
+					
+					
+					//generate the polygon
+					Polygon dropdown = getDropTextPolygon(width, x, y);
+					
+					HSLColor background = new HSLColor(dp.getColor());
+					Color c = background.adjustLuminance(90);
+					
+					//draw the polygon
+					//g.setColor(new Color(255,255,255,160));
+					g.setColor(c);
+					g.fillPolygon(dropdown);
+					g.setColor(Color.BLACK);
+					g.drawPolygon(dropdown);
+					
+					//draw the text
+					g.drawString(name, x+(width-nameSize)/2, y+90);
+					g.drawString(time, x+(width-timeSize)/2, y+110);
+					g.drawString(days, x+(width-daysSize)/2, y+130);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * 
+	 * @param width the width of the box (for text)
+	 * @param x the mouse's position (x)
+	 * @param y the mouse's position (y)
+	 * @return the drawing polygon
+	 */
+	private Polygon getDropTextPolygon(int width, int x, int y)
+	{
+		y += 40;
+		int[] xs = {
+				x+0,x+30,x+0,x+0,x+width,x+width,x+60
+		};
+		int[] ys = {
+				y+0,y+30,y+30,y+100,y+100,y+30,y+30
+		};
+		
+		return new Polygon(xs, ys, 7);
 	}
 }

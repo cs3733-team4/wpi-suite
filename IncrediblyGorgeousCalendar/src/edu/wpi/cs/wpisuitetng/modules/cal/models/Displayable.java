@@ -9,6 +9,9 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.models;
 
+import java.awt.Color;
+import java.util.UUID;
+
 import org.joda.time.DateTime;
 
 /**
@@ -43,4 +46,47 @@ public interface Displayable
 	 * deletes this Displayable
 	 */
 	public void delete();
+	
+	/**
+	 * sets the time (for easy updating)
+	 */
+	public void setTime(DateTime newTime);
+	
+	/**
+	 * updates this event (sends call to db layer)
+	 */
+	public void update();
+	
+	/**
+	 * gets the duration of this event as a string
+	 * 
+	 * @return a String
+	 */
+	public String getFormattedHoverTextTime();
+	
+	/**
+	 * returns the dateRange for this event (an empty string for single day events and commitments)
+	 * 
+	 * @return a String
+	 */
+	public String getFormattedDateRange();
+	
+	/**
+	 * gets the displayables identification UUID
+	 * 
+	 * @return a UUID
+	 */
+	public UUID getIdentification();
+	
+	/**
+	 * @return the category
+	 */
+	public UUID getCategory();
+	
+	/**
+	 * get the color that this event wants to be drawn
+	 * @return a Color Object
+	 */
+	public Color getColor();
+	
 }

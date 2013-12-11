@@ -9,27 +9,28 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.week;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 
-import javax.management.RuntimeErrorException;
 import javax.swing.BorderFactory;
 import javax.swing.BoundedRangeModel;
-import javax.swing.BoxLayout;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
-import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -76,7 +77,7 @@ public class WeekCalendar extends AbstractCalendar
 	private DateTimeFormatter dayTitleFmt = DateTimeFormat.forPattern("E M/d");
 	private JLabel weekTitle = new JLabel();
 	private JScrollPane headerScroller = new JScrollPane();
-	private JPanel headerBox = new JPanel();
+	private ScrollableBox headerBox = new ScrollableBox();
 	private JScrollPane smithsonianScroller = new JScrollPane();
 	private JPanel smithsonian = new JPanel();
 	private JLabel dayHeaders[] = new JLabel[7];
@@ -94,8 +95,9 @@ public class WeekCalendar extends AbstractCalendar
 		this.currentDayUnderMouse = -1;
 		updateWeekStartAndEnd(time);
 		
-		// ui layout //100px:n:100px,grow
-		setLayout(new MigLayout("insets 0,gap 0", "[100px][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][" + (new JScrollBar().getPreferredSize().width) + "px]", "[][][::100px,grow][grow]"));
+		// ui layout
+		String rs = (new JScrollBar().getPreferredSize().width) + "px";
+		setLayout(new MigLayout("insets 0,gap 0", "[50px:50px:50px][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow]["+rs+":"+rs+":"+rs+"]", "[][][::100px,grow][grow]"));
 		
 		weekTitle.setFont(new Font("DejaVu Sans", Font.BOLD, 25));
 		add(weekTitle, "cell 0 0 9 1,alignx center");
@@ -107,11 +109,11 @@ public class WeekCalendar extends AbstractCalendar
 		
 		headerScroller.setBorder(BorderFactory.createEmptyBorder());
 		headerScroller.setViewportBorder(BorderFactory.createEmptyBorder());
+		headerScroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		add(headerScroller, "cell 1 2 7 1,grow"); // default to 7 as no scrollbars
 		
 		headerBox.setBorder(BorderFactory.createEmptyBorder());
 		headerScroller.setViewportView(headerBox);
-		headerBox.setLayout(new BoxLayout(headerBox, BoxLayout.Y_AXIS));
 		
 
 		smithsonianScroller.setBorder(null);
@@ -121,7 +123,8 @@ public class WeekCalendar extends AbstractCalendar
 		add(smithsonianScroller, "cell 0 3 9 1,grow");
 
 		smithsonianScroller.setViewportView(smithsonian);
-		smithsonian.setLayout(new MigLayout("insets 0,gap 0", "[100px][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow]", "[grow]"));
+		smithsonian.setLayout(new MigLayout("insets 0,gap 0", "[50px:50px:50px][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow]", "[grow]"));
+		
 		generateDay();
 		this.addMouseMotionListener(new MouseMotionListener() {
 			
@@ -238,7 +241,11 @@ public class WeekCalendar extends AbstractCalendar
 							{
 								System.out.print("currEvent Name:Name  " + currEvent.getName() + "\n");
 								JLabel multidayPanel = new JLabel(" " + currEvent.getName());
+								multidayPanel.setMinimumSize(new Dimension(0, 0));
 								multidayPanel.setBackground(currEvent.getColor());
+								if (multiGrid.getComponentCount() > 0)
+									((JComponent)multiGrid.getComponents()[multiGrid.getComponentCount() - 1]).setBorder(BorderFactory.createMatteBorder(rows == 0 ? 1 : 0, (gridIndex == 1) ? 1 : 0, 1, 0, Colors.BORDER));
+								multidayPanel.setBorder(new CompoundBorder(BorderFactory.createMatteBorder(rows == 0 ? 1 : 0, 1, 1, 1, currEvent.getColor().darker()), new EmptyBorder(3, 3, 3, 3)));
 								multidayPanel.setOpaque(true);
 								multiGrid.add(multidayPanel, "cell " + gridIndex + " 0, grow");
 								firstPanel = false;
@@ -248,6 +255,7 @@ public class WeekCalendar extends AbstractCalendar
 								System.out.print("currEvent Color: " + currEvent.getName() + "\n");
 								JPanel multidayPanel = new JPanel();
 								multidayPanel.setBackground(currEvent.getColor());
+								multidayPanel.setBorder(new CompoundBorder(BorderFactory.createMatteBorder(rows == 0 ? 1 : 0, 0, 1, 1, currEvent.getColor().darker()), new EmptyBorder(3, 3, 3, 3)));
 								multiGrid.add(multidayPanel, "cell " + gridIndex + " 0, grow");
 							}
 							gridIndex++;
@@ -281,7 +289,7 @@ public class WeekCalendar extends AbstractCalendar
 		{
 			add(headerScroller, "cell 1 2 7 1,grow");
 		}
-		((MigLayout)getLayout()).setRowConstraints("[][][" + (rows * 14) +  "px:n:60px,grow][grow]");// TODO: fix " + (rows > 0 ? "gapafter 3" : "") + "
+		((MigLayout)getLayout()).setRowConstraints("[][][" + (rows * 23) +  "px:n:80px,grow]" + (rows > 0 ? "6" : "") + "[grow]");
 	}
 
 	/**
@@ -294,7 +302,20 @@ public class WeekCalendar extends AbstractCalendar
 	private List<Event> getVisibleEvents(DateTime curDay)
 	{
 		// TODO: this is where filtering should go
-		return EventModel.getInstance().getEvents(weekStartTime, weekEndTime);
+		List<Event> visibleEvents =  EventModel.getInstance().getEvents(weekStartTime, weekEndTime);
+		
+		// Filter for selected categories
+		Collection<UUID> selectedCategories = MainPanel.getInstance().getSelectedCategories();
+		List<Event> categoryFilteredEvents = new ArrayList<Event>();
+		
+		// Else, loop through events and filter by selected categories
+		for (Event e : visibleEvents){
+			if (selectedCategories.contains(e.getCategory()))
+				categoryFilteredEvents.add(e);
+		}
+		
+		// Return list of events to be displayed
+		return categoryFilteredEvents;
 	}
 
 	@Override
