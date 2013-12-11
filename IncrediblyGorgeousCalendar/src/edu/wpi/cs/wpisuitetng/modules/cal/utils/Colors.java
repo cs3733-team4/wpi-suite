@@ -30,8 +30,8 @@ public class Colors
 	
 	
 	public static final Color TABLE_GRAY_HEADER = UIManager.getColor("Panel.background");  // For same color as default panel bg
-	// public static final Color TABLE_GRAY_HEADER =getTableGrayHeader();	// For headers that are darker than default panel bg
-	
+
+
 	/**
 	 * Computes the proper color for the gray header. Annoying on Mac OS X native & Nimbus LAF.
 	 */
