@@ -35,6 +35,7 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarHostIface;
 
 import javax.swing.SwingConstants;
@@ -187,18 +188,7 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 				}
 
 				public void mouseReleased(MouseEvent e) {
-					JFrame cal;
-					if(getDate()!=null)
-						cal = new PopupCalendar(getDate(), me);
-					else
-						cal = new PopupCalendar(DateTime.now(), me);
-				    cal.setUndecorated(true);
-				    cal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				    Point loc = date.getLocationOnScreen();
-				    loc.setLocation(loc.x, loc.y + 26);
-					cal.setLocation(loc);
-					cal.setSize(220, 220);
-				    cal.setVisible(true);
+					showMiniCalendar();
 				}
 
 				public void mouseEntered(MouseEvent e) {
@@ -215,6 +205,24 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 		}
 	}
 
+	/**
+	 * This pulls up the mini calendar date picker for the date
+	 */
+	private void showMiniCalendar()
+	{
+		JFrame cal;
+		if(getDate()!=null)
+			cal = new PopupCalendar(getDate(), this);
+		else
+			cal = new PopupCalendar(DateTime.now(), this);
+	    cal.setUndecorated(true);
+	    cal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    Point loc = date.getLocationOnScreen();
+	    loc.setLocation(loc.x, loc.y + 26);
+		cal.setLocation(loc);
+		cal.setSize(220, 220);
+	    cal.setVisible(true);
+	}
 	public void display(DateTime value) {		
 		date.setText(value.toString(dateFmt));
 		if(linked != null)
@@ -262,6 +270,15 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 		changeListeners.add(newListener);
 	}
 	
+	public void requestDateFocus()
+	{
+		date.requestFocus();
+		showMiniCalendar();
+	}
+	public void requestTimeFocus()
+	{
+		time.requestFocus();
+	}
 	public void notifyListeners()
 	{
 		for(DatePickerListener d : changeListeners)

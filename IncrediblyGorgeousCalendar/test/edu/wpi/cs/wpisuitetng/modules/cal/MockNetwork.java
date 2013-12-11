@@ -14,6 +14,7 @@ import java.util.HashSet;
 
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryEntityManager;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentEntityManager;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventEntityManager;
 import edu.wpi.cs.wpisuitetng.modules.core.models.*;
@@ -87,5 +88,8 @@ public class MockNetwork extends Network {
 		eventManager = new EventEntityManager(new MockData(new HashSet<Object>()));
 		commitmentManager = new CommitmentEntityManager(new MockData(new HashSet<Object>()));
 		categoryManager = new CategoryEntityManager(new MockData(new HashSet<Object>()));
+		
+		// Should we put these here? Doing so breaks the network, but makes a global "clear cache" method
+		CategoryModel.getInstance().updateCache();
 	}
 }

@@ -12,10 +12,16 @@ package edu.wpi.cs.wpisuitetng.modules.cal.navigation;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.beans.PropertyChangeListener;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 
 import org.joda.time.DateTime;
 
@@ -31,6 +37,12 @@ public class MainCalendarNavigation extends JPanel {
 
 	public MainCalendarNavigation(JComponent parent, final AbstractCalendar mAbstractCalendar) {
 		
+		// Disable focus to allow arrow keys to respond to navigation requests
+		nextButton.setFocusable(false);
+		previousButton.setFocusable(false);
+		todayButton.setFocusable(false);
+		navigationButtonPanel.setFocusable(false);
+		
 		navigationButtonPanel.setLayout(new BorderLayout());
 		navigationButtonPanel.add(nextButton, BorderLayout.EAST);
 		navigationButtonPanel.add(todayButton, BorderLayout.CENTER);
@@ -39,34 +51,69 @@ public class MainCalendarNavigation extends JPanel {
 		// Set current calendar
 		this.currentCalendar = mAbstractCalendar;
 		
-		nextButton.addActionListener(new ActionListener() {
-			
+		nextButton.addActionListener(new ActionListener()
+		{	
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 				currentCalendar.next();
 			}
 		});
-		previousButton.addActionListener(new ActionListener() {
-			
+		previousButton.addActionListener(new ActionListener()
+		{
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 				currentCalendar.previous();
 				
 			}
 		});
-		todayButton.addActionListener(new ActionListener() {
-			
+		todayButton.addActionListener(new ActionListener()
+		{	
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 				currentCalendar.display(DateTime.now());
 			}
 		});
 		
+		// Set up UI
 		this.setLayout(new BorderLayout());
 		this.add(navigationButtonPanel, BorderLayout.WEST);
+	
+		// Listens for arrow keyboard input
+		this.setFocusable(true);
+		this.getInputMap().put(KeyStroke.getKeyStroke("LEFT"), "prevMonth");
+		this.getActionMap().put("prevMonth", prevMonth);
+		this.getInputMap().put(KeyStroke.getKeyStroke("RIGHT"), "nextMonth");
+		this.getActionMap().put("nextMonth", nextMonth);
+	
 	}
 	
+	/**
+	 * Update the calendar referenced by the calendar navigation panel
+	 * @param newCalendar calendar to reference
+	 */
 	public void updateCalendar (AbstractCalendar newCalendar){
 		this.currentCalendar = newCalendar;
 	}
+	
+
+	/**
+	 * Action to execute upon press of left arrow key
+	 */
+	private Action prevMonth = new AbstractAction("prevMonth"){
+		public void actionPerformed(ActionEvent e){
+			currentCalendar.previous();
+		}
+	};
+	
+	/**
+	 * Action to execute upon press of right arrow key
+	 */
+	private Action nextMonth = new AbstractAction("prevMonth"){
+		public void actionPerformed(ActionEvent e){
+			currentCalendar.next();
+		}
+	};
 }

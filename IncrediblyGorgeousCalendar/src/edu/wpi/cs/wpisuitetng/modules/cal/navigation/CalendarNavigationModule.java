@@ -16,7 +16,7 @@ import org.joda.time.MutableDateTime;
 
 
 /**
- * This is the controller? for the entire side panel
+ * This is the controller for the entire side panel
  */
 public class CalendarNavigationModule{
 

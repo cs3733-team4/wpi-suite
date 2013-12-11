@@ -12,6 +12,7 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.JLabel;
+
 import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
@@ -21,6 +22,8 @@ import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.DisplayableEditorView;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.util.UUID;
 
 public class AddEventDisplay extends DisplayableEditorView
@@ -38,7 +41,7 @@ public class AddEventDisplay extends DisplayableEditorView
 		super(true);
 		this.eventToEdit = mEvent;
 		this.isEditingEvent = true;
-		this.existingEventID = eventToEdit.getEventID();
+		this.existingEventID = eventToEdit.getIdentification();
 		populateEventFields(eventToEdit);
 		setUpListeners();
 		
@@ -70,7 +73,7 @@ public class AddEventDisplay extends DisplayableEditorView
 		if (eventToEdit.getAssociatedCategory()!=null)
 			this.eventCategoryPicker.setSelectedItem(eventToEdit.getAssociatedCategory());
 		else
-			this.eventCategoryPicker.setSelectedItem(Category.DEFUALT_CATEGORY);
+			this.eventCategoryPicker.setSelectedItem(Category.DEFAULT_CATEGORY);
 	}
 	
 	/**
@@ -78,6 +81,22 @@ public class AddEventDisplay extends DisplayableEditorView
 	 */
 	private void setUpListeners(){
 		
+		nameTextField.addFocusListener(new FocusListener() {
+			
+			@Override
+			public void focusLost(FocusEvent e)
+			{
+				nameErrorLabel.setVisible(!validateText(nameTextField.getText(), nameErrorLabel));
+				saveButton.setEnabled(isSaveable());
+			}
+			
+			@Override
+			public void focusGained(FocusEvent e)
+			{
+				// TODO Auto-generated method stub
+				
+			}
+		});
 
 		nameTextField.getDocument().addDocumentListener(new DocumentListener() {
 			
@@ -119,36 +138,7 @@ public class AddEventDisplay extends DisplayableEditorView
 		saveButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-
-					startTimeDatePicker.getDateTime();
-					endTimeDatePicker.getDateTime();
-					
-					Event e = new Event();
-					e.setName(nameTextField.getText().trim());
-					e.setDescription(descriptionTextArea.getText());
-					e.setStart(startTimeDatePicker.getDateTime());
-					e.setEnd(endTimeDatePicker.getDateTime());
-					e.setProjectEvent(rdbtnTeam.isSelected());
-					e.setParticipants(participantsTextField.getText().trim());
-					e.setCategory(((Category)eventCategoryPicker.getSelectedItem()).getCategoryID());
-					
-					
-					if (isEditingEvent){
-						e.setEventID(existingEventID);
-						MainPanel.getInstance().updateEvent(e);
-					} else {
-						MainPanel.getInstance().addEvent(e);
-					}
-					
-					saveButton.setEnabled(false);
-					saveButton.setText("Saved!");
-					MainPanel.getInstance().closeTab(tabid);
-					MainPanel.getInstance().refreshView();
-				
-				saveButton.setEnabled(false);
-				saveButton.setText("Saved!");
-				MainPanel.getInstance().closeTab(tabid);
-				MainPanel.getInstance().refreshView();
+					attemptSave();
 			}
 		});
 		
@@ -165,10 +155,36 @@ public class AddEventDisplay extends DisplayableEditorView
 		//this should be called in updateSaveable() and thus isnt necessary here
 		//but error msg didn't start visible unless I called it directly
 		validateDate(startTimeDatePicker.getDateTime(), endTimeDatePicker.getDateTime(), dateErrorLabel);
-		
 		saveButton.setEnabled(isSaveable());
 	}
-	
+	public void attemptSave()
+	{
+		if (!isSaveable())
+			return;
+		startTimeDatePicker.getDateTime();
+		endTimeDatePicker.getDateTime();
+		
+		Event e = new Event();
+		e.setName(nameTextField.getText().trim());
+		e.setDescription(descriptionTextArea.getText());
+		e.setStart(startTimeDatePicker.getDateTime());
+		e.setEnd(endTimeDatePicker.getDateTime());
+		e.setProjectEvent(rdbtnTeam.isSelected());
+		e.setParticipants(participantsTextField.getText().trim());
+		e.setCategory(((Category)eventCategoryPicker.getSelectedItem()).getCategoryID());
+		
+		if (isEditingEvent){
+			e.setEventID(existingEventID);
+			MainPanel.getInstance().updateEvent(e);
+		} else {
+			MainPanel.getInstance().addEvent(e);
+		}
+		
+		saveButton.setEnabled(false);
+		saveButton.setText("Saved!");
+		MainPanel.getInstance().closeTab(tabid);
+		MainPanel.getInstance().refreshView();
+	}
 	/**
 	 * Set tab id for the created event view
 	 * @param id value to set id to
@@ -239,7 +255,7 @@ public class AddEventDisplay extends DisplayableEditorView
 	 */
 	public boolean matchingEvent(AddEventDisplay other)
 	{
-		return this.eventToEdit != null && this.eventToEdit.equals(other.eventToEdit);
+		return this.eventToEdit != null && this.eventToEdit.getEventID().equals(other.eventToEdit.getEventID());
 	}
 	
 	
@@ -253,5 +269,10 @@ public class AddEventDisplay extends DisplayableEditorView
 	{
 		this.startTimeDatePicker.setDateTime(currentTime);
 		this.endTimeDatePicker.setDateTime(currentTime.plusHours(1));
+	}
+	
+	public boolean editingEvent()
+	{
+		return this.isEditingEvent;
 	}
 }

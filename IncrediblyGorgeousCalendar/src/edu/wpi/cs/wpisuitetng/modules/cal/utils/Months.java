@@ -133,14 +133,14 @@ public class Months
 	{
 		MutableDateTime mdt = new MutableDateTime(time);
 		mdt.addDays(7);
-		return getWeekStart(mdt.toDateTime());
+		return mdt.toDateTime();
 	}
 
 	public static DateTime prevWeek(DateTime time)
 	{
 		MutableDateTime mdt = new MutableDateTime(time);
-		mdt.addDays(7);
-		return getWeekStart(mdt.toDateTime());
+		mdt.addDays(-7);
+		return mdt.toDateTime();
 	}
 
 	/**
@@ -152,8 +152,40 @@ public class Months
 	public static DateTime getWeekStart(DateTime d)
 	{
 		MutableDateTime t = new MutableDateTime(d);
-		t.addDays(0 - d.getDayOfWeek());
+		t.addDays(-(d.getDayOfWeek()%7));
 		return t.toDateTime();
+	}
+	
+	/**
+	 * adds descriptive letters to numbers:
+	 * 	1 -> 1st
+	 *  2 -> 2nd
+	 *  11 -> 11th
+	 *  etc
+	 * 
+	 * @param i the number to convert
+	 * @return a String
+	 */
+	public static String getDescriptiveNumber(int i)
+	{
+		if (i%100 < 20 && i%100 > 10)
+		{
+			return i+"th";
+		}
+		
+		if (i%10 == 1)
+		{
+			return i+"st";
+		}
+		if (i%10 == 2)
+		{
+			return i+"nd";
+		}
+		if (i%10 == 3){
+			return i+"rd";
+		}
+		
+		return i+"th";
 	}
 
 }

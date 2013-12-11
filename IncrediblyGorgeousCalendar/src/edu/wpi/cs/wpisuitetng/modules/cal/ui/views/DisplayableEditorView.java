@@ -30,6 +30,7 @@ import javax.swing.Box.Filler;
 import net.miginfocom.swing.MigLayout;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.SelectableField;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.DatePicker;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.RequestFocusListener;
@@ -98,7 +99,7 @@ public class DisplayableEditorView extends JPanel
 
 		eventCategoryPicker = new JComboBox<>();
 		eventCategoryPicker.setRenderer(new CategoryComboBoxRenderer());
-		this.eventCategoryPicker.addItem(Category.DEFUALT_CATEGORY);
+		this.eventCategoryPicker.addItem(Category.DEFAULT_CATEGORY);
 		for (Category c : CategoryModel.getInstance().getAllCategories())
 		{
 			this.eventCategoryPicker.addItem(c);
@@ -138,7 +139,27 @@ public class DisplayableEditorView extends JPanel
 		saveButton.setMinimumSize(new Dimension(80, 0));
 		this.add(saveButton, "cell 1 7,alignx right,aligny bottom,tag ok");
 	}
-
+	
+	public void setSelected(SelectableField field)
+	{
+		if (field==SelectableField.NAME)
+			nameTextField.requestFocus();
+		else if ((field == SelectableField.START_DATE) || (field==SelectableField.DATE))
+			startTimeDatePicker.requestDateFocus();
+		else if (field == SelectableField.END_DATE)
+			endTimeDatePicker.requestDateFocus();
+		else if ((field == SelectableField.START_TIME) || (field==SelectableField.TIME))
+			startTimeDatePicker.requestTimeFocus();
+		else if (field == SelectableField.END_TIME)
+			endTimeDatePicker.requestTimeFocus();
+		else if (field == SelectableField.DESCRIPTION)
+			descriptionTextArea.requestFocus();
+		else if (field == SelectableField.PARTICIPANTS)
+			participantsTextField.requestFocus();
+		else if (field == SelectableField.CATEGORY)
+			eventCategoryPicker.showPopup();
+	}
+	
 	private class CategoryComboBoxRenderer implements ListCellRenderer<Category>
 	{
 		@Override

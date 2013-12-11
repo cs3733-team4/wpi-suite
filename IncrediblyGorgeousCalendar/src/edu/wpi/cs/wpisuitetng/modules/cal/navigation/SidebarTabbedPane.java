@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * Copyright (c) 2013 WPI-Suite
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors: Team YOCO (You Only Compile Once)
+ ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.navigation;
 
 import java.awt.BorderLayout;
@@ -5,11 +14,23 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -28,15 +49,12 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddCommitmentDisplay;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddEventDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 
 public class SidebarTabbedPane extends JTabbedPane{
 	
@@ -56,6 +74,21 @@ public class SidebarTabbedPane extends JTabbedPane{
 	private DateTimeFormatter dateFormatter = DateTimeFormat.forPattern("MM/dd/yy");
 	private Displayable currentDisplayable;
 	
+	// Category filter tab
+	private JPanel categoryFilterTab;
+	private JPanel categoryList;
+	private JPanel categoryButtonPanel;
+	private JPanel eventCommitmentTab;
+	private JButton selectAllButton;
+	private JButton clearAllButton;
+	private boolean showCommitments = true; // Show events and commitments by default
+	private boolean showEvents = true;
+	private boolean isUser = true; // Avoid extra db calls when selecting/unselecting all
+	private JScrollPane categoryScroll;
+	private List<Category> allPlusDefault = new ArrayList<Category>();
+	private HashMap<JCheckBox, Category> checkBoxCategoryMap = new HashMap<JCheckBox, Category>();
+	private Collection<UUID> selectedCategories = new ArrayList<UUID>();
+	
 	/**
 	 * Tabbed panel in the navigation sidebar to hold additional details of selected items
 	 */
@@ -63,14 +96,17 @@ public class SidebarTabbedPane extends JTabbedPane{
 		
 		//setup
 		this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+		this.setFocusable(false);
 		
 		setupTextStyles();
 		setupDetailTab();
 		setupCommitementTab();
+		setUpCategoryFilterTab();
 		
 		//add tabs
 		this.addTab("Details", detailTab);
 		//this.addTab("Commitments", commitmentTab);
+		this.addTab("Filters", categoryFilterTab);
 	}
 	
 	/**
@@ -116,6 +152,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 		detailTab = new JPanel();
 		detailTab.setLayout(new BorderLayout());
 		detailTab.setBorder(BorderFactory.createEmptyBorder(3, 0, 0, 0));
+		detailTab.setFocusable(false);
 		
 		// setup text area
 		detailTextPane = new JTextArea();
@@ -143,6 +180,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 		
 	    // setup buttons and listeners
 	    detailEditButton = new JButton("Edit");
+	    detailEditButton.setFocusable(false);
 	    detailEditButton.addActionListener(new ActionListener() {
 			
 			@Override
@@ -168,10 +206,8 @@ public class SidebarTabbedPane extends JTabbedPane{
 	    detailButtonPane = new JPanel();
 	    detailButtonPane.setLayout(new FlowLayout());
 	    detailButtonPane.add(detailEditButton);
+	    detailButtonPane.setFocusable(false);
 	    detailButtonPane.add(detailDeleteButton);
-	    
-	    //for a later user story
-	    //detailButtonPane.add(detailDeleteButton);
 	    
 	    // put entire tab into a scroll pane
 	    detailScrollPane = new JScrollPane(detailTextPane);
@@ -183,6 +219,94 @@ public class SidebarTabbedPane extends JTabbedPane{
 	    detailTab.add(detailTitleLabel, BorderLayout.NORTH);
 	    detailTab.add(detailScrollPane, BorderLayout.CENTER);
 	    detailTab.add(detailButtonPane, BorderLayout.SOUTH);
+	}
+	
+	/**
+	 * Sets up the components of the category filter tab
+	 */
+	private void setUpCategoryFilterTab(){
+
+		// Set up container panel
+		categoryFilterTab = new JPanel();
+		categoryFilterTab.setLayout(new BoxLayout(categoryFilterTab, BoxLayout.Y_AXIS));
+		categoryFilterTab.setBorder(BorderFactory.createEmptyBorder(3, 0, 0, 0));
+		categoryFilterTab.putClientProperty("html.disable", true);
+		categoryFilterTab.setAlignmentY(LEFT_ALIGNMENT);
+		
+		// Set up panel with selecition for events and commitments
+		eventCommitmentTab = new JPanel();
+		eventCommitmentTab.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
+		eventCommitmentTab.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+		eventCommitmentTab.putClientProperty("html.disable", true);
+		eventCommitmentTab.setAlignmentY(CENTER_ALIGNMENT);
+		eventCommitmentTab.setAlignmentX(CENTER_ALIGNMENT);
+		
+		JCheckBox showEvent = new JCheckBox("Events");
+		showEvent.setSelected(true);
+		showEvent.addItemListener(new CheckBoxListener(null));
+		showEvent.setMinimumSize(getPreferredSize());
+		
+		JCheckBox showCommitments = new JCheckBox("Commits");
+		showCommitments.setSelected(true);
+		showCommitments.addItemListener(new CheckBoxListener(null));
+		showCommitments.setMinimumSize(getPreferredSize());
+		
+		eventCommitmentTab.add(showEvent);
+		eventCommitmentTab.add(showCommitments);
+		
+		// Set up panel with categories
+		categoryList = new JPanel();
+		categoryList.setLayout(new BoxLayout(categoryList, BoxLayout.Y_AXIS));
+		categoryList.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+		categoryList.putClientProperty("html.disable", true);
+		categoryList.setAlignmentX(TOP_ALIGNMENT);
+		categoryList.setAlignmentY(TOP_ALIGNMENT);
+		
+		// Add categories to panel
+		populateCategoryList(categoryList);
+
+		// Set up scroll panel
+		categoryScroll = new JScrollPane(categoryList);
+		categoryScroll.putClientProperty("html.disable", true);
+		categoryScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+	    categoryScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		categoryScroll.setBorder(new EmptyBorder(5,5,5,5));
+		categoryScroll.setAlignmentY(LEFT_ALIGNMENT);
+		
+		// Set up selection buttons
+		categoryButtonPanel = new JPanel();
+		categoryButtonPanel.setLayout(new GridLayout());
+		categoryButtonPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+		categoryButtonPanel.putClientProperty("html.disable", true);
+		
+		selectAllButton = new JButton("Select All");
+		selectAllButton.putClientProperty("html.disable", true);
+		selectAllButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				selectAllCategories();
+			}
+		});
+		
+		clearAllButton = new JButton("Clear");
+		clearAllButton.putClientProperty("html.disable", true);
+		clearAllButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				deselectAllCategories();
+			}
+		});
+		
+		categoryButtonPanel.add(selectAllButton);
+		categoryButtonPanel.add(clearAllButton);
+		
+		// Set up UI
+		categoryFilterTab.add(eventCommitmentTab);
+		categoryFilterTab.add(Box.createVerticalStrut(3));
+		categoryFilterTab.add(categoryButtonPanel);
+		categoryFilterTab.add(categoryScroll);
+		categoryFilterTab.setFocusable(false); // Keep tab form grabbing focus from arrow keys
+		
 	}
 	
 	/**
@@ -255,4 +379,216 @@ public class SidebarTabbedPane extends JTabbedPane{
 		detailTextPane.setText("");
 		setButtonsEnabled(false);
 	}
+	
+	/**
+	 * Refreshes the category filter tab
+	 */
+	public void refreshFilterTab()
+	{
+		populateCategoryList(categoryList);
+		categoryScroll.getVerticalScrollBar().setValue(0); // Scroll to top after adding element
+		this.categoryFilterTab.revalidate();
+		this.categoryFilterTab.repaint();
+	}
+	
+	/**
+	 * Populate provided JPanel with list of categories
+	 * @param categoryListHolder the JPanel to populate
+	 */
+	public void populateCategoryList(JPanel categoryListHolder){
+		// Clear category list panel
+		categoryListHolder.removeAll();
+		
+		// Clear category list array
+		selectedCategories.clear();
+		checkBoxCategoryMap.clear();
+		
+		List<Category> allCategories = CategoryModel.getInstance().getAllCategories();
+		
+		// Use different list to avoid commitment and uncategorized from displaying in other places
+		// since the allCategories list is passed by reference
+		allPlusDefault.add(Category.DEFAULT_CATEGORY);
+		allPlusDefault.addAll(allCategories);
+		
+		for(Category c : allPlusDefault)
+		{
+			// Check box for current category
+			JCheckBox categoryCheckBox = new JCheckBox(c.getName());
+			categoryCheckBox.setAlignmentX(BOTTOM_ALIGNMENT);
+			categoryCheckBox.setFocusable(false);
+			categoryCheckBox.setSelected(true);
+			categoryCheckBox.putClientProperty("html.disable", true);
+			categoryCheckBox.addItemListener(new CheckBoxListener(c));
+			
+			// Category color indicator for current category
+			JPanel categoryColor = new JPanel();
+			categoryColor.setPreferredSize(new Dimension(16, 15));
+	    	categoryColor.setMaximumSize(new Dimension(16, 15));
+	    	categoryColor.putClientProperty("html.disable", true);
+	    	categoryColor.setMinimumSize(new Dimension(16, 15));
+	    	categoryColor.setLayout(new GridLayout(1,1));
+	    	categoryColor.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+	    	
+	    	if (c.getName().equals("Uncategorized")) // If uncategorized
+	    	{
+	    		// Show both colors (team and personal events)
+	    		JPanel doubleColor = new JPanel();
+	    		doubleColor.putClientProperty("html.disable", true);
+	    		doubleColor.setLayout(new GridLayout(1,2));
+	    		JPanel blue = new JPanel();
+	    		blue.putClientProperty("html.disable", true);
+	    		blue.setBackground(new Color(125,157,227));
+	    		JPanel red = new JPanel();
+	    		red.putClientProperty("html.disable", true);
+	    		red.setBackground(new Color(227,125,147));
+	    		doubleColor.add(blue);
+	    		doubleColor.add(red);
+	    		categoryColor.add(doubleColor);
+	    	}
+	    	else // If not, get category color
+	    		categoryColor.setBackground(c.getColor());
+	    	
+	    	categoryColor.setAlignmentX(BOTTOM_ALIGNMENT);
+			
+			// Container for category color and check box
+			JPanel container = new JPanel();
+			container.setLayout(new BoxLayout(container, BoxLayout.X_AXIS));
+			container.putClientProperty("html.disable", true);
+			container.setAlignmentY(LEFT_ALIGNMENT);
+			container.setAlignmentX(BOTTOM_ALIGNMENT);
+			container.setMaximumSize(new Dimension(10000, 20));
+			
+			// Store reference to check boxes and categories
+			if (categoryCheckBox.isSelected() && !(selectedCategories.contains(c.getCategoryID())))
+			{
+					selectedCategories.add(c.getCategoryID());
+			}
+			
+			if (!checkBoxCategoryMap.containsKey(categoryCheckBox))
+				checkBoxCategoryMap.put(categoryCheckBox, c);
+			
+			// Set up container UI
+			container.add(categoryColor);
+			container.add(Box.createHorizontalStrut(2));
+			container.add(categoryCheckBox);
+			container.add(Box.createHorizontalGlue());
+			
+			// Add container to category list holder
+			categoryListHolder.add(container);
+		}
+		
+		categoryListHolder.add(Box.createVerticalGlue());
+	}
+	
+	/**
+	 * Get the collection of selected categories
+	 * @return the collection of selected UUIDs
+	 */
+	public Collection<UUID> getSelectedCategories()
+	{
+		return this.selectedCategories;
+	}
+	
+	/**
+	 * Custom listener for check boxes
+	 *
+	 * Maintains the selected category collection updated
+	 */
+	private class CheckBoxListener implements ItemListener{
+		
+		private Category referencedCategory;
+		
+		public CheckBoxListener(Category c) {
+			this.referencedCategory = c;
+		}
+		
+		public void itemStateChanged(ItemEvent e) {
+			JCheckBox tmp = ((JCheckBox)e.getSource());
+			
+			if(tmp.isSelected())
+			{
+				if (referencedCategory == null && tmp.getText().equals("Events"))
+					showEvents = true;
+				else if (referencedCategory == null && tmp.getText().equals("Commits"))
+					showCommitments = true;
+				else
+				{
+					if (! selectedCategories.contains(referencedCategory.getCategoryID()))
+						selectedCategories.add(referencedCategory.getCategoryID());
+				}
+			} else
+			{
+				if (referencedCategory == null && tmp.getText().equals("Events"))
+					showEvents = false;
+				else if (referencedCategory == null && tmp.getText().equals("Commits"))
+					showCommitments = false;
+				else
+				{
+					if (selectedCategories.contains(referencedCategory.getCategoryID()))
+						selectedCategories.remove(referencedCategory.getCategoryID());
+				}
+			}
+			if (isUser)
+				MainPanel.getInstance().refreshView(); //Update view for selected filters
+		}
+	}
+	
+	/**
+	 * Checks all category check boxes and adds UUID to selectedCategories collection
+	 */
+	public void selectAllCategories()
+	{
+		isUser = false; // Do not call db upon single each check and uncheck
+		
+		// Iterate over check boxes and categories, checking them and adding to list
+		for (Map.Entry<JCheckBox, Category> entry : checkBoxCategoryMap.entrySet()){
+			JCheckBox key = entry.getKey();
+			Category value = entry.getValue();
+			
+			if (!key.isSelected())
+			{
+				key.setSelected(true);
+				if(! selectedCategories.contains(value.getCategoryID()))
+					selectedCategories.add(value.getCategoryID());
+			}
+		}
+		
+		MainPanel.getInstance().refreshView(); //Update all events	
+		isUser = true; // set is user back to true
+	}
+	
+	/**
+	 * Un-checks all category check boxes and clears selectedCategories collection
+	 */
+	public void deselectAllCategories()
+	{
+		// Clear previous selected categories
+		selectedCategories.clear();
+		
+		isUser = false; // Do not call db upon single each check and uncheck
+		
+		// Iterate over check boxes and uncheck them
+		for (JCheckBox key : checkBoxCategoryMap.keySet())
+			key.setSelected(false);
+		
+		MainPanel.getInstance().refreshView(); //Update all events	
+		isUser = true; // set is user back to true
+	}
+	
+	/**
+	 * Returns whether commitments should be shown or not
+	 * @return boolean indicating whether commitments should be shown in current calendar view
+	 */
+	public boolean showCommitments(){
+		return this.showCommitments;
+	}
+	
+	/**
+	 * Returns whether events should be shown or not
+	 * @return boolean indicating whether events should be shown in current calendar view
+	 */
+	public boolean showEvents(){
+		return this.showEvents;
+	}
+	
 }
