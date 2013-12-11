@@ -178,7 +178,6 @@ public class Commitment extends AbstractModel implements Displayable
 	{
 		return description;
 	}
-	
 
 	/**
 	 * @param description
@@ -258,6 +257,7 @@ public class Commitment extends AbstractModel implements Displayable
 		return fallbackColor;
 	}	
 	
+	
 	/**
 	 * @return the owner
 	 */
@@ -316,4 +316,5 @@ public class Commitment extends AbstractModel implements Displayable
 	{
 		return commitmentID;
 	}
+
 }
