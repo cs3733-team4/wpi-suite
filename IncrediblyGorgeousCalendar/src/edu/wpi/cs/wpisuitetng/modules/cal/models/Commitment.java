@@ -179,22 +179,7 @@ public class Commitment extends AbstractModel implements Displayable
 		return description;
 	}
 	
-	@Override
-	public Color getColor()
-	{
-		Color fallbackColor = isProjectCommitment ? new Color(125,157,227) : new Color(227,125,147);
-		Category cat = CategoryModel.getInstance().getCategoryByUUID(category);
-		if (cat == null)
-		{
-			return fallbackColor;
-		}
-		Color eventColor = cat.getColor();
-		if (eventColor != null)
-		{
-			return eventColor;
-		}
-		return fallbackColor;
-	}
+
 
 	/**
 	 * @param description
@@ -274,6 +259,7 @@ public class Commitment extends AbstractModel implements Displayable
 		return fallbackColor;
 	}	
 	
+	
 	/**
 	 * @return the owner
 	 */
@@ -333,12 +319,4 @@ public class Commitment extends AbstractModel implements Displayable
 		return commitmentID;
 	}
 	
-	/**
-	 * a getter for GSON
-	 * @return
-	 */
-	public UUID getCommitmentID()
-	{
-		return commitmentID;
-	}
 }
