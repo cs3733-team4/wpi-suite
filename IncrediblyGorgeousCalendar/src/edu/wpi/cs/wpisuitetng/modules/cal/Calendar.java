@@ -41,10 +41,6 @@ public class Calendar implements IJanewayModule
 		RibbonToolbar buttonPanel = new RibbonToolbar(mMainPanel, true);
 		buttonPanel.setFloatable(false);
 
-		
-
-		DocumentMainPanel.getInstance().setVisible(false);
-
 		tabs = new ArrayList<JanewayTabModel>();
 		JanewayTabModel tab = new JanewayTabModel(getName(), new ImageIcon(),
 				buttonPanel, mMainPanel);
