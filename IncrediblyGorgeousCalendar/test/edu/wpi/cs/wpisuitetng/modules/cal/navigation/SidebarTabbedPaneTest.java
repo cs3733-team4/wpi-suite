@@ -309,8 +309,7 @@ public class SidebarTabbedPaneTest {
 		sidebar.deselectAllCategories();
 		
 		assertEquals("Clicking on deselect-all will cause all categories to be unselected", 0, sidebar.getSelectedCategories().size());
-		assertFalse("showCommitments will also be unselected", sidebar.showCommitments());
-		
+
 		sidebar.selectAllCategories();
 		
 		assertEquals("Clicking on select-all will cause all categories to be selected", 4, sidebar.getSelectedCategories().size());
