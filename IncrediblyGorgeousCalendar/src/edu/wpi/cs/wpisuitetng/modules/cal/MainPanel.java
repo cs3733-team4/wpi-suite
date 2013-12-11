@@ -113,6 +113,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	{
 		// call finish init always, it has a if to prevent multiple calls. see below comment on why
 		finishInit();
+		DocumentMainPanel.getInstance().init();
 		super.paint(g);
 		this.mainCalendarNavigationPanel.grabFocus();
 	}
@@ -127,7 +128,6 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		if (mTabbedPane == this)
 			return;
 		mTabbedPane = this;
-		DocumentMainPanel.getInstance().init();
 		this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		
 		// Side tabbed panel needs to be initialized here because event model references the 
@@ -638,6 +638,15 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	public boolean showCommitments(){
 		return this.sideTabbedPanel.showCommitments();
 	}
+	
+	/**
+	 * Determines whether events should be displayed or not
+	 * @return boolean indicating whether or not to display events
+	 */
+	public boolean showEvents(){
+		return this.sideTabbedPanel.showEvents();
+	}
+	
 	/**
 	 * 
 	 * @return the currently selected displayable

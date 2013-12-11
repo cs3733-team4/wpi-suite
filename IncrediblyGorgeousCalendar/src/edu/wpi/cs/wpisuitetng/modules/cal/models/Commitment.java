@@ -138,8 +138,16 @@ public class Commitment extends AbstractModel implements Displayable
 	}
 
 	/**
-	 * @param eventID
-	 *            the eventID to set
+	 * @return the commitmentID
+	 */
+	public UUID getCommitmentID()
+	{
+		return commitmentID;
+	}
+
+	/**
+	 * @param CommitmentID
+	 *            the CommitmentID to set
 	 */
 	public void setCommitmentID(UUID commitmentID)
 	{
@@ -169,23 +177,6 @@ public class Commitment extends AbstractModel implements Displayable
 	public String getDescription()
 	{
 		return description;
-	}
-	
-	@Override
-	public Color getColor()
-	{
-		Color fallbackColor = isProjectCommitment ? new Color(125,157,227) : new Color(227,125,147);
-		Category cat = CategoryModel.getInstance().getCategoryByUUID(category);
-		if (cat == null)
-		{
-			return fallbackColor;
-		}
-		Color eventColor = cat.getColor();
-		if (eventColor != null)
-		{
-			return eventColor;
-		}
-		return fallbackColor;
 	}
 
 	/**
@@ -250,6 +241,23 @@ public class Commitment extends AbstractModel implements Displayable
 		return CategoryModel.getInstance().getCategoryByUUID(category);
 	}
 	
+	public Color getColor()
+	{
+		Color fallbackColor = isProjectCommitment ? new Color(125,157,227) : new Color(227,125,147);
+		Category cat = CategoryModel.getInstance().getCategoryByUUID(category);
+		if (cat == null)
+		{
+			return fallbackColor;
+		}
+		Color commitmentColor = cat.getColor();
+		if (commitmentColor != null)
+		{
+			return commitmentColor;
+		}
+		return fallbackColor;
+	}	
+	
+	
 	/**
 	 * @return the owner
 	 */
@@ -308,13 +316,5 @@ public class Commitment extends AbstractModel implements Displayable
 	{
 		return commitmentID;
 	}
-	
-	/**
-	 * a getter for GSON
-	 * @return
-	 */
-	public UUID getCommitmentID()
-	{
-		return commitmentID;
-	}
+
 }

@@ -35,7 +35,6 @@ public class ToolTipListener implements MouseListener {
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		ToolTipManager.sharedInstance().setEnabled(true);
-		System.out.println("mouse in, turning on...");
 		
 	}
 	

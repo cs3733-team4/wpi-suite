@@ -20,6 +20,7 @@ import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.HashMap;
 import java.util.List;
@@ -98,10 +99,38 @@ public class MonthCalendar extends AbstractCalendar
 					md.setBackground(new Color(255, 255, 200));
 					d.setTime(md.getDay());
 				}
+				else
+				{
+					escaped = false;
+					e.consume();
+					repaint();
+				}
 			}
 
 			@Override
 			public void mouseMoved(MouseEvent e) {}
+			
+		});
+		
+		addMouseListener(new MouseListener()
+		{
+
+			@Override
+			public void mouseClicked(MouseEvent arg0) {}
+
+			@Override
+			public void mouseEntered(MouseEvent arg0) {}
+
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				setEscaped(false);
+			}
+
+			@Override
+			public void mousePressed(MouseEvent arg0) {}
+
+			@Override
+			public void mouseReleased(MouseEvent arg0) {}
 			
 		});
 	}
@@ -340,26 +369,45 @@ public class MonthCalendar extends AbstractCalendar
 
 	private List<Event> getVisibleEvents(DateTime from, DateTime to)
 	{
-		List<Event> visibleEvents = eventModel.getEvents(from, to);
-		
-		// Filter for selected categories
-		Collection<UUID> selectedCategories = MainPanel.getInstance().getSelectedCategories();
-		List<Event> categoryFilteredEvents = new ArrayList<Event>();
-		
-		// Else, loop through events and filter by selected categories
-		for (Event e : visibleEvents){
-			if (selectedCategories.contains(e.getCategory()))
-				categoryFilteredEvents.add(e);
-		}
-		
-		// Return list of events to be displayed
-		return categoryFilteredEvents;
+		if (MainPanel.getInstance().showEvents())
+		{
+			List<Event> visibleEvents = eventModel.getEvents(from, to);
+			
+			// Filter for selected categories
+			Collection<UUID> selectedCategories = MainPanel.getInstance().getSelectedCategories();
+			List<Event> categoryFilteredEvents = new ArrayList<Event>();
+			
+			// Else, loop through events and filter by selected categories
+			for (Event e : visibleEvents){
+				if (selectedCategories.contains(e.getCategory()))
+					categoryFilteredEvents.add(e);
+			}
+			
+			// Return list of events to be displayed
+			return categoryFilteredEvents;
+		} else
+			return new ArrayList<Event>();
 	}
 
 	private List<Commitment> getVisibleCommitments(DateTime from, DateTime to)
-	{
+	{	
 		if (MainPanel.getInstance().showCommitments())
-			return commitmentModel.getCommitments(from, to);
+		{
+			List<Commitment> visibleCommitments = commitmentModel.getCommitments(from, to);
+			
+			// Filter for selected categories
+			Collection<UUID> selectedCategories = MainPanel.getInstance().getSelectedCategories();
+			List<Commitment> categoryFilteredCommitments = new ArrayList<Commitment>();
+			
+			// Else, loop through events and filter by selected categories
+			for (Commitment c : visibleCommitments){
+				if (selectedCategories.contains(c.getCategory()))
+					categoryFilteredCommitments.add(c);
+			}
+			
+			// Return list of events to be displayed
+			return categoryFilteredCommitments;
+		}
 		else
 			return new ArrayList<Commitment>();
 	}
