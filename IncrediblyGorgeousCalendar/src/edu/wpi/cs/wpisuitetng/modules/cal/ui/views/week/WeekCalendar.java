@@ -9,30 +9,23 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.week;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import javax.management.RuntimeErrorException;
 import javax.swing.BorderFactory;
 import javax.swing.BoundedRangeModel;
-import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
-import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
-
 import net.miginfocom.swing.MigLayout;
 
 import org.joda.time.DateTime;
@@ -75,7 +68,7 @@ public class WeekCalendar extends AbstractCalendar
 	private DateTimeFormatter dayTitleFmt = DateTimeFormat.forPattern("E M/d");
 	private JLabel weekTitle = new JLabel();
 	private JScrollPane headerScroller = new JScrollPane();
-	private JPanel headerBox = new JPanel();
+	private ScrollableBox headerBox = new ScrollableBox();
 	private JScrollPane smithsonianScroller = new JScrollPane();
 	private JPanel smithsonian = new JPanel();
 	private JLabel dayHeaders[] = new JLabel[7];
@@ -91,8 +84,9 @@ public class WeekCalendar extends AbstractCalendar
 		this.time = on;
 		updateWeekStartAndEnd(time);
 		
-		// ui layout //100px:n:100px,grow
-		setLayout(new MigLayout("insets 0,gap 0", "[100px][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][" + (new JScrollBar().getPreferredSize().width) + "px]", "[][][::100px,grow][grow]"));
+		// ui layout
+		String rs = (new JScrollBar().getPreferredSize().width) + "px";
+		setLayout(new MigLayout("insets 0,gap 0", "[50px:50px:50px][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow]["+rs+":"+rs+":"+rs+"]", "[][][::100px,grow][grow]"));
 		
 		weekTitle.setFont(new Font("DejaVu Sans", Font.BOLD, 25));
 		add(weekTitle, "cell 0 0 9 1,alignx center");
@@ -104,11 +98,11 @@ public class WeekCalendar extends AbstractCalendar
 		
 		headerScroller.setBorder(BorderFactory.createEmptyBorder());
 		headerScroller.setViewportBorder(BorderFactory.createEmptyBorder());
+		headerScroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		add(headerScroller, "cell 1 2 7 1,grow"); // default to 7 as no scrollbars
 		
 		headerBox.setBorder(BorderFactory.createEmptyBorder());
 		headerScroller.setViewportView(headerBox);
-		headerBox.setLayout(new BoxLayout(headerBox, BoxLayout.Y_AXIS));
 		
 
 		smithsonianScroller.setBorder(null);
@@ -118,7 +112,7 @@ public class WeekCalendar extends AbstractCalendar
 		add(smithsonianScroller, "cell 0 3 9 1,grow");
 
 		smithsonianScroller.setViewportView(smithsonian);
-		smithsonian.setLayout(new MigLayout("insets 0,gap 0", "[100px][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow]", "[grow]"));
+		smithsonian.setLayout(new MigLayout("insets 0,gap 0", "[50px:50px:50px][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow]", "[grow]"));
 		
 		generateDay();
 	}
@@ -216,6 +210,7 @@ public class WeekCalendar extends AbstractCalendar
 							{
 								System.out.print("currEvent Name:Name  " + currEvent.getName() + "\n");
 								JLabel multidayPanel = new JLabel(" " + currEvent.getName());
+								multidayPanel.setMinimumSize(new Dimension(0, 0));
 								multidayPanel.setBackground(currEvent.getColor());
 								if (multiGrid.getComponentCount() > 0)
 									((JComponent)multiGrid.getComponents()[multiGrid.getComponentCount() - 1]).setBorder(BorderFactory.createMatteBorder(rows == 0 ? 1 : 0, (gridIndex == 1) ? 1 : 0, 1, 0, Colors.BORDER));

@@ -29,7 +29,7 @@ public class DayGridLabel extends JPanel
 			int hour = i % 12 == 0 ? 12 : i % 12;
 			String padding = (hour < 10) ? "    " : "   ";
 			StringBuilder currtime = new StringBuilder();
-			currtime.append(" ").append(hour).append(":00");
+			currtime.append(" ").append(hour);
 			if (i <= 11)
 				currtime.append("am");
 			else
