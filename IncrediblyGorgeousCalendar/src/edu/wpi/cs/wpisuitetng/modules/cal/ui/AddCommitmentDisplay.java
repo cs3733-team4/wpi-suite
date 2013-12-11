@@ -33,7 +33,6 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 	private Commitment commitmentToEdit;
 	private UUID existingCommitmentID; // UUID of event being edited
 	private boolean isEditingCommitment;
-	private UUID existingCommtimentID; // UUID of event being edited
 	private DateTime currentTime;
 
 	// For a new commitment.
@@ -52,14 +51,13 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		super(false);
 		this.isEditingCommitment = true;
 		this.commitmentToEdit = mCommitment;
-		this.existingCommtimentID = commitmentToEdit.getCommitmentID();
+		this.existingCommitmentID = commitmentToEdit.getCommitmentID();
 		populateCommitmentFields(commitmentToEdit);
 		setUpListeners();
 	}
 	
 	private void populateCommitmentFields(Commitment mCommitment)
 	{
-		existingCommitmentID = mCommitment.getCommitmentID();
 		nameTextField.setText(mCommitment.getName());
 		startTimeDatePicker.setDateTime(mCommitment.getDate());
 		participantsTextField.setText(mCommitment.getParticipants());
@@ -73,7 +71,14 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 	}
 
 	private void setUpListeners(){
-
+		saveButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				attemptSave();
+				
+			}
+		});
 		cancelButton.addActionListener(new ActionListener() {
 
 			@Override
