@@ -70,28 +70,8 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		else
 			this.eventCategoryPicker.setSelectedItem(Category.DEFAULT_CATEGORY);
 	}
-		
-
-	
-	private void init(final Commitment oldCommitment)
-	{
-		nameTextField.setText(oldCommitment.getName());
-		startTimeDatePicker.setDateTime(oldCommitment.getDate());
-		participantsTextField.setText(oldCommitment.getParticipants());
-		// TODO: categories and team/personal
-		descriptionTextArea.setText(oldCommitment.getDescription());
-		existingCommitmentID=oldCommitment.getCommitmentID();
-	}
 
 	private void setUpListeners(){
-		saveButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0)
-			{
-				attemptSave();
-			}
-		});
 
 		cancelButton.addActionListener(new ActionListener() {
 
