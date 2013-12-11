@@ -124,10 +124,10 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	 */
 	void finishInit()
 	{
-		DocumentMainPanel.getInstance().init();
 		if (mTabbedPane == this)
 			return;
 		mTabbedPane = this;
+		DocumentMainPanel.getInstance().init();
 		this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		
 		// Side tabbed panel needs to be initialized here because event model references the 

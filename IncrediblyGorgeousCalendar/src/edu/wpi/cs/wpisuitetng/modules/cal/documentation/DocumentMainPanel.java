@@ -28,7 +28,6 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
-import edu.wpi.cs.wpisuitetng.modules.cal.MockNetwork;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.SelectableField;
@@ -70,7 +69,8 @@ public class DocumentMainPanel extends JFrame{
     
     public void init()
     {
-    	if (Network.getInstance() instanceof MockNetwork) // tests. don't do anything or we will crash because the mock url is invalid
+    	// TODO: clean this up
+    	if (Network.getInstance().getClass().getName().contains("MockNetwork")) // tests. don't do anything or we will crash because the mock url is invalid
     		return;
     	if (serverLocation!=null)
     		return;
