@@ -11,8 +11,12 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.france;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.event.MouseListener;
+import java.awt.MouseInfo;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -22,8 +26,11 @@ import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
+import org.joda.time.MutableDateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.week.WeekCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 
 /**
@@ -32,57 +39,108 @@ import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 public class LouvreTour extends JPanel
 {
 	HashMap<Event, VanGoghPainting> guides = new HashMap<>();
+	private DateTime date;
+	private VanGoghPainting selected;
+	private boolean isSomethingDragging;
 	private DateTime displayDate;
-	
+	private boolean inWeekView;
+	private WeekCalendar inWeek;
+	private int offset;
 	public LouvreTour()
 	{
+		inWeekView = false;
+		inWeek = null;
+		isSomethingDragging = false;
 		setLayout(null);
 		setPreferredSize(new Dimension(1, 1440));
 		setBackground(Colors.TABLE_BACKGROUND);
 		this.addMouseListener(new MouseListener() {
 			
 			@Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
+			public void mouseReleased(MouseEvent arg0) {
+				if(isSomethingDragging)
+				{
+					MainPanel.getInstance().display(selected.event.getStart());
+				}
+				isSomethingDragging = false;
+				selected = null;
 				
 			}
 			
 			@Override
+
+			public void mouseExited(MouseEvent arg0) {
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+
+			}
 			public void mousePressed(MouseEvent e) {
 				MainPanel.getInstance().setSelectedDay(displayDate);
 				MainPanel.getInstance().clearSelected();
 			}
 			
 			@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent arg0) {
 				// TODO Auto-generated method stub
 				
 			}
 		});
+		
+		this.addMouseMotionListener(new MouseMotionListener() {
+			
+			@Override
+			public void mouseMoved(MouseEvent arg0) {
+				if(inWeekView)
+					inWeek.mouseOverDay(displayDate.getDayOfWeek());
+			}
+			
+			@Override
+			public void mouseDragged(MouseEvent arg0) {
+				if(selected != null)
+				{
+					LouvreTour.this.setComponentZOrder(selected, 0);
+					selected.updateTime(getTimeAtCursor());
+					if(!isSomethingDragging)
+					{
+						offset = arg0.getY();
+						System.out.println(offset + " " + arg0.getY() + " " + selected.event.getStart().getMinuteOfDay());
+						if(inWeekView)
+						{
+							inWeek.passTo(selected.event.getStart().getDayOfYear(),selected);
+							getParent().dispatchEvent(arg0);
+						}
+						isSomethingDragging = true;	
+					}
+					revalidate();
+					repaint();
+				}
+			}
+		});
+	}
+	
+	public LouvreTour(boolean inWeekView, WeekCalendar inWeek)
+	{
+		this();
+		this.inWeek = inWeek;
+		this.inWeekView = inWeekView;
 	}
 	
 	public void setEvents(List<Event> events, DateTime displayedDay)
 	{
+		this.date = displayedDay;
 		List<VanGoghPainting> gallery = CERN.createEventsReallyNicely(events, displayedDay);
 		this.displayDate = displayedDay;
 		removeAll();
 		guides.clear();
+		int i = 2;
 		for (VanGoghPainting vanGoghPainting : gallery)
 		{
 			guides.put(vanGoghPainting.event, vanGoghPainting);
 			add(vanGoghPainting); // priceless
+			//this.setComponentZOrder(vanGoghPainting, i++);
 		}
 		revalidate();
 	}
@@ -127,16 +185,47 @@ public class LouvreTour extends JPanel
 		}
 		if (item instanceof Event)
 		{
-			VanGoghPainting mona = guides.get(item);
-			if(mona != null)
+			selected = guides.get(item);
+			if(selected != null)
 			{
-				mona.setSelected(true);
+				selected.setSelected(true);
 			}
 		}		
 	}
 
 	public DateTime getDisplayDate() {
 		return displayDate;
+	}
+	
+	private DateTime getTimeAtCursor()
+	{
+		Point m = MouseInfo.getPointerInfo().getLocation();
+		Point p = getLocationOnScreen();
+		MutableDateTime d = date.toMutableDateTime();
+		m.y -= offset;
+		if(m.y < p.y)
+			m.y = p.y;
+		if(m.y > 1440)
+			m.y = 1440;
+		
+		d.setHourOfDay((m.y - p.y)/60);
+		int min = (m.y - p.y)%60;
+		
+		if(min >= 7 && min < 23)
+			min = 15;
+		if(min < 7)
+			min = 0;
+		if(min >= 23 && min < 38)
+			min = 30;
+		if(min >= 38 && min < 55)
+			min = 45;
+		if(min >= 55)
+		{
+			min = 0;
+			d.addHours(1);
+		}
+		d.setMinuteOfHour(min);
+		return d.toDateTime();
 	}
 	
 // //TODO: fix so that we can easily re-compute a part of the events stack	

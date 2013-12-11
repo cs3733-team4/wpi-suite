@@ -19,12 +19,12 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
-import org.jfree.util.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 
 import javax.swing.JLabel;
@@ -34,6 +34,7 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -61,13 +62,16 @@ public class VanGoghPainting extends JPanel
 	private static final int FIXED_HEIGHT = 1440;
 	private TimeTraveller traveller;
 	private DateTime displayedDay;
+	private Interval length;
+	private boolean isBeingDragged;
 	public VanGoghPainting(TimeTraveller traveller, DateTime displayedDay)
 	{
-		
+		isBeingDragged = false;
 		this.displayedDay=displayedDay;
 		this.traveller = traveller;
 		height = 25;
 		event = traveller.getEvent();
+		length = new Interval(event.getStart(), event.getEnd());
 		Color bg = event.getColor();
 		setBorder(new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new LineBorder(bg.darker()), new EmptyBorder(6, 6, 6, 6))));
 		setBackground(bg);
@@ -77,20 +81,8 @@ public class VanGoghPainting extends JPanel
 		lblEventTitle.setFont(new Font("Tahoma", Font.BOLD, 14));
 		lblEventTitle.putClientProperty("html.disable", true); //prevents html parsing
 		lblEventTitle.setText(event.getName());
-		
-		if (event.isMultiDayEvent())
-		{
-			if (event.getStart().compareTo(event.getStartTimeOnDay(displayedDay))==0)//if their the same time, its the first day
-				lblTimeInfo = new JLabel(formatTime(event.getStart()) + " \u2192");
-			else if (event.getEnd().compareTo(event.getEndTimeOnDay(displayedDay))==0)
-				lblTimeInfo = new JLabel("\u2190 " + formatTime(event.getEnd()));
-			else
-				lblTimeInfo = new JLabel("\u2190 \u2192");
-				
-		}
-		else
-			lblTimeInfo = new JLabel(formatTime(event.getStart()) + " - " + formatTime(event.getEnd()));
-		
+		lblTimeInfo = new JLabel();
+		putTimeOn();
 		lblTimeInfo.setBorder(new EmptyBorder(0,0,3,0));
 		lblTimeInfo.setMaximumSize(new Dimension(32767, 20));
 		lblTimeInfo.setFont(new Font("DejaVu Sans", Font.ITALIC, 14));
@@ -106,8 +98,8 @@ public class VanGoghPainting extends JPanel
 			
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
+				event.update();
+				getParent().dispatchEvent(e);
 			}
 			
 			@Override
@@ -117,13 +109,11 @@ public class VanGoghPainting extends JPanel
 				} else {
 					MainPanel.getInstance().updateSelectedDisplayable(event);
 				}
-				
 			}
 			
 			@Override
 			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
+				getParent().dispatchEvent(e);
 			}
 			
 			@Override
@@ -138,7 +128,19 @@ public class VanGoghPainting extends JPanel
 				
 			}
 		});
-		
+		this.addMouseMotionListener(new MouseMotionListener() {
+			
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				getParent().dispatchEvent(e);				
+			}
+			
+			@Override
+			public void mouseDragged(MouseEvent arg0) {
+				isBeingDragged = true;
+				getParent().dispatchEvent(arg0);
+			}
+		});
 		Width = new Rational(((traveller.getCollisions() > 1) ? 2 : 1), 1 + traveller.getCollisions());
 		X = traveller.getXpos();
 		description = Arrays.asList(traveller.getEvent().getDescription().split(" "));
@@ -157,6 +159,19 @@ public class VanGoghPainting extends JPanel
 	@Override
 	public void doLayout()
 	{
+		if(isBeingDragged)
+		{
+			Width = new Rational(1,1);
+			X = new Rational(0,1);
+			this.setBackground(new Color(getBackground().getRed(), getBackground().getGreen(),getBackground().getBlue(), 150));
+			int parentWidth = this.getParent().getWidth();
+			recalcBounds(parentWidth, getParent().getHeight());
+			super.doLayout();
+			lblEventTitle.revalidate();
+			lblTimeInfo.revalidate();
+			
+			return;
+		}
 		if(firstDraw)
 		{
 			height = (int) map(new Interval(event.getStartTimeOnDay(displayedDay), event.getEndTimeOnDay(displayedDay)).toDurationMillis(), this.getParent().getHeight());
@@ -178,6 +193,7 @@ public class VanGoghPainting extends JPanel
 		int parentWidth = this.getParent().getWidth();
 		if (recalcBounds(parentWidth, getParent().getHeight()))
 			super.doLayout();
+
 	}
 	
 	private boolean recalcBounds(int parentWidth, int parentHeight)
@@ -319,6 +335,32 @@ public class VanGoghPainting extends JPanel
 
 	public Event getEvent() {
 		return event;
+	}
+	
+	public void updateTime(DateTime t)
+	{
+		if(!this.event.getStart().equals(t))
+		{
+			this.event.setStart(t);;
+			this.event.setEnd(t.plus(this.length.toDuration()));
+			putTimeOn();
+		}
+	}
+	
+	private void putTimeOn()
+	{
+		if (event.isMultiDayEvent())
+		{
+			if (event.getStart().compareTo(event.getStartTimeOnDay(displayedDay))==0)//if their the same time, its the first day
+				lblTimeInfo.setText(formatTime(event.getStart()) + " \u2192");
+			else if (event.getEnd().compareTo(event.getEndTimeOnDay(displayedDay))==0)
+				lblTimeInfo.setText("\u2190 " + formatTime(event.getEnd()));
+			else
+				lblTimeInfo.setText("\u2190 \u2192");
+				
+		}
+		else
+			lblTimeInfo.setText(formatTime(event.getStart()) + " - " + formatTime(event.getEnd()));
 	}
 	
 }
