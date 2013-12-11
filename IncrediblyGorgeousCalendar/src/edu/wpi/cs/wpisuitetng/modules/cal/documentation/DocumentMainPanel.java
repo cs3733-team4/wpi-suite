@@ -307,6 +307,12 @@ public class DocumentMainPanel extends JFrame{
     		setSelectedForCommitment(SelectableField.TIME);
 			return true;
     	}
+
+    	else if (actionPath.contains("#SelectCategoryInNewCommitment"))
+    	{
+    		setSelectedForCommitment(SelectableField.CATEGORY);
+    		return true;
+    	}
     	else if (actionPath.contains("#SelectParticipantsInNewCommitment"))
     	{
     		setSelectedForCommitment(SelectableField.PARTICIPANTS);
