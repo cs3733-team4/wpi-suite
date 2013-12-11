@@ -20,6 +20,7 @@ import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.HashMap;
 import java.util.List;
@@ -108,6 +109,28 @@ public class MonthCalendar extends AbstractCalendar
 
 			@Override
 			public void mouseMoved(MouseEvent e) {}
+			
+		});
+		
+		addMouseListener(new MouseListener()
+		{
+
+			@Override
+			public void mouseClicked(MouseEvent arg0) {}
+
+			@Override
+			public void mouseEntered(MouseEvent arg0) {}
+
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				setEscaped(false);
+			}
+
+			@Override
+			public void mousePressed(MouseEvent arg0) {}
+
+			@Override
+			public void mouseReleased(MouseEvent arg0) {}
 			
 		});
 	}
