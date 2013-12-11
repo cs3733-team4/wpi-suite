@@ -178,14 +178,14 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		e.setName(nameTextField.getText().trim());
 		e.setDescription(descriptionTextArea.getText());
 		e.setDate(startTimeDatePicker.getDateTime());
-		e.setParticipants(participantsTextField.getText());
+		e.setProjectCommitment(rdbtnTeam.isSelected());
+		e.setParticipants(participantsTextField.getText().trim());
+		e.setCategory(((Category)eventCategoryPicker.getSelectedItem()).getCategoryID());
 		
-		if (isEditingCommitment)
+		if (isEditingCommitment) {
 			e.setCommitmentID(existingCommitmentID);
-		
-		if (isEditingCommitment)
 			MainPanel.getInstance().updateCommitment(e);
-		else
+		} else
 			MainPanel.getInstance().addCommitment(e);
 
 		saveButton.setEnabled(false);
