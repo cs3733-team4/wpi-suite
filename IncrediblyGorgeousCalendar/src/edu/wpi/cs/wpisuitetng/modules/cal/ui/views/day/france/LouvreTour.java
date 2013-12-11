@@ -26,9 +26,11 @@ import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
 import org.joda.time.MutableDateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.week.WeekCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 
 /**
@@ -42,10 +44,12 @@ public class LouvreTour extends JPanel
 	private boolean isSomethingDragging;
 	private DateTime displayDate;
 	private boolean inWeekView;
+	private WeekCalendar inWeek;
 	private int offset;
 	public LouvreTour()
 	{
 		inWeekView = false;
+		inWeek = null;
 		isSomethingDragging = false;
 		setLayout(null);
 		setPreferredSize(new Dimension(1, 1440));
@@ -57,7 +61,6 @@ public class LouvreTour extends JPanel
 				if(isSomethingDragging)
 				{
 					MainPanel.getInstance().display(selected.event.getStart());
-					System.out.println("display called");
 				}
 				isSomethingDragging = false;
 				selected = null;
@@ -69,9 +72,9 @@ public class LouvreTour extends JPanel
 			public void mouseExited(MouseEvent arg0) {
 				if(selected != null)
 				{
-					//if(arg0.getXOnScreen() > LouvreTour.this.getX() + LouvreTour.this.getWidth() && selected.event.getStart().getDayOfWeek() == DateTime.)
-						
-				}	
+					inWeek.passTo(selected.event.getStart().getDayOfWeek(),selected);
+					getParent().dispatchEvent(arg0);
+				}
 			}
 			
 			@Override
@@ -94,8 +97,7 @@ public class LouvreTour extends JPanel
 			
 			@Override
 			public void mouseMoved(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
+				inWeek.mouseOverDay(displayDate.getDayOfWeek());
 			}
 			
 			@Override
@@ -108,6 +110,11 @@ public class LouvreTour extends JPanel
 					{
 						offset = arg0.getY();
 						System.out.println(offset + " " + arg0.getY() + " " + selected.event.getStart().getMinuteOfDay());
+						if(inWeekView)
+						{
+							inWeek.passTo(selected.event.getStart().getDayOfYear(),selected);
+							getParent().dispatchEvent(arg0);
+						}
 						isSomethingDragging = true;	
 					}
 					revalidate();
@@ -117,9 +124,10 @@ public class LouvreTour extends JPanel
 		});
 	}
 	
-	public LouvreTour(boolean inWeekView)
+	public LouvreTour(boolean inWeekView, WeekCalendar inWeek)
 	{
 		this();
+		this.inWeek = inWeek;
 		this.inWeekView = inWeekView;
 	}
 	

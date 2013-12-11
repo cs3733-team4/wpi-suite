@@ -13,6 +13,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -46,6 +48,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.DayGridLabel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.france.LouvreTour;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.france.VanGoghPainting;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
 
@@ -59,14 +62,14 @@ public class WeekCalendar extends AbstractCalendar
 	private DateTime time;
 	private DateTime weekStartTime;
 	private DateTime weekEndTime;
-
+	private VanGoghPainting selected;
 	private MainPanel mainPanel;
 
 	private Displayable lastSelection;
 
 	private LouvreTour[] daysOfWeekArray = new LouvreTour[7];
 	private List<Event> eventList;
-
+	private int currentDayUnderMouse;
 	private DateTimeFormatter monthDayFmt = DateTimeFormat.forPattern("MMM d");
 	private DateTimeFormatter dayYearFmt = DateTimeFormat.forPattern("d, yyyy");
 	private DateTimeFormatter monthDayYearFmt = DateTimeFormat.forPattern("MMM d, yyyy");
@@ -85,8 +88,10 @@ public class WeekCalendar extends AbstractCalendar
 	 */
 	public WeekCalendar(DateTime on)
 	{
+		this.selected = null;
 		this.mainPanel = MainPanel.getInstance();
 		this.time = on;
+		this.currentDayUnderMouse = -1;
 		updateWeekStartAndEnd(time);
 		
 		// ui layout //100px:n:100px,grow
@@ -117,8 +122,28 @@ public class WeekCalendar extends AbstractCalendar
 
 		smithsonianScroller.setViewportView(smithsonian);
 		smithsonian.setLayout(new MigLayout("insets 0,gap 0", "[100px][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow]", "[grow]"));
-		
 		generateDay();
+		this.addMouseMotionListener(new MouseMotionListener() {
+			
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				if(selected != null)
+				{
+					if(selected.getEvent().getStart().getDayOfWeek() != currentDayUnderMouse)
+					{
+						daysOfWeekArray[selected.getEvent().getStart().getDayOfWeek()].remove(selected);
+						daysOfWeekArray[currentDayUnderMouse].add(selected);
+						revalidate();
+					}
+				}
+			}
+		});
 	}
 
 	/**
@@ -129,7 +154,6 @@ public class WeekCalendar extends AbstractCalendar
 		// clear out the specifics
 		smithsonian.removeAll();
 		headerBox.removeAll();
-		
 		// add the day grid back in
 		smithsonian.add(new DayGridLabel(), "cell 0 0,grow");
 
@@ -141,7 +165,7 @@ public class WeekCalendar extends AbstractCalendar
 		for (int i = 0; i < 7; i++)
 		{
 			// add day views to the day grid
-			this.daysOfWeekArray[i] = new LouvreTour();
+			this.daysOfWeekArray[i] = new LouvreTour(true, this);
 			this.daysOfWeekArray[i].setEvents(getEventsInInterval(increment.toDateTime(), increment.toDateTime().plusDays(1)), increment.toDateTime());
 			if (i < 6)
 				this.daysOfWeekArray[i].setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, Colors.BORDER));
@@ -481,5 +505,14 @@ public class WeekCalendar extends AbstractCalendar
 			s = weekStartTime;
 
 		return (s.isBefore(e) && mInterval.contains(s));
+	}
+	
+	public void passTo(int day, VanGoghPainting toPass)
+	{
+		selected = toPass;
+	}
+	public void mouseOverDay(int day)
+	{
+		this.currentDayUnderMouse = day;
 	}
 }

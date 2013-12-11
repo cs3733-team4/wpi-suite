@@ -98,10 +98,7 @@ public class VanGoghPainting extends JPanel
 			
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				if(isBeingDragged)
-					EventModel.getInstance().updateEvent(event);
 				getParent().dispatchEvent(e);
-				
 			}
 			
 			@Override
@@ -115,8 +112,7 @@ public class VanGoghPainting extends JPanel
 			
 			@Override
 			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
+				getParent().dispatchEvent(e);
 			}
 			
 			@Override
@@ -135,8 +131,7 @@ public class VanGoghPainting extends JPanel
 			
 			@Override
 			public void mouseMoved(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
+				getParent().dispatchEvent(e);				
 			}
 			
 			@Override
@@ -350,6 +345,7 @@ public class VanGoghPainting extends JPanel
 			putTimeOn();
 		}
 	}
+	
 	private void putTimeOn()
 	{
 		if (event.isMultiDayEvent())
@@ -365,4 +361,5 @@ public class VanGoghPainting extends JPanel
 		else
 			lblTimeInfo.setText(formatTime(event.getStart()) + " - " + formatTime(event.getEnd()));
 	}
+	
 }
