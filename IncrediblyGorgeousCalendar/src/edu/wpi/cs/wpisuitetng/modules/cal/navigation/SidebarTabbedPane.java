@@ -81,6 +81,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 	private JButton selectAllButton;
 	private JButton clearAllButton;
 	private boolean showCommitments;
+	private boolean showEvents;
 	private boolean isUser = true; // Avoid extra db calls when selecting/unselecting all
 	private JScrollPane categoryScroll;
 	private List<Category> allPlusDefault = new ArrayList<Category>();
@@ -383,6 +384,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 		// Use different list to avoid commitment and uncategorized from displaying in other places
 		// since the allCategories list is passed by reference
 		allPlusDefault.add(Category.COMMITMENT_CATEGORY);
+		allPlusDefault.add(Category.EVENT_CATEGORY);
 		allPlusDefault.add(Category.DEFAULT_CATEGORY);
 		allPlusDefault.addAll(allCategories);
 		
@@ -412,7 +414,14 @@ public class SidebarTabbedPane extends JTabbedPane{
 	    		JLabel commitmentMark = new JLabel("\uFF01");
 	    		commitmentMark.setForeground(Colors.COMMITMENT_NOTIFICATION);
 	    		categoryColor.add(commitmentMark);
-	    	} else if (c.getName().equals("Uncategorized")) // If uncategorized
+	    	} else if (c.getName().equals("Events"))
+	    	{
+	    		categoryColor.setBackground(Colors.TABLE_BACKGROUND);
+	    		JLabel commitmentMark = new JLabel("E");
+	    		commitmentMark.setForeground(Colors.COMMITMENT_NOTIFICATION);
+	    		categoryColor.add(commitmentMark);
+	    	}
+	    	else if (c.getName().equals("Uncategorized")) // If uncategorized
 	    	{
 	    		// Show both colors (team and personal events)
 	    		JPanel doubleColor = new JPanel();
@@ -446,6 +455,8 @@ public class SidebarTabbedPane extends JTabbedPane{
 			{
 				if (c.getName().equals("Commitments"))
 					showCommitments = true;
+				else if (c.getName().equals("Events"))
+					showEvents = true;
 				else
 					selectedCategories.add(c.getCategoryID());
 			}
@@ -493,6 +504,8 @@ public class SidebarTabbedPane extends JTabbedPane{
 			{
 				if (referencedCategory.getName().equals("Commitments"))
 					showCommitments = true;
+				else if (referencedCategory.getName().equals("Events"))
+					showEvents = true;
 				else
 				{
 					if (! selectedCategories.contains(referencedCategory.getCategoryID()))
@@ -502,7 +515,9 @@ public class SidebarTabbedPane extends JTabbedPane{
 			{
 				if (referencedCategory.getName().equals("Commitments"))
 					showCommitments = false;
-				else 
+				else if (referencedCategory.getName().equals("Events"))
+					showEvents = false;
+				else
 				{
 					if (selectedCategories.contains(referencedCategory.getCategoryID()))
 						selectedCategories.remove(referencedCategory.getCategoryID());
@@ -534,6 +549,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 		}
 		
 		showCommitments = true;
+		showEvents = true;
 		
 		MainPanel.getInstance().refreshView(); //Update all events	
 		isUser = true; // set is user back to true
@@ -554,6 +570,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 			key.setSelected(false);
 		
 		showCommitments = false;
+		showEvents = false;
 		
 		MainPanel.getInstance().refreshView(); //Update all events	
 		isUser = true; // set is user back to true
@@ -565,6 +582,14 @@ public class SidebarTabbedPane extends JTabbedPane{
 	 */
 	public boolean showCommitments(){
 		return this.showCommitments;
+	}
+	
+	/**
+	 * Returns whether events should be shown or not
+	 * @return boolean indicating whether events should be shown in current calendar view
+	 */
+	public boolean showEvents(){
+		return this.showEvents;
 	}
 	
 }
