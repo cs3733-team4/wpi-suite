@@ -98,6 +98,12 @@ public class MonthCalendar extends AbstractCalendar
 					md.setBackground(new Color(255, 255, 200));
 					d.setTime(md.getDay());
 				}
+				else
+				{
+					escaped = false;
+					e.consume();
+					repaint();
+				}
 			}
 
 			@Override
