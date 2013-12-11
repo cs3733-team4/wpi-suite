@@ -71,6 +71,8 @@ public class LeadParticle implements Comparable<LeadParticle>
 	public int compareTo(LeadParticle o)
 	{
 		int res = time.compareTo(o.time);
+		if (res == 0 && isEnd != o.isEnd)
+			res = isEnd ? -1 : 1;
 		if (res == 0 && !isEnd) // sort by start, and if they are the same, by last end time
 			res = o.event.getEnd().compareTo(event.getEnd());
 		return res;

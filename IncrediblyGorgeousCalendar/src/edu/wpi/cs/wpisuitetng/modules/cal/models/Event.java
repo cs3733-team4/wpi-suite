@@ -16,6 +16,8 @@ import java.util.UUID;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.MutableDateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import com.google.gson.Gson;
 
@@ -438,16 +440,10 @@ public class Event extends AbstractModel implements Displayable
 	@Override
 	public String getFormattedHoverTextTime()
 	{
-		DateTime s = new DateTime(this.start);
-		DateTime e = new DateTime(this.end);
 		StringBuilder timeFormat = new StringBuilder()
-			.append(s.getHourOfDay())
-			.append(":")
-			.append(s.getMinuteOfHour())
+			.append(getStart().toString(DateTimeFormat.forPattern("h:mma")))
 			.append(" - ")
-			.append(e.getHourOfDay())
-			.append(":")
-			.append(e.getMinuteOfHour()==0?"00":e.getMinuteOfHour());
+			.append(getEnd().toString(DateTimeFormat.forPattern("h:mma")));
 		return timeFormat.toString();
 	}
 	

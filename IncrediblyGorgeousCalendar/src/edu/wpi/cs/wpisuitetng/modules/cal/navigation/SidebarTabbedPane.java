@@ -246,14 +246,15 @@ public class SidebarTabbedPane extends JTabbedPane{
 		showEvent.addItemListener(new CheckBoxListener(null));
 		showEvent.setMinimumSize(getPreferredSize());
 		
-		JCheckBox showCommitments = new JCheckBox("Commits");
+		JCheckBox showCommitments = new JCheckBox("Commitments");
 		showCommitments.setSelected(true);
 		showCommitments.addItemListener(new CheckBoxListener(null));
 		showCommitments.setMinimumSize(getPreferredSize());
 		
 		eventCommitmentTab.add(showEvent);
 		eventCommitmentTab.add(showCommitments);
-		
+		eventCommitmentTab.setMaximumSize(new Dimension(1000,25));
+		eventCommitmentTab.setMinimumSize(new Dimension(1000,25));
 		// Set up panel with categories
 		categoryList = new JPanel();
 		categoryList.setLayout(new BoxLayout(categoryList, BoxLayout.Y_AXIS));
@@ -303,6 +304,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 		// Set up UI
 		categoryFilterTab.add(eventCommitmentTab);
 		categoryFilterTab.add(Box.createVerticalStrut(3));
+		categoryButtonPanel.setMaximumSize(new Dimension(1000,20));
 		categoryFilterTab.add(categoryButtonPanel);
 		categoryFilterTab.add(categoryScroll);
 		categoryFilterTab.setFocusable(false); // Keep tab form grabbing focus from arrow keys
@@ -407,6 +409,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 		
 		// Use different list to avoid commitment and uncategorized from displaying in other places
 		// since the allCategories list is passed by reference
+		allPlusDefault.clear();
 		allPlusDefault.add(Category.DEFAULT_CATEGORY);
 		allPlusDefault.addAll(allCategories);
 		

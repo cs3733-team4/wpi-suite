@@ -223,7 +223,7 @@ public class MonthCalendar extends AbstractCalendar
 	 * 
 	 * @param events
 	 */
-	void setEvents(List<Event> events)
+	public void setEvents(List<Event> events)
 	{
 		clearEvents();
 		for (Event e : events)
@@ -232,7 +232,7 @@ public class MonthCalendar extends AbstractCalendar
 		}
 	}
 
-	void setCommitments(List<Commitment> commitments)
+	public void setCommitments(List<Commitment> commitments)
 	{
 		clearCommitments();
 		for (Commitment c : commitments)
@@ -241,12 +241,8 @@ public class MonthCalendar extends AbstractCalendar
 		}
 	}
 
-	/**
-	 * Add an event
-	 * 
-	 * @param e
-	 */
-	void addEvent(Event e)
+	
+	public void addEvent(Event e)
 	{
 		
 		MonthDay md;
@@ -275,12 +271,8 @@ public class MonthCalendar extends AbstractCalendar
 		}
 	}
 
-	/**
-	 * Add a commitment
-	 * 
-	 * @param c
-	 */
-	void addCommitment(Commitment c)
+	
+	public void addCommitment(Commitment c)
 	{
 		MonthDay md = this.days.get(c.getDate().getDayOfYear());
 		md.addCommitment(c);
@@ -291,19 +283,19 @@ public class MonthCalendar extends AbstractCalendar
 	 * 
 	 * @param e
 	 */
-	void removeEvent(Event e)
+	public void removeEvent(Event e)
 	{
 		MonthDay md = this.days.get(e.getStart().getDayOfYear());
 		md.removeEvent(e);
 	}
 
-	void removeCommitment(Commitment c)
+	public void removeCommitment(Commitment c)
 	{
 		MonthDay md = this.days.get(c.getDate().getDayOfYear());
 		md.removeCommitment(c);
 	}
 
-	void clearEvents()
+	public void clearEvents()
 	{
 		for (Component i : inside.getComponents())
 		{
@@ -311,14 +303,14 @@ public class MonthCalendar extends AbstractCalendar
 		}
 	}
 
-	void clearCommitments()
+	public void clearCommitments()
 	{
 		for (Component i : inside.getComponents())
 		{
 			((MonthDay)i).clearComms();
 		}
 	}
-
+	
 	public boolean isToday(ReadableDateTime fom)
 	{
 		DateTime now = DateTime.now();
