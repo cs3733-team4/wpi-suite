@@ -246,7 +246,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 		showEvent.addItemListener(new CheckBoxListener(null));
 		showEvent.setMinimumSize(getPreferredSize());
 		
-		JCheckBox showCommitments = new JCheckBox("Commitments");
+		JCheckBox showCommitments = new JCheckBox("Commits");
 		showCommitments.setSelected(true);
 		showCommitments.addItemListener(new CheckBoxListener(null));
 		showCommitments.setMinimumSize(getPreferredSize());
@@ -512,7 +512,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 			{
 				if (referencedCategory == null && tmp.getText().equals("Events"))
 					showEvents = true;
-				else if (referencedCategory == null && tmp.getText().equals("Commitments"))
+				else if (referencedCategory == null && tmp.getText().equals("Commits"))
 					showCommitments = true;
 				else
 				{
@@ -523,7 +523,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 			{
 				if (referencedCategory == null && tmp.getText().equals("Events"))
 					showEvents = false;
-				else if (referencedCategory == null && tmp.getText().equals("Commitments"))
+				else if (referencedCategory == null && tmp.getText().equals("Commits"))
 					showCommitments = false;
 				else
 				{
