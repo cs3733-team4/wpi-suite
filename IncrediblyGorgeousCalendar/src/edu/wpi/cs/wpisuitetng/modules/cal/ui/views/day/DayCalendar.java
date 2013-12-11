@@ -82,7 +82,7 @@ public class DayCalendar extends AbstractCalendar
 		this.current = new LouvreTour();
 		this.current.setEvents(getVisibleEvents(), time);
 
-		this.holder.add(DayGridLabel.getInstance(), BorderLayout.WEST);
+		this.holder.add(new DayGridLabel(), BorderLayout.WEST);
 		this.holder.add(this.current, BorderLayout.CENTER);
 		// notify mini-calendar to change
 		mainPanel.miniMove(time);

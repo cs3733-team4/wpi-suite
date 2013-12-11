@@ -152,7 +152,7 @@ public class Months
 	public static DateTime getWeekStart(DateTime d)
 	{
 		MutableDateTime t = new MutableDateTime(d);
-		t.addDays(0 - d.getDayOfWeek()%7);
+		t.addDays(-(d.getDayOfWeek()%7));
 		return t.toDateTime();
 	}
 	
