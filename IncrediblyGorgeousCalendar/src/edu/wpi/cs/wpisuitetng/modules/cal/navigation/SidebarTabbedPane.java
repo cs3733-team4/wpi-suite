@@ -512,7 +512,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 			{
 				if (referencedCategory == null && tmp.getText().equals("Events"))
 					showEvents = true;
-				else if (referencedCategory == null && tmp.getText().equals("Commits"))
+				else if (referencedCategory == null && tmp.getText().equals("Commitments"))
 					showCommitments = true;
 				else
 				{
@@ -523,7 +523,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 			{
 				if (referencedCategory == null && tmp.getText().equals("Events"))
 					showEvents = false;
-				else if (referencedCategory == null && tmp.getText().equals("Commits"))
+				else if (referencedCategory == null && tmp.getText().equals("Commitments"))
 					showCommitments = false;
 				else
 				{

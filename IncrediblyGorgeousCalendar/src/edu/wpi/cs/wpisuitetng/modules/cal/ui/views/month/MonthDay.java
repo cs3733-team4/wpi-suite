@@ -29,10 +29,8 @@ import org.joda.time.MutableDateTime;
 import edu.wpi.cs.wpisuitetng.modules.cal.DayStyle;
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 
 /**
@@ -120,18 +118,15 @@ public class MonthDay extends JPanel
 						selected.setTime(newTime.toDateTime());
 						
 						selected.update();
-						
-						parent.display(selected.getDate());
 					}
 				}
-				parent.setEscaped(false);
-				parent.repaint();
+				parent.dispatchEvent(e);
 			}
 
 			@Override
 			public void mouseEntered(MouseEvent e)
 			{
-				
+				parent.dispatchEvent(e);
 			}
 
 			@Override
@@ -177,7 +172,9 @@ public class MonthDay extends JPanel
 			}
 
 			@Override
-			public void mouseMoved(MouseEvent e) {}
+			public void mouseMoved(MouseEvent e) {
+				parent.dispatchEvent(e);
+			}
 			
 		});
 	}
@@ -334,7 +331,23 @@ public class MonthDay extends JPanel
 			if (c instanceof MonthItem)
 			{
 				MonthItem mi = ((MonthItem) c);
-				mi.setSelected(mi.getDisplayable(), item);
+				mi.setSelected(mi.getDisplayable().equals(item));
+			}
+		}
+	}
+	
+	/**
+	 * clears all selected displayables
+	 */
+	public void clearSelected()
+	{
+		selected = null;
+		for (Component c : getComponents())
+		{
+			if (c instanceof MonthItem)
+			{
+				MonthItem mi = ((MonthItem) c);
+				mi.setSelected(false);
 			}
 		}
 	}

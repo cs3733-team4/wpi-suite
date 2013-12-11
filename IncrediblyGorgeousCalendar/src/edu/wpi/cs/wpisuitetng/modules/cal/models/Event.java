@@ -22,6 +22,7 @@ import org.joda.time.format.DateTimeFormatter;
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
@@ -474,7 +475,23 @@ public class Event extends AbstractModel implements Displayable
 		}
 	}
 
+	/**
+	 * 
+	 * @return the events UUID
+	 */
 	public UUID getEventID() {
 		return this.eventID;
+	}
+	
+	@Override
+	public void deselect(MonthCalendar monthCalendar)
+	{
+		monthCalendar.deselect(this);
+	}
+	
+	@Override
+	public void select(MonthCalendar monthCalendar)
+	{
+		monthCalendar.select(this);
 	}
 }

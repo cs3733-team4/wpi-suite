@@ -14,6 +14,8 @@ import java.util.UUID;
 
 import org.joda.time.DateTime;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthCalendar;
+
 /**
  * Any object that is displayable on the calendar with a date and time, such as events and commitments.
  */
@@ -88,5 +90,19 @@ public interface Displayable
 	 * @return a Color Object
 	 */
 	public Color getColor();
+
+	/**
+	 * deselects this from the month calendar
+	 * 
+	 * @param monthCalendar 
+	 */
+	public void deselect(MonthCalendar monthCalendar);
+
+	/**
+	 * selects this from the month calendar
+	 * 
+	 * @param monthCalendar 
+	 */
+	public void select(MonthCalendar monthCalendar);
 	
 }
