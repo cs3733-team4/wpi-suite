@@ -13,6 +13,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 
+import javax.swing.Box;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -20,6 +21,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
@@ -40,8 +42,7 @@ public class DisplayableEditorView extends JPanel
 {
 	protected JTextField nameTextField, participantsTextField;
 	protected final ButtonGroup buttonGroup = new ButtonGroup();
-	protected JLabel nameLabel, nameErrorLabel, dateAndTimeLabel, lblUntil, dateErrorLabel, participantsLabel,
-	lblCategory, lblCalendar, descriptionLabel;
+	protected JLabel nameLabel, nameErrorLabel, dateAndTimeLabel, lblUntil, dateErrorLabel, participantsLabel, lblCategory, lblCalendar, descriptionLabel;
 	protected JRadioButton rdbtnTeam, rdbtnPersonal;
 	protected JTextArea descriptionTextArea;
 	protected DatePicker startTimeDatePicker, endTimeDatePicker;
@@ -56,7 +57,7 @@ public class DisplayableEditorView extends JPanel
 
 		nameLabel = new JLabel("Name:");
 		this.setLayout(new MigLayout("", "[45px][334px,grow]",
-				"[sizegroup 1line][sizegroup 1line][sizegroup 1line][sizegroup 1line][sizegroup 1line][50px:n,grow][grow][]"));
+				"[sizegroup 1line][sizegroup 1line][sizegroup 1line][sizegroup 1line][sizegroup 1line][30px:n,grow][grow][25px]"));
 		this.add(nameLabel, "cell 0 0,alignx right,growy");
 		this.add(nameTextField, "cell 1 0,alignx left,aligny baseline");
 
@@ -71,12 +72,13 @@ public class DisplayableEditorView extends JPanel
 		endTimeDatePicker = new DatePicker(true, null);
 		startTimeDatePicker = new DatePicker(true, showEnd ? endTimeDatePicker : null);
 		this.add(startTimeDatePicker, "flowx,cell 1 1,alignx left,growy");
-		
+
 		if (showEnd)
 		{
 			lblUntil = new JLabel("until");
+			this.add(Box.createHorizontalStrut(6), "flowx,cell 1 1,alignx left,growy");
 			this.add(lblUntil, "flowx,cell 1 1,alignx left,growy");
-	
+			this.add(Box.createHorizontalStrut(7), "flowx,cell 1 1,alignx left,growy");
 			this.add(endTimeDatePicker, "flowx,cell 1 1,alignx left,growy");
 		}
 
@@ -98,7 +100,7 @@ public class DisplayableEditorView extends JPanel
 		eventCategoryPicker = new JComboBox<>();
 		eventCategoryPicker.setRenderer(new CategoryComboBoxRenderer());
 		this.eventCategoryPicker.addItem(Category.DEFAULT_CATEGORY);
-		for(Category c : CategoryModel.getInstance().getAllCategories())
+		for (Category c : CategoryModel.getInstance().getAllCategories())
 		{
 			this.eventCategoryPicker.addItem(c);
 		}
@@ -121,8 +123,13 @@ public class DisplayableEditorView extends JPanel
 		this.add(descriptionLabel, "cell 0 5,alignx right,aligny top");
 
 		descriptionTextArea = new JTextArea();
+		descriptionTextArea.setLineWrap(true);
+		descriptionTextArea.setWrapStyleWord(true);
 		descriptionTextArea.setBorder(nameTextField.getBorder());
-		this.add(descriptionTextArea, "cell 1 5,grow");
+
+		JScrollPane descriptionScrollPane = new JScrollPane(descriptionTextArea);
+		descriptionScrollPane.setBorder(nameTextField.getBorder());
+		this.add(descriptionScrollPane, "cell 1 5,grow");
 
 		cancelButton = new JButton("Cancel");
 		cancelButton.setMinimumSize(new Dimension(80, 0));
@@ -165,6 +172,7 @@ public class DisplayableEditorView extends JPanel
 			jPanel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(3, 6, 3, 0));
 			jPanel1.setAlignmentX(0.0F);
 			jPanel1.setAlignmentY(0.0F);
+			jPanel1.setOpaque(false);
 			jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.X_AXIS));
 
 			jPanel2.setBackground(value.getColor());
@@ -184,6 +192,7 @@ public class DisplayableEditorView extends JPanel
 			jPanel1.setName("ComboBox.listRenderer");
 			if (isSelected)
 			{
+				jPanel1.setOpaque(true);
 				jPanel1.setBackground(list.getSelectionBackground());
 				jPanel1.setForeground(list.getSelectionForeground());
 			}

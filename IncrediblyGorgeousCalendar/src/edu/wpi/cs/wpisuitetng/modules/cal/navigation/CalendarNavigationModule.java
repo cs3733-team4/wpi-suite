@@ -23,30 +23,32 @@ public class CalendarNavigationModule{
 	private DateTime time;
 	private MiniMonth calendar;
 	private MiniCalendarHostIface mc;
+	private boolean monthOnly;
 	
-	public CalendarNavigationModule(DateTime time, MiniCalendarHostIface mc)
+	public CalendarNavigationModule(DateTime time, MiniCalendarHostIface mc, boolean monthOnly)
 	{
 		this.mc = mc;
 		this.time = time;
+		this.monthOnly = monthOnly;
 	}
 	
 	public CalendarNavigationModule getPrevious() {
 		MutableDateTime next = new MutableDateTime(time);
 		next.addMonths(-1);
-		return new CalendarNavigationModule(next.toDateTime(), mc);
+		return new CalendarNavigationModule(next.toDateTime(), mc, monthOnly);
 	}
 
 	public CalendarNavigationModule getFollowing() {
 		MutableDateTime next = new MutableDateTime(time);
 		next.addMonths(1);
-		return new CalendarNavigationModule(next.toDateTime(), mc);
+		return new CalendarNavigationModule(next.toDateTime(), mc, monthOnly);
 	}
 
 	public JComponent renderComponent()
 	{
 		if (calendar == null)
 		{
-			calendar = new MiniMonth(time, mc);
+			calendar = new MiniMonth(time, mc, monthOnly);
 		}
 		return calendar;
 	}

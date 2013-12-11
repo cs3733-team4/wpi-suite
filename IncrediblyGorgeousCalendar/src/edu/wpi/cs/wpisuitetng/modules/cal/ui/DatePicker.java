@@ -9,6 +9,7 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.ui;
 
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -19,11 +20,13 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
+import javax.swing.Box;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.MaskFormatter;
@@ -34,6 +37,9 @@ import org.joda.time.format.DateTimeFormatter;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarHostIface;
+
+import javax.swing.SwingConstants;
+import javax.swing.BoxLayout;
 
 /**
  * This is the DateTime picker that enables picking dates, and datetimes. Has awesome drop-down mini-month 
@@ -51,7 +57,6 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 	public DatePicker(boolean showTime, DatePicker mLinked) {
 		super();
 		linked = mLinked;
-		
 		dateFmt = DateTimeFormat.forPattern("MM/dd/yy");
 		timeFmt = DateTimeFormat.forPattern("hh:mm");
 		dateTimeFmt = DateTimeFormat.forPattern("MM/dd/yy hh:mm aa");
@@ -76,8 +81,9 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 					notifyListeners();
 				}
 			});
+			setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 			this.add(date);
-			
+			this.add(Box.createHorizontalStrut(6));
 			if (showTime) {
 				MaskFormatter mask = new MaskFormatter("##:##");
 				time = new JFormattedTextField(mask);
@@ -149,7 +155,6 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 				});
 				
 				this.add(time);
-
 				AMPM = new JComboBox<>();
 				AMPM.addItem("AM");
 				AMPM.addItem("PM");

@@ -27,7 +27,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
  */
 public class PopupCalendar extends JFrame {
 	public PopupCalendar(DateTime date, MiniCalendarHostIface mc) {
-		MiniCalendarPanel cal = new MiniCalendarPanel(date, mc);
+		MiniCalendarPanel cal = new MiniCalendarPanel(date, mc, true);
 		this.add(cal);
 		final JFrame me = this;
 		
