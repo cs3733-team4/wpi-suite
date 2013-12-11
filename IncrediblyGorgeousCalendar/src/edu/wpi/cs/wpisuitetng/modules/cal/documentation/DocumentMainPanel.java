@@ -69,9 +69,6 @@ public class DocumentMainPanel extends JFrame{
     
     public void init()
     {
-    	// TODO: clean this up
-    	if (Network.getInstance().getClass().getName().contains("MockNetwork")) // tests. don't do anything or we will crash because the mock url is invalid
-    		return;
     	if (serverLocation!=null)
     		return;
     	tocView = new JPanel(new BorderLayout());
