@@ -75,6 +75,7 @@ public class CategoryModel {
 		}
 
 		this.categories = filteredCategories;
+		this.categoryMap.clear();
 		for(Category c : categories)
 		{
 			this.categoryMap.put(c.getCategoryID(), c);

@@ -409,6 +409,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 		
 		// Use different list to avoid commitment and uncategorized from displaying in other places
 		// since the allCategories list is passed by reference
+		allPlusDefault.clear();
 		allPlusDefault.add(Category.DEFAULT_CATEGORY);
 		allPlusDefault.addAll(allCategories);
 		
