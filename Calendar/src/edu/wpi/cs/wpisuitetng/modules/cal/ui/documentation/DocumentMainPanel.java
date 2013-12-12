@@ -7,7 +7,7 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.cal.documentation;
+package edu.wpi.cs.wpisuitetng.modules.cal.ui.documentation;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -29,13 +29,13 @@ import javax.swing.JSplitPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.SelectableField;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddCommitmentDisplay;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddEventDisplay;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.CategoryManager;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs.AddCommitmentDisplay;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs.AddEventDisplay;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs.CategoryManager;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 

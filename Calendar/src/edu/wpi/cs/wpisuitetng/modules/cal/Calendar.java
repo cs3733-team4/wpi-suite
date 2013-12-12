@@ -20,7 +20,8 @@ import javax.swing.JSplitPane;
 
 import edu.wpi.cs.wpisuitetng.janeway.modules.IJanewayModule;
 import edu.wpi.cs.wpisuitetng.janeway.modules.JanewayTabModel;
-import edu.wpi.cs.wpisuitetng.modules.cal.documentation.DocumentMainPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.RibbonToolbar;
 
 /**
  * Calendar class. This is the main Janeway entry point for our calendar.

@@ -7,7 +7,7 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.cal.ui;
+package edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -15,10 +15,10 @@ import javax.swing.JLabel;
 
 import org.joda.time.DateTime;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.DisplayableEditorView;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.DatePickerListener;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

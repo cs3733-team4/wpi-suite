@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import java.lang.reflect.Field;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.navigation.CalendarNavigationModule;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.navigation.CalendarNavigationModule;
 
 import org.joda.time.DateTime;
 import org.junit.Test;

@@ -35,8 +35,8 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
-import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarHostIface;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.navigation.MiniCalendarHostIface;
 
 import javax.swing.SwingConstants;
 import javax.swing.BoxLayout;

@@ -7,7 +7,7 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.cal.navigation;
+package edu.wpi.cs.wpisuitetng.modules.cal.ui.navigation;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -25,7 +25,7 @@ import javax.swing.SwingConstants;
 import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
 

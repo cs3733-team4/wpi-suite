@@ -31,6 +31,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.navigation.SidebarTabbedPane;
 import edu.wpi.cs.wpisuitetng.modules.cal.MockNetwork;
 import edu.wpi.cs.wpisuitetng.modules.cal.ReflectUtils;
 import edu.wpi.cs.wpisuitetng.network.Network;

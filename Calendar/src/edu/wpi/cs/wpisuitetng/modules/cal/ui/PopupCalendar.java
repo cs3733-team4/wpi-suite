@@ -18,8 +18,8 @@ import javax.swing.JFrame;
 
 import org.joda.time.DateTime;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarHostIface;
-import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.navigation.MiniCalendarHostIface;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.navigation.MiniCalendarPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 
 /**

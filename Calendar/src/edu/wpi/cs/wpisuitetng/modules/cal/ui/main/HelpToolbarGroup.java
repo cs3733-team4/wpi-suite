@@ -7,7 +7,7 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.cal;
+package edu.wpi.cs.wpisuitetng.modules.cal.ui.main;
 
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -18,13 +18,8 @@ import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-
 import edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar.ToolbarGroupView;
-import edu.wpi.cs.wpisuitetng.modules.cal.documentation.DocumentMainPanel;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddEventDisplay;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.CategoryManager;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.documentation.DocumentMainPanel;
 
 public class HelpToolbarGroup extends ToolbarGroupView {
 	
@@ -49,7 +44,7 @@ public class HelpToolbarGroup extends ToolbarGroupView {
 		
 		
 		try {
-		    Image img = ImageIO.read(getClass().getResource("gethelp.png"));
+		    Image img = ImageIO.read(getClass().getResource("/edu/wpi/cs/wpisuitetng/modules/cal/img/gethelp.png"));
 		    showHelp.setIcon(new ImageIcon(img));
 		} catch (IOException ex) {}
 

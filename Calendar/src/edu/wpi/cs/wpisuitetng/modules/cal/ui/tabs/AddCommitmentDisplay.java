@@ -7,7 +7,7 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.cal.ui;
+package edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,10 +21,10 @@ import javax.swing.event.DocumentListener;
 
 import org.joda.time.DateTime;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.DisplayableEditorView;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.DatePickerListener;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 
 public class AddCommitmentDisplay extends DisplayableEditorView
 {

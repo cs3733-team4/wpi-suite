@@ -7,7 +7,7 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.cal.navigation;
+package edu.wpi.cs.wpisuitetng.modules.cal.ui.navigation;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;

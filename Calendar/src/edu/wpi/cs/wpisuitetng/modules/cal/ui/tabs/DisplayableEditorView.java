@@ -7,7 +7,7 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.cal.ui.views;
+package edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -36,7 +36,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.RequestFocusListener;
 
 /**
- * The UI for AddEvent
+ * The UI for AddEvent & AddCommitment
  */
 public class DisplayableEditorView extends JPanel
 {

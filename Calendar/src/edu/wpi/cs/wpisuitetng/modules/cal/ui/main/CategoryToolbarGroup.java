@@ -7,7 +7,7 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.cal;
+package edu.wpi.cs.wpisuitetng.modules.cal.ui.main;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -31,10 +31,10 @@ import javax.swing.JToolTip;
 import javax.swing.ToolTipManager;
 
 import edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar.ToolbarGroupView;
-import edu.wpi.cs.wpisuitetng.modules.cal.documentation.DocumentMainPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.documentation.DocumentMainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.ToolTipListener;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddEventDisplay;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.CategoryManager;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs.AddEventDisplay;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs.CategoryManager;
 
 public class CategoryToolbarGroup extends ToolbarGroupView {
 	
@@ -104,7 +104,7 @@ public class CategoryToolbarGroup extends ToolbarGroupView {
 		
 		
 		try {
-		    Image img = ImageIO.read(getClass().getResource("category.png"));
+		    Image img = ImageIO.read(getClass().getResource("/edu/wpi/cs/wpisuitetng/modules/cal/img/category.png"));
 		    editCategory.setIcon(new ImageIcon(img));
 		} catch (IOException ex) {}
 

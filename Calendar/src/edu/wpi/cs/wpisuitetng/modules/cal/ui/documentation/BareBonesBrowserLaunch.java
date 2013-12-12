@@ -1,4 +1,4 @@
-package edu.wpi.cs.wpisuitetng.modules.cal.documentation;
+package edu.wpi.cs.wpisuitetng.modules.cal.ui.documentation;
 
 import javax.swing.JOptionPane;
 import java.util.Arrays;

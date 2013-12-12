@@ -16,6 +16,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthCalendarTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventEntityManagerTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentEntityManagerTest;

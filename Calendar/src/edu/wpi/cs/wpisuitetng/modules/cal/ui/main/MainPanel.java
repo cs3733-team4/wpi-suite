@@ -7,7 +7,7 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.cal;
+package edu.wpi.cs.wpisuitetng.modules.cal.ui.main;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -38,7 +38,8 @@ import javax.swing.border.EmptyBorder;
 
 import org.joda.time.DateTime;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.documentation.DocumentMainPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.documentation.DocumentMainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
@@ -46,16 +47,16 @@ import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
-import edu.wpi.cs.wpisuitetng.modules.cal.navigation.CalendarSelector;
-import edu.wpi.cs.wpisuitetng.modules.cal.navigation.GoToPanel;
-import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MainCalendarNavigation;
-import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarHostIface;
-import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MiniCalendarPanel;
-import edu.wpi.cs.wpisuitetng.modules.cal.navigation.SidebarTabbedPane;
-import edu.wpi.cs.wpisuitetng.modules.cal.navigation.ViewSize;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddCommitmentDisplay;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddEventDisplay;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.CategoryManager;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs.AddCommitmentDisplay;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs.AddEventDisplay;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs.CategoryManager;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.navigation.CalendarSelector;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.navigation.GoToPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.navigation.MainCalendarNavigation;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.navigation.MiniCalendarHostIface;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.navigation.MiniCalendarPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.navigation.SidebarTabbedPane;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.navigation.ViewSize;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.DayCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.week.WeekCalendar;

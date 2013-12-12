@@ -7,15 +7,18 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.cal.navigation;
+package edu.wpi.cs.wpisuitetng.modules.cal.ui.navigation;
+
+import org.joda.time.DateTime;
 
 /**
- * What calendar is in the main view
+ * This is an interface for items that can display dates but not events.
  */
-public enum ViewSize
+public interface MiniCalendarHostIface
 {
-	Year,
-	Month,
-	Week,
-	Day
+	/**
+	 * Requests the view to adjust such that the provided date/time is visible.
+	 * @param newTime The instant to show
+	 */
+	public void display(DateTime newtime);
 }

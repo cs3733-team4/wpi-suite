@@ -11,9 +11,10 @@ import javax.swing.JPanel;
 import org.joda.time.DateTime;
 import org.junit.Test;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.navigation.MainCalendarNavigation;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthCalendar;
 
 public class MainCalendarNavigationTest {

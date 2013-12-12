@@ -6,9 +6,9 @@ import java.lang.reflect.Field;
 
 import javax.swing.JLabel;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.MainPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.navigation.GoToPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthCalendar;
-import edu.wpi.cs.wpisuitetng.modules.cal.navigation.GoToPanel;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
