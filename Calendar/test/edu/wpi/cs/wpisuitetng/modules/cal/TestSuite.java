@@ -10,6 +10,8 @@
 
 package edu.wpi.cs.wpisuitetng.modules.cal;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
@@ -50,7 +52,7 @@ import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
 public class TestSuite
 {
 	@BeforeClass
-	public static void setUpClass()
+	public static void setUpClass() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException
 	{
 		MockNetwork mn = new MockNetwork();
 		mn.addUser("testing11");
@@ -64,7 +66,7 @@ public class TestSuite
 		mn.loginSession("default");
 		Network.initNetwork(mn);
 		Network.getInstance().setDefaultNetworkConfiguration(new NetworkConfiguration("http://wpisuitetng"));
-		MainPanel.getInstance().finishInit();
+		ReflectUtils.callMethod(MainPanel.getInstance(), "finishInit");
 	}
 
 	@AfterClass

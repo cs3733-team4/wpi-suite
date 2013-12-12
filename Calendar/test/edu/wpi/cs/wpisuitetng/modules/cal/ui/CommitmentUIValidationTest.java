@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.ReflectUtils;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.AddCommitmentDisplay;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs.AddCommitmentDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.DatePicker;
 
 public class CommitmentUIValidationTest

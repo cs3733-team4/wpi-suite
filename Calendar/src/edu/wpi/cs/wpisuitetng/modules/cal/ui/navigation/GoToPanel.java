@@ -126,7 +126,7 @@ public class GoToPanel extends JPanel {
 	 * syntax errors
 	 * @param text string to parse
 	 */
-	void parseGoto(String text) {
+	public void parseGoto(String text) {
 		
 		DateTime dt;
 		boolean isValidYear = true;
