@@ -7,7 +7,7 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.france;
+package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.collisiondetection;
 
 import javax.swing.JPanel;
 
@@ -45,7 +45,7 @@ import javax.swing.SwingConstants;
 /**
  * Beautiful images of what is in the days.
  */
-public class VanGoghPainting extends JPanel
+public class DayItem extends JPanel
 {
 	private final long millisInDay = 86400000;
 	private Rational Width;
@@ -60,11 +60,11 @@ public class VanGoghPainting extends JPanel
 	private boolean firstDraw = true;
 	private int height;
 	private static final int FIXED_HEIGHT = 1440;
-	private TimeTraveller traveller;
+	private OverlappedEvent traveller;
 	private DateTime displayedDay;
 	private Interval length;
 	private boolean isBeingDragged;
-	public VanGoghPainting(TimeTraveller traveller, DateTime displayedDay)
+	public DayItem(OverlappedEvent traveller, DateTime displayedDay)
 	{
 		isBeingDragged = false;
 		this.displayedDay=displayedDay;
@@ -298,7 +298,7 @@ public class VanGoghPainting extends JPanel
 		{
 			ratpack.add(new Rational(1, 1));
 		}
-		for (TimeTraveller who : traveller.getOverlappedEvents())
+		for (OverlappedEvent who : traveller.getOverlappedEvents())
 		{
 			//System.out.println("" + who + " was in" + traveller);
 			if (who.getXpos().toInt(10000) < traveller.getXpos().toInt(10000))

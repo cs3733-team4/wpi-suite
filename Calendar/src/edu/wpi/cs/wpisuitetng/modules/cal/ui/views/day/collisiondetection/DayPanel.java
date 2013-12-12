@@ -7,7 +7,7 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.france;
+package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.collisiondetection;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -36,17 +36,17 @@ import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 /**
  * All the VanGoghPaintings are visible in the LouvreTour you saw in the day
  */
-public class LouvreTour extends JPanel
+public class DayPanel extends JPanel
 {
-	HashMap<Event, VanGoghPainting> guides = new HashMap<>();
+	HashMap<Event, DayItem> guides = new HashMap<>();
 	private DateTime date;
-	private VanGoghPainting selected;
+	private DayItem selected;
 	private boolean isSomethingDragging;
 	private DateTime displayDate;
 	private boolean inWeekView;
 	private WeekCalendar inWeek;
 	private int offset;
-	public LouvreTour()
+	public DayPanel()
 	{
 		inWeekView = false;
 		inWeek = null;
@@ -101,7 +101,7 @@ public class LouvreTour extends JPanel
 			public void mouseDragged(MouseEvent arg0) {
 				if(selected != null)
 				{
-					LouvreTour.this.setComponentZOrder(selected, 0);
+					DayPanel.this.setComponentZOrder(selected, 0);
 					selected.updateTime(getTimeAtCursor());
 					if(!isSomethingDragging)
 					{
@@ -121,7 +121,7 @@ public class LouvreTour extends JPanel
 		});
 	}
 	
-	public LouvreTour(boolean inWeekView, WeekCalendar inWeek)
+	public DayPanel(boolean inWeekView, WeekCalendar inWeek)
 	{
 		this();
 		this.inWeek = inWeek;
@@ -131,12 +131,12 @@ public class LouvreTour extends JPanel
 	public void setEvents(List<Event> events, DateTime displayedDay)
 	{
 		this.date = displayedDay;
-		List<VanGoghPainting> gallery = CERN.createEventsReallyNicely(events, displayedDay);
+		List<DayItem> gallery = CollisionAlgorithms.createEventsReallyNicely(events, displayedDay);
 		this.displayDate = displayedDay;
 		removeAll();
 		guides.clear();
 		int i = 2;
-		for (VanGoghPainting vanGoghPainting : gallery)
+		for (DayItem vanGoghPainting : gallery)
 		{
 			guides.put(vanGoghPainting.event, vanGoghPainting);
 			add(vanGoghPainting); // priceless
@@ -177,7 +177,7 @@ public class LouvreTour extends JPanel
 
 	public void select(Displayable item)
 	{
-		for (VanGoghPainting v : guides.values())
+		for (DayItem v : guides.values())
 		{
 			if(item instanceof Event && v.getEvent().getEventID().equals(((Event) item).getEventID()))
 				item = v.getEvent();

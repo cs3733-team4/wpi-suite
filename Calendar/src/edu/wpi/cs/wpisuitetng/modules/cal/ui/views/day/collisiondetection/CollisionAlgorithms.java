@@ -7,7 +7,7 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.france;
+package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.collisiondetection;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,20 +23,20 @@ import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
  * Takes events, which are made of two particles colliding, and smashes them together so fast
  * they turn back time to the renaissance
  */
-public class CERN
+public class CollisionAlgorithms
 {
 	/**
 	 * Do everything, spin back time, steal paintings
 	 * @param events Events to display on day calendar
 	 * @return paintings
 	 */
-	public static List<VanGoghPainting> createEventsReallyNicely(List<Event> events, DateTime displayedDay)
+	public static List<DayItem> createEventsReallyNicely(List<Event> events, DateTime displayedDay)
 	{
-		LeadParticle[] particles = eventsToParticles(events, displayedDay);
-		List<TimeTraveller> travellers = tevatrize(particles); // shoot at speed of light to go back in time
-		disperse(particles);
+		EventEndpoints[] particles = splitEvents(events, displayedDay);
+		List<OverlappedEvent> travellers = collideEvents(particles); // shoot at speed of light to go back in time
+		xSort(particles);
 		Collections.sort(travellers); // Currently traveling backwards, trying to sort things out.
-		return timeWarp(travellers, displayedDay);
+		return generateUI(travellers, displayedDay);
 	}
 	
 	/**
@@ -44,13 +44,13 @@ public class CERN
 	 * @param events List of events to split
 	 * @return Array of lead particles, two for each event (start and end)
 	 */
-	private static LeadParticle[] eventsToParticles(List<Event> events, DateTime displayedDay)
+	private static EventEndpoints[] splitEvents(List<Event> events, DateTime displayedDay)
 	{
-		LeadParticle re[] = new LeadParticle[events.size()*2];
+		EventEndpoints re[] = new EventEndpoints[events.size()*2];
 		for(int i = 0; i < events.size(); i++)
 		{
-			re[i*2] = new LeadParticle(events.get(i), false, displayedDay);
-			re[i*2 + 1] = new LeadParticle(events.get(i), true, displayedDay);
+			re[i*2] = new EventEndpoints(events.get(i), false, displayedDay);
+			re[i*2 + 1] = new EventEndpoints(events.get(i), true, displayedDay);
 		}
 		Arrays.sort(re);
 		return re;
@@ -62,21 +62,21 @@ public class CERN
 	 * @param particles Particles to accelerate
 	 * @return A bunch of time travelers, one for each collision. 
 	 */
-	private static List<TimeTraveller> tevatrize(LeadParticle[] particles)
+	private static List<OverlappedEvent> collideEvents(EventEndpoints[] particles)
 	{
 		int counter = -1;
-		List<TimeTraveller> out = new ArrayList<TimeTraveller>(particles.length/2);
-		HashMap<Event, TimeTraveller> active = new HashMap<Event, TimeTraveller>();
+		List<OverlappedEvent> out = new ArrayList<OverlappedEvent>(particles.length/2);
+		HashMap<Event, OverlappedEvent> active = new HashMap<Event, OverlappedEvent>();
 		
-		for(LeadParticle c : particles) // c = speed of light
+		for(EventEndpoints c : particles) // c = speed of light
 		{
 			if(!c.isEnd())
 			{
-				TimeTraveller t = new TimeTraveller(c.getEvent());
+				OverlappedEvent t = new OverlappedEvent(c.getEvent());
 				active.put(c.getEvent(), c.setResult(t));
 				counter++;
 				// max active
-				for (TimeTraveller who : active.values())
+				for (OverlappedEvent who : active.values())
 				{
 					// count the number of hits we register
 					who.setCollisions(Math.max(who.getCollisions(), counter));
@@ -89,7 +89,7 @@ public class CERN
 			}
 			else
 			{
-				TimeTraveller who = active.remove(c.getEvent());
+				OverlappedEvent who = active.remove(c.getEvent());
 				out.add(who);
 				c.setResult(who);
 				counter--;
@@ -103,10 +103,10 @@ public class CERN
 	 * the detectors.
 	 * @param particles The particles to disperse, sorted by time
 	 */
-	private static void disperse(LeadParticle[] particles)
+	private static void xSort(EventEndpoints[] particles)
 	{
 		ArrayList<Boolean> state = new ArrayList<>();
-		for (LeadParticle x : particles)
+		for (EventEndpoints x : particles)
 		{
 			if (!x.isEnd())
 			{
@@ -139,12 +139,12 @@ public class CERN
 	 * @param travellers
 	 * @return Stolen Van Gogh Paintings for each time traveler
 	 */
-	private static List<VanGoghPainting> timeWarp(List<TimeTraveller> travellers, DateTime displayedDay)
+	private static List<DayItem> generateUI(List<OverlappedEvent> travellers, DateTime displayedDay)
 	{
-		List<VanGoghPainting> paintings = new ArrayList<>(travellers.size());
-		for(TimeTraveller t : travellers)
+		List<DayItem> paintings = new ArrayList<>(travellers.size());
+		for(OverlappedEvent t : travellers)
 		{
-			paintings.add(new VanGoghPainting(t, displayedDay));
+			paintings.add(new DayItem(t, displayedDay));
 		}
 		return paintings;
 	}

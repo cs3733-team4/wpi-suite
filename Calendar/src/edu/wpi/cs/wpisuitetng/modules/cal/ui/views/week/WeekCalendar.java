@@ -48,8 +48,8 @@ import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.DayGridLabel;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.france.LouvreTour;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.france.VanGoghPainting;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.collisiondetection.DayPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.collisiondetection.DayItem;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
 
@@ -63,12 +63,12 @@ public class WeekCalendar extends AbstractCalendar
 	private DateTime time;
 	private DateTime weekStartTime;
 	private DateTime weekEndTime;
-	private VanGoghPainting selected;
+	private DayItem selected;
 	private MainPanel mainPanel;
 
 	private Displayable lastSelection;
 
-	private LouvreTour[] daysOfWeekArray = new LouvreTour[7];
+	private DayPanel[] daysOfWeekArray = new DayPanel[7];
 	private List<Event> eventList;
 	private int currentDayUnderMouse;
 	private DateTimeFormatter monthDayFmt = DateTimeFormat.forPattern("MMM d");
@@ -168,7 +168,7 @@ public class WeekCalendar extends AbstractCalendar
 		for (int i = 0; i < 7; i++)
 		{
 			// add day views to the day grid
-			this.daysOfWeekArray[i] = new LouvreTour(true, this);
+			this.daysOfWeekArray[i] = new DayPanel(true, this);
 			this.daysOfWeekArray[i].setEvents(getEventsInInterval(increment.toDateTime(), increment.toDateTime().plusDays(1)), increment.toDateTime());
 			if (i < 6)
 				this.daysOfWeekArray[i].setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, Colors.BORDER));
@@ -382,7 +382,7 @@ public class WeekCalendar extends AbstractCalendar
 	public void select(Displayable item)
 	{
 		Displayable oitem = item;
-		LouvreTour day;
+		DayPanel day;
 		if (item == null && lastSelection == null)
 			return;
 		if (item == null)
@@ -395,7 +395,7 @@ public class WeekCalendar extends AbstractCalendar
 			else
 			{
 				day = null;
-				for (LouvreTour lt : daysOfWeekArray)
+				for (DayPanel lt : daysOfWeekArray)
 				{
 					if (lastSelection.getDate().getDayOfYear() == lt.getDisplayDate().getDayOfYear())
 					{
@@ -416,7 +416,7 @@ public class WeekCalendar extends AbstractCalendar
 		else
 		{
 			day = null;
-			for (LouvreTour lt : daysOfWeekArray)
+			for (DayPanel lt : daysOfWeekArray)
 			{
 				if (oitem.getDate().getDayOfYear() == lt.getDisplayDate().getDayOfYear())
 				{
@@ -444,7 +444,7 @@ public class WeekCalendar extends AbstractCalendar
 	private void selectEvents(Event on, Displayable setTo)
 	{
 		// TODO: refactor this pattern
-		LouvreTour mLouvreTour;
+		DayPanel mLouvreTour;
 		MutableDateTime startDay = new MutableDateTime(on.getStart());
 		MutableDateTime endDay = new MutableDateTime(on.getEnd());
 
@@ -531,7 +531,7 @@ public class WeekCalendar extends AbstractCalendar
 		return (s.isBefore(e) && mInterval.contains(s));
 	}
 	
-	public void passTo(int day, VanGoghPainting toPass)
+	public void passTo(int day, DayItem toPass)
 	{
 		selected = toPass;
 	}

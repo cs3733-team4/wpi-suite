@@ -7,7 +7,7 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.france;
+package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.collisiondetection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,14 +18,14 @@ import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
  * TimeTravelers are the result of colliding particles at the speed of light. They keep track 
  * of the number of collisions and where the x detector detected them. Also knows who its comrads are.
  */
-public class TimeTraveller implements Comparable<TimeTraveller>
+public class OverlappedEvent implements Comparable<OverlappedEvent>
 {
 	private int collisions = 0;
 	private Event event;
 	private Rational xpos = new Rational(1, 1);
-	private List<TimeTraveller> commies = new ArrayList<>(); // the reds will invade you
+	private List<OverlappedEvent> commies = new ArrayList<>(); // the reds will invade you
 	
-	public TimeTraveller(Event event)
+	public OverlappedEvent(Event event)
 	{
 		this.event = event;
 	}
@@ -51,19 +51,19 @@ public class TimeTraveller implements Comparable<TimeTraveller>
 		return event;
 	}
 	
-	public void addOverlappedEvent(TimeTraveller karl)
+	public void addOverlappedEvent(OverlappedEvent karl)
 	{
 		if (!commies.contains(karl))
 			commies.add(karl);
 	}
 	
-	public List<TimeTraveller> getOverlappedEvents()
+	public List<OverlappedEvent> getOverlappedEvents()
 	{
 		return commies;
 	}
 
 	@Override
-	public int compareTo(TimeTraveller toCompare) {
+	public int compareTo(OverlappedEvent toCompare) {
 		int res = Integer.compare(toCompare.xpos.toInt(10000), xpos.toInt(10000));
 		if (res == 0)
 			return toCompare.event.getStart().compareTo(event.getStart());

@@ -7,7 +7,7 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.france;
+package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.collisiondetection;
 
 import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
@@ -17,14 +17,14 @@ import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 /**
  * Class used for day calendar collisions
  */
-public class LeadParticle implements Comparable<LeadParticle>
+public class EventEndpoints implements Comparable<EventEndpoints>
 {
 	private Event event;
 	private DateTime time;
 	private boolean isEnd; //is this the start of an event or the end of an event
-	private TimeTraveller result;
+	private OverlappedEvent result;
 	
-	public LeadParticle(Event event, boolean isEnd, DateTime displayedDay)
+	public EventEndpoints(Event event, boolean isEnd, DateTime displayedDay)
 	{
 		this.event = event;
 		this.isEnd = isEnd;
@@ -57,18 +57,18 @@ public class LeadParticle implements Comparable<LeadParticle>
 	{
 		this.isEnd = isEnd;
 	}
-	public TimeTraveller getResult()
+	public OverlappedEvent getResult()
 	{
 		return result;
 	}
-	public TimeTraveller setResult(TimeTraveller result)
+	public OverlappedEvent setResult(OverlappedEvent result)
 	{
 		this.result = result;
 		return result;
 	}
 
 	@Override
-	public int compareTo(LeadParticle o)
+	public int compareTo(EventEndpoints o)
 	{
 		int res = time.compareTo(o.time);
 		if (res == 0 && isEnd != o.isEnd)

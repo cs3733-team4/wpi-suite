@@ -36,7 +36,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.france.LouvreTour;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.collisiondetection.DayPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
 
@@ -45,7 +45,7 @@ public class DayCalendar extends AbstractCalendar
 
 	private DateTime time;
 	private MainPanel mainPanel;
-	private LouvreTour current;
+	private DayPanel current;
 	
 	private JPanel holder = new JPanel();
 	private JScrollPane scroll = new JScrollPane(holder);
@@ -82,7 +82,7 @@ public class DayCalendar extends AbstractCalendar
 		dayTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		this.add(dayTitle, BorderLayout.NORTH);
 
-		this.current = new LouvreTour();
+		this.current = new DayPanel();
 		this.current.setEvents(getVisibleEvents(), time);
 
 		this.holder.add(new DayGridLabel(), BorderLayout.WEST);
