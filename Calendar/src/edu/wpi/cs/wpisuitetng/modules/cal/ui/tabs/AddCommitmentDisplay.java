@@ -56,6 +56,11 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		setUpListeners();
 	}
 	
+	/**
+	 * Fill fields of commitment UI with existing data of commitment
+	 * @param mCommitment
+	 * 				the commitment being edited
+	 */
 	private void populateCommitmentFields(Commitment mCommitment)
 	{
 		nameTextField.setText(mCommitment.getName());
@@ -68,6 +73,10 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 			this.eventCategoryPicker.setSelectedItem(mCommitment.getAssociatedCategory());
 		else
 			this.eventCategoryPicker.setSelectedItem(Category.DEFAULT_CATEGORY);
+		if (mCommitment.getStatus()!=null)
+			this.eventCategoryPicker.setSelectedItem(mCommitment.getStatus());
+		else
+			this.eventCategoryPicker.setSelectedItem(Commitment.DEFAULT_STATUS);
 	}
 
 	private void setUpListeners(){
