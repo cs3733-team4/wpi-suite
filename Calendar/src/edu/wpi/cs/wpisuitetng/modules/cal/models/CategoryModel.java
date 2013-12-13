@@ -107,7 +107,7 @@ public class CategoryModel {
 	
 	/**
 	* @param toUpdate
-	* @return boolean if the post request was succesful
+	* @return boolean if the post request was successful
 	*/
 	public boolean updateCategory(Category toUpdate)
     {
@@ -115,4 +115,14 @@ public class CategoryModel {
 		updateCache();
 		return result;
     }
+	
+	/**
+	 * 
+	 * @param toRemove the category to delete from db
+	 * @return true if delete was successful
+	 */
+	public boolean deleteCategory(Category toRemove)
+	{
+		return ServerManager.delete("cal/categories", "filter-category-by-id", toRemove.getCategoryID().toString());
+	}
 }

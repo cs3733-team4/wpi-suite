@@ -116,8 +116,7 @@ public class Category extends AbstractModel
 
         @Override
         public void delete() {
-                // TODO Auto-generated method stub
-                
+                CategoryModel.getInstance().deleteCategory(this);
         }
 
         @Override
