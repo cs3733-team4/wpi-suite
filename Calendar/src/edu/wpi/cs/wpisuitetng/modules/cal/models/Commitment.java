@@ -337,6 +337,8 @@ public class Commitment extends AbstractModel implements Displayable
 	 */
 	public String getStatus()
 	{
+		if(this.status != null)
+		{
 		switch(this.status) {
 			case NotStarted:
 				return "Not Started";
@@ -344,7 +346,9 @@ public class Commitment extends AbstractModel implements Displayable
 				return "In Progress";
 			default:
 				return "Complete";
+				}
 		}
+		return "";
 	}
 	
 	
