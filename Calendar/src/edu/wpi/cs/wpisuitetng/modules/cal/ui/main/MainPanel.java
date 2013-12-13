@@ -463,6 +463,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	{
 		view = ViewSize.Day;
 		refreshView(dayCal);
+		this.mCalendarSelector.toDay();
 	}
 	
 	public void viewYear()
