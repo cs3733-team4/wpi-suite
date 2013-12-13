@@ -9,6 +9,8 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.ui;
 
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
@@ -32,6 +34,7 @@ public class PopupCalendar extends JFrame {
 		final JFrame me = this;
 		
 		((JComponent) getContentPane()).setBorder(BorderFactory.createLineBorder(Colors.BORDER));
+		
 		this.addWindowListener(new WindowListener(){
 
 			@Override

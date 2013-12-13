@@ -53,6 +53,7 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 	JFormattedTextField time;
 	DatePicker linked;
 	ArrayList<DatePickerListener> changeListeners = new ArrayList<DatePickerListener>();
+	JFrame cal;
 	
 	public DatePicker(boolean showTime, DatePicker mLinked) {
 		super();
@@ -221,12 +222,16 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 	    loc.setLocation(loc.x, loc.y + 26);
 		cal.setLocation(loc);
 		cal.setSize(220, 220);
-	    cal.setVisible(true);
+		this.cal = cal;
+	    this.cal.setVisible(true);
 	}
-	public void display(DateTime value) {		
+	
+	public void display(DateTime value) {
+		this.cal.setVisible(false);
 		date.setText(value.toString(dateFmt));
-		if(linked != null)
+		if(linked != null) {
 			linked.display(value);
+		}
 	}
 	
 	public DateTime getDate()	{
