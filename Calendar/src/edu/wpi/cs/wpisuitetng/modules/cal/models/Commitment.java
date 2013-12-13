@@ -38,6 +38,7 @@ public class Commitment extends AbstractModel implements Displayable
 	private String participants;
 	private boolean isProjectCommitment;
 	private User owner;
+	private String status;
 
 	/**
 	 * 
@@ -328,6 +329,16 @@ public class Commitment extends AbstractModel implements Displayable
 	public void select(MonthCalendar monthCalendar)
 	{
 		monthCalendar.select(this);
+	}
+	
+	public String getStatus()
+	{
+		return this.status;
+	}
+	
+	public void setStatus(String status)
+	{
+		this.status = status;
 	}
 
 }
