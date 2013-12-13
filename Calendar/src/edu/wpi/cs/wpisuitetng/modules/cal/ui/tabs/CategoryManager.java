@@ -67,6 +67,8 @@ public class CategoryManager extends JPanel {
 	private Category selectedCategory = null;
 	private int selectedIndex;
 	
+	// When selecting category from list, repeated name alert shouldn't pop up
+	
 	public CategoryManager() {
 		allCategories = CategoryModel.getInstance().getAllCategories();
 		
@@ -182,10 +184,13 @@ public class CategoryManager extends JPanel {
 		    	
 		    	// Display data from selected category object
 		    	categoryName.setText(selectedCategory.getName());
+		    	editCategory = true; // TODO Make this work
 		    	//TODO set category color
 		    	
 		    }
 		});
+		
+		//TODO NAME FIELD NAME FIELD NAME FIELD
 		
 		// Set up cell renderer
 		categoriesList.setCellRenderer(new ListCellRenderer<Category>() {
@@ -352,9 +357,13 @@ public class CategoryManager extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				changeEventOnDelete(selectedCategory.getCategoryID());
-				removeCategory(selectedCategory);
-				selectedCategory = null;
-				
+			
+				System.out.println(selectedCategory);
+				if (selectedCategory != null)
+				{
+					removeCategory(selectedCategory);
+					selectedCategory = null;
+				}
 				
 				MainPanel.getInstance().refreshCategoryFilterTab();
 				//TODO do not delete no category
@@ -375,8 +384,7 @@ public class CategoryManager extends JPanel {
 	 * @param category the category to remove
 	 */
 	private void removeCategory (Category category){
-		
-		
+		MainPanel.getInstance().deleteCategory(category);
 		categoriesList.remove(selectedIndex);
 		
 	}

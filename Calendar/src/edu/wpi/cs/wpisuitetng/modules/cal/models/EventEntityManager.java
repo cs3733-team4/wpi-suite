@@ -135,7 +135,7 @@ public class EventEntityManager implements EntityManager<Event> {
 		
 		for (Event e: all)
 		{
-			if (e.getCategory().compareTo(cat) == 0) //if they are equal, compareTo returns true
+			if (e.getCategory().equals(cat))
 			{
 				retrievedEvents.add(e);
 			}

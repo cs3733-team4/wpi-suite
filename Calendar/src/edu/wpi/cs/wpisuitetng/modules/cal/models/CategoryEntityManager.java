@@ -174,7 +174,7 @@ public class CategoryEntityManager implements EntityManager<Category> {
                 UUID idVal = UUID.fromString(id);
                 for(Category c: all)
                 {
-                        if (c.getCategoryID() == idVal)
+                        if (c.getCategoryID().equals(idVal))
                         {
                                 retrievedCategories.add(c);
                                 return new Category[] {retrievedCategories.get(0)};
@@ -251,6 +251,8 @@ public class CategoryEntityManager implements EntityManager<Category> {
 
         @Override
         public boolean deleteEntity(Session s, String id) throws WPISuiteException {
+        		System.err.println(getEntity(s, id).length);
+        		System.err.println(id);
                 return (db.delete(getEntity(s, id)[0]) != null) ? true : false;
         }
 

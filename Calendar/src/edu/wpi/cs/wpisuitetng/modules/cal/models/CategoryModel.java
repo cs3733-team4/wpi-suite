@@ -111,7 +111,7 @@ public class CategoryModel {
 	*/
 	public boolean updateCategory(Category toUpdate)
     {
-		boolean result = ServerManager.put("cal/categories", toUpdate.toJSON());
+		boolean result = ServerManager.post("cal/categories", toUpdate.toJSON());
 		updateCache();
 		return result;
     }
@@ -123,6 +123,6 @@ public class CategoryModel {
 	 */
 	public boolean deleteCategory(Category toRemove)
 	{
-		return ServerManager.delete("cal/categories", "filter-category-by-id", toRemove.getCategoryID().toString());
+		return ServerManager.delete("cal/categories", "get-category-by-id", toRemove.getCategoryID().toString());
 	}
 }

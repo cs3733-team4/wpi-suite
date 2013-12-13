@@ -646,6 +646,15 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	}
 
 	/**
+	 * Delete specified category
+	 * @param categoryToDelete the category to delete
+	 */
+	public void deleteCategory(Category categoryToDelete)
+	{
+		categoryToDelete.delete();
+	}
+	
+	/**
 	 * deletes the displayable, then repaints
 	 * 
 	 * @param displayableToDelete the displayable to delete
