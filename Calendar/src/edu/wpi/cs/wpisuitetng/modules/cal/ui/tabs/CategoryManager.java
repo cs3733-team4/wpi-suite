@@ -40,6 +40,8 @@ import javax.swing.event.DocumentListener;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.PastelColorPicker;
@@ -308,6 +310,18 @@ public class CategoryManager extends JPanel {
 		
 		saveCategoryButton.setEnabled(false);
 	}
+	
+	private void changeEventOnDelete(UUID categoryID) 
+	{
+		List<Event> affectedEvents = EventModel.getInstance().getEvents(categoryID);
+		
+		for(Event e: affectedEvents)
+		{
+			e.setCategory(Category.DEFAULT_CATEGORY.getCategoryID());
+			MainPanel.getInstance().updateEvent(e);
+		}
+	}
+	
 	public void focusOnName()
 	{
 		categoryName.requestFocus();

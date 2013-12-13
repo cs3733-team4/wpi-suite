@@ -11,6 +11,7 @@ package edu.wpi.cs.wpisuitetng.modules.cal.models;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
@@ -55,6 +56,13 @@ public class EventModel {
 			}
 		}
 		return filteredEvents;		
+	}
+	
+	public List<Event> getEvents(UUID categoryID)
+	{
+		final List<Event> events = ServerManager.get("cal/events/", Event[].class, "filter-events-by-category", categoryID.toString());
+		
+		return events;
 	}
 
 	public boolean putEvent(Event toAdd){
