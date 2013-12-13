@@ -83,6 +83,8 @@ public class EventEntityManager implements EntityManager<Event> {
 		{
 			case "filter-events-by-range":
 				return getEventsByRange(s, args[1], args[2]);
+			case "filter-all":
+				return getAll(s);
 			case "filter-event-by-uuid":
 				return getEventByUUID(s, args[1]);
 			case "filter-events-by-category":
@@ -133,7 +135,7 @@ public class EventEntityManager implements EntityManager<Event> {
 		
 		for (Event e: all)
 		{
-			if (e.getCategory() == cat)
+			if (e.getCategory().compareTo(cat) == 0) //if they are equal, compareTo returns true
 			{
 				retrievedEvents.add(e);
 			}
