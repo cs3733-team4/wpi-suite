@@ -16,6 +16,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -54,6 +56,8 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 	DatePicker linked;
 	ArrayList<DatePickerListener> changeListeners = new ArrayList<DatePickerListener>();
 	JFrame cal;
+	
+	boolean instance;
 	
 	public DatePicker(boolean showTime, DatePicker mLinked) {
 		super();
@@ -177,7 +181,26 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 				AMPM.addItem("PM");
 				AMPM.setSelectedIndex(0);
 			}
-			
+			date.addKeyListener(new KeyListener() {
+
+				@Override
+				public void keyPressed(KeyEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void keyReleased(KeyEvent e) {
+					hideMiniCalendar();
+				}
+
+				@Override
+				public void keyTyped(KeyEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+			});
 			date.addMouseListener(new MouseListener() {
 
 				public void mouseClicked(MouseEvent e) {
@@ -211,6 +234,8 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 	 */
 	private void showMiniCalendar()
 	{
+		if (!instance)
+		{
 		JFrame cal;
 		if(getDate()!=null)
 			cal = new PopupCalendar(getDate(), this);
@@ -223,10 +248,22 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 		cal.setLocation(loc);
 		cal.setSize(220, 220);
 		this.cal = cal;
+		this.miniCalendarInstance(true);
 	    this.cal.setVisible(true);
+		}
+	}
+	private void hideMiniCalendar()
+	{
+		this.miniCalendarInstance(false);
+		this.cal.setVisible(false);
+	}
+	public void miniCalendarInstance(boolean status)
+	{
+		this.instance = status;
 	}
 	
 	public void display(DateTime value) {
+		this.miniCalendarInstance(false);
 		this.cal.setVisible(false);
 		date.setText(value.toString(dateFmt));
 		if(linked != null) {

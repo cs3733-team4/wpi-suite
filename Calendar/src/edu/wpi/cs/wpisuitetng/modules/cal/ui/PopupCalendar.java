@@ -28,7 +28,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
  * MiniMonth-based popup calendar used for DatePicker.
  */
 public class PopupCalendar extends JFrame {
-	public PopupCalendar(DateTime date, MiniCalendarHostIface mc) {
+	public PopupCalendar(DateTime date, final MiniCalendarHostIface mc) {
 		MiniCalendarPanel cal = new MiniCalendarPanel(date, mc, true);
 		this.add(cal);
 		final JFrame me = this;
@@ -57,6 +57,7 @@ public class PopupCalendar extends JFrame {
 
 			@Override
 			public void windowDeactivated(WindowEvent arg0) {
+				((DatePicker)mc).miniCalendarInstance(false);
 				me.dispose();
 				
 			}
