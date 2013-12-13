@@ -18,15 +18,49 @@ import org.joda.time.format.ISODateTimeFormat;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 
-public class EventModel {
-
+public class EventModel
+{
 	private static EventModel instance;
 	public static final DateTimeFormatter serializer = ISODateTimeFormat.basicDateTime();
 
-	
 	private EventModel()
-	{}
-	
+	{
+		Thread t = new Thread(new Runnable() {
+
+			@Override
+			public void run()
+			{
+				while (true)
+				{
+					try
+					{
+						//TODO: cache
+						List<Event.SerializedAction> acts = ServerManager.get("Advanced/cal/events/poll", Event.SerializedAction[].class);
+						if (acts.size() > 0)
+						{
+							System.out.println("found acts!");
+							MainPanel.getInstance().refreshView();
+						}
+					}
+					catch (Exception ex)
+					{
+						ex.printStackTrace();// network went down?
+						try
+						{
+							Thread.sleep(20000);
+						}
+						catch (InterruptedException e)
+						{
+							
+						}
+					}
+				}
+			}
+		});
+		t.setDaemon(true);
+		t.start();
+	}
+
 	public static EventModel getInstance()
 	{
 		if (instance == null)
@@ -36,40 +70,45 @@ public class EventModel {
 		return instance;
 	}
 
-	public List<Event> getEvents(DateTime from, DateTime to) {
-		final List<Event> events = ServerManager.get("cal/events/", Event[].class, "filter-events-by-range", from.toString(serializer),
-				to.toString(serializer));
-		
-		//set up to filter events based on booleans in MainPanel
+	public List<Event> getEvents(DateTime from, DateTime to)
+	{
+		final List<Event> events = ServerManager.get("Advanced/cal/events/filter-events-by-range/" + from.toString(serializer) + "/" + to.toString(serializer),
+				Event[].class);
+
+		// set up to filter events based on booleans in MainPanel
 		List<Event> filteredEvents = new ArrayList<Event>();
 		boolean showPersonal = MainPanel.getInstance().showPersonal;
 		boolean showTeam = MainPanel.getInstance().showTeam;
-		
-		//loop through and add only if isProjectEvent() matches corresponding boolean
-		for(Event e: events){
-			if(e.isProjectEvent()&&showTeam){
+
+		// loop through and add only if isProjectEvent() matches corresponding
+		// boolean
+		for (Event e : events)
+		{
+			if (e.isProjectEvent() && showTeam)
+			{
 				filteredEvents.add(e);
 			}
-			if(!e.isProjectEvent()&&showPersonal){
+			if (!e.isProjectEvent() && showPersonal)
+			{
 				filteredEvents.add(e);
 			}
 		}
-		return filteredEvents;		
+		return filteredEvents;
 	}
 
-	public boolean putEvent(Event toAdd){
+	public boolean putEvent(Event toAdd)
+	{
 		return ServerManager.put("cal/events", toAdd.toJSON());
 	}
-	
+
 	public boolean updateEvent(Event toUpdate)
 	{
 		return ServerManager.post("cal/events", toUpdate.toJSON());
 	}
-	
+
 	public boolean deleteEvent(Event toRemove)
 	{
-		return ServerManager.delete("cal/events", "filter-event-by-uuid", toRemove.getEventID().toString());
+		return ServerManager.delete("cal/events", toRemove.getEventID().toString());
 	}
-	
 
 }

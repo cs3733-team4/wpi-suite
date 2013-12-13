@@ -494,4 +494,17 @@ public class Event extends AbstractModel implements Displayable
 	{
 		monthCalendar.select(this);
 	}
+	
+	public static class SerializedAction
+	{
+		public SerializedAction(Event e, UUID eventID, boolean b)
+		{
+			object = e;
+			uuid = eventID;
+			isDeleted = b;
+		}
+		public Event object;
+		public UUID uuid;
+		public boolean isDeleted;
+	}
 }

@@ -9,7 +9,9 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.models;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,6 +19,8 @@ import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
+
+import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.database.Data;
@@ -26,6 +30,7 @@ import edu.wpi.cs.wpisuitetng.exceptions.NotImplementedException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.Model;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.PollPusher.PushedInfo;
 /**
  * This is the entity manager for the Event in the
  * EventManager module.
@@ -76,22 +81,45 @@ public class EventEntityManager implements EntityManager<Event> {
 	@Override
 	public Event[] getEntity(Session s, String data) throws NotFoundException
 	{
-		String[] args = data.split(",");
-		
-		
-		switch (args[0])
-		{
-			case "filter-events-by-range":
-				return getEventsByRange(s, args[1], args[2]);
-			case "filter-event-by-uuid":
-				return getEventByUUID(s, args[1]);
-			default:
-				throw new NotFoundException("Error: " + args[0] + " not a valid method");
-		}
-
-	
+		return getEventByUUID(s, data);	
 	}
 	
+	/**
+	 * Comet/Long Polling implementation for real-time updating. Waits 20s for any changes, then returns
+	 * @param s Session this is on
+	 * @return json string
+	 */
+	private String getFromPoll(Session s)
+	{
+		PollPusher<Event> pp = PollPusher.getInstance(Event.class);
+		final String[] stringList = new String[]{"[]"}; // so we can modify the string from the listener
+		final Thread thisthread = Thread.currentThread();
+		PushedInfo listener = (new PushedInfo(s) {
+			
+			@Override
+			public void pushUpdates(String item)
+			{
+				stringList[0] = item;
+				thisthread.interrupt();
+			}
+		});
+		String events = pp.listenSession(listener);
+		if (events == null)
+		{
+			try
+			{
+				Thread.sleep(20000);
+			}
+			catch (InterruptedException e)
+			{
+				// we were interruped!
+			}
+			return stringList[0];
+		}
+		else
+			return events;
+	}
+
 	/**
 	 * gets the event with the current UUID
 	 * 
@@ -109,6 +137,7 @@ public class EventEntityManager implements EntityManager<Event> {
 		}
 		catch (WPISuiteException e)
 		{
+			System.out.println("Tryiing to find " + uuid + " fAILED!");
 			throw new NotFoundException(uuid);
 		}
 		
@@ -167,6 +196,7 @@ public class EventEntityManager implements EntityManager<Event> {
 		if (model.isProjectEvent())
 			model.setProject(s.getProject());
 		db.save(model);
+		PollPusher.getInstance(Event.class).updated(json(model));
 	}
 	
 
@@ -178,7 +208,10 @@ public class EventEntityManager implements EntityManager<Event> {
 	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#deleteEntity(Session, String) */
 	@Override
 	public boolean deleteEntity(Session s, String id) throws WPISuiteException {
-		return (db.delete(getEntity(s, id)[0]) != null) ? true : false;
+		boolean res = (db.delete(getEntity(s, id)[0]) != null) ? true : false;
+		if (res)
+			PollPusher.getInstance(Event.class).updated(deleted(UUID.fromString(id)));
+		return res;
 	}
 	
 	/**
@@ -230,6 +263,8 @@ public class EventEntityManager implements EntityManager<Event> {
 		if(!db.save(updatedEvent, session.getProject())) {
 			throw new WPISuiteException();
 		}
+
+		PollPusher.getInstance(Event.class).updated(updated(existingEvent));
 		
 		return existingEvent;
 		
@@ -246,8 +281,42 @@ public class EventEntityManager implements EntityManager<Event> {
 	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#advancedGet(Session, String[])
 	 */
 	@Override
-	public String advancedGet(Session arg0, String[] arg1) throws NotImplementedException {
-		throw new NotImplementedException();
+	public String advancedGet(Session s, String[] args) throws NotFoundException
+	{
+		// shift cal/events off
+		args = Arrays.copyOfRange(args, 2, args.length-1);
+		switch (args[0])
+		{
+			case "filter-events-by-range":
+				return json((Object[])getEventsByRange(s, args[1], args[2]));
+			case "filter-event-by-uuid":
+				return json((Object[])getEventByUUID(s, args[1]));
+			case "poll":
+				return getFromPoll(s);
+			default:
+				System.out.println(args[0]);
+				throw new NotFoundException("Error: " + args[0] + " not a valid method");
+		}
+	}
+
+	/**
+	 * Simple wrapper to make json from event array
+	 * @param events list of events to stringify
+	 * @return json data
+	 */
+	private String json(Object... events)
+	{
+		return new Gson().toJson(events);
+	}
+	
+	private String updated(Event e)
+	{
+		return json(new Event.SerializedAction(e, e.getEventID(), false));
+	}
+	
+	private String deleted(UUID id)
+	{
+		return json(new Event.SerializedAction(null, id, true));
 	}
 
 	/**
