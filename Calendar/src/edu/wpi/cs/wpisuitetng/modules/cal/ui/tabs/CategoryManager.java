@@ -16,6 +16,8 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.UUID;
 
@@ -54,16 +56,13 @@ public class CategoryManager extends JPanel {
 	private JLabel categoryNameErrorLabel;
 	private PastelColorPicker colorPicker;
 	private JButton saveCategoryButton;
-	private JCheckBox deleteCategory;
+	private JButton deleteCategoryButton;
 	private DefaultListModel<Category> JListModel;
 	private JList<Category> categoriesList;
 	private JPanel bottomEditPanel;
 	private List<Category> allCategories;
 	private boolean editCategory = false;
-	private UUID selectedCategoryUUID;
-	private Category selectedCategory;
-	//TODO Note: When clicking off of a category on list, selectedCategory must be set to null
-	// to avoid deleting unwanted categories
+	private Category selectedCategory = null;
 	
 	public CategoryManager() {
 		allCategories = CategoryModel.getInstance().getAllCategories();
@@ -150,12 +149,11 @@ public class CategoryManager extends JPanel {
 		
 		// Buttons
 		saveCategoryButton = new JButton("Save");
-		deleteCategory = new JCheckBox("Delete selected");
-		deleteCategory.setSelected(false);
+		deleteCategoryButton = new JButton("Delete");
 		
 		// Add to Panel
 		bottomEditPanel.add(saveCategoryButton);
-		//bottomEditPanel.add(deleteCategory);
+		bottomEditPanel.add(deleteCategoryButton);
 		bottomEditPanel.add(Box.createHorizontalGlue());
 		
 		// Add to UI
@@ -167,7 +165,7 @@ public class CategoryManager extends JPanel {
 		JListModel = new DefaultListModel<Category>();
 		categoriesList = new JList<Category>(JListModel);
 		
-		/* Add click listener
+		// Add click listener
 		categoriesList.addMouseListener(new MouseAdapter() {
 		    public void mouseClicked(MouseEvent evt) {
 		    	
@@ -180,11 +178,11 @@ public class CategoryManager extends JPanel {
 		    	selectedCategory = (Category) categoriesList.getSelectedValue();
 		    	
 		    	// Display data from selected category object
-		    	selectedCategoryUUID = selectedCategory.getUUID();
 		    	categoryName.setText(selectedCategory.getName());
+		    	//TODO set category color
 		    	
 		    }
-		}); */
+		});
 		
 		// Set up cell renderer
 		categoriesList.setCellRenderer(new ListCellRenderer<Category>() {
@@ -292,7 +290,7 @@ public class CategoryManager extends JPanel {
 		c.setColor(colorPicker.getCurrentColorState()); // Get color from color picker
 
 		if (editCategory){
-			c.setCategoryID(selectedCategoryUUID);
+			c.setCategoryID(selectedCategory.getCategoryID());
 			MainPanel.getInstance().updateCategory(c);
 			JListModel.removeElement(selectedCategory);
 			JListModel.addElement(c);
@@ -327,12 +325,30 @@ public class CategoryManager extends JPanel {
 			}
 		});
 		
+		deleteCategoryButton.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				changeEventOnDelete(selectedCategory.getCategoryID());
+				selectedCategory = null;
+				
+				
+				MainPanel.getInstance().refreshCategoryFilterTab();
+				//TODO do not delete no category
+			}
+			
+		});
+		
 		//this should be called in updateSaveable() and thus isnt necessary here
 		//but error msg didn't start visible unless I called it directly
 		
 		saveCategoryButton.setEnabled(isSaveable());
 		
 
+	}
+	
+	private void changeEventOnDelete (UUID catID){
+		System.out.println("changeEventOnDelete called");
 	}
 
 }
