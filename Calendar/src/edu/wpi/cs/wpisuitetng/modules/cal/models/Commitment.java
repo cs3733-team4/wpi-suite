@@ -26,7 +26,6 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 /**
  * Basic Commitment class that contains the information required to represent a
  * Commitment on a calendar.
- *  
  */
 public class Commitment extends AbstractModel implements Displayable
 {
@@ -38,10 +37,11 @@ public class Commitment extends AbstractModel implements Displayable
 	private String participants;
 	private boolean isProjectCommitment;
 	private User owner;
-	private String status;
+	private CommitmentStatus status;
+	// Default status for new commitments.
+	public static final CommitmentStatus DEFAULT_STATUS = CommitmentStatus.NotStarted;
 
 	/**
-	 * 
 	 * @param name the name of the event
 	 * @return this event after having it's name set
 	 */
@@ -331,12 +331,21 @@ public class Commitment extends AbstractModel implements Displayable
 		monthCalendar.select(this);
 	}
 	
-	public String getStatus()
+	/**
+	 * Gets the current status the commitment is at.
+	 * @return the current commitment status.
+	 */
+	public CommitmentStatus getStatus()
 	{
 		return this.status;
 	}
 	
-	public void setStatus(String status)
+	
+	/**
+	 * Set the status to a given status input.
+	 * @param status
+	 */
+	public void setStatus(CommitmentStatus status)
 	{
 		this.status = status;
 	}
