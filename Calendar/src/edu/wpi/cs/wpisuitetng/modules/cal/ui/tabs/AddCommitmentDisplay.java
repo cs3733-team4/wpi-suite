@@ -23,6 +23,7 @@ import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentStatus;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.DatePickerListener;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 
@@ -70,13 +71,23 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		this.rdbtnTeam.setSelected(mCommitment.isProjectCommitment());
 		descriptionTextArea.setText(mCommitment.getDescription());
 		if (mCommitment.getAssociatedCategory()!=null)
+		{
 			this.eventCategoryPicker.setSelectedItem(mCommitment.getAssociatedCategory());
+		}
 		else
+		{
 			this.eventCategoryPicker.setSelectedItem(Category.DEFAULT_CATEGORY);
+		}
 		if (mCommitment.getStatus()!=null)
+		{
 			this.eventCategoryPicker.setSelectedItem(mCommitment.getStatus());
+			System.out.println("STATUS WAS NOT NULL, IT WAS"+mCommitment.getStatus());
+		}
 		else
+		{
 			this.eventCategoryPicker.setSelectedItem(Commitment.DEFAULT_STATUS);
+			System.out.println("STATUS WAS NULL, IT IS NOW"+mCommitment.getStatus());
+		}
 	}
 
 	private void setUpListeners(){
@@ -160,6 +171,7 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		e.setProjectCommitment(rdbtnTeam.isSelected());
 		e.setParticipants(participantsTextField.getText().trim());
 		e.setCategory(((Category)eventCategoryPicker.getSelectedItem()).getCategoryID());
+		e.setStatus((CommitmentStatus)commitmentStatusPicker.getSelectedItem());
 		
 		if (isEditingCommitment) {
 			e.setCommitmentID(existingCommitmentID);
