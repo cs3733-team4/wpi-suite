@@ -80,6 +80,16 @@ public class CategoryEntityManagerTest {
     }
     
     @Test
+    public void testDeleteEntity() throws WPISuiteException {
+    	
+    	CategoryEntityManager cem = new CategoryEntityManager(db);
+        assertNotNull("A Category Entity Manager will return a category upon sucessfully sending a category into the database", cem.makeEntity(ses1, eString));
+        assertEquals("After making Category, Count() will return the updated # of Categories", 1, cem.Count());
+        assertEquals("The deleteEntity method will return true if the deletion was successful", true, cem.deleteEntity(ses1, "filter-category-by-id,"+c1.getCategoryID()));
+        assertEquals("After deleting Category, Count() will return the updated # of Categories", 0, cem.Count());
+    }
+    
+    @Test
     public void testGetAllSingle() throws WPISuiteException {
 
             CategoryEntityManager cem = new CategoryEntityManager(db);
