@@ -68,7 +68,7 @@
 
 	<target name="depend.Calendar"
 		depends="depend.Janeway">
-		<ant dir="${dependencies.basedir}/IncrediblyGorgeousCalendar"
+		<ant dir="${dependencies.basedir}/Calendar"
 			target="${dependency.target}"
 			inheritAll="false"/>
 	</target>
