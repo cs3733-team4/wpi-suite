@@ -333,11 +333,18 @@ public class Commitment extends AbstractModel implements Displayable
 	
 	/**
 	 * Gets the current status the commitment is at.
-	 * @return the current commitment status.
+	 * @return the current commitment status as a String.
 	 */
-	public CommitmentStatus getStatus()
+	public String getStatus()
 	{
-		return this.status;
+		switch(this.status) {
+			case NotStarted:
+				return "Not Started";
+			case InProgress:
+				return "In Progress";
+			default:
+				return "Complete";
+		}
 	}
 	
 	
