@@ -663,6 +663,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	public void setSelectedDay(DateTime time)
 	{
 		lastTime = time;
+		mCalendar.setSelectedDay(time);
 	}
 	
 	/**

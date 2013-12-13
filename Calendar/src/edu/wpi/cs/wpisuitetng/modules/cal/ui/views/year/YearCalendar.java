@@ -368,4 +368,10 @@ public class YearCalendar extends AbstractCalendar
 	public void select(Displayable item) {
 		
 	}
+	
+	@Override
+	public void setSelectedDay(DateTime time)
+	{
+		
+	}
 }

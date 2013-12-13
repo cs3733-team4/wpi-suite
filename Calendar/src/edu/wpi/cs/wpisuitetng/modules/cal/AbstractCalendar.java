@@ -57,4 +57,6 @@ public abstract class AbstractCalendar extends JComponent
 	 * @param item the event to select
 	 */
 	public abstract void select(Displayable item);
+
+	public abstract void setSelectedDay(DateTime time);
 }

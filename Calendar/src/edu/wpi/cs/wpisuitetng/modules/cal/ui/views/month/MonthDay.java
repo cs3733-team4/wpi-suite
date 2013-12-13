@@ -15,10 +15,12 @@ import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.font.TextAttribute;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -62,8 +64,10 @@ public class MonthDay extends JPanel
 				grayit = bg;
 				break;
 			case Today:
-				grayit = Colors.SELECTED_BACKGROUND;
-				textit = Colors.SELECTED_TEXT;
+				grayit = Colors.TABLE_GRAY_HEADER;
+				textit = Colors.TABLE_GRAY_TEXT;
+				//grayit = Colors.SELECTED_BACKGROUND;
+				//textit = Colors.SELECTED_TEXT;
 				break;
 			default:
 				throw new IllegalStateException("DayStyle is not a valid DayStyle!");
@@ -76,6 +80,15 @@ public class MonthDay extends JPanel
 		header.setBackground(grayit);
 		header.setForeground(textit);
 		header.setFont(new java.awt.Font("DejaVu Sans",	style == DayStyle.Today ? Font.BOLD : Font.PLAIN, 12));
+		
+		if(style == DayStyle.Today)
+		{
+			Font font = header.getFont();
+			Map attributes = font.getAttributes();
+			attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+			header.setFont(font.deriveFont(attributes));
+		}
+		
 		header.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
 		header.setText(Integer.toString(initDay.getDayOfMonth()));
 		header.setAutoscrolls(true);
@@ -362,4 +375,9 @@ public class MonthDay extends JPanel
 		return this.day;
 	}
 	
+	public void setSelectedStatus(boolean isSelected)
+	{
+		this.header.setBackground(isSelected ? Colors.SELECTED_BACKGROUND : Colors.TABLE_GRAY_HEADER);
+		this.header.setForeground(isSelected ? Color.WHITE : Colors.TABLE_GRAY_TEXT);
+	}
 }

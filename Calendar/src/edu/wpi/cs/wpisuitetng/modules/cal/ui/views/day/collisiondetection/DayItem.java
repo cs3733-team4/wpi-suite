@@ -330,7 +330,10 @@ public class DayItem extends JPanel
 	// Set text color to white to indicate selected event
 	public void setSelected(boolean b)
 	{
-		lblEventTitle.setForeground(b?Color.WHITE:Color.BLACK);		
+		//lblEventTitle.setForeground(b?Color.WHITE:Color.BLACK);
+		//TODO: Fix the paint order or revert to old selection method
+		setBorder(b?new CompoundBorder(new LineBorder(Colors.SELECTED_BACKGROUND), new CompoundBorder(new LineBorder(event.getColor().darker()), new EmptyBorder(6, 6, 6, 6)))
+					:new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new LineBorder(event.getColor().darker()), new EmptyBorder(6, 6, 6, 6))));
 	}
 
 	public Event getEvent() {
