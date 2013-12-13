@@ -26,7 +26,7 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 /**
  * Basic Commitment class that contains the information required to represent a
  * Commitment on a calendar.
- * 
+ *  
  */
 public class Commitment extends AbstractModel implements Displayable
 {
