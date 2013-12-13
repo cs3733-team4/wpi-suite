@@ -65,6 +65,7 @@ public class CategoryManager extends JPanel {
 	private List<Category> allCategories;
 	private boolean editCategory = false;
 	private Category selectedCategory = null;
+	private int selectedIndex;
 	
 	public CategoryManager() {
 		allCategories = CategoryModel.getInstance().getAllCategories();
@@ -173,10 +174,10 @@ public class CategoryManager extends JPanel {
 		    	
 		    	// Get index of selected cell
 		        JList list = (JList)evt.getSource();
-		        int index = list.locationToIndex(evt.getPoint());
+		        selectedIndex = list.locationToIndex(evt.getPoint());
 		    	
 		        // Get category object
-		    	categoriesList.setSelectedIndex(index);
+		    	categoriesList.setSelectedIndex(selectedIndex);
 		    	selectedCategory = (Category) categoriesList.getSelectedValue();
 		    	
 		    	// Display data from selected category object
@@ -311,6 +312,10 @@ public class CategoryManager extends JPanel {
 		saveCategoryButton.setEnabled(false);
 	}
 	
+	/**
+	 * Changes the category of events related to categories being deleted
+	 * @param categoryID the category to fetch events by
+	 */
 	private void changeEventOnDelete(UUID categoryID) 
 	{
 		List<Event> affectedEvents = EventModel.getInstance().getEvents(categoryID);
@@ -322,6 +327,9 @@ public class CategoryManager extends JPanel {
 		}
 	}
 	
+	/**
+	 * Focus on the name field
+	 */
 	public void focusOnName()
 	{
 		categoryName.requestFocus();
@@ -344,6 +352,7 @@ public class CategoryManager extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				changeEventOnDelete(selectedCategory.getCategoryID());
+				removeCategory(selectedCategory);
 				selectedCategory = null;
 				
 				
@@ -361,8 +370,15 @@ public class CategoryManager extends JPanel {
 
 	}
 	
-	private void changeEventOnDelete (UUID catID){
-		System.out.println("changeEventOnDelete called");
+	/**
+	 * Remove category from database and UI
+	 * @param category the category to remove
+	 */
+	private void removeCategory (Category category){
+		
+		
+		categoriesList.remove(selectedIndex);
+		
 	}
 
 }
