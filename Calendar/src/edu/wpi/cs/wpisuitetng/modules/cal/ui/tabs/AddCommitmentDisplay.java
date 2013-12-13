@@ -27,6 +27,11 @@ import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentStatus;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.DatePickerListener;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 
+/**
+ * UI for adding and editing a commitment
+ * @author TeamYOCO
+ *
+ */
 public class AddCommitmentDisplay extends DisplayableEditorView
 {
 	
@@ -80,16 +85,17 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		}
 		if (mCommitment.getStatus()!=null)
 		{
-			this.eventCategoryPicker.setSelectedItem(mCommitment.getStatus());
-			System.out.println("STATUS WAS NOT NULL, IT WAS"+mCommitment.getStatus());
+			this.commitmentStatusPicker.setSelectedItem(mCommitment.getStatus());
 		}
 		else
 		{
-			this.eventCategoryPicker.setSelectedItem(Commitment.DEFAULT_STATUS);
-			System.out.println("STATUS WAS NULL, IT IS NOW"+mCommitment.getStatus());
+			this.commitmentStatusPicker.setSelectedItem(Commitment.DEFAULT_STATUS);
 		}
 	}
 
+	/**
+	 * Set up listeners for UI operation
+	 */
 	private void setUpListeners(){
 		saveButton.addActionListener(new ActionListener() {
 			
@@ -119,9 +125,7 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 			
 			@Override
 			public void focusGained(FocusEvent e)
-			{
-				// TODO Auto-generated method stub
-				
+			{				
 			}
 		});
 
@@ -160,6 +164,10 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		validateDate(startTimeDatePicker.getDateTime(), dateErrorLabel);
 		saveButton.setEnabled(isSaveable());
 	}
+	
+	/**
+	 * Checks to see if fields need saving, if so, saves to server database
+	 */
 	public void attemptSave()
 	{
 		if(!isSaveable())
@@ -184,10 +192,23 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		MainPanel.getInstance().closeTab(tabid);
 		MainPanel.getInstance().refreshView();
 	}
+	
+	/**
+	 * Checks to see if a field can be saved, or if it is incorrect
+	 * @return
+	 * 		True/False
+	 */
 	public boolean isSaveable()
 	{
 		return validateText(nameTextField.getText(), nameErrorLabel) && validateDate(startTimeDatePicker.getDateTime(), dateErrorLabel);
 	}
+	
+	/**
+	 * Checks to see if the commitment is being edited
+	 * (as opposed to added)
+	 * @return
+	 * 		True/False
+	 */
 	public boolean editingCommitment()
 	{
 		return this.isEditingCommitment; 
@@ -233,11 +254,22 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		return true;
 	}
 
+	/**
+	 * Sets the ID of the tab
+	 * @param id
+	 * 			ID to be set
+	 */
 	public void setTabId(int id)
 	{
 		tabid = id;
 	}
 
+	/**
+	 * Makes sure a commitment isn't being edited in another tab
+	 * @param other
+	 * 		Other tab being compared
+	 * @return true if both are the same, false if they are different or if the current commitment is null
+	 */
 	public boolean matchingCommitment(AddCommitmentDisplay other)
 	{
 		return this.commitmentToEdit != null && this.commitmentToEdit.equals(other.commitmentToEdit);

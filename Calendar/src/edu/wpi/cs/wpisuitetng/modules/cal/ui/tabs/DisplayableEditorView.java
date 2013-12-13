@@ -186,6 +186,10 @@ public class DisplayableEditorView extends JPanel
 			commitmentStatusPicker.showPopup();
 	}
 	
+	/**
+	 * Renders the fields for the category drop-down menu
+	 * (Necessary because of the colored squares for each category) 
+	 */
 	private class CategoryComboBoxRenderer implements ListCellRenderer<Category>
 	{
 		@Override
