@@ -31,7 +31,6 @@ import net.miginfocom.swing.MigLayout;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentStatus;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.SelectableField;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.DatePicker;
@@ -50,7 +49,7 @@ public class DisplayableEditorView extends JPanel
 	protected JTextArea descriptionTextArea;
 	protected DatePicker startTimeDatePicker, endTimeDatePicker;
 	protected JComboBox<Category> eventCategoryPicker;
-	protected JComboBox<CommitmentStatus> commitmentStatusPicker;
+	protected JComboBox<String> commitmentStatusPicker;
 	protected JButton cancelButton, saveButton;
 
 	public DisplayableEditorView(boolean showEnd)
@@ -119,8 +118,8 @@ public class DisplayableEditorView extends JPanel
 
 		commitmentStatusPicker = new JComboBox<>();
 		this.commitmentStatusPicker.addItem(Commitment.DEFAULT_STATUS);
-		this.commitmentStatusPicker.addItem(CommitmentStatus.InProgress);
-		this.commitmentStatusPicker.addItem(CommitmentStatus.Complete);
+		this.commitmentStatusPicker.addItem(CommitmentStatus.InProgress.toString());
+		this.commitmentStatusPicker.addItem(CommitmentStatus.Complete.toString());
 
 		this.add(commitmentStatusPicker, "cell 1 4,alignx left,aligny baseline");
 		}

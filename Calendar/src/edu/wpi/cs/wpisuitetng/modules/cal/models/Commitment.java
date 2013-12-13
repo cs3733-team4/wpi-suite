@@ -37,9 +37,9 @@ public class Commitment extends AbstractModel implements Displayable
 	private String participants;
 	private boolean isProjectCommitment;
 	private User owner;
-	private CommitmentStatus status;
+	private String status;
 	// Default status for new commitments.
-	public static final CommitmentStatus DEFAULT_STATUS = CommitmentStatus.NotStarted;
+	public static final String DEFAULT_STATUS = CommitmentStatus.NotStarted.toString();
 
 	/**
 	 * @param name the name of the event
@@ -335,7 +335,7 @@ public class Commitment extends AbstractModel implements Displayable
 	 * Gets the current status the commitment is at.
 	 * @return the current commitment status as a String.
 	 */
-	public CommitmentStatus getStatus()
+	public String getStatus()
 	{
 		return this.status;
 	}
@@ -345,7 +345,7 @@ public class Commitment extends AbstractModel implements Displayable
 	 * Set the status to a given status input.
 	 * @param status
 	 */
-	public void setStatus(CommitmentStatus status)
+	public void setStatus(String status)
 	{
 		this.status = status;
 	}

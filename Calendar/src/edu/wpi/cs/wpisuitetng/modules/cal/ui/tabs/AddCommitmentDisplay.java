@@ -85,7 +85,7 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		}
 		if (mCommitment.getStatus()!=null)
 		{
-			this.commitmentStatusPicker.setSelectedItem(mCommitment.getStatus().toString());
+			this.commitmentStatusPicker.setSelectedItem(mCommitment.getStatus());
 		}
 		else
 		{
@@ -179,7 +179,7 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		e.setProjectCommitment(rdbtnTeam.isSelected());
 		e.setParticipants(participantsTextField.getText().trim());
 		e.setCategory(((Category)eventCategoryPicker.getSelectedItem()).getCategoryID());
-		e.setStatus((CommitmentStatus)commitmentStatusPicker.getSelectedItem());
+		e.setStatus((String)commitmentStatusPicker.getSelectedItem());
 		
 		if (isEditingCommitment) {
 			e.setCommitmentID(existingCommitmentID);
