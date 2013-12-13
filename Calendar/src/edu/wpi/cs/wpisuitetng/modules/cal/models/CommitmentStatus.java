@@ -25,6 +25,9 @@ public enum CommitmentStatus
 		this.currstatus = currstatus;
 	}
 	
+	/**
+	 * Overwrite the default toString method to return the string name for the enum.
+	 */
 	@Override
 	public String toString()
 	{
