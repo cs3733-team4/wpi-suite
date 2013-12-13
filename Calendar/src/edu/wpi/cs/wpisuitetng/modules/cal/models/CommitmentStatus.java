@@ -15,8 +15,20 @@ package edu.wpi.cs.wpisuitetng.modules.cal.models;
  */
 public enum CommitmentStatus
 {
-	NotStarted,
-	InProgress,
-	Complete
+	NotStarted("Not Started"),
+	InProgress("In Progress"),
+	Complete("Complete");
+	
+	private String currstatus;
+	private CommitmentStatus(String currstatus)
+	{
+		this.currstatus = currstatus;
+	}
+	
+	@Override
+	public String toString()
+	{
+		return this.currstatus;
+	}
 }
 

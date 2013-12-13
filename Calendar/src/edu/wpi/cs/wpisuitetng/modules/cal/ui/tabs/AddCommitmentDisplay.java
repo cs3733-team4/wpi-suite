@@ -85,7 +85,7 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		}
 		if (mCommitment.getStatus()!=null)
 		{
-			this.commitmentStatusPicker.setSelectedItem(mCommitment.getStatus());
+			this.commitmentStatusPicker.setSelectedItem(mCommitment.getStatus().toString());
 		}
 		else
 		{
