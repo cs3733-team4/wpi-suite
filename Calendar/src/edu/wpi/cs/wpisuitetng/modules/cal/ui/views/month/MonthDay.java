@@ -146,7 +146,10 @@ public class MonthDay extends JPanel
 
 			@Override
 			public void mouseClicked(MouseEvent e)
-			{}
+			{
+				MainPanel.getInstance().miniMove(day);
+				MainPanel.getInstance().viewDay();
+			}
 
 			@Override
 			public void mouseReleased(MouseEvent e)
