@@ -112,5 +112,26 @@ public class CategoryEntityManagerTest {
 			hasCat3=true;
 		assertTrue("GetAll will return multiple events in a random order; if the result has all of the inputs, this method is working correctly",hasCat3);
 	}
+	
+	@Test
+	public void testGetByUserSingle() throws WPISuiteException {
+		CategoryEntityManager cem = new CategoryEntityManager(db);
+		cem.makeEntity(ses1, cat1String);
+		cem.makeEntity(ses2, cat2String);
+		cem.makeEntity(ses2, cat3String);
+
+		assertEquals("After making Categories, Count() will return the updated # of Categories", 3, cem.Count());
+		assertEquals("GetByUser will return categories from a specific user in Category[] form; "
+				+ "in the case of multiple categories being stored, only will return one from specified user", c1.getName(), cem.getEntity(ses1, "get-user-categories")[0].getName());
+		assertEquals("Array size of returned categories should only be 1 in this case", 1, cem.getEntity(ses1, "get-user-categories").length);
+	}
+	
+	@Test
+	public void testGetByNameSingle() throws WPISuiteException {
+		CategoryEntityManager cem = new CategoryEntityManager(db);
+		cem.makeEntity(ses1, cat1String);
+
+		assertEquals("GetByName will return the category, in Category[] form, matching the specified name", c1.getName(), cem.getEntity(ses1, "get-category-by-name,cat1")[0].getName());
+	}
 
 }

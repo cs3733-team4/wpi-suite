@@ -111,7 +111,7 @@ public class CategoryEntityManager implements EntityManager<Category> {
                                 retrievedCategories.add(c);
                         }
                 }
-                Category[] userCategories = (Category[]) retrievedCategories.toArray();
+                Category[] userCategories = (Category[]) retrievedCategories.toArray(new Category[0]);
                 return userCategories;
         }
         /**
@@ -132,7 +132,7 @@ public class CategoryEntityManager implements EntityManager<Category> {
                                 retrievedCategories.add(c);
                         }
                 }
-                Category[] teamCategories = (Category[]) retrievedCategories.toArray();
+                Category[] teamCategories = (Category[]) retrievedCategories.toArray(new Category[0]);
                 return teamCategories;
         }
         /**For now, only return the first category it finds with a matching name.
@@ -151,7 +151,7 @@ public class CategoryEntityManager implements EntityManager<Category> {
                 
                 for(Category c: all)
                 {
-                        if(c.getName() == name){
+                        if(c.getName().equals(name)){
                                 retrievedCategories.add(c);
                                 return new Category[] {retrievedCategories.get(0)};
                         }        
@@ -251,8 +251,6 @@ public class CategoryEntityManager implements EntityManager<Category> {
 
         @Override
         public boolean deleteEntity(Session s, String id) throws WPISuiteException {
-        		System.err.println(getEntity(s, id).length);
-        		System.err.println(id);
                 return (db.delete(getEntity(s, id)[0]) != null) ? true : false;
         }
 
