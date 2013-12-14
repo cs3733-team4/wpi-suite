@@ -340,6 +340,10 @@ public class Commitment extends AbstractModel implements Displayable
 		return this.status;
 	}
 	
+	public Commitment addStatus(String status) {
+		this.status=status;
+		return this;
+	}
 	
 	/**
 	 * Set the status to a given status input.

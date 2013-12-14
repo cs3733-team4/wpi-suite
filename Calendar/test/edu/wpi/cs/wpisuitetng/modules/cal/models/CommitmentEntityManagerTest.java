@@ -38,16 +38,15 @@ public class CommitmentEntityManagerTest {
         
         
         
-        Commitment e = new Commitment().addName("First").setDueDate(one);
+        Commitment e = new Commitment().addName("First").setDueDate(one).addStatus("Not Started");
         String eString=e.toJSON();
         
-        Commitment ee=new Commitment().setDueDate(two).addName("Second");
+        Commitment ee=new Commitment().setDueDate(two).addName("Second").addStatus("In Progress");
         String eeString=ee.toJSON();
         
-        Commitment eee=new Commitment().setDueDate(three).addName("Third");
+        Commitment eee=new Commitment().setDueDate(three).addName("Third").addStatus("Complete");
 
         String eeeString=eee.toJSON();
-        
         
         Project p=new Project("p","26");
         User u1 = new User("User1", "U1", null, 0);
@@ -94,6 +93,7 @@ public class CommitmentEntityManagerTest {
                 
                 assertEquals("GetAll will return commitments in the database in Commitment[] form; in the case of only 1 commitment being stored, it will return that Commitment", e.getName(), cem.getAll(ses1)[0].getName());
                 assertEquals("GetAll will return commitments in the database in Commitment[] form; in the case of only 1 commitment being stored, it will return that Commitment", e.getDate(), cem.getAll(ses1)[0].getDate());
+                assertEquals("GetAll will return commitments in the database in Commitment[] form; in the case of only 1 commitment being stored, it will return that Commitment", e.getStatus(), cem.getAll(ses1)[0].getStatus());
 
         }
         
@@ -247,14 +247,20 @@ public class CommitmentEntityManagerTest {
                 assertEquals("getEntity will return all commitments in the database if get-all-commitments is the initial string argument, regardless of the datetime strings", 3, cem.getEntity(ses1,"get-all-commitments,20000101T000000.000Z,12000101T000000.000Z").length);
         }
         
-        @Test(expected=NotFoundException.class)
-        public void testGetEntityWrongInput() throws WPISuiteException {
+        @Test
+        public void testGetEntityByUUID() throws WPISuiteException {
                 CommitmentEntityManager cem = new CommitmentEntityManager(db);
                 cem.makeEntity(ses1, eString);
                 cem.makeEntity(ses1, eeString);
                 cem.makeEntity(ses1, eeeString);
                 
-                assertNotNull("getEntity return an error if anything but the previous two strings are the first string argument", cem.getEntity(ses1,"filter-Commitments-by-time,20000101T000000.000Z,20000102T010000.000Z")[0].getName());
+                // The huge string being used as input is "filter-commitment-by-uuid," + UUID of a commitment in string form
+                // This method is just another wa of calling getCommitmentByUUID
+                
+                String cat1UUID=e.getCommitmentID().toString();
+                
+                assertEquals("getEntity will return an array of a single commitment if filter-commitment-by-uuid is the initial string argument", 1, cem.getEntity(ses1,"filter-commitment-by-uuid," + cat1UUID).length);
+                assertEquals("getEntity will return an array containing only the commitment referenced by the UUID", e.getName(), cem.getEntity(ses1,"filter-commitment-by-uuid," + cat1UUID)[0].getName());
         }
         
         @Test
