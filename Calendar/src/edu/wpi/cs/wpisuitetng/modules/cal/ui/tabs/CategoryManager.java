@@ -18,6 +18,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,6 +37,7 @@ import javax.swing.ListCellRenderer;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
@@ -52,7 +54,9 @@ public class CategoryManager extends JPanel {
 	private JPanel rightCategoryEdit;
 	private JTextField categoryName;
 	private JPanel categoryNamePanel;
+	private JPanel categoryColorPanel;
 	private JLabel categoryNameLabel;
+	private JLabel categoryColorLabel;
 	private JLabel categoryNameErrorLabel;
 	private JLabel selectionChangeErrorLabel;
 	private PastelColorPicker colorPicker;
@@ -67,15 +71,18 @@ public class CategoryManager extends JPanel {
 	private Category selectedCategory;
 	private int selectedIndex;
 	
-	//TODO When selecting category from list, repeated name alert shouldn't pop up -- DONE
-	// First click on category doesn't allow saving -- DONE
-	// Constraint moving if name or color changed on editing category -- DONE FOR NAME, HAVE TO MAKE COLOR SELECTOR POSITION MORE PRECISE
-	// Display error message if trying to select different category while in edit mode -- DONE, BUT CHOOSE BETTER LOCATION FOR ERROR MESSAGE
-	// Properly refresh category list upon change
-	// Disable arrow key navigation in list
-	// Avoid deleting no category // DONE, NEED TO TEST
-	// Format UI to be consistent with other panels in project
-	// Populate categories may not be getting updated list since database is not being called
+	// TODO LIST 
+	// DONE -- When selecting category from list, repeated name alert shouldn't pop up
+	// DONE -- First click on category doesn't allow saving
+	// TODO NAME IS OK, BUT HAVE TO MAKE COLOR SELECTOR POSITION MORE ACCURATE -- Constraint moving if name or color changed on editing category
+	// TODO CHOOSE BETTER LOCATION FOR ERROR MESSAGE -- Display error message if trying to select different category while in edit mode
+	// DONE -- Properly refresh category list upon change
+	// DONE -- Disable arrow key navigation in list
+	// TODO NEED TO TEST -- Avoid deleting no category
+	// DONE -- Format UI to be consistent with other panels in pROJECT
+	// DONE -- Populate categories may not be getting updated list since database is not being called
+	// DONE -- Update filter immediately -- DONE
+	// TODO -- Clean up code and add comments
 	
 	public CategoryManager() {
 		allCategories = CategoryModel.getInstance().getAllCategories();
@@ -91,6 +98,22 @@ public class CategoryManager extends JPanel {
 		rightCategoryEdit = new JPanel();
 		rightCategoryEdit.setLayout(new BoxLayout(rightCategoryEdit, BoxLayout.Y_AXIS));
 		rightCategoryEdit.setBorder(new EmptyBorder(6, 6, 6, 6));
+		rightCategoryEdit.addMouseListener(new MouseListener(){
+			@Override
+			public void mousePressed(MouseEvent e) {
+				if (canChangeSelection())
+					clearSelectedCategory();
+			}
+			@Override
+			public void mouseReleased(MouseEvent e) {}
+			@Override
+			public void mouseEntered(MouseEvent e) {}
+			@Override
+			public void mouseExited(MouseEvent e) {}
+			@Override
+			public void mouseClicked(MouseEvent e) {}
+			
+		});
 		
 		/** Name Panel */
 		
@@ -102,6 +125,7 @@ public class CategoryManager extends JPanel {
 		// Label
 		categoryNameLabel = new JLabel("Name: ");
 		categoryNamePanel.add(categoryNameLabel);
+		
 		categoryNameErrorLabel = new JLabel();
 		selectionChangeErrorLabel = new JLabel("");
 		selectionChangeErrorLabel.setLayout(new BorderLayout());
@@ -143,18 +167,30 @@ public class CategoryManager extends JPanel {
 		
 		// Add to UI
 		rightCategoryEdit.add(categoryNamePanel);
+		rightCategoryEdit.add(Box.createVerticalStrut(10));
 		
 		/** Color Picker */
 		
 		// Panel
+		categoryColorPanel = new JPanel();
+		categoryColorPanel.setLayout(new BoxLayout(categoryColorPanel, BoxLayout.X_AXIS));
+		categoryColorPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+		
+		// Label
+		categoryColorLabel = new JLabel("Color:  ");
+		categoryColorPanel.add(categoryColorLabel);
+		
+		// Picker
 		colorPicker = new PastelColorPicker();
 		colorPicker.setPreferredSize(new Dimension(450, 53));
 		colorPicker.setMaximumSize(new Dimension(450, 53));
 		colorPicker.setAlignmentX(Component.LEFT_ALIGNMENT);
+		categoryColorPanel.add(Box.createRigidArea(new Dimension (0, 6)));
+		categoryColorPanel.add(colorPicker);
 		
 		// Add to UI
-		rightCategoryEdit.add(Box.createRigidArea(new Dimension (0, 6)));
-		rightCategoryEdit.add(colorPicker);
+		rightCategoryEdit.add(categoryColorPanel);
+		rightCategoryEdit.add(Box.createVerticalStrut(10));
 		
 		/** Buttons */
 		
@@ -212,7 +248,7 @@ public class CategoryManager extends JPanel {
 		    }
 		});
 		
-		//TODO NAME FIELD NAME FIELD NAME FIELD
+		categoriesList.getInputMap().getParent().clear();
 		
 		categoriesList.setSelectionModel(new DefaultListSelectionModel(){
 			@Override
@@ -331,22 +367,23 @@ public class CategoryManager extends JPanel {
 		c.setName(categoryName.getText().trim());
 		c.setColor(colorPicker.getCurrentColorState()); // Get color from color picker
 
-		if (editCategory){
+		if (editCategory)
+		{
 			c.setCategoryID(selectedCategory.getCategoryID());
 			MainPanel.getInstance().updateCategory(c);
-			JListModel.removeElement(selectedCategory);
-			JListModel.addElement(c);
-		} else {
+		} else 
+		{
 			MainPanel.getInstance().addCategory(c);
-			if (JListModel.contains(Category.DEFAULT_DISPLAY_CATEGORY))
-				JListModel.removeElement(Category.DEFAULT_DISPLAY_CATEGORY);
-			JListModel.addElement(c);
 		}
 		
 		MainPanel.getInstance().refreshCategoryFilterTab(); // Update created/edited category filters
 		
-		categoryName.setText(""); // Clear category name text field upon addition
-		selectedCategory = null; // Clear selection
+		clearSelectedCategory();
+		
+		categoriesList.revalidate();
+		categoriesList.repaint();
+		
+		populateCategories(JListModel);
 		
 		saveCategoryButton.setEnabled(false);
 		
@@ -365,6 +402,7 @@ public class CategoryManager extends JPanel {
 		{
 			e.setCategory(Category.DEFAULT_CATEGORY.getCategoryID());
 			MainPanel.getInstance().updateEvent(e);
+			MainPanel.getInstance().refreshView();
 		}
 	}
 	
@@ -385,6 +423,7 @@ public class CategoryManager extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				attemptSave();
+				MainPanel.getInstance().refreshView();
 			}
 		});
 		
@@ -393,14 +432,16 @@ public class CategoryManager extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				changeEventOnDelete(selectedCategory.getCategoryID());
-			
-				System.out.println(selectedCategory);
+
 				if (selectedCategory != null)
 				{
 					removeCategory(selectedCategory);
 					selectedCategory = null;
 				}
 				
+				clearSelectedCategory();
+				
+				MainPanel.getInstance().refreshView();
 				MainPanel.getInstance().refreshCategoryFilterTab();
 			}
 			
@@ -410,11 +451,7 @@ public class CategoryManager extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				categoryName.setText("");
-				colorPicker.moveColorSelector(PastelColorPicker.DEFAULT_SELECTOR_LOCATION);
-				editCategory = false;
-				hideEditionButtons();
-				categoriesList.clearSelection();
+				clearSelectedCategory();
 			}
 			
 		});
@@ -428,12 +465,9 @@ public class CategoryManager extends JPanel {
 	 * Remove category from database and UI
 	 * @param category the category to remove
 	 */
-	private void removeCategory (Category category){
+	public void removeCategory (Category category){
 		MainPanel.getInstance().deleteCategory(category);
 		populateCategories(JListModel);
-		//categoriesList.remove(selectedIndex);
-		//TODO Properly repopulate
-		
 	}
 	
 	/**
@@ -441,14 +475,17 @@ public class CategoryManager extends JPanel {
 	 * @param listModel the model of the list to populate
 	 */
 	private void populateCategories(DefaultListModel<Category> listModel)
-	{
-		listModel.removeAllElements();
-
+	{	
+		listModel.clear();
+		
+		allCategories = CategoryModel.getInstance().getAllCategories();
+		
 		for (int i = 0; i < allCategories.size(); i++) {
 			Category temp = allCategories.get(i);
 			listModel.addElement(temp);
 		}
 	}
+	
 	
 	/**
 	 * Determines whether the selected category can be changed based on whether it's being edited or not
@@ -460,7 +497,7 @@ public class CategoryManager extends JPanel {
 		else 
 		{
 			return (selectedCategory.getName().equals(categoryName.getText()));
-					//&& (selectedCategory.getColor().equals(colorPicker.getCurrentColorState())));
+					//&& //TODO (selectedCategory.getColor().equals(colorPicker.getCurrentColorState())));
 		}
 	}
 	
@@ -480,6 +517,19 @@ public class CategoryManager extends JPanel {
 	{
 		deleteCategoryButton.setVisible(true);
 		cancelEditButton.setVisible(true);
+	}
+	
+	/** 
+	 * Clears the selected category
+	 */
+	public void clearSelectedCategory()
+	{
+		categoryName.setText("");
+		colorPicker.moveColorSelector(PastelColorPicker.DEFAULT_SELECTOR_LOCATION);
+		editCategory = false;
+		hideEditionButtons();
+		selectionChangeErrorLabel.setText("");
+		categoriesList.clearSelection();
 	}
 
 }

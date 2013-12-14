@@ -123,6 +123,8 @@ public class CategoryModel {
 	 */
 	public boolean deleteCategory(Category toRemove)
 	{
-		return ServerManager.delete("cal/categories", "get-category-by-id", toRemove.getCategoryID().toString());
+		boolean result = ServerManager.delete("cal/categories", "get-category-by-id", toRemove.getCategoryID().toString());
+		updateCache();
+		return result;
 	}
 }
