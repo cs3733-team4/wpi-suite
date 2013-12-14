@@ -12,5 +12,6 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.week;
 public enum MultidayEventItemType {
 	Start,
 	Middle,
-	End
+	End,
+	Single
 }

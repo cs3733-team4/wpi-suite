@@ -664,7 +664,10 @@ public class MonthCalendar extends AbstractCalendar
 			if(c instanceof MonthDay)
 			{
 				MonthDay day = (MonthDay) c;
-				day.setSelectedStatus(day.getDay().getDayOfYear()==time.getDayOfYear() && 
+				if(day.isSelected())
+					day.setSelected(false);
+				
+				day.setSelected(day.getDay().getDayOfYear()==time.getDayOfYear() && 
 						day.getDay().getYear()==time.getYear());
 			}
 		}

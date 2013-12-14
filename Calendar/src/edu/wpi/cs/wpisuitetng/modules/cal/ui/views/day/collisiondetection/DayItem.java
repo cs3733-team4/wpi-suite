@@ -23,7 +23,6 @@ import org.joda.time.DateTime;
 import org.joda.time.Interval;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 
@@ -332,7 +331,7 @@ public class DayItem extends JPanel
 	{
 		//lblEventTitle.setForeground(b?Color.WHITE:Color.BLACK);
 		//TODO: Fix the paint order or revert to old selection method
-		setBorder(b?new CompoundBorder(new LineBorder(Colors.SELECTED_BACKGROUND), new CompoundBorder(new LineBorder(event.getColor().darker()), new EmptyBorder(6, 6, 6, 6)))
+		setBorder(b?new CompoundBorder(new LineBorder(event.getColor().darker()), new CompoundBorder(new LineBorder(event.getColor().darker()), new EmptyBorder(6, 6, 6, 6)))
 					:new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new LineBorder(event.getColor().darker()), new EmptyBorder(6, 6, 6, 6))));
 	}
 

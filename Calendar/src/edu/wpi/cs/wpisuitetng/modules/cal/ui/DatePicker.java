@@ -255,8 +255,8 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 	 * @param previous the DateTime object from which to obtain values
 	 */
 	public void setDateTime(DateTime previous) {
-			this.date.setText(previous.toString(dateFmt));
-			this.time.setText(previous.toString(timeFmt));
+			this.date.setValue(previous.toString(dateFmt));
+			this.time.setValue(previous.toString(timeFmt));
 			if (previous.getHourOfDay() >= 12){
 				this.AMPM.setSelectedIndex(1);
 			}

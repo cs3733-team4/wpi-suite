@@ -47,13 +47,14 @@ public class MonthDay extends JPanel
 	private List<Commitment> commitments = new ArrayList<Commitment>();
 	private DateTime day;
 	private MonthCalendar parent;
+	private boolean isSelected = false;
 
+	Color grayit, textit = Colors.TABLE_TEXT, bg = Colors.TABLE_BACKGROUND;
 	
 	public MonthDay(DateTime initDay, DayStyle style, final MonthCalendar parent)
 	{
 		this.day = initDay;
 		this.parent = parent;
-		Color grayit, textit = Colors.TABLE_TEXT, bg = Colors.TABLE_BACKGROUND;
 		switch (style)
 		{
 			case Normal:
@@ -155,7 +156,10 @@ public class MonthDay extends JPanel
 			
 			@Override
 			public void mousePressed(MouseEvent e)
-			{}
+			{
+				MainPanel.getInstance().setSelectedDay(day);
+				MainPanel.getInstance().clearSelected();
+			}
 
 			@Override
 			public void mouseClicked(MouseEvent e)
@@ -375,9 +379,22 @@ public class MonthDay extends JPanel
 		return this.day;
 	}
 	
-	public void setSelectedStatus(boolean isSelected)
+	/**
+	 * Updates header and text to show selected status
+	 * @param b the selected status of the day
+	 */
+	public void setSelected(boolean b)
 	{
-		this.header.setBackground(isSelected ? Colors.SELECTED_BACKGROUND : Colors.TABLE_GRAY_HEADER);
-		this.header.setForeground(isSelected ? Color.WHITE : Colors.TABLE_GRAY_TEXT);
+		isSelected=b;
+		this.header.setBackground(b ? Colors.SELECTED_BACKGROUND : grayit);
+		this.header.setForeground(b ? Color.WHITE : Colors.TABLE_GRAY_TEXT);
+	}
+	
+	/**
+	 * Getter for isSelected
+	 * @return whether the day is selected
+	 */
+	public boolean isSelected() {
+		return isSelected;
 	}
 }

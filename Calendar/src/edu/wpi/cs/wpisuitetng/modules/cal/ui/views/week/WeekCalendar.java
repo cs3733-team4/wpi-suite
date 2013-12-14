@@ -200,6 +200,10 @@ public class WeekCalendar extends AbstractCalendar
 		mainPanel.miniMove(time);
 	}
 
+	/**
+	 * Adds all multiday event items into grids corresponding to the days of the week
+	 * then adds them to the top bar display
+	 */
 	private void populateMultidayEventGrid()
 	{
 		List<Event> multidayEvents = getMultidayEvents();
@@ -261,7 +265,11 @@ public class WeekCalendar extends AbstractCalendar
 							gridIndex++;
 						} while (gridIndex < 7 && daysOfWeekArray[gridIndex].getDisplayDate().isBefore(currEvent.getEnd()));
 						
-						multidayPanel.setType(MultidayEventItemType.End);
+						if(multidayPanel.getType() == MultidayEventItemType.Start)
+							multidayPanel.setType(MultidayEventItemType.Single);
+						else
+							multidayPanel.setType(MultidayEventItemType.End);
+						
 						multidayPanel.setDynamicBorder(currEvent.getColor().darker(), false);
 						multidayEvents.remove(currEvent);
 						continue next;
@@ -365,6 +373,10 @@ public class WeekCalendar extends AbstractCalendar
 		mainPanel.repaint();
 	}
 
+	/**
+	 * updates the week start and end variables
+	 * @param time a time in the week
+	 */
 	private void updateWeekStartAndEnd(DateTime time)
 	{
 		MutableDateTime mdt = new MutableDateTime(time);
@@ -507,6 +519,12 @@ public class WeekCalendar extends AbstractCalendar
 		return time;
 	}
 
+	/**
+	 * Gets all the events in the week that also are in the given interval
+	 * @param intervalStart start of the interval to check
+	 * @param intervalEnd end of the interval to check
+	 * @return list of events that are both in the week and interval
+	 */
 	private List<Event> getEventsInInterval(DateTime intervalStart, DateTime intervalEnd)
 	{
 		List<Event> retrievedEvents = new ArrayList<>();
@@ -526,6 +544,10 @@ public class WeekCalendar extends AbstractCalendar
 		return retrievedEvents;
 	}
 
+	/**
+	 * Gets the multiday events in the scope of the week
+	 * @return list of multiday events
+	 */
 	private List<Event> getMultidayEvents()
 	{
 		List<Event> retrievedEvents = new ArrayList<>();

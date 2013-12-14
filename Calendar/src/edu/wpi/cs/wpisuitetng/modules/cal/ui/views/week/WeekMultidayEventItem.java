@@ -19,7 +19,6 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
-import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
 public class WeekMultidayEventItem extends JLabel {
@@ -28,8 +27,13 @@ public class WeekMultidayEventItem extends JLabel {
 	boolean isSpacer = false;
 	MultidayEventItemType type;
 
-	int rows = 0;
+	int row = 0;
 
+	/**
+	 * Constructor for WeekMultidayEventItem
+	 * @param event event associated with the item
+	 * @param type type of item
+	 */
 	public WeekMultidayEventItem(Event event, MultidayEventItemType type) {
 		this.mEvent = event;
 		this.type = type;
@@ -38,6 +42,12 @@ public class WeekMultidayEventItem extends JLabel {
 		setupListeners();
 	}
 
+	/**
+	 * Constructor for WeekMultidayEventItem with text
+	 * @param event event associated with the item
+	 * @param type type of item
+	 * @param itemText the text to display on the item
+	 */
 	public WeekMultidayEventItem(Event event, MultidayEventItemType type, String itemText) {
 		this.mEvent = event;
 		this.type = type;
@@ -47,6 +57,9 @@ public class WeekMultidayEventItem extends JLabel {
 		setupListeners();
 	}
 
+	/**
+	 * Sets up the listeners for the item
+	 */
 	private void setupListeners() {
 		this.addMouseListener(new MouseListener() {
 
@@ -80,65 +93,111 @@ public class WeekMultidayEventItem extends JLabel {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				// TODO Auto-generated method stub
-				System.out.print(type);
 			}
 		});
 	}
 
+	/**
+	 * gets the event associated with this item
+	 * @return the associated event
+	 */
 	public Event getEvent() {
 		return mEvent;
 	}
 
+	/**
+	 * sets the event associated with this item
+	 * @param mEvent the event to set
+	 */
 	public void setEvent(Event mEvent) {
 		this.mEvent = mEvent;
 	}
 
+	/**
+	 * Sets the border depending on the type and location of the item in the grid
+	 * @param mColor the color to set the border to
+	 * @param isSelected whether the item is currently selected
+	 */
 	public void setDynamicBorder(Color mColor, boolean isSelected) {
 		if(isSpacer)
-			this.setBorder(BorderFactory.createMatteBorder(rows == 0 ? 1 : 0,
-					type == MultidayEventItemType.Start ? 1 : 0, 
-					1,
-					type == MultidayEventItemType.End ? 1 : 0, mColor));
+			this.setBorder(BorderFactory.createMatteBorder(
+					row == 0 ? 1 : 0, 
+					(type == MultidayEventItemType.Start || 
+							type == MultidayEventItemType.Single) ? 1 : 0, 1,
+					(type == MultidayEventItemType.End || 
+							type == MultidayEventItemType.Single) ? 1 : 0, mColor));
 		else
 			this.setBorder(new CompoundBorder(
 								BorderFactory.createMatteBorder(
-									rows == 0 ? 1 : 0, 
-									type == MultidayEventItemType.Start ? 1 : 0, 1,
-									type == MultidayEventItemType.End ? 1 : 0, mColor), 
+									row == 0 ? 1 : 0, 
+									(type == MultidayEventItemType.Start || 
+											type == MultidayEventItemType.Single) ? 1 : 0, 1,
+									(type == MultidayEventItemType.End || 
+											type == MultidayEventItemType.Single) ? 1 : 0, mColor), 
 								new CompoundBorder(
 										BorderFactory.createMatteBorder(2,
-												type == MultidayEventItemType.Start ? 2 : 0, 
+												(type == MultidayEventItemType.Start || 
+													type == MultidayEventItemType.Single) ? 2 : 0, 
 												2,
-												type == MultidayEventItemType.End ? 2 : 0,
-												isSelected ? Colors.SELECTED_BACKGROUND
+												(type == MultidayEventItemType.End || 
+													type == MultidayEventItemType.Single) ? 2 : 0,
+												isSelected ? mEvent.getColor().darker()
 												: mEvent.getColor()), 
 										new EmptyBorder(2, 2, 2, 2))));
 	}
 
+	/**
+	 * updates the border corresponding to the item's selected status
+	 * @param selected the item's selected status
+	 */
 	public void setSelected(boolean selected) {
 		setDynamicBorder(mEvent.getColor().darker(), selected);
 	}
 	
+	/**
+	 * gets the row number in the parent grid array
+	 * @param rows the row in the grid array that this item is stored in
+	 */
 	public int getRows() {
-		return rows;
+		return row;
 	}
 
-	public void setRows(int rows) {
-		this.rows = rows;
+	/**
+	 * sets the row number in the parent grid array
+	 * @param rows the row number to set
+	 */
+	public void setRows(int row) {
+		this.row = row;
 	}
 	
+	/**
+	 * setter for whether or not the item is a spacer
+	 * @param isSpacer whether or not the item is a spacer
+	 */
 	public boolean isSpacer() {
 		return isSpacer;
 	}
 
+	/**
+	 * sets whether or not the item is a spacer
+	 * @param isSpacer whether or not the item is a spacer
+	 */
 	public void setSpacer(boolean isSpacer) {
 		this.isSpacer = isSpacer;
 	}
 	
+	/**
+	 * gets the item's type
+	 * @return the item's type
+	 */
 	public MultidayEventItemType getType() {
 		return type;
 	}
 
+	/**
+	 * sets the items type
+	 * @param type the type to set
+	 */
 	public void setType(MultidayEventItemType type) {
 		this.type = type;
 	}
