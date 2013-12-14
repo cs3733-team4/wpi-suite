@@ -94,7 +94,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	private static MainPanel instance;
 	private Displayable currentSelected;
 	
-	//TODO: "make this better" -Patrick
+	//Left these as public variables as they are updated & read in refresh loops so encapsulation makes no sense at all (just overhead)
 	public boolean showPersonal = true;
 	public boolean showTeam = true;
 
@@ -200,7 +200,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		this.mMiniCalendarPanel = new MiniCalendarPanel(DateTime.now(), this); // Mini calendar
 		
 		// Components of center panel
-		this.mCalendar = monthCal = new MonthCalendar(DateTime.now(), events, commitments); // Monthly calendar
+		this.mCalendar = monthCal = new MonthCalendar(DateTime.now()); // Monthly calendar
 		
 		this.dayCal = new DayCalendar(DateTime.now(), events); // Day calendar (hidden)
 		this.yearCal = new YearCalendar(DateTime.now(), events); // Year calendar (hidden)
@@ -379,7 +379,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	public void addEvent(Event newEvent)
 	{
 		events.putEvent(newEvent);
-		mCalendar.updateEvents(newEvent, true);
+		mCalendar.updateDisplayable(newEvent, true);
 	}
 	
 	/**

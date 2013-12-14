@@ -29,10 +29,10 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import org.joda.time.DateTime;
+import org.joda.time.Interval;
 import org.joda.time.MutableDateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
@@ -323,10 +323,12 @@ public class YearCalendar extends AbstractCalendar
 
 
 	@Override
-	public void updateEvents(Event event, boolean added) {
-		MutableDateTime start = new MutableDateTime(event.getStart());
+	public void updateDisplayable(Displayable event, boolean added)
+	{
+		Interval ival = event.getInterval();
+		MutableDateTime start = new MutableDateTime(ival.getStart());
 		
-		while(start.isBefore(event.getEnd()))
+		while(start.isBefore(ival.getEnd()))
 		{
 			if (!added)
 			{
@@ -360,7 +362,7 @@ public class YearCalendar extends AbstractCalendar
 		List<Event> events = this.eventModel.getEvents(from, to);
 		for(Event e : events)
 		{
-			this.updateEvents(e, true);
+			this.updateDisplayable(e, true);
 		}
 	}
 

@@ -14,12 +14,12 @@ import java.util.Date;
 import java.util.UUID;
 
 import org.joda.time.DateTime;
+import org.joda.time.Interval;
 import org.joda.time.MutableDateTime;
 
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
@@ -283,6 +283,12 @@ public class Commitment extends AbstractModel implements Displayable
 		mdt.setYear(newTime.getYear());
 		this.duedate = mdt.toDate();
 	}
+	
+	@Override
+	public Interval getInterval()
+	{
+		return new Interval(getDate(), getDate());
+	}
 
 	@Override
 	public void update()
@@ -317,17 +323,4 @@ public class Commitment extends AbstractModel implements Displayable
 	{
 		return commitmentID;
 	}
-	
-	@Override
-	public void deselect(MonthCalendar monthCalendar)
-	{
-		monthCalendar.deselect(this);
-	}
-	
-	@Override
-	public void select(MonthCalendar monthCalendar)
-	{
-		monthCalendar.select(this);
-	}
-
 }

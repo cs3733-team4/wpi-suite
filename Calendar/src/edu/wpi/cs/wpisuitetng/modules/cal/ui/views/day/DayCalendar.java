@@ -18,10 +18,8 @@ import java.util.UUID;
 import javax.swing.BoundedRangeModel;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 
 import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
@@ -31,7 +29,6 @@ import org.joda.time.format.DateTimeFormatter;
 import com.lowagie.text.Font;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
@@ -159,7 +156,7 @@ public class DayCalendar extends AbstractCalendar
 	}
 
 	@Override
-	public void updateEvents(Event events, boolean added)
+	public void updateDisplayable(Displayable events, boolean added)
 	{
 		// at the moment, we don't care, and just re-pull from the DB. TODO: this should change
 		this.generateDay();

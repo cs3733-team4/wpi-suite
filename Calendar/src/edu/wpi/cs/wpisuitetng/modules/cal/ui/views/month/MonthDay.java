@@ -41,16 +41,12 @@ public class MonthDay extends JPanel
 	private boolean borderTop;
 	JLabel header = new JLabel();
 	private Displayable selected;
-	private List<Event> events = new ArrayList<Event>();
-	private List<Commitment> commitments = new ArrayList<Commitment>();
+	private List<Displayable> allitems = new ArrayList<>();
 	private DateTime day;
-	private MonthCalendar parent;
-
 	
 	public MonthDay(DateTime initDay, DayStyle style, final MonthCalendar parent)
 	{
 		this.day = initDay;
-		this.parent = parent;
 		Color grayit, textit = Colors.TABLE_TEXT, bg = Colors.TABLE_BACKGROUND;
 		switch (style)
 		{
@@ -187,46 +183,23 @@ public class MonthDay extends JPanel
 	}
 
 	/**
-	 * Add an event to a given day of the month
-	 * 
-	 * @param e
+	 * Add an event or commitment to a given day of the month
+	 * @param d the displayable to add
 	 */
-	public void addEvent(Event e)
+	public void addDisplayable(Displayable d)
 	{
-		this.events.add(e);
+		allitems.add(d);
 		revalidate();
 	}
 
 	/**
-	 * Add a commitment to a given day of the month.
+	 * removes a displayable from this monthday
 	 * 
-	 * @param c
+	 * @param d the commitment or event to remove
 	 */
-	public void addCommitment(Commitment c)
+	public void removeDisplayable(Displayable d)
 	{
-		this.commitments.add(c);
-		revalidate();
-	}
-
-	/**
-	 * Remove an event from a given day of the month
-	 * 
-	 * @param e
-	 */
-	public void removeEvent(Event e)
-	{
-		this.events.remove(e);
-		revalidate();
-	}
-
-	/**
-	 * removes a commitment from this monthday
-	 * 
-	 * @param c the commitment to remove
-	 */
-	public void removeCommitment(Commitment c)
-	{
-		this.commitments.remove(c);
+		allitems.remove(d);
 		revalidate();
 	}
 
@@ -239,10 +212,6 @@ public class MonthDay extends JPanel
 		removeAll();
 		add(header);
 		total -= header.getHeight();
-		
-		ArrayList<Displayable> allitems = new ArrayList<>(events.size() + commitments.size());
-		allitems.addAll(events);
-		allitems.addAll(commitments);
 		
 		Collections.sort(allitems, new Comparator<Displayable>() {
 
@@ -303,18 +272,9 @@ public class MonthDay extends JPanel
 	/**
 	 * remove all events from the monthday
 	 */
-	public void clearEvents()
+	public void clearDisplayable()
 	{
-		events.clear();
-		revalidate();
-	}
-
-	/**
-	 * remove all commitments from the monthday
-	 */
-	public void clearComms()
-	{
-		commitments.clear();
+		allitems.clear();
 		revalidate();
 	}
 

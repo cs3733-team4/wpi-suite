@@ -17,12 +17,10 @@ import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.MutableDateTime;
 import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
@@ -359,6 +357,12 @@ public class Event extends AbstractModel implements Displayable
 		return this.getStart();
 	}
 	
+	@Override
+	public Interval getInterval()
+	{
+		return new Interval(getStart(), getEnd());
+	}
+	
 	/**
 	 * this is primarily used for multiday events
 	 * 
@@ -481,18 +485,6 @@ public class Event extends AbstractModel implements Displayable
 	 */
 	public UUID getEventID() {
 		return this.eventID;
-	}
-	
-	@Override
-	public void deselect(MonthCalendar monthCalendar)
-	{
-		monthCalendar.deselect(this);
-	}
-	
-	@Override
-	public void select(MonthCalendar monthCalendar)
-	{
-		monthCalendar.select(this);
 	}
 	
 	public static class SerializedAction

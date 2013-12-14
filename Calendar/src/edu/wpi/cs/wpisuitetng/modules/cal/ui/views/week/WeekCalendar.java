@@ -11,7 +11,6 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.week;
 
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
@@ -41,15 +40,13 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.DayGridLabel;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.collisiondetection.DayPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.collisiondetection.DayItem;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.collisiondetection.DayPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
 
@@ -371,7 +368,7 @@ public class WeekCalendar extends AbstractCalendar
 	}
 
 	@Override
-	public void updateEvents(Event events, boolean added)
+	public void updateDisplayable(Displayable events, boolean added)
 	{
 		// at the moment, we don't care, and just re-pull from the DB. TODO:
 		// this should change

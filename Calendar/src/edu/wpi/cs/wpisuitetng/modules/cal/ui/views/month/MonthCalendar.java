@@ -12,10 +12,9 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Polygon;
@@ -31,21 +30,19 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import org.joda.time.DateTime;
+import org.joda.time.Interval;
 import org.joda.time.MutableDateTime;
 import org.joda.time.ReadableDateTime;
 
-import java.awt.Font;
-
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.DayStyle;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.HSLColor;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.Lambda;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
 
 /**
@@ -64,26 +61,25 @@ public class MonthCalendar extends AbstractCalendar
 	private DateTime firstOnMonth;
 	private DateTime lastOnMonth;
 	private HashMap<Integer, MonthDay> days = new HashMap<Integer, MonthDay>();
+	private HashMap<UUID, Displayable> emap = new HashMap<>();
 
-	private EventModel eventModel;
-	private CommitmentModel commitmentModel;
 	private boolean escaped; //has the user dragged an event off it's starting day?
 	private boolean external; //has the user dragged an event off of the calendar?
 	private boolean tooltip;
 
-	public MonthCalendar(DateTime on, EventModel emodel, CommitmentModel cmodel)
+	public MonthCalendar(DateTime on)
 	{
-		this.eventModel = emodel;
-		this.commitmentModel = cmodel;
 		this.mainPanel = MainPanel.getInstance();
 		this.time = on;
 
 		this.setLayout(new BorderLayout());
 		this.add(calendarTitlePanel, BorderLayout.NORTH);
 
+		// add the UI
 		generateDays(new MutableDateTime(on));
 		generateHeaders(new MutableDateTime(on));
 		
+		// add drag and drop listeners
 		addMouseMotionListener(new MouseMotionListener()
 		{
 			@Override
@@ -118,7 +114,8 @@ public class MonthCalendar extends AbstractCalendar
 			}
 			
 		});
-		
+
+		// add drag and drop listeners
 		addMouseListener(new MouseListener()
 		{
 
@@ -165,6 +162,10 @@ public class MonthCalendar extends AbstractCalendar
 		});
 	}
 	
+	/**
+	 * Finds the MonthDay UI object under the cursor
+	 * @return MonthDay UI object under cursor
+	 */
 	public MonthDay getMonthDayAtCursor()
 	{
 		Point l = MouseInfo.getPointerInfo().getLocation();
@@ -229,92 +230,92 @@ public class MonthCalendar extends AbstractCalendar
 	 * 
 	 * @param events
 	 */
-	public void setEvents(List<Event> events)
+	public void setDisplayables(List<Displayable> disps)
 	{
-		clearEvents();
-		for (Event e : events)
+		clearDisplayables();
+		for (Displayable displayable : disps)
 		{
-			this.addEvent(e);
+			addDisplayable(displayable);
 		}
 	}
-
-	public void setCommitments(List<Commitment> commitments)
-	{
-		clearCommitments();
-		for (Commitment c : commitments)
-		{
-			this.addCommitment(c);
-		}
-	}
-
 	
-	public void addEvent(Event e)
+	/**
+	 * Adds a commitment or event to the calendar
+	 * @param disp Displayable to add
+	 */
+	public void addDisplayable(final Displayable disp)
 	{
-		
-		MonthDay md;
-		MutableDateTime startDay = new MutableDateTime(e.getStart());
-		MutableDateTime endDay = new MutableDateTime(e.getEnd());
+		emap.put(disp.getIdentification(), disp);
+
+		traverseDisplayable(disp, new Lambda<MonthDay>() {
+			
+			@Override
+			public void call(MonthDay md)
+			{
+				md.addDisplayable(disp);
+			}
+		});
+	}
+	
+	/**
+	 * Adds or deletes a displayable from the days its occupies
+	 * @param e
+	 * @param add
+	 */
+	protected void traverseDisplayable(Displayable e, Lambda<MonthDay> func)
+	{
+		// get and normalize the range of the disp
+		Interval ival = e.getInterval();
+		MutableDateTime startDay = new MutableDateTime(ival.getStart());
+		MutableDateTime endDay = new MutableDateTime(ival.getEnd());
 		endDay.setMillisOfDay(0);
 		startDay.setMillisOfDay(0);
 		
+		// bound it inside this visible month
 		if (startDay.isBefore(firstOnMonth))
 			startDay=new MutableDateTime(firstOnMonth);
 		if (endDay.isAfter(lastOnMonth))
 			endDay= new MutableDateTime(lastOnMonth);
-			
+		
+		// go from start to end and add it to all the days in the way
 		while (!endDay.isBefore(startDay))
 		{
-			md = this.days.get(startDay.getDayOfYear());
-			try{
-				md.addEvent(e);
-			}
-			catch(NullPointerException ex)
-			{
-				System.err.println("Error when adding Event: " + e.toJSON());
-			}
+			MonthDay md = this.days.get(startDay.getDayOfYear());
+			if (md != null)
+				func.call(md);
 			startDay.addDays(1);
-		
 		}
-	}
-
-	
-	public void addCommitment(Commitment c)
-	{
-		MonthDay md = this.days.get(c.getDate().getDayOfYear());
-		md.addCommitment(c);
 	}
 
 	/**
 	 * Remove a single event
-	 * 
-	 * @param e
+	 * @param disp the event/commitment to remove
 	 */
-	public void removeEvent(Event e)
+	public void removeDisplayable(final Displayable disp)
 	{
-		MonthDay md = this.days.get(e.getStart().getDayOfYear());
-		md.removeEvent(e);
+		if (disp == null)
+			return;
+		traverseDisplayable(disp, new Lambda<MonthDay>() {
+			
+			@Override
+			public void call(MonthDay md)
+			{
+				md.removeDisplayable(disp);
+			}
+		});
+		emap.remove(disp.getIdentification());
 	}
 
-	public void removeCommitment(Commitment c)
-	{
-		MonthDay md = this.days.get(c.getDate().getDayOfYear());
-		md.removeCommitment(c);
-	}
-
-	public void clearEvents()
+	/**
+	 * Removes all displayable items inside this month
+	 */
+	public void clearDisplayables()
 	{
 		for (Component i : inside.getComponents())
 		{
-			((MonthDay)i).clearEvents();
+			((MonthDay)i).clearDisplayable();
 		}
-	}
-
-	public void clearCommitments()
-	{
-		for (Component i : inside.getComponents())
-		{
-			((MonthDay)i).clearComms();
-		}
+		emap.clear();
 	}
 	
 	public boolean isToday(ReadableDateTime fom)
@@ -386,8 +387,7 @@ public class MonthCalendar extends AbstractCalendar
 		referenceDay.addDays(-1);// go back one to counteract last add one
 		
 		lastOnMonth = new DateTime(referenceDay);
-		setEvents(getVisibleEvents(from, referenceDay.toDateTime()));
-		setCommitments(getVisibleCommitments(from, referenceDay.toDateTime()));
+		setDisplayables(getVisibleItems(from, referenceDay.toDateTime()));
 
 		monthLabel.setText(this.getTime().toString(Months.monthLblFormat));
 
@@ -398,49 +398,12 @@ public class MonthCalendar extends AbstractCalendar
 		mainPanel.revalidate();
 	}
 
-	private List<Event> getVisibleEvents(DateTime from, DateTime to)
+	@SuppressWarnings("unchecked")
+	private List<Displayable> getVisibleItems(DateTime from, DateTime to)
 	{
-		if (MainPanel.getInstance().showEvents())
-		{
-			List<Event> visibleEvents = eventModel.getEvents(from, to);
-			
-			// Filter for selected categories
-			Collection<UUID> selectedCategories = MainPanel.getInstance().getSelectedCategories();
-			List<Event> categoryFilteredEvents = new ArrayList<Event>();
-			
-			// Else, loop through events and filter by selected categories
-			for (Event e : visibleEvents){
-				if (selectedCategories.contains(e.getCategory()))
-					categoryFilteredEvents.add(e);
-			}
-			
-			// Return list of events to be displayed
-			return categoryFilteredEvents;
-		} else
-			return new ArrayList<Event>();
-	}
-
-	private List<Commitment> getVisibleCommitments(DateTime from, DateTime to)
-	{	
-		if (MainPanel.getInstance().showCommitments())
-		{
-			List<Commitment> visibleCommitments = commitmentModel.getCommitments(from, to);
-			
-			// Filter for selected categories
-			Collection<UUID> selectedCategories = MainPanel.getInstance().getSelectedCategories();
-			List<Commitment> categoryFilteredCommitments = new ArrayList<Commitment>();
-			
-			// Else, loop through events and filter by selected categories
-			for (Commitment c : visibleCommitments){
-				if (selectedCategories.contains(c.getCategory()))
-					categoryFilteredCommitments.add(c);
-			}
-			
-			// Return list of events to be displayed
-			return categoryFilteredCommitments;
-		}
-		else
-			return new ArrayList<Commitment>();
+		List<Displayable> visible = (List<Displayable>) (List<? extends Displayable>)EventModel.getInstance().getEvents(from, to);
+		visible.addAll(CommitmentModel.getInstance().getCommitments(from, to));
+		return visible;
 	}
 
 	/**
@@ -466,105 +429,39 @@ public class MonthCalendar extends AbstractCalendar
 	}
 
 	@Override
-	public void updateEvents(Event events, boolean addOrRemove)
+	public void updateDisplayable(Displayable events, boolean added)
 	{
-		// TODO Auto-generated method stub
+		removeDisplayable(emap.get(events.getIdentification()));
+		if (added)
+			addDisplayable(events);
 	}
 
 	@Override
-	public void select(Displayable item)
+	public void select(final Displayable item)
 	{
 		if (this.lastSelection != null)
 		{
-			this.lastSelection.deselect(this);
+			traverseDisplayable(lastSelection, new Lambda<MonthDay>() {
+				
+				@Override
+				public void call(MonthDay md)
+				{
+					md.clearSelected();
+				}
+			});
 		}
 		
 		if (item != null)
 		{
-			item.select(this);
+			traverseDisplayable(item, new Lambda<MonthDay>() {
+				
+				@Override
+				public void call(MonthDay md)
+				{
+					md.select(item);
+				}
+			});
 			lastSelection = item;
-		}
-	}
-
-	/**
-	 * 
-	 * @param e
-	 */
-	public void select(Event e)
-	{
-		MonthDay md;
-		MutableDateTime startDay = new MutableDateTime(e.getStart());
-		MutableDateTime endDay = new MutableDateTime(e.getEnd());
-		endDay.setMillisOfDay(0);
-		startDay.setMillisOfDay(0);
-		
-		if (startDay.isBefore(firstOnMonth))
-			startDay=new MutableDateTime(firstOnMonth);
-		if (endDay.isAfter(lastOnMonth))
-			endDay= new MutableDateTime(lastOnMonth);
-			
-		while (!endDay.isBefore(startDay))
-		{
-			md = this.days.get(startDay.getDayOfYear());
-			if (md != null)
-			{
-				md.select(e);
-			}
-			startDay.addDays(1);
-		}
-	}
-	
-	/**
-	 * 
-	 * @param m
-	 */
-	public void select(Commitment m)
-	{
-		MonthDay md = this.days.get(m.getDate().getDayOfYear());
-		if (md != null)
-		{
-			md.select(m);
-		}
-	}
-	
-	/**
-	 * 
-	 * @param e
-	 */
-	public void deselect(Event e)
-	{
-		MonthDay md;
-		MutableDateTime startDay = new MutableDateTime(e.getStart());
-		MutableDateTime endDay = new MutableDateTime(e.getEnd());
-		endDay.setMillisOfDay(0);
-		startDay.setMillisOfDay(0);
-		
-		if (startDay.isBefore(firstOnMonth))
-			startDay=new MutableDateTime(firstOnMonth);
-		if (endDay.isAfter(lastOnMonth))
-			endDay= new MutableDateTime(lastOnMonth);
-			
-		while (!endDay.isBefore(startDay))
-		{
-			md = this.days.get(startDay.getDayOfYear());
-			if (md != null)
-			{
-				md.clearSelected();
-			}
-			startDay.addDays(1);
-		}
-	}
-	
-	/**
-	 * 
-	 * @param m
-	 */
-	public void deselect(Commitment m)
-	{
-		MonthDay md = this.days.get(m.getDate().getDayOfYear());
-		if (md != null)
-		{
-			md.clearSelected();
 		}
 	}
 
