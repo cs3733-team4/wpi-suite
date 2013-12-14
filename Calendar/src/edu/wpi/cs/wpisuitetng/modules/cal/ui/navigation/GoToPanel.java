@@ -17,14 +17,17 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.text.ParseException;
 
 import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.MaskFormatter;
 
 import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
@@ -54,8 +57,15 @@ public class GoToPanel extends JPanel {
 		this.setBorder(new EmptyBorder(5, 0, 0, 0));
 
 		// Go to field
-		this.gotoDateField = new JTextField(currentDate.toString(gotoExampleField));
-		
+		try
+		{
+			this.gotoDateField = new JFormattedTextField(new MaskFormatter("##/##/####"));
+		} 
+		catch (ParseException e1)
+		{
+			e1.printStackTrace();
+		}
+		this.gotoDateField.setText(currentDate.toString(gotoExampleField));
 		// Go to label
 		gotoDateText = new JLabel("Go to: ");
 		
