@@ -181,7 +181,7 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		e.setCategory(((Category)eventCategoryPicker.getSelectedItem()).getCategoryID());
 		if(commitmentStatusPicker.getSelectedItem()=="Not Started")
 			e.setStatus(CommitmentStatus.NotStarted);
-		if(commitmentStatusPicker.getSelectedItem()=="In Progress")
+		else if(commitmentStatusPicker.getSelectedItem()=="In Progress")
 			e.setStatus(CommitmentStatus.InProgress);
 		else
 			e.setStatus(CommitmentStatus.Complete);
