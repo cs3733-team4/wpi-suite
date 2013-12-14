@@ -9,6 +9,9 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.Session;
@@ -60,6 +63,11 @@ public class MockRequest extends Request
 	public void send() throws IllegalStateException
 	{
 		String[] bitsOfUrl = relPath.split("/");
+		boolean advanced;
+		if (advanced = bitsOfUrl[0].equals("Advanced"))
+		{
+			bitsOfUrl = Arrays.copyOfRange(bitsOfUrl, 1, bitsOfUrl.length);
+		}
 		if (!bitsOfUrl[0].equals("cal"))
 			throw new IllegalStateException("Not a calender!" + bitsOfUrl[0] + "|yay");
 		if (bitsOfUrl.length >= 3)
@@ -88,7 +96,7 @@ public class MockRequest extends Request
 			switch (getHttpMethod())
 			{
 				case GET:
-					this.response.setBody(new Gson().toJson(em.getEntity(session, bitsOfUrl[2])));
+					this.response.setBody(advanced ? em.advancedGet(session, bitsOfUrl) : new Gson().toJson(em.getEntity(session, bitsOfUrl[2])));
 					break;
 				case POST:
 					em.update(session, getBody());

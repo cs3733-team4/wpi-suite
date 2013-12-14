@@ -284,7 +284,7 @@ public class EventEntityManager implements EntityManager<Event> {
 	public String advancedGet(Session s, String[] args) throws NotFoundException
 	{
 		// shift cal/events off
-		args = Arrays.copyOfRange(args, 2, args.length-1);
+		args = Arrays.copyOfRange(args, 2, args.length);
 		switch (args[0])
 		{
 			case "filter-events-by-range":
