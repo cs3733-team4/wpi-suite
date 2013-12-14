@@ -179,7 +179,7 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		e.setProjectCommitment(rdbtnTeam.isSelected());
 		e.setParticipants(participantsTextField.getText().trim());
 		e.setCategory(((Category)eventCategoryPicker.getSelectedItem()).getCategoryID());
-		e.setStatus((String)commitmentStatusPicker.getSelectedItem());
+		e.setStatus((CommitmentStatus)commitmentStatusPicker.getSelectedItem());
 		
 		if (isEditingCommitment) {
 			e.setCommitmentID(existingCommitmentID);

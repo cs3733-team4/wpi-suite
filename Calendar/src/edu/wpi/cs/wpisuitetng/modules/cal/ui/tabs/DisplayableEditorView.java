@@ -117,7 +117,7 @@ public class DisplayableEditorView extends JPanel
 		this.add(lblStatus, "cell 0 4,alignx right,aligny baseline");
 
 		commitmentStatusPicker = new JComboBox<>();
-		this.commitmentStatusPicker.addItem(Commitment.DEFAULT_STATUS);
+		this.commitmentStatusPicker.addItem(Commitment.DEFAULT_STATUS.toString());
 		this.commitmentStatusPicker.addItem(CommitmentStatus.InProgress.toString());
 		this.commitmentStatusPicker.addItem(CommitmentStatus.Complete.toString());
 

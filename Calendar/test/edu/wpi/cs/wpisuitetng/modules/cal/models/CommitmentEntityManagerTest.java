@@ -38,15 +38,16 @@ public class CommitmentEntityManagerTest {
         
         
         
-        Commitment e = new Commitment().addName("First").setDueDate(one).addStatus("Not Started");
+        Commitment e = new Commitment().addName("First").setDueDate(one).addStatus(CommitmentStatus.NotStarted);
         String eString=e.toJSON();
         
-        Commitment ee=new Commitment().setDueDate(two).addName("Second").addStatus("In Progress");
+        Commitment ee=new Commitment().setDueDate(two).addName("Second").addStatus(CommitmentStatus.InProgress);
         String eeString=ee.toJSON();
         
-        Commitment eee=new Commitment().setDueDate(three).addName("Third").addStatus("Complete");
+        Commitment eee=new Commitment().setDueDate(three).addName("Third").addStatus(CommitmentStatus.Complete);
 
         String eeeString=eee.toJSON();
+        
         
         Project p=new Project("p","26");
         User u1 = new User("User1", "U1", null, 0);
