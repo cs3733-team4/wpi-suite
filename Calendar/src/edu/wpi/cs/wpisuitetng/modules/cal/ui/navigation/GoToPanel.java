@@ -168,6 +168,7 @@ public class GoToPanel extends JPanel {
 		{
 			MainPanel.getInstance().display(dt);
 			MainPanel.getInstance().refreshView();
+			gotoErrorText.setText(" ");
 		}
 		else
 		{
