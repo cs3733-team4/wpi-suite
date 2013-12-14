@@ -39,8 +39,7 @@ public class PopupCalendar extends JFrame {
 
 			@Override
 			public void windowActivated(WindowEvent arg0) {
-				// TODO Auto-generated method stub
-				
+				((DatePicker)mc).requestDateFocusPost();
 			}
 
 			@Override
@@ -57,9 +56,7 @@ public class PopupCalendar extends JFrame {
 
 			@Override
 			public void windowDeactivated(WindowEvent arg0) {
-				((DatePicker)mc).miniCalendarInstance(false);
-				me.dispose();
-				
+				// TODO Auto-generated method stub
 			}
 
 			@Override

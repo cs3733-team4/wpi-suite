@@ -69,6 +69,7 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 		try {
 			date = new JFormattedTextField(new MaskFormatter("##/##/##"));
 			date.setFont(new Font("Monospaced", Font.PLAIN, 12));
+			
 			date.getDocument().addDocumentListener(new DocumentListener() {
 				
 				@Override
@@ -212,7 +213,7 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 				}
 
 				public void mouseReleased(MouseEvent e) {
-					showMiniCalendar();
+					requestDateFocus();
 				}
 
 				public void mouseEntered(MouseEvent e) {
@@ -248,6 +249,7 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 		cal.setLocation(loc);
 		cal.setSize(220, 220);
 		this.cal = cal;
+		this.cal.setAlwaysOnTop(true);
 		this.miniCalendarInstance(true);
 	    this.cal.setVisible(true);
 		}
@@ -316,6 +318,10 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 	{
 		date.requestFocus();
 		showMiniCalendar();
+	}
+	public void requestDateFocusPost()
+	{
+		date.requestFocus();
 	}
 	public void requestTimeFocus()
 	{

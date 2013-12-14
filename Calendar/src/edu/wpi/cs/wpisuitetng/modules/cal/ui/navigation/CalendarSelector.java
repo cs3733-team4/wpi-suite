@@ -33,7 +33,7 @@ public class CalendarSelector extends JPanel
 		day = new JToggleButton("Day");
 		year = new JToggleButton("Year");
 		week = new JToggleButton("Week");
-		Filler filler1 = new Filler(new Dimension(6, 0), new Dimension(6, 0), new Dimension(6, 32767));
+		Filler filler1 = new Filler(new Dimension(30, 0), new Dimension(30, 0), new Dimension(30, 32767));
 
 		// build button groups
 		ButtonGroup view = new ButtonGroup();
