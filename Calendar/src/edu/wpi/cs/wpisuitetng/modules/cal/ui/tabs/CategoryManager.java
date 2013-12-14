@@ -59,15 +59,17 @@ public class CategoryManager extends JPanel {
 	private PastelColorPicker colorPicker;
 	private JButton saveCategoryButton;
 	private JButton deleteCategoryButton;
+	private JButton cancelEditButton;
 	private DefaultListModel<Category> JListModel;
 	private JList<Category> categoriesList;
 	private JPanel bottomEditPanel;
 	private List<Category> allCategories;
 	private boolean editCategory = false;
+	private boolean canChangeSelection = true;
 	private Category selectedCategory = null;
 	private int selectedIndex;
 	
-	// When selecting category from list, repeated name alert shouldn't pop up
+	//TODO When selecting category from list, repeated name alert shouldn't pop up
 	
 	public CategoryManager() {
 		allCategories = CategoryModel.getInstance().getAllCategories();
@@ -155,10 +157,14 @@ public class CategoryManager extends JPanel {
 		// Buttons
 		saveCategoryButton = new JButton("Save");
 		deleteCategoryButton = new JButton("Delete");
+		deleteCategoryButton.setVisible(false);
+		cancelEditButton = new JButton("Cancel");
+		cancelEditButton.setVisible(false);
 		
 		// Add to Panel
 		bottomEditPanel.add(saveCategoryButton);
 		bottomEditPanel.add(deleteCategoryButton);
+		bottomEditPanel.add(cancelEditButton);
 		bottomEditPanel.add(Box.createHorizontalGlue());
 		
 		// Add to UI
@@ -174,21 +180,29 @@ public class CategoryManager extends JPanel {
 		categoriesList.addMouseListener(new MouseAdapter() {
 		    public void mouseClicked(MouseEvent evt) {
 		    	
-		    	// Get index of selected cell
-		        JList list = (JList)evt.getSource();
-		        selectedIndex = list.locationToIndex(evt.getPoint());
-		    	
-		        // Get category object
-		    	categoriesList.setSelectedIndex(selectedIndex);
-		    	selectedCategory = (Category) categoriesList.getSelectedValue();
-		    	
-		    	// Display data from selected category object
-		    	categoryName.setText(selectedCategory.getName());
-		    	editCategory = true; // TODO Make this work
-		    	//TODO set category color
-		    	
+		    	if (canChangeSelection)
+		    	{
+			    	// Get index of selected cell
+			        JList<?> list = (JList<?>)evt.getSource();
+			        selectedIndex = list.locationToIndex(evt.getPoint());
+			    	
+			        // Get category object
+			    	categoriesList.setSelectedIndex(selectedIndex);
+			    	selectedCategory = (Category) categoriesList.getSelectedValue();
+			    	
+			    	// Display data from selected category object
+			    	categoryName.setText(selectedCategory.getName());
+			    	colorPicker.moveColorSelector(selectedCategory.getColor());
+			    	
+			    	editCategory = true; // Signal that a category is being edited
+			    
+		    	}
+		    	//else
+		    		// TODO Show error message
 		    }
 		});
+		
+		//TODO Add on focus for arrow key navigation
 		
 		//TODO NAME FIELD NAME FIELD NAME FIELD
 		
@@ -224,17 +238,7 @@ public class CategoryManager extends JPanel {
 			}
 		});
 		
-		if (allCategories.size() == 0){
-			JListModel.addElement(Category.DEFAULT_DISPLAY_CATEGORY);
-		} else {
-			if (JListModel.contains(Category.DEFAULT_DISPLAY_CATEGORY))
-				JListModel.removeElement(Category.DEFAULT_DISPLAY_CATEGORY);
-			
-			for (int i = 0; i < allCategories.size(); i++) {
-				Category temp = allCategories.get(i);
-				JListModel.addElement(temp);
-			}
-		}
+		populateCategories(JListModel);
 		
 		JScrollPane categoriesListScrollPane = new JScrollPane(categoriesList);
 		categoriesListScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -262,7 +266,7 @@ public class CategoryManager extends JPanel {
 		}
 		
 		for (Category cat : allCategories){
-			if (cat.getName().equals(categoryName.getText())){
+			if (!editCategory && cat.getName().equals(categoryName.getText())){
 				mErrorLabel.setText("* Category name already exists");
 				return false;
 			}
@@ -315,6 +319,7 @@ public class CategoryManager extends JPanel {
 		selectedCategory = null; // Clear selection
 		
 		saveCategoryButton.setEnabled(false);
+		canChangeSelection = true; // Signal that a different category can be selected
 	}
 	
 	/**
@@ -367,12 +372,21 @@ public class CategoryManager extends JPanel {
 				
 				MainPanel.getInstance().refreshCategoryFilterTab();
 				//TODO do not delete no category
+				
+				canChangeSelection = true; // Signal that a different category can be selected
 			}
 			
 		});
 		
-		//this should be called in updateSaveable() and thus isnt necessary here
-		//but error msg didn't start visible unless I called it directly
+		cancelEditButton.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				canChangeSelection = true; // Signal that a different category can be selected
+				
+			}
+			
+		});
 		
 		saveCategoryButton.setEnabled(isSaveable());
 		
@@ -385,8 +399,30 @@ public class CategoryManager extends JPanel {
 	 */
 	private void removeCategory (Category category){
 		MainPanel.getInstance().deleteCategory(category);
-		categoriesList.remove(selectedIndex);
+		populateCategories(JListModel);
+		//categoriesList.remove(selectedIndex);
 		
+	}
+	
+	/**
+	 * Populate the provided list with the categories
+	 * @param listModel the model of the list to populate
+	 */
+	private void populateCategories(DefaultListModel<Category> listModel)
+	{
+		listModel.removeAllElements();
+		
+		if (allCategories.size() == 0){
+			listModel.addElement(Category.DEFAULT_DISPLAY_CATEGORY);
+		} else {
+			if (listModel.contains(Category.DEFAULT_DISPLAY_CATEGORY))
+				listModel.removeElement(Category.DEFAULT_DISPLAY_CATEGORY);
+			
+			for (int i = 0; i < allCategories.size(); i++) {
+				Category temp = allCategories.get(i);
+				listModel.addElement(temp);
+			}
+		}
 	}
 
 }
