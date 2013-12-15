@@ -12,27 +12,27 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.collisiondetection;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 
 public class OverlappedEvent implements Comparable<OverlappedEvent>
 {
 	private int collisionCount = 0;
-	private Event event;
+	private Displayable displayable;
 	private Rational xpos = new Rational(1, 1);
 	private List<OverlappedEvent> collisions = new ArrayList<>();
 	
 	/**
 	 * 
-	 * @param event the event that this encapsulates
+	 * @param Displayable the Displayable that this encapsulates
 	 */
-	public OverlappedEvent(Event event)
+	public OverlappedEvent(Displayable displayable)
 	{
-		this.event = event;
+		this.displayable = displayable;
 	}
 	
 	/**
 	 * 
-	 * @return the maximum number of collisions this event has
+	 * @return the maximum number of collisions this Displayable has
 	 * 		   at any given time
 	 */
 	public int getCollisions()
@@ -51,7 +51,7 @@ public class OverlappedEvent implements Comparable<OverlappedEvent>
 	
 	/**
 	 * 
-	 * @return get this event's horizontal position
+	 * @return get this Displayable's horizontal position
 	 */
 	public Rational getXpos()
 	{
@@ -60,7 +60,7 @@ public class OverlappedEvent implements Comparable<OverlappedEvent>
 	
 	/**
 	 * 
-	 * @param xpos set this event's horizontal position
+	 * @param xpos set this Displayable's horizontal position
 	 */
 	public void setXpos(Rational xpos)
 	{
@@ -69,16 +69,16 @@ public class OverlappedEvent implements Comparable<OverlappedEvent>
 	
 	/**
 	 * 
-	 * @return the event we encapsulate
+	 * @return the Displayable we encapsulate
 	 */
-	public Event getEvent()
+	public Displayable getEvent()
 	{
-		return event;
+		return displayable;
 	}
 	
 	/**
 	 * 
-	 * @param overlapped add an overlapping event to the list of events that this overlaps with
+	 * @param overlapped add an overlapping Displayable to the list of events that this overlaps with
 	 */
 	public void addOverlappedEvent(OverlappedEvent overlapped)
 	{
@@ -99,7 +99,7 @@ public class OverlappedEvent implements Comparable<OverlappedEvent>
 	public int compareTo(OverlappedEvent toCompare) {
 		int res = Integer.compare(toCompare.xpos.toInt(10000), xpos.toInt(10000));
 		if (res == 0)
-			return toCompare.event.getStart().compareTo(event.getStart());
+			return toCompare.displayable.getStart().compareTo(displayable.getStart());
 		return res;
 	}
 	

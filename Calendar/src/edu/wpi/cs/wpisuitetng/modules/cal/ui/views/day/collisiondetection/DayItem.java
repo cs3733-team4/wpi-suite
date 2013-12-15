@@ -9,28 +9,11 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.collisiondetection;
 
-import javax.swing.JPanel;
-
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
-
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
-
-import org.joda.time.DateTime;
-import org.joda.time.Interval;
-
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
-import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
-
-import javax.swing.JLabel;
-import javax.swing.BoxLayout;
-
 import java.awt.Font;
 import java.awt.FontMetrics;
+import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -39,7 +22,20 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+
+import org.joda.time.DateTime;
+import org.joda.time.Interval;
+
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 
 /**
  * Beautiful images of what is in the days.
@@ -51,7 +47,7 @@ public class DayItem extends JPanel
 	
 	private Rational width;
 	private Rational x;
-	private Event event;
+	private Displayable displayable;
 	private JLabel lblEventTitle, lblTimeInfo;
 	private JLabel lblStarryNightdutch;
 	private HashMap<String, Integer> wordLengths = new HashMap<>();
@@ -66,9 +62,9 @@ public class DayItem extends JPanel
 	private boolean isBeingDragged;
 	
 	/**
-	 * Creates a DayItem (drawable) based on an overlapping event (Information) on the given day
+	 * Creates a DayItem (drawable) based on an overlapping Displayable (Information) on the given day
 	 * 
-	 * @param eventPositionalInformation the positional information for the event
+	 * @param eventPositionalInformation the positional information for the Displayable
 	 * @param displayedDay the day to display this panel on
 	 */
 	public DayItem(OverlappedEvent eventPositionalInformation, DateTime displayedDay)
@@ -77,9 +73,9 @@ public class DayItem extends JPanel
 		this.displayedDay=displayedDay;
 		this.eventPositionalInformation = eventPositionalInformation;
 		height = 25;
-		event = eventPositionalInformation.getEvent();
-		length = new Interval(event.getStart(), event.getEnd());
-		Color bg = event.getColor();
+		displayable = eventPositionalInformation.getEvent();
+		length = new Interval(displayable.getStart(), displayable.getEnd());
+		Color bg = displayable.getColor();
 		setBorder(new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new LineBorder(bg.darker()), new EmptyBorder(6, 6, 6, 6))));
 		setBackground(bg);
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -87,7 +83,7 @@ public class DayItem extends JPanel
 		add(lblEventTitle);
 		lblEventTitle.setFont(new Font("Tahoma", Font.BOLD, 14));
 		lblEventTitle.putClientProperty("html.disable", true); //prevents html parsing
-		lblEventTitle.setText(event.getName());
+		lblEventTitle.setText(displayable.getName());
 		lblTimeInfo = new JLabel();
 		putTimeOn();
 		lblTimeInfo.setBorder(new EmptyBorder(0,0,3,0));
@@ -106,7 +102,7 @@ public class DayItem extends JPanel
 			@Override
 			public void mouseReleased(MouseEvent e)
 			{
-				event.update();
+				displayable.update();
 				getParent().dispatchEvent(e);
 			}
 			
@@ -115,9 +111,9 @@ public class DayItem extends JPanel
 			{
 				if (e.getClickCount() > 1)
 				{
-					MainPanel.getInstance().editSelectedDisplayable(event);
+					MainPanel.getInstance().editSelectedDisplayable(displayable);
 				} else {
-					MainPanel.getInstance().updateSelectedDisplayable(event);
+					MainPanel.getInstance().updateSelectedDisplayable(displayable);
 				}
 			}
 			
@@ -189,7 +185,7 @@ public class DayItem extends JPanel
 		}
 		if(firstDraw)
 		{
-			height = (int) map(new Interval(event.getStartTimeOnDay(displayedDay), event.getEndTimeOnDay(displayedDay)).toDurationMillis(), this.getParent().getHeight());
+			height = (int) map(new Interval(displayable.getStartTimeOnDay(displayedDay), displayable.getEndTimeOnDay(displayedDay)).toDurationMillis(), this.getParent().getHeight());
 			height = Math.max(height, 45);
 			recalcBounds(getParent().getWidth(), getParent().getHeight());
 			FontMetrics descriptionMetrics = getGraphics().getFontMetrics(lblStarryNightdutch.getFont());
@@ -219,7 +215,7 @@ public class DayItem extends JPanel
 	{
 		lblStarryNightdutch.setMaximumSize(new Dimension(width.toInt(parentWidth), height-20));
 		int outWidth = width.toInt(parentWidth);
-		this.setBounds(x.toInt(parentWidth), (int) map(event.getStartTimeOnDay(displayedDay).getMillisOfDay(), parentHeight), outWidth, height);
+		this.setBounds(x.toInt(parentWidth), (int) map(displayable.getStartTimeOnDay(displayedDay).getMillisOfDay(), parentHeight), outWidth, height);
 		if(!firstDraw)
 		{
 			wrapDescription(outWidth-16);
@@ -255,7 +251,7 @@ public class DayItem extends JPanel
 	 */
 	private void wrapDescription(int myWidth)
 	{
-		//System.out.println("We are " + myWidth + " for event " + event);
+		//System.out.println("We are " + myWidth + " for Displayable " + Displayable);
 		int line = 0;
 		int lengthRemaining = lineLengths.size() > 0 ? lineLengths.get(0).toInt(myWidth) : 0;
 		String formattedDescription = "<html>";
@@ -364,40 +360,40 @@ public class DayItem extends JPanel
 	}
 	
 
-	// Set text color to white to indicate selected event
+	// Set text color to white to indicate selected Displayable
 	public void setSelected(boolean b)
 	{
 		lblEventTitle.setForeground(b?Color.WHITE:Color.BLACK);		
 	}
 
-	public Event getEvent() {
-		return event;
+	public Displayable getEvent() {
+		return displayable;
 	}
 	
 	public void updateTime(DateTime t)
 	{
-		if(!this.event.getStart().equals(t))
+		if(!this.displayable.getStart().equals(t))
 		{
-			this.event.setStart(t);;
-			this.event.setEnd(t.plus(this.length.toDuration()));
+			this.displayable.setStart(t);;
+			this.displayable.setEnd(t.plus(this.length.toDuration()));
 			putTimeOn();
 		}
 	}
 	
 	private void putTimeOn()
 	{
-		if (event.isMultiDayEvent())
+		if (displayable.isMultiDayEvent())
 		{
-			if (event.getStart().compareTo(event.getStartTimeOnDay(displayedDay))==0)//if their the same time, its the first day
-				lblTimeInfo.setText(formatTime(event.getStart()) + " \u2192");
-			else if (event.getEnd().compareTo(event.getEndTimeOnDay(displayedDay))==0)
-				lblTimeInfo.setText("\u2190 " + formatTime(event.getEnd()));
+			if (displayable.getStart().compareTo(displayable.getStartTimeOnDay(displayedDay))==0)//if their the same time, its the first day
+				lblTimeInfo.setText(formatTime(displayable.getStart()) + " \u2192");
+			else if (displayable.getEnd().compareTo(displayable.getEndTimeOnDay(displayedDay))==0)
+				lblTimeInfo.setText("\u2190 " + formatTime(displayable.getEnd()));
 			else
 				lblTimeInfo.setText("\u2190 \u2192");
 				
 		}
 		else
-			lblTimeInfo.setText(formatTime(event.getStart()) + " - " + formatTime(event.getEnd()));
+			lblTimeInfo.setText(formatTime(displayable.getStart()) + " - " + formatTime(displayable.getEnd()));
 	}
 	
 }
