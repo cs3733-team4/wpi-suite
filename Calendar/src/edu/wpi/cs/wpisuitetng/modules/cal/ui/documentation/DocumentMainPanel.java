@@ -80,8 +80,8 @@ public class DocumentMainPanel extends JFrame{
     	this.setTitle("YOCO Calendar Help");
     	this.setLayout(new BorderLayout());
     	
-    	serverLocation = Network.getInstance().makeRequest("docs/Calendar/", HttpMethod.GET).getUrl().toString().replace("API/", "");
-        //serverLocation = "http://www.wpi.edu/~bkmcleod/newDocs/";
+    	//serverLocation = Network.getInstance().makeRequest("docs/Calendar/", HttpMethod.GET).getUrl().toString().replace("API/", "");
+        serverLocation = "http://users.wpi.edu/~bkmcleod/Test%20Out/";
     	System.out.println(serverLocation);
     	tableOfContents=new TableOfContents(serverLocation);
     	try
@@ -462,6 +462,7 @@ public class DocumentMainPanel extends JFrame{
     {
     	try {
 			webPage.setPage(new URL(serverLocation + page));
+			tableOfContents.expandToPage(page);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

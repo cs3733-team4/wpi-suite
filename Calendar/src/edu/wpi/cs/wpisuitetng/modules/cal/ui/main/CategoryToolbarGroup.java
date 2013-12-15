@@ -55,6 +55,7 @@ public class CategoryToolbarGroup extends ToolbarGroupView {
 			        button.addActionListener(new ActionListener() {  
 			        	public void actionPerformed(ActionEvent e) {
 			        		ToolTipManager.sharedInstance().setEnabled(false);
+			        		toolTip.setEnabled(false);
 			        		DocumentMainPanel.getInstance().setVisible(true);
 			        		DocumentMainPanel.getInstance().requestFocus();
 			        		DocumentMainPanel.getInstance().goToPage("CreateaCategory.html");  

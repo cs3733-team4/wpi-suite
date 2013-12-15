@@ -16,6 +16,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.Enumeration;
+import java.util.HashMap;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -24,17 +26,22 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 
 public class TableOfContents extends JPanel implements TreeSelectionListener {
     private JTree tree;
-
-    
-
+    private HashMap<String, DefaultMutableTreeNode> theMap;
+    private boolean fromTOC;
+    /**
+     * Constructor for the TableOfContents
+     * @param serverLocation the String location of the server
+     */
     public TableOfContents(String serverLocation) {
         super(new GridLayout(1,0));
-
+        theMap = new HashMap<>();
         this.setBackground(Color.getColor("EFEFEF"));
         //Create the nodes.
         DefaultMutableTreeNode top = new DefaultMutableTreeNode("Team YOCO Calendar");
@@ -67,11 +74,40 @@ public class TableOfContents extends JPanel implements TreeSelectionListener {
     public void valueChanged(TreeSelectionEvent e) {
 
         DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
-        
+        if (node==null)
+        	return;
         if (node.getUserObject() instanceof ListInfo)
+        {
         	DocumentMainPanel.getInstance().goToPage(((ListInfo)node.getUserObject()).getPageName());
+        	fromTOC=true;
+        }
+        
   }
+    /**
+     * Expands the tree to only the shown page and selects the page
+     * @param thePage
+     */
+    public void expandToPage(String thePage)
+    {
+    
+    	DefaultMutableTreeNode theNode = theMap.get(thePage);
 
+    	if (theNode==null)
+    		return;
+    	
+    	
+    	if (!fromTOC)
+    	{
+        	tree.setSelectionPath(new TreePath(theNode.getPath()));
+        	tree.scrollPathToVisible(new TreePath(theNode.getPath()));
+    	}
+    	fromTOC=false;
+    	
+    	
+    }
+/**
+ * A class that contains information about the tree node
+ */
     private class ListInfo {
         private String Name;
         private String PageName;
@@ -96,8 +132,7 @@ public class TableOfContents extends JPanel implements TreeSelectionListener {
     }
     private String getHREFFromLine(String lineIn)
     {
-    	lineIn = lineIn.substring(lineIn.indexOf("href=\"") + 6, lineIn.length()-1);
-    	return lineIn;
+    	return lineIn.substring(lineIn.indexOf("href=\"") + 6, lineIn.length()-1);  
     }
     
     private void populateFromTOC(DefaultMutableTreeNode top, String server) {
@@ -120,13 +155,13 @@ public class TableOfContents extends JPanel implements TreeSelectionListener {
 	        }
 			while(true)
 			{
-				if (holdLine.contains("<ul>"))
+				if (holdLine.contains("<ul>"))//if it contains a <ul> the the list index goes one deeper
 					level++;
 				if (holdLine.contains("</ul>"))
 				{
 					for (int i=0; i<holdLine.length(); i++)
 					{
-						if (holdLine.indexOf("</ul>", i)>0)
+						if (holdLine.indexOf("</ul>", i)>0)//decrease for every instance of </ul>
 						{
 
 							level--;
@@ -144,16 +179,17 @@ public class TableOfContents extends JPanel implements TreeSelectionListener {
 				nameHold=getIDFromLine(holdLine);
 				holdLine=read.readLine();
 				holdLine=read.readLine();
-				//System.out.println("Level: " + level + " Name: " + nameHold + " HREF: " + dataHold);
 				
 				if (level ==0)
 				{
 					levels[level]=new DefaultMutableTreeNode(new ListInfo(nameHold, dataHold));
+					theMap.put(dataHold, levels[level]);
 					top.add(levels[level]);
 				}
 				else
 				{
 					levels[level] = new DefaultMutableTreeNode(new ListInfo(nameHold, dataHold));
+					theMap.put(dataHold, levels[level]);
 					levels[level-1].add(levels[level]);
 				}
 			}
@@ -161,12 +197,5 @@ public class TableOfContents extends JPanel implements TreeSelectionListener {
         } catch (IOException e) {
 			e.printStackTrace();
 		}       
-    }
-    
-    /**
-     * Create the GUI and show it.  For thread safety,
-     * this method should be invoked from the
-     * event dispatch thread.
-     */
-   
+    }   
 }
