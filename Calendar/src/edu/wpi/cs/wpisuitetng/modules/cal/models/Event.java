@@ -487,6 +487,14 @@ public class Event extends AbstractModel implements Displayable
 		return this.eventID;
 	}
 	
+	@Override
+	public String toString()
+	{
+		return new StringBuilder(super.toString()).append("{name: ").append(getName())
+				.append(", from: ").append(getStart().toString())
+				.append(", to: ").append(getEnd().toString()).append("}").toString();
+	}
+	
 	public static class SerializedAction
 	{
 		public SerializedAction(Event e, UUID eventID, boolean b)

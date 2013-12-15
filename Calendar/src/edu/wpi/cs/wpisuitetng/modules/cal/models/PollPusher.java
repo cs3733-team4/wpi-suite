@@ -9,14 +9,9 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.models;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.HashMap;
-import java.util.UUID;
-
-import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.Session;
 

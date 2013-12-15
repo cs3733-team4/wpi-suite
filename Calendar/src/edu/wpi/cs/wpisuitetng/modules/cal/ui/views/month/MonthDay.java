@@ -189,7 +189,9 @@ public class MonthDay extends JPanel
 	public void addDisplayable(Displayable d)
 	{
 		allitems.add(d);
+		this.removeAll();
 		revalidate();
+		repaint();
 	}
 
 	/**
@@ -200,7 +202,9 @@ public class MonthDay extends JPanel
 	public void removeDisplayable(Displayable d)
 	{
 		allitems.remove(d);
+		this.removeAll();
 		revalidate();
+		repaint();
 	}
 
 	// call revalidate, not this method directly, it is an override
@@ -275,7 +279,9 @@ public class MonthDay extends JPanel
 	public void clearDisplayable()
 	{
 		allitems.clear();
+		removeAll();
 		revalidate();
+		repaint();
 	}
 
 	/**

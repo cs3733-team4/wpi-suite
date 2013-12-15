@@ -9,16 +9,10 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.models;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-
-import org.joda.time.DateTime;
-import org.joda.time.Interval;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
 
 import com.google.gson.Gson;
 
@@ -34,13 +28,8 @@ import edu.wpi.cs.wpisuitetng.modules.cal.models.PollPusher.PushedInfo;
 /**
  * This is the entity manager for the Event in the
  * EventManager module.
- *
- * @version $Revision: 1.0 $
- * @author NileshP
  */
 public class EventEntityManager implements EntityManager<Event> {
-
-	private static final DateTimeFormatter serializer = ISODateTimeFormat.basicDateTime();
 	/** The database */
 	Data db;
 	
@@ -69,6 +58,7 @@ public class EventEntityManager implements EntityManager<Event> {
 		if(!db.save(newEvent, s.getProject())) {
 			throw new WPISuiteException();
 		}
+		PollPusher.getInstance(Event.class).updated(updated(newEvent));
 		return newEvent;
 	}
 	
@@ -99,7 +89,8 @@ public class EventEntityManager implements EntityManager<Event> {
 			@Override
 			public void pushUpdates(String item)
 			{
-				stringList[0] = item;
+				// poor mans json. its only one item
+				stringList[0] = "[" + item + "]";
 				thisthread.interrupt();
 			}
 		});
@@ -142,32 +133,6 @@ public class EventEntityManager implements EntityManager<Event> {
 		}
 		
 	}
-
-	/**
-	 * Query database to retrieve events with overlapping range
-	 * @param sfrom date from, DateTime formatted as String
-	 * @param sto date to, DateTime formatted as String
-	 * @return retrieved events with overlapping range
-	 */
-	Event[] getEventsByRange(Session ses, String sfrom, String sto) {
-		DateTime from = serializer.parseDateTime(sfrom);
-		DateTime to = serializer.parseDateTime(sto);
-		List<Event> retrievedEvents = new ArrayList<>();
-		
-		Event[] all = getAll(ses);
-
-		final Interval range = new Interval(from, to);
-		
-		for (Event event : all)
-		{
-			DateTime s = event.getStart(), e = event.getEnd();
-			if (s.isBefore(e) && range.overlaps(new Interval(s, e)))
-			{
-				retrievedEvents.add(event);
-			}
-		}
-		return retrievedEvents.toArray(new Event[0]);
-	}
 	
 	/**
 	 * Retrieves all events from the database
@@ -196,7 +161,7 @@ public class EventEntityManager implements EntityManager<Event> {
 		if (model.isProjectEvent())
 			model.setProject(s.getProject());
 		db.save(model);
-		PollPusher.getInstance(Event.class).updated(json(model));
+		PollPusher.getInstance(Event.class).updated(updated(model));
 	}
 	
 
@@ -264,7 +229,7 @@ public class EventEntityManager implements EntityManager<Event> {
 			throw new WPISuiteException();
 		}
 
-		PollPusher.getInstance(Event.class).updated(updated(existingEvent));
+		PollPusher.getInstance(Event.class).updated(updated(updatedEvent));
 		
 		return existingEvent;
 		
@@ -287,8 +252,6 @@ public class EventEntityManager implements EntityManager<Event> {
 		args = Arrays.copyOfRange(args, 2, args.length);
 		switch (args[0])
 		{
-			case "filter-events-by-range":
-				return json((Object[])getEventsByRange(s, args[1], args[2]));
 			case "filter-event-by-uuid":
 				return json((Object[])getEventByUUID(s, args[1]));
 			case "poll":
@@ -311,12 +274,12 @@ public class EventEntityManager implements EntityManager<Event> {
 	
 	private String updated(Event e)
 	{
-		return json(new Event.SerializedAction(e, e.getEventID(), false));
+		return new Gson().toJson(new Event.SerializedAction(e, e.getEventID(), false));
 	}
 	
 	private String deleted(UUID id)
 	{
-		return json(new Event.SerializedAction(null, id, true));
+		return new Gson().toJson(new Event.SerializedAction(null, id, true));
 	}
 
 	/**

@@ -434,6 +434,8 @@ public class MonthCalendar extends AbstractCalendar
 		removeDisplayable(emap.get(events.getIdentification()));
 		if (added)
 			addDisplayable(events);
+		revalidate();
+		repaint();
 	}
 
 	@Override
