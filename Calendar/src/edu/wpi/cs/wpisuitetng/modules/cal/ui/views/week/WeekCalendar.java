@@ -42,6 +42,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentEvent;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
@@ -308,6 +309,16 @@ public class WeekCalendar extends AbstractCalendar
 			// Filter for selected categories
 			Collection<UUID> selectedCategories = MainPanel.getInstance().getSelectedCategories();
 			List<Event> categoryFilteredEvents = new ArrayList<Event>();
+			
+			/*// Filter commitments by date
+			List<Commitment> visibleCommitments = CommitmentModel.getInstance().getCommitments(weekStartTime, weekEndTime);
+						
+			// Add them to the list of events
+			for (Commitment c : visibleCommitments)
+			{
+				CommitmentEvent ce = new CommitmentEvent(c);
+				visibleEvents.add(ce);
+			}*/
 			
 			// Else, loop through events and filter by selected categories
 			for (Event e : visibleEvents){

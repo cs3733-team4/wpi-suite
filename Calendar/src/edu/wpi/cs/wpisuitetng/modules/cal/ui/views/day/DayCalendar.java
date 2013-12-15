@@ -30,7 +30,6 @@ import com.lowagie.text.Font;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.collisiondetection.DayPanel;
@@ -97,7 +96,7 @@ public class DayCalendar extends AbstractCalendar
 	 * Get visible events for the current day view
 	 * @return returns the list of events to display
 	 */
-	private List<Event> getVisibleEvents()
+	private List<Displayable> getVisibleEvents()
 	{
 		
 		if (MainPanel.getInstance().showEvents()){
@@ -109,14 +108,24 @@ public class DayCalendar extends AbstractCalendar
 			DateTime to = f.toDateTime();
 			
 			// Filter events by date
-			List<Event> visibleEvents = eventModel.getEvents(from, to);
+			List<Displayable> visibleEvents = eventModel.getEvents(from, to);
+			
+			/* // Filter commitments by date
+			List<Commitment> visibleCommitments = CommitmentModel.getInstance().getCommitments(from, to);
+			
+			// Add them to the list of events
+			for (Commitment c : visibleCommitments)
+			{
+				CommitmentEvent ce = new CommitmentEvent(c);
+				visibleEvents.add(ce);
+			}*/
 			
 			// Filter for selected categories
 			Collection<UUID> selectedCategories = MainPanel.getInstance().getSelectedCategories();
-			List<Event> categoryFilteredEvents = new ArrayList<Event>();
+			List<Displayable> categoryFilteredEvents = new ArrayList<Displayable>();
 			
 			// Else, loop through events and filter by selected categories
-			for (Event e : visibleEvents){
+			for (Displayable e : visibleEvents){
 				if (selectedCategories.contains(e.getCategory()))
 					categoryFilteredEvents.add(e);
 			}
@@ -124,7 +133,7 @@ public class DayCalendar extends AbstractCalendar
 			// Return list of events to be displayed
 			return categoryFilteredEvents;
 		} else {
-			return new ArrayList<Event>();
+			return new ArrayList<Displayable>();
 		}
 	}
 
@@ -156,7 +165,7 @@ public class DayCalendar extends AbstractCalendar
 	}
 
 	@Override
-	public void updateEvents(Event events, boolean added)
+	public void updateEvents(Displayable events, boolean added)
 	{
 		// at the moment, we don't care, and just re-pull from the DB. TODO: this should change
 		this.generateDay();

@@ -356,7 +356,7 @@ public class DayItem extends JPanel
 			}
 		}
 		// remote buffer overflow
-//		ratpack.remove(rows);
+		// ratpack.remove(rows);
 		ratpack.remove(rows - 1);
 		
 		
