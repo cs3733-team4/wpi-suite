@@ -94,6 +94,7 @@ public class Commitment extends AbstractModel implements Displayable
 	public Commitment()
 	{
 		super();
+		status=DEFAULT_STATUS;
 	}
 
 	/**
