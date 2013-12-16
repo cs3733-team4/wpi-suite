@@ -3,18 +3,13 @@ package edu.wpi.cs.wpisuitetng.modules.cal.models.google;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 import com.google.gdata.client.calendar.CalendarService;
-import com.google.gdata.data.DateTime;
 import com.google.gdata.data.PlainTextConstruct;
 import com.google.gdata.data.calendar.CalendarEntry;
 import com.google.gdata.data.calendar.CalendarEventEntry;
-import com.google.gdata.data.calendar.CalendarFeed;
 import com.google.gdata.data.calendar.ColorProperty;
-import com.google.gdata.data.extensions.When;
+import com.google.gdata.util.AuthenticationException;
 import com.google.gdata.util.ServiceException;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
@@ -36,7 +31,13 @@ public class GoogleSync {
 		if (instance == null || a == null)
 		{
 			Pair<String, String> nameAndPass = a.getAuthenticationInformation();
-			instance = new GoogleSync(nameAndPass.getA(), nameAndPass.getB());
+			try {
+				instance = new GoogleSync(nameAndPass.getA(), nameAndPass.getB());
+			} catch (AuthenticationException ae) {
+				a.handleError(ae);
+			} catch (MalformedURLException mue) {
+				a.handleError(mue);
+			}
 		}
 		return instance;
 	}
@@ -63,23 +64,13 @@ public class GoogleSync {
 	
 	
 	private CalendarService service;
-	private String username;
 	private URL feedURL;
 	
-	private GoogleSync(String username, String password)
-	{	
-		this.username = username;
-		try
-		{
-			service = new CalendarService("WPISuiteCalendarSync");
-			service.setUserCredentials(username, password);
-			
-			feedURL = new URL("https://www.google.com/calendar/feeds/" + username + "/private/full");
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+	private GoogleSync(String username, String password) throws AuthenticationException, MalformedURLException
+	{
+		service = new CalendarService("WPISuiteCalendarSync");
+		service.setUserCredentials(username, password);
+		feedURL = new URL("https://www.google.com/calendar/feeds/" + username + "/private/full");
 	}
 	
 	
@@ -96,6 +87,6 @@ public class GoogleSync {
 	public void addEventToCalendar(Displayable toConvert) throws IOException, ServiceException
 	{
 		CalendarEventEntry myEntry = toConvert.getGoogleCalendarEntry();
-		CalendarEventEntry insertedEntry = service.insert(feedURL, myEntry);
+		service.insert(feedURL, myEntry);
 	}
 }
