@@ -16,7 +16,6 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -25,7 +24,6 @@ import javax.swing.JPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeConstants;
 import org.joda.time.MutableDateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
@@ -60,7 +58,7 @@ public class DayPanel extends JPanel
 			public void mouseReleased(MouseEvent arg0) {
 				if(isSomethingDragging)
 				{
-					MainPanel.getInstance().display(selected.event.getStart());
+					MainPanel.getInstance().display(selected.getEvent().getStart());
 				}
 				isSomethingDragging = false;
 				selected = null;
@@ -106,10 +104,10 @@ public class DayPanel extends JPanel
 					if(!isSomethingDragging)
 					{
 						offset = arg0.getY();
-						System.out.println(offset + " " + arg0.getY() + " " + selected.event.getStart().getMinuteOfDay());
+						System.out.println(offset + " " + arg0.getY() + " " + selected.getEvent().getStart().getMinuteOfDay());
 						if(inWeekView)
 						{
-							inWeek.passTo(selected.event.getStart().getDayOfYear(),selected);
+							inWeek.passTo(selected.getEvent().getStart().getDayOfYear(),selected);
 							getParent().dispatchEvent(arg0);
 						}
 						isSomethingDragging = true;	
@@ -131,16 +129,14 @@ public class DayPanel extends JPanel
 	public void setEvents(List<Event> events, DateTime displayedDay)
 	{
 		this.date = displayedDay;
-		List<DayItem> gallery = CollisionAlgorithms.createEventsReallyNicely(events, displayedDay);
+		List<DayItem> collidingEvents = CollisionAlgorithms.createEventsReallyNicely(events, displayedDay);
 		this.displayDate = displayedDay;
 		removeAll();
 		guides.clear();
-		int i = 2;
-		for (DayItem vanGoghPainting : gallery)
+		for (DayItem dayItem : collidingEvents)
 		{
-			guides.put(vanGoghPainting.event, vanGoghPainting);
-			add(vanGoghPainting); // priceless
-			//this.setComponentZOrder(vanGoghPainting, i++);
+			guides.put(dayItem.getEvent(), dayItem);
+			add(dayItem);
 		}
 		revalidate();
 	}
@@ -158,7 +154,6 @@ public class DayPanel extends JPanel
 		{
 			g.drawLine(0, currentPosition, this.getWidth(), currentPosition);
 			currentPosition++;
-			//g.drawLine(0, currentPosition, this.getWidth(), currentPosition);
 			currentPosition += distanceBetweenBorders;
 		}
 		
@@ -168,7 +163,6 @@ public class DayPanel extends JPanel
 		{
 			g.drawLine(0, currentPosition, this.getWidth(), currentPosition);
 			currentPosition++;
-			//g.drawLine(0, currentPosition, this.getWidth(), currentPosition);
 			currentPosition += distanceBetweenBorders;
 		}
 		
@@ -227,14 +221,4 @@ public class DayPanel extends JPanel
 		d.setMinuteOfHour(min);
 		return d.toDateTime();
 	}
-	
-// //TODO: fix so that we can easily re-compute a part of the events stack	
-//	public void removeEvent(Event event)
-//	{
-//		VanGoghPainting painting = guides.get(event);
-//		remove(painting); // sell at auction in Christie's or Sotheby's
-//		guides.remove(event);
-//	}
-
-	
 }
