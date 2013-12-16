@@ -379,6 +379,6 @@ public class Commitment extends AbstractModel implements Displayable
 			return mDisplayedDay.toDateTime();
 		}
 		else
-			return this.getDate().plusMinutes(30);
+			return this.getDate().plusMinutes(30); 
 	}
 }
