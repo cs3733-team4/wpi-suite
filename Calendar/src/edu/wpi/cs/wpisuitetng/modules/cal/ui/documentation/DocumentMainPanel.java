@@ -121,22 +121,21 @@ public class DocumentMainPanel extends JFrame{
         webPage.addHyperlinkListener(new HyperlinkListener() {
             public void hyperlinkUpdate(HyperlinkEvent e) {
                 if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED)
-                      	try {
-                      			if (doAction(e.getURL().toString()))
-                      				return;
-                      			else if (!e.getURL().toString().contains("html"))
-                      			{
-                      				BareBonesBrowserLaunch.openURL(e.getURL().toString());
-                      				return;
-                      			}
-                      			else
-                      				webPage.setPage(e.getURL());
-                            }
-                            catch(IOException | IllegalArgumentException ioe) {
-                                JOptionPane.showMessageDialog(null,ioe);
-                            }
-                    }//end hyperlinkUpdate()
-                });//end HyperlinkListener
+                {
+          			if (doAction(e.getURL().toString()))
+          				return;
+          			else if (!e.getURL().toString().contains("html"))
+          			{
+          				BareBonesBrowserLaunch.openURL(e.getURL().toString());
+          				return;
+          			}
+          			else
+          			{
+          				goToPage(e.getURL().toString().replace(serverLocation, ""));
+          			}
+                }
+            }//end hyperlinkUpdate()
+        });//end HyperlinkListener
 
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         tocView.add(openInBrowser, BorderLayout.NORTH);
@@ -324,6 +323,11 @@ public class DocumentMainPanel extends JFrame{
     	else if (actionPath.contains("#SelectDescriptionInNewCommitment"))
     	{
     		setSelectedForCommitment(SelectableField.DESCRIPTION);
+			return true;
+    	}
+    	else if (actionPath.contains("#SelectNameInNewCommitment"))
+    	{
+    		setSelectedForCommitment(SelectableField.NAME);
 			return true;
     	}
     	else if (actionPath.contains("#SwitchToDayView"))
