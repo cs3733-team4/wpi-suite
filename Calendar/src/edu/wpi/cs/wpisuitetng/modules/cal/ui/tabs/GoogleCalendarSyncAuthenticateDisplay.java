@@ -4,6 +4,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.MalformedURLException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -12,6 +13,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 
+import com.google.gdata.util.AuthenticationException;
+
+import edu.wpi.cs.wpisuitetng.modules.cal.models.google.AuthRequest;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.google.GoogleSync;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.cache.Pair;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.field.JSearchPasswordField;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.field.JSearchTextField;
 
@@ -58,7 +65,37 @@ public class GoogleCalendarSyncAuthenticateDisplay extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
-				JOptionPane.showMessageDialog(null, "Eggs are not supposed to be green.");
+				MainPanel.getInstance()
+						 .setGoogleCalendarSyncer(GoogleSync.getInstance(new AuthRequest()
+						 {
+							@Override
+							public Pair<String, String> getAuthenticationInformation()
+							{
+								return new Pair<String, String>(username.getText(), password.getText());
+							}
+
+							@Override
+							public void handleError(AuthenticationException ae)
+							{
+								//this will error on screen soon
+								System.out.println("YOU FAILED AUTHENTICATION");
+							}
+
+							@Override
+							public void handleError(MalformedURLException ae)
+							{
+								System.out.println("you have a broken google account");
+							}
+
+							@Override
+							public void succede() {
+								//close the tab
+								System.out.println("YISSSSS");
+							}
+							
+							
+							 
+						 }));	 
 			}
 			
 		});

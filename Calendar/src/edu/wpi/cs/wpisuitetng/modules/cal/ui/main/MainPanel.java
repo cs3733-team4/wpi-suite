@@ -47,6 +47,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.google.GoogleSync;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs.AddCommitmentDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs.AddEventDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs.CategoryManager;
@@ -93,8 +94,8 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	private ViewSize view = ViewSize.Month;
 	private static MainPanel instance;
 	private Displayable currentSelected;
+	private GoogleSync googleCalendarSyncer;
 	
-	//TODO: "make this better" -Patrick
 	public boolean showPersonal = true;
 	public boolean showTeam = true;
 
@@ -714,5 +715,19 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	public DateTime getSelectedDay()
 	{
 		return this.lastTime;
+	}
+
+	/**
+	 * @return the googleCalendarSyncer
+	 */
+	public GoogleSync getGoogleCalendarSyncer() {
+		return googleCalendarSyncer;
+	}
+
+	/**
+	 * @param googleCalendarSyncer the googleCalendarSyncer to set
+	 */
+	public void setGoogleCalendarSyncer(GoogleSync googleCalendarSyncer) {
+		this.googleCalendarSyncer = googleCalendarSyncer;
 	}
 }
