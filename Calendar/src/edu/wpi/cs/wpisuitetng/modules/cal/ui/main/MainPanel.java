@@ -123,31 +123,26 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 				
 				@Override
 				public void windowOpened(WindowEvent arg0) {
-					// TODO Auto-generated method stub
 					
 				}
 				
 				@Override
 				public void windowIconified(WindowEvent arg0) {
-					// TODO Auto-generated method stub
 					
 				}
 				
 				@Override
 				public void windowDeiconified(WindowEvent arg0) {
-					// TODO Auto-generated method stub
 					
 				}
 				
 				@Override
 				public void windowDeactivated(WindowEvent arg0) {
-					// TODO Auto-generated method stub
 					
 				}
 				
 				@Override
 				public void windowClosing(WindowEvent arg0) {
-					// TODO Auto-generated method stub
 					
 				}
 				
@@ -159,7 +154,6 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 				
 				@Override
 				public void windowActivated(WindowEvent arg0) {
-					// TODO Auto-generated method stub
 					
 				}
 			});
@@ -202,7 +196,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		// Components of center panel
 		this.mCalendar = monthCal = new MonthCalendar(DateTime.now()); // Monthly calendar
 		
-		this.dayCal = new DayCalendar(DateTime.now(), events); // Day calendar (hidden)
+		this.dayCal = new DayCalendar(DateTime.now()); // Day calendar (hidden)
 		this.yearCal = new YearCalendar(DateTime.now(), events); // Year calendar (hidden)
 		this.weekCal = new WeekCalendar(DateTime.now()); // Year calendar (hidden)
 		

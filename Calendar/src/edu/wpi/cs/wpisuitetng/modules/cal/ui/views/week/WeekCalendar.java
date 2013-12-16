@@ -14,11 +14,9 @@ import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.UUID;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoundedRangeModel;
@@ -298,24 +296,7 @@ public class WeekCalendar extends AbstractCalendar
 	 */
 	private List<Event> getVisibleEvents(DateTime curDay)
 	{
-		
-		if (MainPanel.getInstance().showEvents()){
-			List<Event> visibleEvents =  EventModel.getInstance().getEvents(weekStartTime, weekEndTime);
-			
-			// Filter for selected categories
-			Collection<UUID> selectedCategories = MainPanel.getInstance().getSelectedCategories();
-			List<Event> categoryFilteredEvents = new ArrayList<Event>();
-			
-			// Else, loop through events and filter by selected categories
-			for (Event e : visibleEvents){
-				if (selectedCategories.contains(e.getCategory()))
-					categoryFilteredEvents.add(e);
-			}
-			
-			// Return list of events to be displayed
-			return categoryFilteredEvents;
-		} else
-			return new ArrayList<Event>();
+		return EventModel.getInstance().getEvents(weekStartTime, weekEndTime);
 	}
 
 	@Override
