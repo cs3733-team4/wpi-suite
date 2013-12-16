@@ -16,7 +16,12 @@ public class DisplayableSyncer implements Runnable {
 		this.d = d;
 		this.gs = gs;
 		
-		new Thread(this).start();
+		if (gs != null)
+		{
+			new Thread(this).start();
+		}
+		
+		System.out.println("gonna sync event!");
 	}
 	
 	@Override

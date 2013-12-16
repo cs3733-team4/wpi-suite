@@ -84,7 +84,27 @@ public class EventModel
 		List<Event> filteredEvents = new ArrayList<Event>();
 		boolean showPersonal = MainPanel.getInstance().showPersonal;
 		boolean showTeam = MainPanel.getInstance().showTeam;
-
+		
+		//add all database events to the gcal syncer
+		//pulls all events back out of gcal syncer before filter;
+		GoogleSync gs = MainPanel.getInstance().getGoogleCalendarSyncer();
+		if (gs != null)
+		{
+			System.out.println("There were " + filteredEvents.size() + " Events before the sync");
+			try
+			{
+				gs.pullEventsBetween(from, to);
+				gs.addAllDisplayablesToMap(filteredEvents);
+				
+				filteredEvents = gs.getAllEvents();
+			}
+			catch(Exception e){
+				e.printStackTrace();
+			}
+			System.out.println("there are " + filteredEvents.size() + " Events after the sync");
+		}
+		
+		
 		// loop through and add only if isProjectEvent() matches corresponding
 		// boolean
 		for (Event e : events)
@@ -99,10 +119,26 @@ public class EventModel
 			}
 		}
 		
-		for(Event e : events)
+		System.out.println("there are " + filteredEvents.size() + " Events after the filter");
+		if (filteredEvents.size() > 0)
 		{
-			new DisplayableSyncer(MainPanel.getInstance().getGoogleCalendarSyncer(), e);
+			System.out.println(filteredEvents.get(0).getStart().toString(ISODateTimeFormat.basicDateTime()));
+			System.out.println(filteredEvents.get(0).getEnd().toString(ISODateTimeFormat.basicDateTime()));
 		}
+		//for(Event e : events)
+		//{
+		//	new DisplayableSyncer(MainPanel.getInstance().getGoogleCalendarSyncer(), e);
+		//}
+		
+		//GoogleSync gs = MainPanel.getInstance().getGoogleCalendarSyncer();
+		//if (gs != null)
+		//{
+		//	try {
+		//		gs.pullEventsBetween(from, to);
+		//	} catch (IOException | ServiceException e1) {
+		//		e1.printStackTrace();
+		//	}
+		//}
 		
 		return filteredEvents;
 	}

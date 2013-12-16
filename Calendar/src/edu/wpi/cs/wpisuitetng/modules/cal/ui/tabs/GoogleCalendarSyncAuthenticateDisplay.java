@@ -78,6 +78,7 @@ public class GoogleCalendarSyncAuthenticateDisplay extends JPanel {
 							{
 								//this will error on screen soon
 								System.out.println("YOU FAILED AUTHENTICATION");
+								password.setText("");
 							}
 
 							@Override

@@ -26,6 +26,7 @@ import com.google.gson.Gson;
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.cache.EventDualityFactory;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
@@ -512,19 +513,12 @@ public class Event extends AbstractModel implements Displayable
 
 	@Override
 	public CalendarEventEntry getGoogleCalendarEntry() {
-		CalendarEventEntry myEntry = new CalendarEventEntry();
-
-		myEntry.setTitle(new PlainTextConstruct(this.getName()));
-		myEntry.setContent(new PlainTextConstruct(this.getDescription()));
-
-		//oh what fun it is to have two identically named classes
-		com.google.gdata.data.DateTime startTime = new com.google.gdata.data.DateTime(this.getStart().toDate());
-		com.google.gdata.data.DateTime endTime = new com.google.gdata.data.DateTime(this.getEnd().toDate());
-		When eventTimes = new When();
-		eventTimes.setStartTime(startTime);
-		eventTimes.setEndTime(endTime);
-		myEntry.addTime(eventTimes);
-		
-		return myEntry;
+		EventDualityFactory edf = EventDualityFactory.init(name);
+		edf.setDisplayableEnd(end)
+		   .setDisplayableStart(start)
+		   .setDisplayableID(eventID)
+		   .setDisplayableDescription(getDescription())
+		   .setProject(isProjectEvent);
+		return edf.getDuality().getB();
 	}
 }

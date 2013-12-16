@@ -15,7 +15,7 @@ public class Pair<A, B> {
 		return a;
 	}
 
-	private void setA(A a) {
+	public void setA(A a) {
 		this.a = a;
 	}
 
@@ -23,7 +23,24 @@ public class Pair<A, B> {
 		return b;
 	}
 
-	private void setB(B b) {
+	public void setB(B b) {
 		this.b = b;
+	}
+	
+	@Override
+	public boolean equals(Object other)
+	{
+		if (!(other instanceof Pair))
+		{
+			return false;
+		}
+		Pair<?, ?> casted = (Pair<?, ?>)other;
+		return casted.getA().equals(getA()) && casted.getB().equals(getB());
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return this.getA().hashCode() ^ this.getB().hashCode();
 	}
 }
