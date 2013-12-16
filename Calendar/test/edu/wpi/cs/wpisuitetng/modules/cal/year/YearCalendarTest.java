@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import java.lang.reflect.Field;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventModel;
 
 /**
  * Tests for MonthItem class

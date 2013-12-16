@@ -12,7 +12,7 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.collisiondetection;
 import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 
 /**
  * Class used for day calendar collisions

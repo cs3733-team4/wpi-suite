@@ -23,7 +23,8 @@ import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
 import edu.wpi.cs.wpisuitetng.modules.cal.MockData;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.EventEntityManager;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.server.EventEntityManager;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 

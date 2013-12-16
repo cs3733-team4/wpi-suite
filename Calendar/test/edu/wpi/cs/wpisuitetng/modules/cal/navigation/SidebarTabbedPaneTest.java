@@ -25,12 +25,12 @@ import javax.swing.JCheckBox;
 import org.junit.Test;
 import org.junit.BeforeClass;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryModel;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentModel;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CommitmentModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Category;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.navigation.SidebarTabbedPane;
 import edu.wpi.cs.wpisuitetng.modules.cal.MockNetwork;
 import edu.wpi.cs.wpisuitetng.modules.cal.ReflectUtils;
@@ -210,7 +210,7 @@ public class SidebarTabbedPaneTest {
 		Category blue=new Category();
 		blue.setName("blue");
 		blue.setColor(Color.blue);
-		CategoryModel.getInstance().putCategory(blue);
+		CategoryModel.getInstance().put(blue);
 		
 		SidebarTabbedPane sidebar = new SidebarTabbedPane();
 		
@@ -228,7 +228,7 @@ public class SidebarTabbedPaneTest {
 		Category blue=new Category();
 		blue.setName("blue");
 		blue.setColor(Color.blue);
-		CategoryModel.getInstance().putCategory(blue);
+		CategoryModel.getInstance().put(blue);
 		
 		SidebarTabbedPane sidebar = new SidebarTabbedPane();
 		
@@ -241,7 +241,7 @@ public class SidebarTabbedPaneTest {
 		Category red=new Category();
 		red.setName("red");
 		red.setColor(Color.red);
-		CategoryModel.getInstance().putCategory(red);
+		CategoryModel.getInstance().put(red);
 		
 		assertEquals("The filtering tab list still only has the old categories,", 2, sidebar.getSelectedCategories().size());
 		sidebar.refreshFilterTab();
@@ -257,12 +257,12 @@ public class SidebarTabbedPaneTest {
 		Category blue=new Category();
 		blue.setName("blue");
 		blue.setColor(Color.blue);
-		CategoryModel.getInstance().putCategory(blue);
+		CategoryModel.getInstance().put(blue);
 		
 		Category red=new Category();
 		red.setName("red");
 		red.setColor(Color.red);
-		CategoryModel.getInstance().putCategory(red);
+		CategoryModel.getInstance().put(red);
 		
 		SidebarTabbedPane sidebar = new SidebarTabbedPane();
 		
@@ -289,17 +289,17 @@ public class SidebarTabbedPaneTest {
 		Category blue=new Category();
 		blue.setName("blue");
 		blue.setColor(Color.blue);
-		CategoryModel.getInstance().putCategory(blue);
+		CategoryModel.getInstance().put(blue);
 		
 		Category red=new Category();
 		red.setName("red");
 		red.setColor(Color.red);
-		CategoryModel.getInstance().putCategory(red);
+		CategoryModel.getInstance().put(red);
 		
 		Category green=new Category();
 		green.setName("green");
 		green.setColor(Color.green);
-		CategoryModel.getInstance().putCategory(green);
+		CategoryModel.getInstance().put(green);
 		
 		SidebarTabbedPane sidebar = new SidebarTabbedPane();
 		

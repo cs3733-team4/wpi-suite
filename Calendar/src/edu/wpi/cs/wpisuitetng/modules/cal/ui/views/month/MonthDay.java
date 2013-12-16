@@ -34,9 +34,9 @@ import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.DayStyle;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 
@@ -48,9 +48,9 @@ public class MonthDay extends JPanel
 	private boolean borderTop;
 	JLabel header = new JLabel();
 	private Displayable selected;
-	private List<Event> events = new ArrayList<Event>();
-	private List<Commitment> commitments = new ArrayList<Commitment>();
+	private List<Displayable> allitems = new ArrayList<>();
 	private DateTime day;
+	private DayStyle style;
 	private MonthCalendar parent;
 	private boolean isSelected = false;
 
@@ -60,6 +60,8 @@ public class MonthDay extends JPanel
 	{
 		this.day = initDay;
 		this.parent = parent;
+		this.style = style;
+		Color grayit = Colors.TABLE_GRAY_HEADER, textit = Colors.TABLE_TEXT, bg = Colors.TABLE_BACKGROUND;
 		switch (style)
 		{
 			case Normal:
@@ -216,47 +218,28 @@ public class MonthDay extends JPanel
 	}
 
 	/**
-	 * Add an event to a given day of the month
-	 * 
-	 * @param e
+	 * Add an event or commitment to a given day of the month
+	 * @param d the displayable to add
 	 */
-	public void addEvent(Event e)
+	public void addDisplayable(Displayable d)
 	{
-		this.events.add(e);
+		allitems.add(d);
+		this.removeAll();
 		revalidate();
+		repaint();
 	}
 
 	/**
-	 * Add a commitment to a given day of the month.
+	 * removes a displayable from this monthday
 	 * 
-	 * @param c
+	 * @param d the commitment or event to remove
 	 */
-	public void addCommitment(Commitment c)
+	public void removeDisplayable(Displayable d)
 	{
-		this.commitments.add(c);
+		allitems.remove(d);
+		this.removeAll();
 		revalidate();
-	}
-
-	/**
-	 * Remove an event from a given day of the month
-	 * 
-	 * @param e
-	 */
-	public void removeEvent(Event e)
-	{
-		this.events.remove(e);
-		revalidate();
-	}
-
-	/**
-	 * removes a commitment from this monthday
-	 * 
-	 * @param c the commitment to remove
-	 */
-	public void removeCommitment(Commitment c)
-	{
-		this.commitments.remove(c);
-		revalidate();
+		repaint();
 	}
 
 	// call revalidate, not this method directly, it is an override
@@ -268,10 +251,6 @@ public class MonthDay extends JPanel
 		removeAll();
 		add(header);
 		total -= header.getHeight();
-		
-		ArrayList<Displayable> allitems = new ArrayList<>(events.size() + commitments.size());
-		allitems.addAll(events);
-		allitems.addAll(commitments);
 		
 		Collections.sort(allitems, new Comparator<Displayable>() {
 
@@ -332,19 +311,12 @@ public class MonthDay extends JPanel
 	/**
 	 * remove all events from the monthday
 	 */
-	public void clearEvents()
+	public void clearDisplayable()
 	{
-		events.clear();
+		allitems.clear();
+		removeAll();
 		revalidate();
-	}
-
-	/**
-	 * remove all commitments from the monthday
-	 */
-	public void clearComms()
-	{
-		commitments.clear();
-		revalidate();
+		repaint();
 	}
 
 	/**
@@ -398,7 +370,7 @@ public class MonthDay extends JPanel
 	public void setSelected(boolean b)
 	{
 		isSelected=b;
-		this.header.setBackground(b ? Colors.SELECTED_BACKGROUND : grayit);
+		this.header.setBackground(b ? Colors.SELECTED_BACKGROUND : (this.style == DayStyle.OutOfMonth ? grayit : Colors.TABLE_GRAY_HEADER) );
 		this.header.setForeground(b ? Color.WHITE : Colors.TABLE_GRAY_TEXT);
 	}
 	

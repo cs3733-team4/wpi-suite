@@ -9,17 +9,20 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month;
 
-import static org.junit.Assert.*;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthDay;
-import edu.wpi.cs.wpisuitetng.modules.cal.DayStyle;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
+
+import edu.wpi.cs.wpisuitetng.modules.cal.DayStyle;
+import edu.wpi.cs.wpisuitetng.modules.cal.ReflectUtils;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 
 public class MonthDayTest {
 
@@ -39,19 +42,18 @@ public class MonthDayTest {
 									 .addStartTime(new DateTime(2000, 10, 10, 0, 0))
 									 .addEndTime(new DateTime(2000, 10, 10, 0, 30));
 									
-		MD.addEvent(eatIcecream);
+		MD.addDisplayable(eatIcecream);
 		
-		Field f= MD.getClass().getDeclaredField("events");
-		f.setAccessible(true);
+		List<Displayable> f= ReflectUtils.getFieldValue(MD, "allitems");
 		
-		assertTrue("New events can be added to a MonthDay", ((List<Event>) f.get(MD)).contains(eatIcecream));
+		assertTrue("New events can be added to a MonthDay", f.contains(eatIcecream));
 		
 		Event throwUpIcecream=new Event().addName("Throw up icecream")
 				 .addDescription("Ugh!")
 				 .addStartTime(new DateTime(2000, 10, 10, 0, 30))
 				 .addEndTime(new DateTime(2000, 10, 10, 1, 30));
-		MD.addEvent(throwUpIcecream);
-		assertTrue("Multiple events can be added to a MonthDay", ((List<Event>) f.get(MD)).contains(throwUpIcecream));
+		MD.addDisplayable(throwUpIcecream);
+		assertTrue("Multiple events can be added to a MonthDay", f.contains(throwUpIcecream));
 	}
 	
 	@Test
@@ -62,16 +64,15 @@ public class MonthDayTest {
 				 					 .addStartTime(new DateTime(2000, 10, 10, 0, 0))
 				 					 .addEndTime(new DateTime(2000, 10, 10, 0, 30));
 				
-		MD.addEvent(eatIcecream);
-		
-		Field f= MD.getClass().getDeclaredField("events");
-		f.setAccessible(true);
+		MD.addDisplayable(eatIcecream);
 
-		assertTrue("Events can be added,", ((List<Event>) f.get(MD)).contains(eatIcecream));
-		
-		MD.removeEvent(eatIcecream);
+		List<Displayable> f= ReflectUtils.getFieldValue(MD, "allitems");
 
-		assertFalse("Events can be removed from a MonthDay", ((List<Event>) f.get(MD)).contains(eatIcecream));
+		assertTrue("Events can be added,", f.contains(eatIcecream));
+		
+		MD.removeDisplayable(eatIcecream);
+
+		assertFalse("Events can be removed from a MonthDay", f.contains(eatIcecream));
 	}
 	
 	@Test
@@ -82,21 +83,21 @@ public class MonthDayTest {
 				 					 .addStartTime(new DateTime(2000, 10, 10, 0, 0))
 				 					 .addEndTime(new DateTime(2000, 10, 10, 0, 30));
 				
-		MD.addEvent(eatIcecream);
+		MD.addDisplayable(eatIcecream);
 		
 		Event throwUpIcecream=new Event().addName("Throw up icecream")
 										 .addDescription("Ugh!")
 										 .addStartTime(new DateTime(2000, 10, 10, 0, 30))
 										 .addEndTime(new DateTime(2000, 10, 10, 1, 30));
-		MD.addEvent(throwUpIcecream);
+		MD.addDisplayable(throwUpIcecream);
 		
-		MD.removeEvent(throwUpIcecream);
+		MD.removeDisplayable(throwUpIcecream);
 		
-		Field f= MD.getClass().getDeclaredField("events");
-		f.setAccessible(true);
+
+		List<Displayable> f= ReflectUtils.getFieldValue(MD, "allitems");
 		
-		assertFalse("Events can be removed from a MonthDay", ((List<Event>) f.get(MD)).contains(throwUpIcecream));
-		assertTrue("Without removing any of the other events", ((List<Event>) f.get(MD)).contains(eatIcecream));
+		assertFalse("Events can be removed from a MonthDay", f.contains(throwUpIcecream));
+		assertTrue("Without removing any of the other events", f.contains(eatIcecream));
 		
 		
 		
@@ -104,13 +105,13 @@ public class MonthDayTest {
 				 					 .addDescription("Try to sell me bad icecream, will he?")
 				 					 .addStartTime(new DateTime(2000, 10, 10, 1, 30))
 				 					 .addEndTime(new DateTime(2000, 10, 10, 4, 0));
-		MD.addEvent(throwUpIcecream);
-		MD.addEvent(seekRevenge);
+		MD.addDisplayable(throwUpIcecream);
+		MD.addDisplayable(seekRevenge);
 		
-		MD.removeEvent(throwUpIcecream);
+		MD.removeDisplayable(throwUpIcecream);
 		
-		assertTrue("Removing events between other events still won't affect the other events", ((List<Event>) f.get(MD)).contains(eatIcecream));
-		assertTrue("Removing events between other events still won't affect the other events", ((List<Event>) f.get(MD)).contains(seekRevenge));
+		assertTrue("Removing events between other events still won't affect the other events", f.contains(eatIcecream));
+		assertTrue("Removing events between other events still won't affect the other events", f.contains(seekRevenge));
 	}
 	
 	@Test
@@ -120,20 +121,19 @@ public class MonthDayTest {
 									 .addDescription("Eat icecream by today!")
 									 .setDueDate(new DateTime(2000, 10, 10, 0, 0));
 									
-		MD.addCommitment(icecreamDay);
+		MD.addDisplayable(icecreamDay);
 		
-		Field f= MD.getClass().getDeclaredField("commitments");
-		f.setAccessible(true);
+		List<Displayable> f= ReflectUtils.getFieldValue(MD, "allitems");
 		
-		assertTrue("New commitments can be added to a MonthDay", ((List<Commitment>) f.get(MD)).contains(icecreamDay));
+		assertTrue("New commitments can be added to a MonthDay", f.contains(icecreamDay));
 		
 		Commitment venganceDay=new Commitment().addName("Vengance day")
 				 .addDescription("Exact vengance by today!")
 				 .setDueDate(new DateTime(2000, 10, 10, 0, 30));
-		MD.addCommitment(venganceDay);
+		MD.addDisplayable(venganceDay);
 		
-		assertTrue("Multiple commitments can be added to a MonthDay", ((List<Event>) f.get(MD)).contains(icecreamDay));
-		assertTrue("Multiple commitments can be added to a MonthDay", ((List<Event>) f.get(MD)).contains(venganceDay));
+		assertTrue("Multiple commitments can be added to a MonthDay", f.contains(icecreamDay));
+		assertTrue("Multiple commitments can be added to a MonthDay", f.contains(venganceDay));
 	}
 	
 	@Test
@@ -143,16 +143,16 @@ public class MonthDayTest {
 				 					 .addDescription("Eat icecream by today!")
 				 					 .setDueDate(new DateTime(2000, 10, 10, 0, 0));
 				
-		MD.addCommitment(icecreamDay);
+		MD.addDisplayable(icecreamDay);
 		
-		Field f= MD.getClass().getDeclaredField("commitments");
-		f.setAccessible(true);
+
+		List<Displayable> f= ReflectUtils.getFieldValue(MD, "allitems");
 		
-		assertTrue("Commitments can be added,", ((List<Commitment>) f.get(MD)).contains(icecreamDay));
+		assertTrue("Commitments can be added,",f.contains(icecreamDay));
 		
-		MD.removeCommitment(icecreamDay);
+		MD.removeDisplayable(icecreamDay);
 		
-		assertFalse("and removed from a MonthDay", ((List<Commitment>) f.get(MD)).contains(icecreamDay));
+		assertFalse("and removed from a MonthDay", f.contains(icecreamDay));
 	}
 	
 	@Test
@@ -162,20 +162,20 @@ public class MonthDayTest {
 				 					 .addDescription("Eat icecream by today!")
 				 					 .setDueDate(new DateTime(2000, 10, 10, 0, 0));
 				
-		MD.addCommitment(icecreamDay);
+		MD.addDisplayable(icecreamDay);
 		
 		Commitment venganceDay=new Commitment().addName("Vengance day")
 										 .addDescription("Exact vengace by today!")
 										 .setDueDate(new DateTime(2000, 10, 10, 0, 30));
-		MD.addCommitment(venganceDay);
+		MD.addDisplayable(venganceDay);
 		
-		MD.removeCommitment(venganceDay);
+		MD.removeDisplayable(venganceDay);
 		
-		Field f= MD.getClass().getDeclaredField("commitments");
-		f.setAccessible(true);
+
+		List<Displayable> f= ReflectUtils.getFieldValue(MD, "allitems");
 		
-		assertFalse("Commitments can be removed from a MonthDay", ((List<Commitment>) f.get(MD)).contains(venganceDay));
-		assertTrue("Without removing any of the other commitments", ((List<Commitment>) f.get(MD)).contains(icecreamDay));
+		assertFalse("Commitments can be removed from a MonthDay", f.contains(venganceDay));
+		assertTrue("Without removing any of the other commitments", f.contains(icecreamDay));
 	}
 
 }

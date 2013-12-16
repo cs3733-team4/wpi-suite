@@ -18,8 +18,8 @@ import javax.swing.JLabel;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 
 public class WeekMultidayEventItem extends JLabel {
 

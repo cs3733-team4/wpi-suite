@@ -22,8 +22,8 @@ import javax.swing.event.DocumentListener;
 import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Category;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.DatePickerListener;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 
@@ -62,8 +62,8 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		nameTextField.setText(mCommitment.getName());
 		startTimeDatePicker.setDateTime(mCommitment.getDate());
 		participantsTextField.setText(mCommitment.getParticipants());
-		this.rdbtnPersonal.setSelected(!mCommitment.isProjectCommitment());
-		this.rdbtnTeam.setSelected(mCommitment.isProjectCommitment());
+		this.rdbtnPersonal.setSelected(!mCommitment.isProjectwide());
+		this.rdbtnTeam.setSelected(mCommitment.isProjectwide());
 		descriptionTextArea.setText(mCommitment.getDescription());
 		if (mCommitment.getAssociatedCategory()!=null)
 			this.eventCategoryPicker.setSelectedItem(mCommitment.getAssociatedCategory());

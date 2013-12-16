@@ -10,10 +10,7 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day;
 
 import java.awt.BorderLayout;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoundedRangeModel;
@@ -30,9 +27,9 @@ import org.joda.time.format.DateTimeFormatter;
 import com.lowagie.text.Font;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.collisiondetection.DayPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
@@ -42,21 +39,16 @@ public class DayCalendar extends AbstractCalendar
 {
 
 	private DateTime time;
-	private MainPanel mainPanel;
 	private DayPanel current;
 	
 	private JPanel holder = new JPanel();
 	private JScrollPane scroll = new JScrollPane(holder);
 
-	private EventModel eventModel;
-
 	private DateTimeFormatter titleFmt = DateTimeFormat.forPattern("EEEE, MMM d, yyyy");
 
-	public DayCalendar(DateTime on, EventModel emodel)
+	public DayCalendar(DateTime on)
 	{
-		this.mainPanel = MainPanel.getInstance();
 		this.time = on;
-		eventModel = emodel;
 		scroll.setBackground(Colors.TABLE_BACKGROUND);
 		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -93,7 +85,7 @@ public class DayCalendar extends AbstractCalendar
 		day *= (jsb.getMaximum()) - jsb.getMinimum();
 		jsb.setValue((int)day);
 		// notify mini-calendar to change
-		mainPanel.miniMove(time);
+		MainPanel.getInstance().miniMove(time);
 	}
 	
 	/**
@@ -102,33 +94,13 @@ public class DayCalendar extends AbstractCalendar
 	 */
 	private List<Event> getVisibleEvents()
 	{
-		
-		if (MainPanel.getInstance().showEvents()){
-			// Set up from and to datetime for search
-			MutableDateTime f = new MutableDateTime(time);
-			f.setMillisOfDay(0);
-			DateTime from = f.toDateTime();
-			f.addDays(1);
-			DateTime to = f.toDateTime();
-			
-			// Filter events by date
-			List<Event> visibleEvents = eventModel.getEvents(from, to);
-			
-			// Filter for selected categories
-			Collection<UUID> selectedCategories = MainPanel.getInstance().getSelectedCategories();
-			List<Event> categoryFilteredEvents = new ArrayList<Event>();
-			
-			// Else, loop through events and filter by selected categories
-			for (Event e : visibleEvents){
-				if (selectedCategories.contains(e.getCategory()))
-					categoryFilteredEvents.add(e);
-			}
-			
-			// Return list of events to be displayed
-			return categoryFilteredEvents;
-		} else {
-			return new ArrayList<Event>();
-		}
+		// Set up from and to datetime for search
+		MutableDateTime f = new MutableDateTime(time);
+		f.setMillisOfDay(0);
+		DateTime from = f.toDateTime();
+		f.addDays(1);
+		DateTime to = f.toDateTime();
+		return EventModel.getInstance().getEvents(from, to);
 	}
 
 	@Override
@@ -154,12 +126,12 @@ public class DayCalendar extends AbstractCalendar
 
 		this.current.repaint();
 		
-		mainPanel.revalidate();
-		mainPanel.repaint();
+		MainPanel.getInstance().revalidate();
+		MainPanel.getInstance().repaint();
 	}
 
 	@Override
-	public void updateEvents(Event events, boolean added)
+	public void updateDisplayable(Displayable events, boolean added)
 	{
 		// at the moment, we don't care, and just re-pull from the DB. TODO: this should change
 		this.generateDay();

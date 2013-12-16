@@ -13,9 +13,7 @@ import javax.swing.JComponent;
 
 import org.joda.time.DateTime;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
 
 /**
  * Abstract calendar is used to abstract month/week/day/year view
@@ -43,14 +41,14 @@ public abstract class AbstractCalendar extends JComponent
 	public abstract void display(DateTime newTime);
 	
 	/**
-	 * Notifies the calendar that the local client has changed an event.
-	 * NOTE: updateEvents is only used when updating/creating/deleting events
+	 * Notifies the calendar that the local client has changed an event/commitment.
+	 * NOTE: updateDisplayable is only used when updating/creating/deleting events
 	 * and is not used to pass ALL the events in. The AC should get the model
 	 * and request from it all events.
-	 * @param event The modified event
+	 * @param event The modified displayable
 	 * @param added Did we add/edit it or was it deleted (false)
 	 */
-	public abstract void updateEvents(Event event, boolean added);
+	public abstract void updateDisplayable(Displayable event, boolean added);
 	
 	/**
 	 * Select the given displayable via UI changes

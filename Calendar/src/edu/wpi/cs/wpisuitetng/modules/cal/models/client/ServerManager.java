@@ -7,7 +7,7 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.cal.models;
+package edu.wpi.cs.wpisuitetng.modules.cal.models.client;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,10 +45,12 @@ public class ServerManager {
 			e1.printStackTrace();
 		}
 		final ArrayList<T> events = new ArrayList<T>();
+		final Exception ex[] = new Exception[1];
 		
 		// Send a request to the core to save this message
 		final Request request = Network.getInstance().makeRequest(path + glue(args),
 				HttpMethod.GET);
+		request.setReadTimeout(30000);
 		request.addObserver(new RequestObserver() {
 
 			@Override
@@ -69,7 +71,8 @@ public class ServerManager {
 			@Override
 			public void fail(IRequest iReq, Exception exception) {
 				System.err.println("The request to select events failed:");
-				System.err.println(iReq.getResponse().getBody());
+				System.err.println(iReq.getUrl());
+				ex[0] = exception; 
 				sem.release();
 			}
 		}); // add an observer to process the response
@@ -83,6 +86,8 @@ public class ServerManager {
 			} catch (InterruptedException e) {
 			}
 		}
+		if (ex[0] != null)
+			throw new RuntimeException(ex[0]);
 		return events;
 	}
 	

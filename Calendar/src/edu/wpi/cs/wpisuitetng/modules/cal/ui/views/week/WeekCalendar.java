@@ -11,15 +11,12 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.week;
 
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.UUID;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoundedRangeModel;
@@ -41,15 +38,13 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentModel;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.DayGridLabel;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.collisiondetection.DayPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.collisiondetection.DayItem;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.collisiondetection.DayPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
 
@@ -314,24 +309,7 @@ public class WeekCalendar extends AbstractCalendar
 	 */
 	private List<Event> getVisibleEvents(DateTime curDay)
 	{
-		
-		if (MainPanel.getInstance().showEvents()){
-			List<Event> visibleEvents =  EventModel.getInstance().getEvents(weekStartTime, weekEndTime);
-			
-			// Filter for selected categories
-			Collection<UUID> selectedCategories = MainPanel.getInstance().getSelectedCategories();
-			List<Event> categoryFilteredEvents = new ArrayList<Event>();
-			
-			// Else, loop through events and filter by selected categories
-			for (Event e : visibleEvents){
-				if (selectedCategories.contains(e.getCategory()))
-					categoryFilteredEvents.add(e);
-			}
-			
-			// Return list of events to be displayed
-			return categoryFilteredEvents;
-		} else
-			return new ArrayList<Event>();
+		return EventModel.getInstance().getEvents(weekStartTime, weekEndTime);
 	}
 
 	@Override
@@ -388,7 +366,7 @@ public class WeekCalendar extends AbstractCalendar
 	}
 
 	@Override
-	public void updateEvents(Event events, boolean added)
+	public void updateDisplayable(Displayable events, boolean added)
 	{
 		// at the moment, we don't care, and just re-pull from the DB. TODO:
 		// this should change

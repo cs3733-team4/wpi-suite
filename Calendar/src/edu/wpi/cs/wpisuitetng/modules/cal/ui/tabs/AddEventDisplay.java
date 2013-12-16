@@ -16,8 +16,8 @@ import javax.swing.JLabel;
 import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Category;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.DatePickerListener;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 
@@ -67,8 +67,8 @@ public class AddEventDisplay extends DisplayableEditorView
 		this.participantsTextField.setText(eventToEdit.getParticipants());
 		this.nameTextField.setText(eventToEdit.getName());
 		this.descriptionTextArea.setText(eventToEdit.getDescription());
-		this.rdbtnPersonal.setSelected(!eventToEdit.isProjectEvent());
-		this.rdbtnTeam.setSelected(eventToEdit.isProjectEvent());
+		this.rdbtnPersonal.setSelected(!eventToEdit.isProjectwide());
+		this.rdbtnTeam.setSelected(eventToEdit.isProjectwide());
 		this.startTimeDatePicker.setDateTime(eventToEdit.getStart());
 		this.endTimeDatePicker.setDateTime(eventToEdit.getEnd());
 		if (eventToEdit.getAssociatedCategory()!=null)
