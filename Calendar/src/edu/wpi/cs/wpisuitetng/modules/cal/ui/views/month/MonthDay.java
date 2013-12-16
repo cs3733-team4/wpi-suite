@@ -12,18 +12,23 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.font.TextAttribute;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
@@ -81,6 +86,12 @@ public class MonthDay extends JPanel
 		header.setBackground(grayit);
 		header.setForeground(textit);
 		header.setFont(new java.awt.Font("DejaVu Sans",	style == DayStyle.Today ? Font.BOLD : Font.PLAIN, 12));
+		header.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+		header.setText(Integer.toString(initDay.getDayOfMonth()));
+		header.setAutoscrolls(true);
+		header.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+		header.setMaximumSize(new java.awt.Dimension(10000, 17));
+		header.setOpaque(true);
 		
 		if(style == DayStyle.Today)
 		{
@@ -88,14 +99,15 @@ public class MonthDay extends JPanel
 			Map attributes = font.getAttributes();
 			attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
 			header.setFont(font.deriveFont(attributes));
+
+			/*
+			try {
+			    Image img = ImageIO.read(getClass().getResource("/edu/wpi/cs/wpisuitetng/modules/cal/img/today_label_blue.png"));
+			    header.setIcon(new ImageIcon(img));
+			} catch (IOException ex) {}
+			*/
 		}
 		
-		header.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-		header.setText(Integer.toString(initDay.getDayOfMonth()));
-		header.setAutoscrolls(true);
-		header.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-		header.setMaximumSize(new java.awt.Dimension(10000, 17));
-		header.setOpaque(true);
 		add(header);
 
 		addMouseListener(new MouseListener()

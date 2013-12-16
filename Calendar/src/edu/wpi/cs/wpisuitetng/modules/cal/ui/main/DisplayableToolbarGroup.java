@@ -37,10 +37,10 @@ import edu.wpi.cs.wpisuitetng.modules.cal.models.ToolTipListener;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs.AddCommitmentDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs.AddEventDisplay;
 
-public class EventToolbarGroup extends ToolbarGroupView {
+public class DisplayableToolbarGroup extends ToolbarGroupView {
 	
 	private final JButton addEventButton, removeEventButton, addCommitmentButton;
-	public EventToolbarGroup(final MainPanel mMainPanel) {
+	public DisplayableToolbarGroup(final MainPanel mMainPanel) {
 		super("Events & Commitments");
 		setPreferredWidth(600);
 		
@@ -91,8 +91,6 @@ public class EventToolbarGroup extends ToolbarGroupView {
 			public void actionPerformed(ActionEvent e){
 				AddEventDisplay ned = new AddEventDisplay();
 				ned.setTabId(mMainPanel.addTopLevelTab(ned, "New Event", true));
-				
-				//TODO: use selected times. ned.display(DateTime.now());
 			}
 		});
 		
@@ -140,8 +138,6 @@ public class EventToolbarGroup extends ToolbarGroupView {
 			public void actionPerformed(ActionEvent e){
 				AddCommitmentDisplay newCommitment = new AddCommitmentDisplay();
 				newCommitment.setTabId(mMainPanel.addTopLevelTab(newCommitment, "New Commitment", true));
-				
-				//TODO: use selected times. ned.display(DateTime.now());
 			}
 		});
 		addCommitmentButton.addMouseListener(new ToolTipListener());

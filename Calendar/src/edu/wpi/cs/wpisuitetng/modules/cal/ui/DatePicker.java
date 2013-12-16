@@ -265,6 +265,28 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 			}
 	}
 	
+	/**
+	 * Sets date of DatePicker to specified value
+	 * @param previous the DateTime object from which to obtain values
+	 */
+	public void setDate(DateTime previous) {
+			this.date.setValue(previous.toString(dateFmt));
+	}
+	
+	/**
+	 * Sets time of DatePicker to specified value
+	 * @param previous the DateTime object from which to obtain values
+	 */
+	public void setTime(DateTime previous) {
+			this.time.setValue(previous.toString(timeFmt));
+			if (previous.getHourOfDay() >= 12){
+				this.AMPM.setSelectedIndex(1);
+			}
+			else{
+				this.AMPM.setSelectedIndex(0);
+			}
+	}
+	
 	public void addChangeListener(DatePickerListener newListener)
 	{
 		changeListeners.add(newListener);

@@ -326,7 +326,10 @@ public class DayItem extends JPanel
 	}
 	
 
-	// Set text color to white to indicate selected event
+	/**
+	 * Set borders depending on selected status
+	 * @param b selected status of the item
+	 */
 	public void setSelected(boolean b)
 	{
 		//lblEventTitle.setForeground(b?Color.WHITE:Color.BLACK);

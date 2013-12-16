@@ -14,6 +14,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.JLabel;
 
 import org.joda.time.DateTime;
+import org.joda.time.MutableDateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
@@ -33,7 +34,7 @@ public class AddEventDisplay extends DisplayableEditorView
 	private Event eventToEdit;
 	private boolean isEditingEvent;
 	private UUID existingEventID; // UUID of event being edited
-	private DateTime currentTime;
+	private DateTime selectedTime;
 	
 	// Constructor for edit event.
 	public AddEventDisplay(Event mEvent)
@@ -52,7 +53,7 @@ public class AddEventDisplay extends DisplayableEditorView
 	{
 		super(true);
 		this.isEditingEvent = false;
-		this.currentTime = new DateTime();
+		this.selectedTime = MainPanel.getInstance().getSelectedDay();
 		setCurrentDateAndTime();
 		setUpListeners();
 	}
@@ -267,8 +268,16 @@ public class AddEventDisplay extends DisplayableEditorView
 	 */
 	public void setCurrentDateAndTime()
 	{
-		this.startTimeDatePicker.setDateTime(currentTime);
-		this.endTimeDatePicker.setDateTime(currentTime.plusHours(1));
+		this.startTimeDatePicker.setDate(selectedTime);
+		this.endTimeDatePicker.setDate(selectedTime);
+		
+		MutableDateTime mdt = DateTime.now().toMutableDateTime();
+		int quarterHours = mdt.getMinuteOfHour()/15;
+		mdt.setMinuteOfHour(quarterHours < 4 ? (quarterHours + 1)*15 : (quarterHours)*15);
+		
+		this.startTimeDatePicker.setTime(mdt.toDateTime());
+		mdt.addHours(1);
+		this.endTimeDatePicker.setTime(mdt.toDateTime());
 	}
 	
 	public boolean editingEvent()

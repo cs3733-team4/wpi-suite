@@ -9,6 +9,10 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.week;
 
+/**
+ * What type of panel a multiday event item is in the week view
+ *
+ */
 public enum MultidayEventItemType {
 	Start,
 	Middle,
