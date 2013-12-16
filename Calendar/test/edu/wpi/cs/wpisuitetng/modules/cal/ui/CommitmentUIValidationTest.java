@@ -2,6 +2,7 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui;
 
 import static org.junit.Assert.*;
 
+import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
 import org.joda.time.DateTime;
@@ -9,6 +10,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.ReflectUtils;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentStatus;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs.AddCommitmentDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.DatePicker;
 
@@ -16,15 +19,18 @@ public class CommitmentUIValidationTest
 {
 	private AddCommitmentDisplay mCommitDisplay = new AddCommitmentDisplay();
 
-	DatePicker ff;
+	DatePicker dateBox;
 
-	JTextField fff;
+	JTextField nameBox;
+	
+	JComboBox<String> statusPick;
 
 	@Before
 	public void setup() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException
 	{
-		ff = ReflectUtils.getFieldValue(mCommitDisplay, "startTimeDatePicker");
-		fff = ReflectUtils.getFieldValue(mCommitDisplay, "nameTextField");
+		dateBox = ReflectUtils.getFieldValue(mCommitDisplay, "startTimeDatePicker");
+		nameBox = ReflectUtils.getFieldValue(mCommitDisplay, "nameTextField");
+		statusPick = ReflectUtils.getFieldValue(mCommitDisplay, "commitmentStatusPicker");
 	}
 
 	@Test
@@ -49,9 +55,9 @@ public class CommitmentUIValidationTest
 	public void testIfSaveButtonIsDisabledWithProperDateButNoName() throws NoSuchFieldException, SecurityException, IllegalArgumentException,
 			IllegalAccessException
 	{
-		ff.date.setValue("11/20/13");
-		ff.time.setValue("03:00");
-		ff.AMPM.setSelectedItem("PM");
+		dateBox.date.setValue("11/20/13");
+		dateBox.time.setValue("03:00");
+		dateBox.AMPM.setSelectedItem("PM");
 		assertFalse("Commitment is not saveable with no Commitment name", mCommitDisplay.isSaveable());
 	}
 
@@ -59,7 +65,7 @@ public class CommitmentUIValidationTest
 	public void testIfSaveButtonIsDisabledWithProperNameButNoDate() throws NoSuchFieldException, SecurityException, IllegalArgumentException,
 			IllegalAccessException
 	{
-		fff.setText("Test Commitment");
+		nameBox.setText("Test Commitment");
 
 		assertTrue("Commitment date and time is set automatically", mCommitDisplay.isSaveable());
 	}
@@ -69,7 +75,7 @@ public class CommitmentUIValidationTest
 			IllegalAccessException
 	{
 		setUpAndTestValidCommitmentFields();
-		fff.setText("");
+		nameBox.setText("");
 		assertFalse("Commitment is no longer saveable", mCommitDisplay.isSaveable());
 	}
 
@@ -78,7 +84,7 @@ public class CommitmentUIValidationTest
 			IllegalAccessException
 	{
 		setUpAndTestValidCommitmentFields();
-		ff.date.setValue("");
+		dateBox.date.setValue("");
 		assertFalse("Commitment is no longer saveable", mCommitDisplay.isSaveable());
 	}
 
@@ -87,16 +93,31 @@ public class CommitmentUIValidationTest
 			IllegalAccessException
 	{
 		setUpAndTestValidCommitmentFields();
-		fff.setText("    ");
+		nameBox.setText("    ");
 		assertFalse("Commitment is no longer saveable", mCommitDisplay.isSaveable());
 	}
 
+	@Test
+	public void testIfCommitmentCantBeSavedWithNondefaultStatus() throws NoSuchFieldException, SecurityException, IllegalArgumentException,
+			IllegalAccessException
+	{
+		setUpAndTestValidCommitmentFields();
+		statusPick.setSelectedItem(CommitmentStatus.InProgress.toString());
+		assertTrue("Commitment is saveable with a new status", mCommitDisplay.isSaveable());
+		
+		statusPick.setSelectedItem(CommitmentStatus.Complete.toString());
+		assertTrue("Commitment is saveable with a new status", mCommitDisplay.isSaveable());
+		
+		statusPick.setSelectedItem(CommitmentStatus.NotStarted.toString());
+		assertTrue("Commitment is saveable with the default status (Not started)", mCommitDisplay.isSaveable());
+	}
+	
 	private void setUpAndTestValidCommitmentFields() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException
 	{
-		fff.setText("Test Commitment");
-		ff.date.setValue("11/20/13");
-		ff.time.setValue("03:00");
-		ff.AMPM.setSelectedItem("PM");
+		nameBox.setText("Test Commitment");
+		dateBox.date.setValue("11/20/13");
+		dateBox.time.setValue("03:00");
+		dateBox.AMPM.setSelectedItem("PM");
 		assertTrue("Commitment is saveable with proper input", mCommitDisplay.isSaveable());
 	}
 
@@ -105,11 +126,11 @@ public class CommitmentUIValidationTest
 	{
 		DateTime today = new DateTime();
 
-		fff.setText("Test Commitment");
+		nameBox.setText("Test Commitment");
 
-		assertEquals(ff.getDate().getMonthOfYear(), today.getMonthOfYear());
-		assertEquals(ff.getDate().getDayOfYear(), today.getDayOfYear());
-		assertEquals(ff.getDate().getYear(), today.getYear());
+		assertEquals(dateBox.getDate().getMonthOfYear(), today.getMonthOfYear());
+		assertEquals(dateBox.getDate().getDayOfYear(), today.getDayOfYear());
+		assertEquals(dateBox.getDate().getYear(), today.getYear());
 		assertTrue("Commitment is saveable with proper input", mCommitDisplay.isSaveable());
 	}
 }
