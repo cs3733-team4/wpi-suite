@@ -15,6 +15,7 @@ import java.util.UUID;
 import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 
 public class EventModel extends CachingDisplayableModel<Event, Event.SerializedAction>
 {
@@ -61,5 +62,11 @@ public class EventModel extends CachingDisplayableModel<Event, Event.SerializedA
 	public List<Event> getAllEvents()
 	{
 		return getAll();
+	}
+	
+	@Override
+	protected boolean visibleCategory(Event obj)
+	{
+		return MainPanel.getInstance().showEvents() && super.visibleCategory(obj);
 	}
 }

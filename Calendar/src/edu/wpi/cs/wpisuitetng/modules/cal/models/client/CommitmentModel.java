@@ -15,6 +15,7 @@ import java.util.UUID;
 import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 
 public class CommitmentModel extends CachingDisplayableModel<Commitment, Commitment.SerializedAction>
 {
@@ -61,5 +62,11 @@ public class CommitmentModel extends CachingDisplayableModel<Commitment, Commitm
 	public List<Commitment> getAllCommitments()
 	{
 		return getAll();
+	}
+	
+	@Override
+	protected boolean visibleCategory(Commitment obj)
+	{
+		return MainPanel.getInstance().showCommitments() && super.visibleCategory(obj);
 	}
 }

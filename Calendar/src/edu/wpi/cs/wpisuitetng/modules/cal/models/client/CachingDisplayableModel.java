@@ -10,6 +10,7 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.models.client;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -52,12 +53,17 @@ public abstract class CachingDisplayableModel<T extends Model & Displayable, SA 
 		return obj.getIdentification();
 	}
 	
+	protected boolean visibleCategory(T obj)
+	{
+		Collection<UUID> categories = MainPanel.getInstance().getSelectedCategories();
+		return categories.contains(obj.getCategory());
+	}
+	
 	@Override
 	protected boolean filter(T obj)
 	{
-		return (obj.isProjectwide() ? MainPanel.getInstance().showTeam : MainPanel.getInstance().showPersonal);
+		return (obj.isProjectwide() ? MainPanel.getInstance().showTeam : MainPanel.getInstance().showPersonal) && visibleCategory(obj);
 	}
-	
 
 	/**
 	 * Gets all visible events in the range [from..to]

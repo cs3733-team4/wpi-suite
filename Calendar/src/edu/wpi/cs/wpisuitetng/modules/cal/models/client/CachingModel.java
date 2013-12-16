@@ -92,7 +92,7 @@ public abstract class CachingModel<T extends Model, SA extends CachingModel.Seri
 		cache.put(getUuidFrom(obj), obj);
 	}
 
-	protected void invalidateCache()
+	public void invalidateCache()
 	{
 		valid = false;
 	}
