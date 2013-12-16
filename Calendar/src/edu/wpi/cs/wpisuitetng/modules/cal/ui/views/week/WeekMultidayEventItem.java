@@ -135,15 +135,15 @@ public class WeekMultidayEventItem extends JLabel {
 									(type == MultidayEventItemType.End || 
 											type == MultidayEventItemType.Single) ? 1 : 0, mColor), 
 								new CompoundBorder(
-										BorderFactory.createMatteBorder(2,
+										BorderFactory.createMatteBorder(1,
 												(type == MultidayEventItemType.Start || 
-													type == MultidayEventItemType.Single) ? 2 : 0, 
-												2,
+													type == MultidayEventItemType.Single) ? 1 : 0, 
+												1,
 												(type == MultidayEventItemType.End || 
-													type == MultidayEventItemType.Single) ? 2 : 0,
+													type == MultidayEventItemType.Single) ? 1 : 0,
 												isSelected ? mEvent.getColor().darker()
 												: mEvent.getColor()), 
-										new EmptyBorder(2, 2, 2, 2))));
+										new EmptyBorder(1, 1, 1, 1))));
 	}
 
 	/**

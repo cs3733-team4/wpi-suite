@@ -40,7 +40,9 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CommitmentModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
@@ -67,6 +69,7 @@ public class WeekCalendar extends AbstractCalendar
 
 	private DayPanel[] daysOfWeekArray = new DayPanel[7];
 	private List<Event> eventList = new ArrayList<Event>();
+	private List<Commitment> commitmentList = new ArrayList<Commitment>();
 	private List<WeekMultidayEventItem> multidayItems = new ArrayList<WeekMultidayEventItem>();;
 
 	private int currentDayUnderMouse;
@@ -163,12 +166,13 @@ public class WeekCalendar extends AbstractCalendar
 		increment.setMillisOfDay(0);
 
 		eventList = getVisibleEvents(increment.toDateTime());
-
+		commitmentList = getVisibleCommitments(increment.toDateTime());
+		
 		for (int i = 0; i < 7; i++)
 		{
 			// add day views to the day grid
 			this.daysOfWeekArray[i] = new DayPanel(true, this);
-			this.daysOfWeekArray[i].setEvents(getEventsInInterval(increment.toDateTime(), increment.toDateTime().plusDays(1)), increment.toDateTime());
+			this.daysOfWeekArray[i].setEvents(getDisplayablesInInterval(increment.toDateTime(), increment.toDateTime().plusDays(1)), increment.toDateTime());
 			this.daysOfWeekArray[i].setBorder(BorderFactory.createMatteBorder(1, 0, 1, i == 6 ? 0 : 1, Colors.BORDER));
 			
 			this.smithsonian.add(this.daysOfWeekArray[i], "cell " + (i+1) + " 0,grow");
@@ -230,7 +234,7 @@ public class WeekCalendar extends AbstractCalendar
 
 				for (Event currEvent : multidayEvents)
 				{
-					if (isEventInInterval(currEvent, mInterval))
+					if (isDisplayableInInterval(currEvent, mInterval))
 					{
 						boolean firstPanel = true;
 						WeekMultidayEventItem multidayPanel;
@@ -318,16 +322,6 @@ public class WeekCalendar extends AbstractCalendar
 			Collection<UUID> selectedCategories = MainPanel.getInstance().getSelectedCategories();
 			List<Event> categoryFilteredEvents = new ArrayList<Event>();
 			
-			/*// Filter commitments by date
-			List<Commitment> visibleCommitments = CommitmentModel.getInstance().getCommitments(weekStartTime, weekEndTime);
-						
-			// Add them to the list of events
-			for (Commitment c : visibleCommitments)
-			{
-				CommitmentEvent ce = new CommitmentEvent(c);
-				visibleEvents.add(ce);
-			}*/
-			
 			// Else, loop through events and filter by selected categories
 			for (Event e : visibleEvents){
 				if (selectedCategories.contains(e.getCategory()))
@@ -338,6 +332,35 @@ public class WeekCalendar extends AbstractCalendar
 			return categoryFilteredEvents;
 		} else
 			return new ArrayList<Event>();
+	}
+	
+	/**
+	 * Get a list of Events for the current day
+	 * 
+	 * @param curDay
+	 *            DateTime that the calendar is focused on
+	 * @return
+	 */
+	private List<Commitment> getVisibleCommitments(DateTime curDay)
+	{
+		if (MainPanel.getInstance().showEvents()){
+			// Filter commitments by date
+			List<Commitment> visibleCommitments = CommitmentModel.getInstance().getCommitments(weekStartTime, weekEndTime);
+						
+			// Filter for selected categories
+			Collection<UUID> selectedCategories = MainPanel.getInstance().getSelectedCategories();
+			List<Commitment> categoryFilteredCommitments = new ArrayList<Commitment>();
+			
+			// Else, loop through events and filter by selected categories
+			for (Commitment c : visibleCommitments){
+				if (selectedCategories.contains(c.getCategory()))
+					categoryFilteredCommitments.add(c);
+			}
+			
+			// Return list of events to be displayed
+			return categoryFilteredCommitments;
+		} else
+			return new ArrayList<Commitment>();
 	}
 
 	@Override
@@ -531,23 +554,27 @@ public class WeekCalendar extends AbstractCalendar
 	 * @param intervalEnd end of the interval to check
 	 * @return list of events that are both in the week and interval
 	 */
-	private List<Displayable> getEventsInInterval(DateTime intervalStart, DateTime intervalEnd)
+	private List<Displayable> getDisplayablesInInterval(DateTime intervalStart, DateTime intervalEnd)
 	{
-		List<Displayable> retrievedEvents = new ArrayList<>();
+		List<Displayable> retrievedDisplayables = new ArrayList<>();
 		Interval mInterval = new Interval(intervalStart, intervalEnd);
 
-		for (Event event : eventList)
+		List<Displayable> allVisibleDisplayables = new ArrayList<>();
+		allVisibleDisplayables.addAll(eventList);
+		allVisibleDisplayables.addAll(commitmentList);
+		
+		for (Displayable d : allVisibleDisplayables)
 		{
-			if (new Interval(event.getStart(),event.getEnd()).toDuration().getStandardHours()>24)
+			if (new Interval(d.getDate(),d.getEnd()).toDuration().getStandardHours()>24)
 				continue;
 
-			if (isEventInInterval(event, mInterval))
+			if (isDisplayableInInterval(d, mInterval))
 			{
-				retrievedEvents.add(event);
+				retrievedDisplayables.add(d);
 			}
 		}
 
-		return retrievedEvents;
+		return retrievedDisplayables;
 	}
 
 	/**
@@ -570,9 +597,9 @@ public class WeekCalendar extends AbstractCalendar
 		return retrievedEvents;
 	}
 
-	private boolean isEventInInterval(Event mEvent, Interval mInterval)
+	private boolean isDisplayableInInterval(Displayable mDisplayable, Interval mInterval)
 	{
-		DateTime s = mEvent.getStart(), e = mEvent.getEnd();
+		DateTime s = mDisplayable.getDate(), e = mDisplayable.getEnd();
 		if (this.weekStartTime.isAfter(s))
 			s = weekStartTime;
 
