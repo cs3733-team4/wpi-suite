@@ -115,7 +115,7 @@ public class Commitment extends AbstractModel implements Displayable
 	@Override
 	public void delete()
 	{
-		CommitmentModel.getInstance().deleteCommitment(this);
+		CommitmentModel.getInstance().delete(this);
 	}
 
 	/**
@@ -223,7 +223,7 @@ public class Commitment extends AbstractModel implements Displayable
 		this.participants = participants;
 	}
 	
-	public boolean isProjectCommitment()
+	public boolean isProjectwide()
 	{
 		return isProjectCommitment;
 	}
@@ -293,7 +293,7 @@ public class Commitment extends AbstractModel implements Displayable
 	@Override
 	public void update()
 	{
-		CommitmentModel.getInstance().updateCommitment(this);
+		CommitmentModel.getInstance().update(this);
 	}
 	
 	@Override
@@ -322,5 +322,16 @@ public class Commitment extends AbstractModel implements Displayable
 	public UUID getIdentification()
 	{
 		return commitmentID;
+	}
+	
+
+	public static class SerializedAction extends CachingModel.SerializedAction<Commitment>
+	{
+		public SerializedAction(Commitment e, UUID eventID, boolean b)
+		{
+			object = e;
+			uuid = eventID;
+			isDeleted = b;
+		}
 	}
 }

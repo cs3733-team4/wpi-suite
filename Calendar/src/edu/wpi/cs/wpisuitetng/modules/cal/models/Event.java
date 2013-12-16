@@ -127,7 +127,7 @@ public class Event extends AbstractModel implements Displayable
 	@Override
 	public void delete()
 	{
-		EventModel.getInstance().deleteEvent(this);
+		EventModel.getInstance().delete(this);
 	}
 
 	@Override
@@ -234,7 +234,7 @@ public class Event extends AbstractModel implements Displayable
 	/**
 	 * @return the isProjectEvent
 	 */
-	public boolean isProjectEvent()
+	public boolean isProjectwide()
 	{
 		return isProjectEvent;
 	}
@@ -438,7 +438,7 @@ public class Event extends AbstractModel implements Displayable
 	@Override
 	public void update()
 	{
-		EventModel.getInstance().updateEvent(this);
+		EventModel.getInstance().update(this);
 	}
 	
 	@Override
@@ -495,7 +495,7 @@ public class Event extends AbstractModel implements Displayable
 				.append(", to: ").append(getEnd().toString()).append("}").toString();
 	}
 	
-	public static class SerializedAction
+	public static class SerializedAction extends CachingModel.SerializedAction<Event>
 	{
 		public SerializedAction(Event e, UUID eventID, boolean b)
 		{
@@ -503,8 +503,5 @@ public class Event extends AbstractModel implements Displayable
 			uuid = eventID;
 			isDeleted = b;
 		}
-		public Event object;
-		public UUID uuid;
-		public boolean isDeleted;
 	}
 }

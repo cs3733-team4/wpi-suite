@@ -7,32 +7,22 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-
 package edu.wpi.cs.wpisuitetng.modules.cal.models;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
-
-public class CommitmentModel {
-
+public class CommitmentModel extends CachingDisplayableModel<Commitment, Commitment.SerializedAction>
+{
 	private static CommitmentModel instance;
-	public static final DateTimeFormatter serializer = ISODateTimeFormat.basicDateTime();
 
-	/**
-	 * the privatized default constructor
-	 */
-	private CommitmentModel(){}
+	private CommitmentModel()
+	{
+		super("commitments", Commitment.SerializedAction[].class, Commitment[].class);
+	}
 	
-	/**
-	 * 
-	 * @return the singleton commitment model
-	 */
 	public static CommitmentModel getInstance()
 	{
 		if (instance == null)
@@ -42,6 +32,14 @@ public class CommitmentModel {
 		return instance;
 	}
 	
+	@Override
+	protected Commitment buildUuidOnlyObject(UUID uuid)
+	{
+		Commitment c = new Commitment();
+		c.setCommitmentID(uuid);
+		return c;
+	}
+
 	/**
 	 * gets a list of commitments within a specified range
 	 * 
@@ -49,65 +47,17 @@ public class CommitmentModel {
 	 * @param to the end time of the range
 	 * @return all commitments within this range
 	 */
-	public List<Commitment> getCommitments(DateTime from, DateTime to) {
-		/*return ServerManager.get("cal/commitments/", Commitment[].class, "filter-commitments-by-range", 
-				from.toString(serializer),
-				to.toString(serializer));*/
-		final List<Commitment> commitments = ServerManager.get("cal/commitments/", Commitment[].class, "filter-commitments-by-range", from.toString(serializer),
-				to.toString(serializer));
-		
-		//set up to filter events based on booleans in MainPanel
-		List<Commitment> filteredCommitments = new ArrayList<Commitment>();
-		boolean showPersonal = MainPanel.getInstance().showPersonal;
-		boolean showTeam = MainPanel.getInstance().showTeam;
-		
-		//loop through and add only if isProjectEvent() matches corresponding boolean
-		for(Commitment e: commitments){
-			if(e.isProjectCommitment()&&showTeam){
-				filteredCommitments.add(e);
-			}
-			if(!e.isProjectCommitment()&&showPersonal){
-				filteredCommitments.add(e);
-			}
-		}
-		return filteredCommitments;
-		}
-
+	public List<Commitment> getCommitments(DateTime from, DateTime to)
+	{
+		return getRange(from, to);
+	}
+	
 	/**
 	 * 
 	 * @return get all the commitments that the user has access to
 	 */
-	public List<Commitment> getAllCommitments() {
-		return ServerManager.get("cal/commitments/", Commitment[].class, "get-all-commitments");
-	}
-
-	/**
-	 * 
-	 * @param toAdd the commitment to add to the database
-	 * @return whether the event was added successfully
-	 */
-	public boolean putCommitment(Commitment toAdd){
-		return ServerManager.put("cal/commitments", toAdd.toJSON());
-	}
-	
-	/**
-	 * 
-	 * @param toUpdate the commitment to modify
-	 * @return whether the commitment was updated successfully
-	 */
-	public boolean updateCommitment(Commitment toUpdate)
+	public List<Commitment> getAllCommitments()
 	{
-		return ServerManager.post("cal/commitments", toUpdate.toJSON());
+		return getAll();
 	}
-	
-	/**
-	 * 
-	 * @param toDelete the commitment to delete
-	 * @return whether the commitment was deleted successfully
-	 */
-	public boolean deleteCommitment(Commitment toDelete)
-	{
-		return ServerManager.delete("cal/commitments", "filter-commitment-by-uuid", toDelete.getCommitmentID().toString());
-	}
-
 }

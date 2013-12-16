@@ -22,12 +22,11 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
-
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.MutableDateTime;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.week.WeekCalendar;

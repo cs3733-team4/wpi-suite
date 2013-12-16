@@ -378,7 +378,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	 */
 	public void addEvent(Event newEvent)
 	{
-		events.putEvent(newEvent);
+		events.put(newEvent);
 		mCalendar.updateDisplayable(newEvent, true);
 	}
 	
@@ -389,7 +389,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	public void updateEvent(Event updateEvent){
 		if((currentSelected instanceof Event) && updateEvent.getIdentification().equals(((Event) currentSelected).getIdentification()))
 			clearSelected();
-		events.updateEvent(updateEvent);
+		events.update(updateEvent);
 	}
 	
 	/**
@@ -398,7 +398,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	 */
 	public void addCommitment(Commitment newCommitment)
 	{
-		commitments.putCommitment(newCommitment);
+		commitments.put(newCommitment);
 	}
 	/**
 	 * Updates a commitment as long both commitments have the same ID
@@ -406,7 +406,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	 */
 	public void updateCommitment(Commitment updateCommitment)
 	{
-		commitments.updateCommitment(updateCommitment);
+		commitments.update(updateCommitment);
 	}
 
 	/**

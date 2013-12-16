@@ -66,8 +66,8 @@ public class AddEventDisplay extends DisplayableEditorView
 		this.participantsTextField.setText(eventToEdit.getParticipants());
 		this.nameTextField.setText(eventToEdit.getName());
 		this.descriptionTextArea.setText(eventToEdit.getDescription());
-		this.rdbtnPersonal.setSelected(!eventToEdit.isProjectEvent());
-		this.rdbtnTeam.setSelected(eventToEdit.isProjectEvent());
+		this.rdbtnPersonal.setSelected(!eventToEdit.isProjectwide());
+		this.rdbtnTeam.setSelected(eventToEdit.isProjectwide());
 		this.startTimeDatePicker.setDateTime(eventToEdit.getStart());
 		this.endTimeDatePicker.setDateTime(eventToEdit.getEnd());
 		if (eventToEdit.getAssociatedCategory()!=null)

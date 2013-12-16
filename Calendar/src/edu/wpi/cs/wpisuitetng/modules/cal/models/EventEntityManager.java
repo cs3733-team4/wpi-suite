@@ -77,7 +77,7 @@ public class EventEntityManager implements EntityManager<Event> {
 	/**
 	 * Comet/Long Polling implementation for real-time updating. Waits 20s for any changes, then returns
 	 * @param s Session this is on
-	 * @return json string
+	 * @return json string with the results
 	 */
 	private String getFromPoll(Session s)
 	{
@@ -113,7 +113,6 @@ public class EventEntityManager implements EntityManager<Event> {
 
 	/**
 	 * gets the event with the current UUID
-	 * 
 	 * @param ses the session
 	 * @param uuid the event's UUID
 	 * @return an array containing just this event
@@ -145,7 +144,7 @@ public class EventEntityManager implements EntityManager<Event> {
 		ArrayList<Event> eventArray = new ArrayList<>();
 		for (Event e: allEvents)
 		{
-			if (s.getUser().equals(e.getOwner()) || e.isProjectEvent())
+			if (s.getUser().equals(e.getOwner()) || e.isProjectwide())
 					eventArray.add(e);
 		}
 		return eventArray.toArray(new Event[0]);
@@ -158,7 +157,7 @@ public class EventEntityManager implements EntityManager<Event> {
 	 */
 	@Override
 	public void save(Session s, Event model) {
-		if (model.isProjectEvent())
+		if (model.isProjectwide())
 			model.setProject(s.getProject());
 		db.save(model);
 		PollPusher.getInstance(Event.class).updated(updated(model));

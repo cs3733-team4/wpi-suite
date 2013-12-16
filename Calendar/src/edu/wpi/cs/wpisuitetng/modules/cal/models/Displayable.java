@@ -45,6 +45,8 @@ public interface Displayable
 	
 	public Interval getInterval();
 	
+	public boolean isProjectwide();
+	
 	/**
 	 * deletes this Displayable
 	 */
