@@ -2,10 +2,12 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui.main;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JOptionPane;
+
 import edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar.ToolbarGroupView;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs.GoogleCalendarSyncAuthenticateDisplay;
 
 public class GoogleCalendarSynchronizationGroup extends ToolbarGroupView {
 	
@@ -18,10 +20,13 @@ public class GoogleCalendarSynchronizationGroup extends ToolbarGroupView {
 		this.content.setLayout(new BoxLayout(content, BoxLayout.X_AXIS));
 		syncButton = new JButton("<html>GCal Sync</html>");
 		    
-		syncButton.addActionListener(new ActionListener(){
+		syncButton.addActionListener(new ActionListener()
+		{
 			@Override
-			public void actionPerformed(ActionEvent e){
-				JOptionPane.showMessageDialog(null, "Eggs are not supposed to be green.");
+			public void actionPerformed(ActionEvent e)
+			{	
+				GoogleCalendarSyncAuthenticateDisplay ned = new GoogleCalendarSyncAuthenticateDisplay();
+				MainPanel.getInstance().addTopLevelTab(ned, "Log in with Google", true);
 			}
 		});
 		
