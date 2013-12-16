@@ -20,7 +20,8 @@
 			<include name="iText-2.1.5.jar"/>
 			<include name="miglayout-4.0-swing.jar"/>
 			<include name="swingx-all-1.6.4.jar"/>
-			<include name="joda-time-2.3.jar"/>
+			<include name="joda-time-2.3.jar" />
+			<include name="jfxrt.jar"/>
 		</fileset>
 		<pathelement path="build"/>
 	</path>

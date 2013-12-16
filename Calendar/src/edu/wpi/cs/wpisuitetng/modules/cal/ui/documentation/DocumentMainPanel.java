@@ -10,39 +10,42 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.ui.documentation;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.management.RuntimeErrorException;
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
+
 import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
+import javax.swing.SwingUtilities;
+
+import com.sun.glass.ui.Platform;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.SelectableField;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs.AddCommitmentDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs.AddEventDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs.CategoryManager;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.BareBonesBrowserLaunch;
-import edu.wpi.cs.wpisuitetng.network.Network;
-import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 
 public class DocumentMainPanel extends JFrame{
 
-    private JEditorPane webPage;
+    //private JEditorPane webPage;
+	private WebView theView;
+	private WebEngine theEngine;
     private JScrollPane scroll;
     private URL url;
     private String serverLocation;
@@ -50,6 +53,8 @@ public class DocumentMainPanel extends JFrame{
     private static DocumentMainPanel instance;
     private JButton openInBrowser;
     private JPanel tocView;
+
+    JFXPanel fxPanel = new JFXPanel();
     private DocumentMainPanel()
     {
     	super();
@@ -92,32 +97,36 @@ public class DocumentMainPanel extends JFrame{
             JOptionPane.showMessageDialog(null,mue);
         }
         
-        //create the JEditorPane
+
+    	
+    	/*
         try {
             webPage = new JEditorPane(url);
-            
             //set the editor pane to false.
             webPage.setEditable(false);
         }
         catch(IOException ioe) {
             JOptionPane.showMessageDialog(null,ioe);
-        }
+        }*/
         
+    	
+    	
         
         //create the scroll pane and add the JEditorPane to it.
-        scroll = new JScrollPane(webPage);
-        scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+       // scroll = new JScrollPane(webPage);
+        //scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        //scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         openInBrowser.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				BareBonesBrowserLaunch.openURL(serverLocation + "YOCO Calendar.html?" + extractPage(webPage.getPage().getPath()));
+				//BareBonesBrowserLaunch.openURL(serverLocation + "YOCO Calendar.html?" + extractPage(webPage.getPage().getPath()));
+				BareBonesBrowserLaunch.openURL(serverLocation + "YOCO Calendar.html?" + extractPage(theEngine.getLocation()));
 				
 			}
 		});
         //create the JTextField that shows the HTML Page
-        webPage.setBackground(Color.getColor("EFEFEF"));
+        /*webPage.setBackground(Color.getColor("EFEFEF"));
         webPage.addHyperlinkListener(new HyperlinkListener() {
             public void hyperlinkUpdate(HyperlinkEvent e) {
                 if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED)
@@ -136,12 +145,30 @@ public class DocumentMainPanel extends JFrame{
                 }
             }//end hyperlinkUpdate()
         });//end HyperlinkListener
-
+*/
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         tocView.add(openInBrowser, BorderLayout.NORTH);
         tocView.add(tableOfContents, BorderLayout.CENTER);
         splitPane.add(tocView);
-        splitPane.add(scroll);
+        //splitPane.add(scroll);
+        javafx.application.Platform.runLater(new Runnable() {
+			
+			@Override
+			public void run() {
+		        theView = new WebView();
+
+		        theEngine = theView.getEngine();
+
+		    	theEngine.load(serverLocation + "Introduction.html");
+				Group group = new Group();
+		        Scene scene = new Scene(group);
+		        fxPanel.setScene(scene);
+		        group.getChildren().add(theView);
+				
+			}
+		});
+        
+        splitPane.add(fxPanel);
         this.add(splitPane, BorderLayout.CENTER);
     }
     /**
@@ -460,18 +487,28 @@ public class DocumentMainPanel extends JFrame{
     
     /**
      * Navigates the documentation view to a specific page.  Will not work for link outside of the documentation
-     * @param page the HTML page to navigate to. DO NOT INCLUDE THE SERVER PATH!!!!
+     * @param page the HTML page to navigate to
      */
-    public void goToPage(String page)
-    {
+    public void goToPage(final String page)
+    {/*
     	try {
-			webPage.setPage(new URL(serverLocation + page));
-			tableOfContents.expandToPage(page);
+			//webPage.setPage(new URL(serverLocation + page.replace(serverLocation, "")));
+    		theEngine.load(serverLocation + page.replace(serverLocation, ""));
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		}*/
+    	 javafx.application.Platform.runLater(new Runnable() {
+ 			
+ 			@Override
+ 			public void run() {
+
+ 				theEngine.load(serverLocation + page.replace(serverLocation, ""));;
+ 				
+ 			}
+ 		});
+		tableOfContents.expandToPage(page.replace(serverLocation, ""));
     	
     }
 
