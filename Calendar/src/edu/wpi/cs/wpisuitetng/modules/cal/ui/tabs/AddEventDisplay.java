@@ -273,7 +273,13 @@ public class AddEventDisplay extends DisplayableEditorView
 		
 		MutableDateTime mdt = DateTime.now().toMutableDateTime();
 		int quarterHours = mdt.getMinuteOfHour()/15;
-		mdt.setMinuteOfHour(quarterHours < 4 ? (quarterHours + 1)*15 : (quarterHours)*15);
+		int minutes = quarterHours < 4 ? (quarterHours + 1)*15 : (quarterHours)*15;
+		if(minutes == 60)
+		{
+			mdt.addHours(1);
+			mdt.setMinuteOfHour(0);
+		}else
+			mdt.setMinuteOfHour(minutes);
 		
 		this.startTimeDatePicker.setTime(mdt.toDateTime());
 		mdt.addHours(1);
