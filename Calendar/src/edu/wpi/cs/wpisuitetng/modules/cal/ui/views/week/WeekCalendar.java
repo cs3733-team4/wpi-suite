@@ -11,7 +11,6 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.week;
 
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
@@ -41,16 +40,13 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentEvent;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentModel;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.DayGridLabel;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.collisiondetection.DayPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.collisiondetection.DayItem;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.collisiondetection.DayPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
 
@@ -139,9 +135,9 @@ public class WeekCalendar extends AbstractCalendar
 			public void mouseDragged(MouseEvent e) {
 				if(selected != null)
 				{
-					if(selected.getEvent().getStart().getDayOfWeek() != currentDayUnderMouse)
+					if(selected.getEvent().getDate().getDayOfWeek() != currentDayUnderMouse)
 					{
-						daysOfWeekArray[selected.getEvent().getStart().getDayOfWeek()].remove(selected);
+						daysOfWeekArray[selected.getEvent().getDate().getDayOfWeek()].remove(selected);
 						daysOfWeekArray[currentDayUnderMouse].add(selected);
 						revalidate();
 					}
@@ -170,7 +166,7 @@ public class WeekCalendar extends AbstractCalendar
 		{
 			// add day views to the day grid
 			this.daysOfWeekArray[i] = new DayPanel(true, this);
-			this.daysOfWeekArray[i].setEvents(getEventsInInterval(increment.toDateTime(), increment.toDateTime().plusDays(1)), increment.toDateTime());
+			this.daysOfWeekArray[i].setEvents(((List<Displayable>) getEventsInInterval(increment.toDateTime(), increment.toDateTime().plusDays(1))), increment.toDateTime());
 			if (i < 6)
 				this.daysOfWeekArray[i].setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, Colors.BORDER));
 			
@@ -302,7 +298,6 @@ public class WeekCalendar extends AbstractCalendar
 	 */
 	private List<Event> getVisibleEvents(DateTime curDay)
 	{
-		
 		if (MainPanel.getInstance().showEvents()){
 			List<Event> visibleEvents =  EventModel.getInstance().getEvents(weekStartTime, weekEndTime);
 			
@@ -382,7 +377,7 @@ public class WeekCalendar extends AbstractCalendar
 	}
 
 	@Override
-	public void updateEvents(Event events, boolean added)
+	public void updateDisplayable(Displayable events, boolean added)
 	{
 		// at the moment, we don't care, and just re-pull from the DB. TODO:
 		// this should change
@@ -500,9 +495,9 @@ public class WeekCalendar extends AbstractCalendar
 		return time;
 	}
 
-	private List<Event> getEventsInInterval(DateTime intervalStart, DateTime intervalEnd)
+	private List<Displayable> getEventsInInterval(DateTime intervalStart, DateTime intervalEnd)
 	{
-		List<Event> retrievedEvents = new ArrayList<>();
+		List<Displayable> retrievedEvents = new ArrayList<>();
 		Interval mInterval = new Interval(intervalStart, intervalEnd);
 
 		for (Event event : eventList)

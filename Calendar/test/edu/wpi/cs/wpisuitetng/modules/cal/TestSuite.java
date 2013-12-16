@@ -30,6 +30,8 @@ import edu.wpi.cs.wpisuitetng.modules.cal.navigation.SidebarTabbedPaneTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.CommitmentUIValidationTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.DatePickerTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.EventUIValidationTest;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.cache.AccessOrderedListTest;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.cache.CacheTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.CalendarNavigationModuleTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.year.YearCalendarTest;
 import edu.wpi.cs.wpisuitetng.network.Network;
@@ -48,7 +50,9 @@ import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
 	MonthCalendarTest.class, MonthDayTest.class, MonthItemTest.class,
 	CommitmentUIValidationTest.class, DatePickerTest.class,
 	EventUIValidationTest.class,
-	YearCalendarTest.class })
+	YearCalendarTest.class,
+	CacheTest.class, AccessOrderedListTest.class})
+
 public class TestSuite
 {
 	@BeforeClass

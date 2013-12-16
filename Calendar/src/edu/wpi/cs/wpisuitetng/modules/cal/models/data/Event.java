@@ -7,7 +7,7 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.cal.models;
+package edu.wpi.cs.wpisuitetng.modules.cal.models.data;
 
 import java.awt.Color;
 import java.util.Date;
@@ -17,12 +17,13 @@ import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.MutableDateTime;
 import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthCalendar;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CachingModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
@@ -129,7 +130,7 @@ public class Event extends AbstractModel implements Displayable
 	@Override
 	public void delete()
 	{
-		EventModel.getInstance().deleteEvent(this);
+		EventModel.getInstance().delete(this);
 	}
 
 	@Override
@@ -215,6 +216,15 @@ public class Event extends AbstractModel implements Displayable
 	{
 		this.start = start.toDate();
 	}
+	
+	/**
+	 * @param start
+	 *            the start to set
+	 */
+	public void setDate(DateTime date)
+	{
+		setStart(date);
+	}
 
 	/**
 	 * @return the end
@@ -236,7 +246,7 @@ public class Event extends AbstractModel implements Displayable
 	/**
 	 * @return the isProjectEvent
 	 */
-	public boolean isProjectEvent()
+	public boolean isProjectwide()
 	{
 		return isProjectEvent;
 	}
@@ -359,6 +369,12 @@ public class Event extends AbstractModel implements Displayable
 		return this.getStart();
 	}
 	
+	@Override
+	public Interval getInterval()
+	{
+		return new Interval(getStart(), getEnd());
+	}
+	
 	/**
 	 * this is primarily used for multiday events
 	 * 
@@ -434,7 +450,7 @@ public class Event extends AbstractModel implements Displayable
 	@Override
 	public void update()
 	{
-		EventModel.getInstance().updateEvent(this);
+		EventModel.getInstance().update(this);
 	}
 	
 	@Override
@@ -475,23 +491,21 @@ public class Event extends AbstractModel implements Displayable
 		}
 	}
 
-	/**
-	 * 
-	 * @return the events UUID
-	 */
-	public UUID getEventID() {
-		return this.eventID;
+	@Override
+	public String toString()
+	{
+		return new StringBuilder(super.toString()).append("{name: ").append(getName())
+				.append(", from: ").append(getStart().toString())
+				.append(", to: ").append(getEnd().toString()).append("}").toString();
 	}
 	
-	@Override
-	public void deselect(MonthCalendar monthCalendar)
+	public static class SerializedAction extends CachingModel.SerializedAction<Event>
 	{
-		monthCalendar.deselect(this);
-	}
-	
-	@Override
-	public void select(MonthCalendar monthCalendar)
-	{
-		monthCalendar.select(this);
+		public SerializedAction(Event e, UUID eventID, boolean b)
+		{
+			object = e;
+			uuid = eventID;
+			isDeleted = b;
+		}
 	}
 }

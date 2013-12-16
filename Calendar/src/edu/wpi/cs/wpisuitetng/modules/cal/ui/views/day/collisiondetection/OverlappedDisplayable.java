@@ -12,20 +12,21 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.collisiondetection;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 
-public class OverlappedEvent implements Comparable<OverlappedEvent>
+public class OverlappedDisplayable implements Comparable<OverlappedDisplayable>
 {
 	private int collisionCount = 0;
 	private Displayable displayable;
 	private Rational xpos = new Rational(1, 1);
-	private List<OverlappedEvent> collisions = new ArrayList<>();
+	private List<OverlappedDisplayable> collisions = new ArrayList<>();
 	
 	/**
 	 * 
 	 * @param Displayable the Displayable that this encapsulates
 	 */
-	public OverlappedEvent(Displayable displayable)
+	public OverlappedDisplayable(Displayable displayable)
 	{
 		this.displayable = displayable;
 	}
@@ -80,7 +81,7 @@ public class OverlappedEvent implements Comparable<OverlappedEvent>
 	 * 
 	 * @param overlapped add an overlapping Displayable to the list of events that this overlaps with
 	 */
-	public void addOverlappedEvent(OverlappedEvent overlapped)
+	public void addOverlappedEvent(OverlappedDisplayable overlapped)
 	{
 		if (!collisions.contains(overlapped))
 			collisions.add(overlapped);
@@ -90,22 +91,22 @@ public class OverlappedEvent implements Comparable<OverlappedEvent>
 	 * 
 	 * @return all of the events that we overlap with
 	 */
-	public List<OverlappedEvent> getOverlappedEvents()
+	public List<OverlappedDisplayable> getOverlappedEvents()
 	{
 		return collisions;
 	}
 
 	@Override
-	public int compareTo(OverlappedEvent toCompare) {
+	public int compareTo(OverlappedDisplayable toCompare) {
 		int res = Integer.compare(toCompare.xpos.toInt(10000), xpos.toInt(10000));
 		if (res == 0)
-			return toCompare.displayable.getStart().compareTo(displayable.getStart());
+			return toCompare.displayable.getDate().compareTo(displayable.getDate());
 		return res;
 	}
 	
 	@Override
 	public String toString()
 	{
-		return super.toString() + "{" + getEvent().getName() + "@" + getEvent().getStart().toString() + " collisions: " + collisionCount + "}";
+		return super.toString() + "{" + getEvent().getName() + "@" + getEvent().getDate().toString() + " collisions: " + collisionCount + "}";
 	}
 }

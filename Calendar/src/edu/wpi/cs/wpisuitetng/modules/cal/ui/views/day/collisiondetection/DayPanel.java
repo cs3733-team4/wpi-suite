@@ -24,7 +24,8 @@ import javax.swing.JPanel;
 import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.week.WeekCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
@@ -56,7 +57,7 @@ public class DayPanel extends JPanel
 			public void mouseReleased(MouseEvent arg0) {
 				if(isSomethingDragging)
 				{
-					MainPanel.getInstance().display(selected.getEvent().getStart());
+					MainPanel.getInstance().display(selected.getEvent().getDate());
 				}
 				isSomethingDragging = false;
 				selected = null;
@@ -102,10 +103,10 @@ public class DayPanel extends JPanel
 					if(!isSomethingDragging)
 					{
 						offset = arg0.getY();
-						System.out.println(offset + " " + arg0.getY() + " " + selected.getEvent().getStart().getMinuteOfDay());
+						System.out.println(offset + " " + arg0.getY() + " " + selected.getEvent().getDate().getMinuteOfDay());
 						if(inWeekView)
 						{
-							inWeek.passTo(selected.getEvent().getStart().getDayOfYear(),selected);
+							inWeek.passTo(selected.getEvent().getDate().getDayOfYear(),selected);
 							getParent().dispatchEvent(arg0);
 						}
 						isSomethingDragging = true;	
@@ -171,7 +172,7 @@ public class DayPanel extends JPanel
 	{
 		for (DayItem v : guides.values())
 		{
-			if(item instanceof Displayable && v.getEvent().getEventID().equals(((Displayable) item).getEventID()))
+			if(item instanceof Displayable && v.getEvent().getIdentification().equals(((Displayable) item).getIdentification()))
 				item = v.getEvent();
 			v.setSelected(false);
 		}

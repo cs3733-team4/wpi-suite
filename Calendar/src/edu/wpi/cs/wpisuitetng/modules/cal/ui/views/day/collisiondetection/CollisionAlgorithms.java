@@ -17,7 +17,8 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 
 /**
  * Detects collisions in the events and sets positional values for them accordingly,
@@ -32,10 +33,10 @@ public class CollisionAlgorithms
 	 * @param displayedDay the day on which these events occur
 	 * @return the list of DayItems containing events
 	 */
-	public static List<DayItem> createEventsReallyNicely(List<Event> events, DateTime displayedDay)
+	public static List<DayItem> createEventsReallyNicely(List<Displayable> events, DateTime displayedDay)
 	{
 		EventEndpoints[] particles = splitEvents(events, displayedDay);
-		List<OverlappedEvent> travellers = collideEvents(particles);
+		List<OverlappedDisplayable> travellers = collideEvents(particles);
 		xSort(particles);
 		Collections.sort(travellers);
 		return generateUI(travellers, displayedDay);
@@ -48,7 +49,7 @@ public class CollisionAlgorithms
 	 * @param displayedDay the day that these events are to displayed on
 	 * @return an array of starting and ending points for these events
 	 */
-	private static EventEndpoints[] splitEvents(List<Event> events, DateTime displayedDay)
+	private static EventEndpoints[] splitEvents(List<Displayable> events, DateTime displayedDay)
 	{
 		EventEndpoints re[] = new EventEndpoints[events.size()*2];
 		for(int i = 0; i < events.size(); i++)
@@ -67,21 +68,21 @@ public class CollisionAlgorithms
 	 * @param eventEndpoints the endpoints of all the events 
 	 * @return a list of overlapping events
 	 */
-	private static List<OverlappedEvent> collideEvents(EventEndpoints[] eventEndpoints)
+	private static List<OverlappedDisplayable> collideEvents(EventEndpoints[] eventEndpoints)
 	{
 		int counter = -1;
-		List<OverlappedEvent> out = new ArrayList<OverlappedEvent>(eventEndpoints.length/2);
-		HashMap<Event, OverlappedEvent> active = new HashMap<Event, OverlappedEvent>();
+		List<OverlappedDisplayable> out = new ArrayList<OverlappedDisplayable>(eventEndpoints.length/2);
+		HashMap<Displayable, OverlappedDisplayable> active = new HashMap<Displayable, OverlappedDisplayable>();
 		
 		for(EventEndpoints c : eventEndpoints)
 		{
 			if(!c.isEnd())
 			{
-				OverlappedEvent t = new OverlappedEvent(c.getEvent());
+				OverlappedDisplayable t = new OverlappedDisplayable(c.getEvent());
 				active.put(c.getEvent(), c.setResult(t));
 				counter++;
 				// max active
-				for (OverlappedEvent who : active.values())
+				for (OverlappedDisplayable who : active.values())
 				{
 					// count the number of hits we register
 					who.setCollisions(Math.max(who.getCollisions(), counter));
@@ -94,7 +95,7 @@ public class CollisionAlgorithms
 			}
 			else
 			{
-				OverlappedEvent who = active.remove(c.getEvent());
+				OverlappedDisplayable who = active.remove(c.getEvent());
 				out.add(who);
 				c.setResult(who);
 				counter--;
@@ -146,10 +147,10 @@ public class CollisionAlgorithms
 	 * @param overlappingInformation the information regarding the position of the events
 	 * @return a list of day Items with the position set on them based on the overlapping information
 	 */
-	private static List<DayItem> generateUI(List<OverlappedEvent> overlappingInformation, DateTime displayedDay)
+	private static List<DayItem> generateUI(List<OverlappedDisplayable> overlappingInformation, DateTime displayedDay)
 	{
 		List<DayItem> paintings = new ArrayList<>(overlappingInformation.size());
-		for(OverlappedEvent t : overlappingInformation)
+		for(OverlappedDisplayable t : overlappingInformation)
 		{
 			paintings.add(new DayItem(t, displayedDay));
 		}

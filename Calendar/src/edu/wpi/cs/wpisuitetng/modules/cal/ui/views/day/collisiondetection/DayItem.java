@@ -11,6 +11,25 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.collisiondetection;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
+
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+
+import org.joda.time.DateTime;
+import org.joda.time.Interval;
+
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
+
+import javax.swing.JLabel;
+import javax.swing.BoxLayout;
+
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -33,7 +52,6 @@ import javax.swing.border.LineBorder;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 
@@ -56,7 +74,7 @@ public class DayItem extends JPanel
 	private List<Rational> lineLengths;
 	private boolean firstDraw = true;
 	private int height;
-	private OverlappedEvent eventPositionalInformation;
+	private OverlappedDisplayable eventPositionalInformation;
 	private DateTime displayedDay;
 	private Interval length;
 	private boolean isBeingDragged;
@@ -67,14 +85,14 @@ public class DayItem extends JPanel
 	 * @param eventPositionalInformation the positional information for the Displayable
 	 * @param displayedDay the day to display this panel on
 	 */
-	public DayItem(OverlappedEvent eventPositionalInformation, DateTime displayedDay)
+	public DayItem(OverlappedDisplayable eventPositionalInformation, DateTime displayedDay)
 	{
 		isBeingDragged = false;
 		this.displayedDay=displayedDay;
 		this.eventPositionalInformation = eventPositionalInformation;
 		height = 25;
 		displayable = eventPositionalInformation.getEvent();
-		length = new Interval(displayable.getStart(), displayable.getEnd());
+		length = new Interval(displayable.getDate(), displayable.getEnd());
 		Color bg = displayable.getColor();
 		setBorder(new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new LineBorder(bg.darker()), new EmptyBorder(6, 6, 6, 6))));
 		setBackground(bg);
@@ -331,7 +349,7 @@ public class DayItem extends JPanel
 		{
 			ratpack.add(new Rational(1, 1));
 		}
-		for (OverlappedEvent who : eventPositionalInformation.getOverlappedEvents())
+		for (OverlappedDisplayable who : eventPositionalInformation.getOverlappedEvents())
 		{
 			//System.out.println("" + who + " was in" + traveller);
 			if (who.getXpos().toInt(10000) < eventPositionalInformation.getXpos().toInt(10000))
@@ -372,28 +390,27 @@ public class DayItem extends JPanel
 	
 	public void updateTime(DateTime t)
 	{
-		if(!this.displayable.getStart().equals(t))
+		if(!this.displayable.getDate().equals(t))
 		{
-			this.displayable.setStart(t);;
-			this.displayable.setEnd(t.plus(this.length.toDuration()));
+			this.displayable.setDate(t);
+			if(this.displayable instanceof Event)
+				((Event) this.displayable).setEnd(t.plus(this.length.toDuration()));
 			putTimeOn();
 		}
 	}
 	
 	private void putTimeOn()
 	{
-		if (displayable.isMultiDayEvent())
+		if(displayable instanceof Event && ((Event) displayable).isMultiDayEvent())
 		{
-			if (displayable.getStart().compareTo(displayable.getStartTimeOnDay(displayedDay))==0)//if their the same time, its the first day
-				lblTimeInfo.setText(formatTime(displayable.getStart()) + " \u2192");
-			else if (displayable.getEnd().compareTo(displayable.getEndTimeOnDay(displayedDay))==0)
-				lblTimeInfo.setText("\u2190 " + formatTime(displayable.getEnd()));
+			Event eDisplayable = (Event) displayable;
+			if (eDisplayable.getStart().compareTo(eDisplayable.getStartTimeOnDay(displayedDay))==0)//if their the same time, its the first day
+				lblTimeInfo.setText(formatTime(eDisplayable.getStart()) + " \u2192");
+			else if (eDisplayable.getEnd().compareTo(eDisplayable.getEndTimeOnDay(displayedDay))==0)
+				lblTimeInfo.setText("\u2190 " + formatTime(eDisplayable.getEnd()));
 			else
 				lblTimeInfo.setText("\u2190 \u2192");
-				
-		}
-		else
-			lblTimeInfo.setText(formatTime(displayable.getStart()) + " - " + formatTime(displayable.getEnd()));
+		}else
+			lblTimeInfo.setText(formatTime(displayable.getDate()) + " - " + formatTime(displayable.getEnd()));
 	}
-	
 }

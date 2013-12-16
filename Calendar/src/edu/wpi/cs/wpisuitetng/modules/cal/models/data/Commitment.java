@@ -7,19 +7,22 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.cal.models;
+package edu.wpi.cs.wpisuitetng.modules.cal.models.data;
 
 import java.awt.Color;
 import java.util.Date;
 import java.util.UUID;
 
 import org.joda.time.DateTime;
+import org.joda.time.Interval;
 import org.joda.time.MutableDateTime;
 
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthCalendar;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CachingModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CommitmentModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
@@ -115,7 +118,7 @@ public class Commitment extends AbstractModel implements Displayable
 	@Override
 	public void delete()
 	{
-		CommitmentModel.getInstance().deleteCommitment(this);
+		CommitmentModel.getInstance().delete(this);
 	}
 
 	/**
@@ -207,6 +210,14 @@ public class Commitment extends AbstractModel implements Displayable
 	}
 	
 	/**
+	 * @return the end (only used for displaying on day calendar)
+	 */
+	public DateTime getEnd()
+	{
+		return new DateTime(duedate).plusMinutes(30);
+	}
+	
+	/**
 	 * @return the participants
 	 */
 	public String getParticipants()
@@ -223,7 +234,7 @@ public class Commitment extends AbstractModel implements Displayable
 		this.participants = participants;
 	}
 	
-	public boolean isProjectCommitment()
+	public boolean isProjectwide()
 	{
 		return isProjectCommitment;
 	}
@@ -283,11 +294,17 @@ public class Commitment extends AbstractModel implements Displayable
 		mdt.setYear(newTime.getYear());
 		this.duedate = mdt.toDate();
 	}
+	
+	@Override
+	public Interval getInterval()
+	{
+		return new Interval(getDate(), getDate());
+	}
 
 	@Override
 	public void update()
 	{
-		CommitmentModel.getInstance().updateCommitment(this);
+		CommitmentModel.getInstance().update(this);
 	}
 	
 	@Override
@@ -317,17 +334,51 @@ public class Commitment extends AbstractModel implements Displayable
 	{
 		return commitmentID;
 	}
-	
-	@Override
-	public void deselect(MonthCalendar monthCalendar)
-	{
-		monthCalendar.deselect(this);
-	}
-	
-	@Override
-	public void select(MonthCalendar monthCalendar)
-	{
-		monthCalendar.select(this);
-	}
 
+	public static class SerializedAction extends CachingModel.SerializedAction<Commitment>
+	{
+		public SerializedAction(Commitment e, UUID eventID, boolean b)
+		{
+			object = e;
+			uuid = eventID;
+			isDeleted = b;
+		}
+	}
+	
+	/**
+	 * this is primarily used for multiday events
+	 * 
+	 * @param givenDay gets the time that this event starts on a given day
+	 * @return when this event starts
+	 */
+	public DateTime getStartTimeOnDay(DateTime givenDay)
+	{
+		MutableDateTime mDisplayedDay = new MutableDateTime(givenDay);
+		mDisplayedDay.setMillisOfDay(1);
+		//if it starts before the beginning of the day then its a multi day event, or all day event
+		if (this.getDate().isBefore(mDisplayedDay)){
+			mDisplayedDay.setMillisOfDay(0);
+			return(mDisplayedDay.toDateTime());
+		}
+		else
+			return this.getDate();
+	}
+	
+	/**
+	 * this is primarily used for multiday events
+	 * 
+	 * @param givenDay gets the time that this event ends on a given day
+	 * @return when this event ends
+	 */
+	public DateTime getEndTimeOnDay(DateTime givenDay)
+	{
+		MutableDateTime mDisplayedDay = new MutableDateTime(givenDay);;
+		mDisplayedDay.setMillisOfDay(86400000-2);
+		if (this.getDate().plusMinutes(30).isAfter(mDisplayedDay))
+		{
+			return mDisplayedDay.toDateTime();
+		}
+		else
+			return this.getDate().plusMinutes(30);
+	}
 }

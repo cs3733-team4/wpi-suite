@@ -29,8 +29,11 @@ import org.joda.time.format.DateTimeFormatter;
 import com.lowagie.text.Font;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CommitmentModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.collisiondetection.DayPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
@@ -40,21 +43,16 @@ public class DayCalendar extends AbstractCalendar
 {
 
 	private DateTime time;
-	private MainPanel mainPanel;
 	private DayPanel current;
 	
 	private JPanel holder = new JPanel();
 	private JScrollPane scroll = new JScrollPane(holder);
 
-	private EventModel eventModel;
-
 	private DateTimeFormatter titleFmt = DateTimeFormat.forPattern("EEEE, MMM d, yyyy");
 
-	public DayCalendar(DateTime on, EventModel emodel)
+	public DayCalendar(DateTime on)
 	{
-		this.mainPanel = MainPanel.getInstance();
 		this.time = on;
-		eventModel = emodel;
 		scroll.setBackground(Colors.TABLE_BACKGROUND);
 		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -89,7 +87,7 @@ public class DayCalendar extends AbstractCalendar
 		day *= (jsb.getMaximum()) - jsb.getMinimum();
 		jsb.setValue((int)day);
 		// notify mini-calendar to change
-		mainPanel.miniMove(time);
+		MainPanel.getInstance().miniMove(time);
 	}
 	
 	/**
@@ -98,7 +96,6 @@ public class DayCalendar extends AbstractCalendar
 	 */
 	private List<Displayable> getVisibleEvents()
 	{
-		
 		if (MainPanel.getInstance().showEvents()){
 			// Set up from and to datetime for search
 			MutableDateTime f = new MutableDateTime(time);
@@ -108,11 +105,11 @@ public class DayCalendar extends AbstractCalendar
 			DateTime to = f.toDateTime();
 			
 			// Filter events by date
-			List<Displayable> visibleEvents = eventModel.getEvents(from, to);
+			List<Event> visibleEvents = EventModel.getInstance().getEvents(from, to);
 			
-			/* // Filter commitments by date
+			 // Filter commitments by date
 			List<Commitment> visibleCommitments = CommitmentModel.getInstance().getCommitments(from, to);
-			
+			/*
 			// Add them to the list of events
 			for (Commitment c : visibleCommitments)
 			{
@@ -126,6 +123,11 @@ public class DayCalendar extends AbstractCalendar
 			
 			// Else, loop through events and filter by selected categories
 			for (Displayable e : visibleEvents){
+				if (selectedCategories.contains(e.getCategory()))
+					categoryFilteredEvents.add(e);
+			}
+			
+			for (Displayable e : visibleCommitments){
 				if (selectedCategories.contains(e.getCategory()))
 					categoryFilteredEvents.add(e);
 			}
@@ -160,12 +162,12 @@ public class DayCalendar extends AbstractCalendar
 
 		this.current.repaint();
 		
-		mainPanel.revalidate();
-		mainPanel.repaint();
+		MainPanel.getInstance().revalidate();
+		MainPanel.getInstance().repaint();
 	}
 
 	@Override
-	public void updateEvents(Displayable events, boolean added)
+	public void updateDisplayable(Displayable events, boolean added)
 	{
 		// at the moment, we don't care, and just re-pull from the DB. TODO: this should change
 		this.generateDay();
