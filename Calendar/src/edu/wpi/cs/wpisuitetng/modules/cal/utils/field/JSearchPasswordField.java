@@ -46,11 +46,11 @@ public class JSearchPasswordField extends JIconPasswordField implements FocusLis
 	 * @param greyMSG
 	 *            the default grey message
 	 * @param i
-	 *            the length of te password box
+	 *            the length of the password box
 	 */
 	public JSearchPasswordField(String greyMSG, int i)
 	{
-		super();
+		super(i);
 		this.textWhenNotFocused = greyMSG;
 		this.addFocusListener(this);
 	}

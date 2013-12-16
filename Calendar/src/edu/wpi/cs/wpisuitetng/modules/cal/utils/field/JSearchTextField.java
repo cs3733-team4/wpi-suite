@@ -52,7 +52,7 @@ public class JSearchTextField extends JIconTextField implements FocusListener {
 	 */
 	public JSearchTextField(String greyMSG, int i)
 	{
-		super();
+		super(i);
 		this.textWhenNotFocused = greyMSG;
 		this.addFocusListener(this);
 	}

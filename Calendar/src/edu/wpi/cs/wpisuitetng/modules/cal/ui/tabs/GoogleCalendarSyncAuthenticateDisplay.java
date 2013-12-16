@@ -10,49 +10,50 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
 import javax.swing.border.Border;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.field.JSearchPasswordField;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.field.JSearchTextField;
+
 public class GoogleCalendarSyncAuthenticateDisplay extends JPanel {
-	JTextField username = new JTextField(13);
-	JPasswordField password = new JPasswordField(13);
+	JSearchTextField username = new JSearchTextField("example@gmail.com", 23);
+	JSearchPasswordField password = new JSearchPasswordField("google account password", 23);
 
-	JButton l = new JButton("Authenticate");
+	JButton authenticateButton = new JButton("Authenticate");
 
-	JPanel u = new JPanel();
-	JPanel p = new JPanel();
-	JPanel b = new JPanel();
+	JPanel usernamePanel = new JPanel();
+	JPanel passwordPanel = new JPanel();
+	JPanel buttonPanel = new JPanel();
 
-	JPanel con = new JPanel();
+	JPanel panelContainer = new JPanel();
 
 	public GoogleCalendarSyncAuthenticateDisplay() {
 		setLayout(new GridBagLayout());
 
-		con.setLayout(new GridLayout(3, 1));
+		panelContainer.setLayout(new GridLayout(3, 1));
 
-		u.add(new JLabel("username"));
-		u.add(username);
-		p.add(new JLabel("password"));
-		p.add(password);
+		usernamePanel.add(new JLabel("username"));
+		usernamePanel.add(username);
+		passwordPanel.add(new JLabel("password"));
+		passwordPanel.add(password);
 
-		b.add(l);
+		buttonPanel.add(authenticateButton);
 
-		con.add(u);
-		con.add(p);
-		con.add(b);
+		panelContainer.add(usernamePanel);
+		panelContainer.add(passwordPanel);
+		panelContainer.add(buttonPanel);
 
-		add(con);
-		con.setOpaque(false);
+		add(panelContainer);
+		panelContainer.setOpaque(false);
 
 		Border raisedbevel = BorderFactory.createRaisedBevelBorder();
 		Border loweredbevel = BorderFactory.createLoweredBevelBorder();
 		Border compound = BorderFactory.createCompoundBorder(raisedbevel,
 				loweredbevel);
-		con.setBorder(compound);
+		panelContainer.setBorder(compound);
 		
 		
-		l.addActionListener(new ActionListener()
+		authenticateButton.addActionListener(new ActionListener()
 		{
 			@Override
 			public void actionPerformed(ActionEvent arg0)
