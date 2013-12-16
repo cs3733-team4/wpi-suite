@@ -16,6 +16,9 @@ import java.util.UUID;
 import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
 
+import com.google.gdata.data.PlainTextConstruct;
+import com.google.gdata.data.calendar.CalendarEventEntry;
+import com.google.gdata.data.extensions.When;
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
@@ -328,6 +331,22 @@ public class Commitment extends AbstractModel implements Displayable
 	public void select(MonthCalendar monthCalendar)
 	{
 		monthCalendar.select(this);
+	}
+
+	@Override
+	public CalendarEventEntry getGoogleCalendarEntry() {
+		CalendarEventEntry myEntry = new CalendarEventEntry();
+
+		myEntry.setTitle(new PlainTextConstruct(this.getName()));
+		myEntry.setContent(new PlainTextConstruct(this.getDescription()));
+
+		//oh what fun it is to have two identically named classes
+		com.google.gdata.data.DateTime dueTime = new com.google.gdata.data.DateTime(this.duedate);
+		When eventTimes = new When();
+		eventTimes.setEndTime(dueTime);
+		myEntry.addTime(eventTimes);
+		
+		return myEntry;
 	}
 
 }

@@ -14,6 +14,8 @@ import java.util.UUID;
 
 import org.joda.time.DateTime;
 
+import com.google.gdata.data.calendar.CalendarEventEntry;
+
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthCalendar;
 
 /**
@@ -104,5 +106,11 @@ public interface Displayable
 	 * @param monthCalendar 
 	 */
 	public void select(MonthCalendar monthCalendar);
+	
+	/**
+	 * 
+	 * @return this Displayable event converted to a GoogleCalendar compatable entry
+	 */
+	public CalendarEventEntry getGoogleCalendarEntry();
 	
 }

@@ -14,5 +14,7 @@
 	<classpathentry kind="lib" path="/Janeway/lib/miglayout-4.0-swing.jar"/>
 	<classpathentry kind="lib" path="/Janeway/lib/swingx-all-1.6.4.jar"/>
 	<classpathentry kind="lib" path="/Janeway/lib/joda-time-2.3.jar"/>
+	<classpathentry kind="lib" path="/Janeway/lib/gdata-calendar-2.0.jar"/>
+	<classpathentry kind="lib" path="/Janeway/lib/guava-11.0.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
