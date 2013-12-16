@@ -16,15 +16,18 @@ import java.awt.Graphics;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.border.MatteBorder;
 
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 
+import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.BoxLayout;
 
@@ -80,15 +83,23 @@ public class DayItem extends JPanel
 		height = 25;
 		displayable = eventPositionalInformation.getEvent();
 		length = new Interval(displayable.getDate(), displayable.getEnd());
-		Color bg = displayable.getColor();
-		setBorder(new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new LineBorder(bg.darker()), new EmptyBorder(6, 6, 6, 6))));
+		
+		Color bg = Colors.TABLE_GRAY_HEADER;
+		
+		if(displayable instanceof Event)
+		{
+			bg = displayable.getColor();
+			setBorder(new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new LineBorder(bg.darker()), new EmptyBorder(6, 6, 6, 6))));
+		}else
+			setBorder(new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new MatteBorder(1, 0, 0, 0, Colors.COMMITMENT_NOTIFICATION), new CompoundBorder(new LineBorder(bg.darker()), new EmptyBorder(6, 6, 6, 6)))));
+		
 		setBackground(bg);
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		lblEventTitle = new JLabel();
 		add(lblEventTitle);
 		lblEventTitle.setFont(new Font("Tahoma", Font.BOLD, 14));
 		lblEventTitle.putClientProperty("html.disable", true); //prevents html parsing
-		lblEventTitle.setText(displayable.getName());
+		lblEventTitle.setText(displayable.getName());		
 		lblTimeInfo = new JLabel();
 		putTimeOn();
 		lblTimeInfo.setBorder(new EmptyBorder(0,0,3,0));
@@ -373,8 +384,12 @@ public class DayItem extends JPanel
 	{
 		//lblEventTitle.setForeground(b?Color.WHITE:Color.BLACK);
 		//TODO: Fix the paint order or revert to old selection method
-		setBorder(b?new CompoundBorder(new LineBorder(displayable.getColor().darker()), new CompoundBorder(new LineBorder(displayable.getColor().darker()), new EmptyBorder(6, 6, 6, 6)))
-					:new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new LineBorder(displayable.getColor().darker()), new EmptyBorder(6, 6, 6, 6))));
+		if(displayable instanceof Event)
+			setBorder(b ? new CompoundBorder(new LineBorder(displayable.getColor().darker()), new CompoundBorder(new LineBorder(displayable.getColor().darker()), new EmptyBorder(6, 6, 6, 6)))
+						: new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new LineBorder(displayable.getColor().darker()), new EmptyBorder(6, 6, 6, 6))));
+		else
+			setBorder(b ? new CompoundBorder(new LineBorder(displayable.getColor().darker()), new CompoundBorder(new MatteBorder(1, 0, 0, 0, Colors.COMMITMENT_NOTIFICATION), new CompoundBorder(new LineBorder(Colors.TABLE_GRAY_HEADER.darker()), new EmptyBorder(6, 6, 6, 6))))
+						: new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new MatteBorder(1, 0, 0, 0, Colors.COMMITMENT_NOTIFICATION), new CompoundBorder(new LineBorder(Colors.TABLE_GRAY_HEADER.darker()), new EmptyBorder(6, 6, 6, 6)))));
 	}
 
 	public Displayable getEvent() {
@@ -394,16 +409,27 @@ public class DayItem extends JPanel
 	
 	private void putTimeOn()
 	{
-		if(displayable instanceof Event && ((Event) displayable).isMultiDayEvent())
+		if(displayable instanceof Event)
 		{
-			Event eDisplayable = (Event) displayable;
-			if (eDisplayable.getStart().compareTo(eDisplayable.getStartTimeOnDay(displayedDay))==0)//if their the same time, its the first day
-				lblTimeInfo.setText(formatTime(eDisplayable.getStart()) + " \u2192");
-			else if (eDisplayable.getEnd().compareTo(eDisplayable.getEndTimeOnDay(displayedDay))==0)
-				lblTimeInfo.setText("\u2190 " + formatTime(eDisplayable.getEnd()));
-			else
-				lblTimeInfo.setText("\u2190 \u2192");
-		}else
-			lblTimeInfo.setText(formatTime(displayable.getDate()) + " - " + formatTime(displayable.getEnd()));
+			if(((Event) displayable).isMultiDayEvent())
+			{
+				Event eDisplayable = (Event) displayable;
+				if (eDisplayable.getStart().compareTo(eDisplayable.getStartTimeOnDay(displayedDay))==0)//if their the same time, its the first day
+					lblTimeInfo.setText(formatTime(eDisplayable.getStart()) + " \u2192");
+				else if (eDisplayable.getEnd().compareTo(eDisplayable.getEndTimeOnDay(displayedDay))==0)
+					lblTimeInfo.setText("\u2190 " + formatTime(eDisplayable.getEnd()));
+				else
+					lblTimeInfo.setText("\u2190 \u2192");
+			}else
+				lblTimeInfo.setText(formatTime(displayable.getDate()) + " - " + formatTime(displayable.getEnd()));
+		}else if(displayable instanceof Commitment)
+		{
+			lblTimeInfo.setText("<html></i><b><font face = \"DejaVu Sans\""
+								 + "color=\"rgb(" + Colors.COMMITMENT_NOTIFICATION.getRed() + ","
+													+ Colors.COMMITMENT_NOTIFICATION.getGreen() + "," 
+													+ Colors.COMMITMENT_NOTIFICATION.getBlue() 
+													+ "\">\uFF01</font></b>" 
+													+ formatTime(displayable.getDate()) + "</html>");
+		}
 	}
 }
