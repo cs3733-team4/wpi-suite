@@ -12,4 +12,6 @@ public interface AuthRequest {
 	void handleError(AuthenticationException ae);
 	
 	void handleError(MalformedURLException ae);
+	
+	void succede();
 }

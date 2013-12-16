@@ -33,10 +33,15 @@ public class GoogleSync {
 			Pair<String, String> nameAndPass = a.getAuthenticationInformation();
 			try {
 				instance = new GoogleSync(nameAndPass.getA(), nameAndPass.getB());
+				a.succede();
 			} catch (AuthenticationException ae) {
+				instance = null;
 				a.handleError(ae);
+				ae.printStackTrace();
 			} catch (MalformedURLException mue) {
+				instance = null;
 				a.handleError(mue);
+				mue.printStackTrace();
 			}
 		}
 		return instance;
