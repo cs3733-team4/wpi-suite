@@ -17,8 +17,10 @@ import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.MutableDateTime;
 import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
+import com.google.gdata.data.PlainTextConstruct;
+import com.google.gdata.data.calendar.CalendarEventEntry;
+import com.google.gdata.data.extensions.When;
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
@@ -493,5 +495,36 @@ public class Event extends AbstractModel implements Displayable
 	public void select(MonthCalendar monthCalendar)
 	{
 		monthCalendar.select(this);
+	}
+	
+	public static class SerializedAction
+	{
+		public SerializedAction(Event e, UUID eventID, boolean b)
+		{
+			object = e;
+			uuid = eventID;
+			isDeleted = b;
+		}
+		public Event object;
+		public UUID uuid;
+		public boolean isDeleted;
+	}
+
+	@Override
+	public CalendarEventEntry getGoogleCalendarEntry() {
+		CalendarEventEntry myEntry = new CalendarEventEntry();
+
+		myEntry.setTitle(new PlainTextConstruct(this.getName()));
+		myEntry.setContent(new PlainTextConstruct(this.getDescription()));
+
+		//oh what fun it is to have two identically named classes
+		com.google.gdata.data.DateTime startTime = new com.google.gdata.data.DateTime(this.getStart().toDate());
+		com.google.gdata.data.DateTime endTime = new com.google.gdata.data.DateTime(this.getEnd().toDate());
+		When eventTimes = new When();
+		eventTimes.setStartTime(startTime);
+		eventTimes.setEndTime(endTime);
+		myEntry.addTime(eventTimes);
+		
+		return myEntry;
 	}
 }

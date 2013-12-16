@@ -49,6 +49,7 @@ public class ServerManager {
 		// Send a request to the core to save this message
 		final Request request = Network.getInstance().makeRequest(path + glue(args),
 				HttpMethod.GET);
+		request.setReadTimeout(30000);
 		request.addObserver(new RequestObserver() {
 
 			@Override
@@ -69,7 +70,8 @@ public class ServerManager {
 			@Override
 			public void fail(IRequest iReq, Exception exception) {
 				System.err.println("The request to select events failed:");
-				System.err.println(iReq.getResponse().getBody());
+				System.err.println(iReq.getUrl());
+				exception.printStackTrace();
 				sem.release();
 			}
 		}); // add an observer to process the response
