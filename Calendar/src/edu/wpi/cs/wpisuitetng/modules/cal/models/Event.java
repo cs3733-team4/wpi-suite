@@ -25,8 +25,8 @@ import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthCalendar;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.EventDualityFactory;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
-import edu.wpi.cs.wpisuitetng.modules.cal.utils.cache.EventDualityFactory;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
