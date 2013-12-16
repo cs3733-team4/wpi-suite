@@ -134,7 +134,7 @@ public class CommitmentEntityManagerTest {
                 
                 String before="19500101T010100.050Z"; // String representing a DateTime at Jan 1, 1950
                 String after ="20500102T010100.050Z"; // String representing a DateTime at Jan 1, 2050
-                Commitment[] eList=cem.getCommitmentsByRange(ses1,before,after);
+                Commitment[] eList=cem.getEntity(ses1,before);
 
                 boolean hasFirst=false, hasSecond=false, hasThird=false;
                 
@@ -167,14 +167,14 @@ public class CommitmentEntityManagerTest {
                 
                 String before="20000101T010000.000Z"; // DateTime string at 1/1/2000, 1:00; ie a little before datetime one in basicDateTime string format
                 String after ="20000102T020000.000Z"; // DateTime string at 1/2/2000, 2:00; ie a little before datetime two in basicDateTime string format
-                Commitment[] eList=cem.getCommitmentsByRange(ses1,before,after);
+                Commitment[] eList=cem.getEntity(ses1,before);
                 boolean hasCommitment=false;
                 if(eList[0].getName().equals("First"))
                         hasCommitment=true;
                 assertTrue("GetCommitmentsByRange, if given a time range that only one Commitment is within, will return only that Commitment",hasCommitment);
                 
                 after="20000103T020000.000Z"; // DateTime string at 1/3/2000, 2:00am; ie a little before datetime three in basicDateTime string format
-                eList=cem.getCommitmentsByRange(ses1,before,after);
+                eList=cem.getEntity(ses1,before);
                 
                 assertEquals("GetCommitmentsByRange, if given a time range that some Commitments are within, will return only those Commitments in a random order", 2, eList.length);
                 
@@ -188,7 +188,7 @@ public class CommitmentEntityManagerTest {
                 assertTrue("GetCommitmentsByRange, if given a time range that some commitments are within, will return only those commitments in a random order",hasFirst);
                 assertTrue("GetCommitmentsByRange, if given a time range that some commitments are within, will return only those commitments in a random order",hasSecond);
                 
-                eList=cem.getCommitmentsByRange(ses1, before, before);
+                eList=cem.getEntity(ses1, before);
                 assertEquals("GetCommitmentsByRange, if given a time range that no Commitments are within, will return an empty commitment[]", 0, eList.length);
                 
         }
@@ -206,7 +206,7 @@ public class CommitmentEntityManagerTest {
                 
                 String before="20000101T010000.000Z"; // DateTime string at 1/1/2000, 1:00am; ie a little before datetime one in basicDateTime string format
                 String after ="20000101T060000.000Z"; // DateTime string at 1/1/2000, 6:00am; ie a little past datetime one in basicDateTime string format
-                Commitment[] eList=cem.getCommitmentsByRange(ses1,before,after);
+                Commitment[] eList=cem.getEntity(ses1,before);
                 boolean hasCommitment=false;
                 
                 assertEquals("GetCommitmentsByRange, if given a time range that only one commitment is within, *should* return only that commitment", 1, eList.length);

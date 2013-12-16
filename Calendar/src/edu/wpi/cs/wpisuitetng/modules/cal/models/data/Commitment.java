@@ -214,7 +214,7 @@ public class Commitment extends AbstractModel implements Displayable
 	 */
 	public DateTime getEnd()
 	{
-		return new DateTime(duedate).plusMinutes(30);
+		return new DateTime(duedate).plusMinutes(15);
 	}
 	
 	/**

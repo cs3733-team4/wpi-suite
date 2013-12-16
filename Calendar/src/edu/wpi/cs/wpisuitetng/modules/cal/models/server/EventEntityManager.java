@@ -72,7 +72,7 @@ public class EventEntityManager implements EntityManager<Event> {
 	@Override
 	public Event[] getEntity(Session s, String data) throws NotFoundException
 	{
-		return getEventByUUID(s, data);	
+		return getEventByUUID(s, data);
 	}
 	
 	/**

@@ -112,13 +112,6 @@ public class DayCalendar extends AbstractCalendar
 			
 			 // Filter commitments by date
 			List<Commitment> visibleCommitments = CommitmentModel.getInstance().getCommitments(from, to);
-			/*
-			// Add them to the list of events
-			for (Commitment c : visibleCommitments)
-			{
-				CommitmentEvent ce = new CommitmentEvent(c);
-				visibleEvents.add(ce);
-			}*/
 			
 			// Filter for selected categories
 			Collection<UUID> selectedCategories = MainPanel.getInstance().getSelectedCategories();
