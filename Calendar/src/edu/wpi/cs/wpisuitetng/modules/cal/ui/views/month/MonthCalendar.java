@@ -555,4 +555,20 @@ public class MonthCalendar extends AbstractCalendar
 		
 		return new Polygon(xs, ys, 7);
 	}
+	
+	@Override
+	public void setSelectedDay(DateTime time) {
+		for(Component c : inside.getComponents())
+		{
+			if(c instanceof MonthDay)
+			{
+				MonthDay day = (MonthDay) c;
+				if(day.isSelected())
+					day.setSelected(false);
+				
+				day.setSelected(day.getDay().getDayOfYear()==time.getDayOfYear() && 
+						day.getDay().getYear()==time.getYear());
+			}
+		}
+	}
 }

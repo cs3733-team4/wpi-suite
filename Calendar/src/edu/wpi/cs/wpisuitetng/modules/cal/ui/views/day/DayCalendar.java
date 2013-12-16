@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoundedRangeModel;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -57,6 +58,7 @@ public class DayCalendar extends AbstractCalendar
 		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scroll.getVerticalScrollBar().setUnitIncrement(20);
+		scroll.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		holder.setBackground(Colors.TABLE_BACKGROUND);
 		
 		this.setLayout(new BorderLayout());
@@ -78,7 +80,8 @@ public class DayCalendar extends AbstractCalendar
 
 		this.current = new DayPanel();
 		this.current.setEvents(getVisibleEvents(), time);
-
+		this.current.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, Colors.BORDER));
+		
 		this.holder.add(new DayGridLabel(), BorderLayout.WEST);
 		this.holder.add(this.current, BorderLayout.CENTER);
 		BoundedRangeModel jsb = scroll.getVerticalScrollBar().getModel();
@@ -177,5 +180,11 @@ public class DayCalendar extends AbstractCalendar
 	public void select(Displayable item)
 	{
 		current.select(item);		
+	}
+	
+	@Override
+	public void setSelectedDay(DateTime time)
+	{
+		
 	}
 }

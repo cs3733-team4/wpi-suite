@@ -212,7 +212,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 	    // put entire tab into a scroll pane
 	    detailScrollPane = new JScrollPane(detailTextPane);
 	    detailScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-	    detailScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+	    detailScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 	    detailScrollPane.setBorder( new EmptyBorder(5,5,5,5));
 	    
 	    // add text area and button container to detail tab
@@ -592,6 +592,22 @@ public class SidebarTabbedPane extends JTabbedPane{
 	 */
 	public boolean showEvents(){
 		return this.showEvents;
+	}
+
+	/**
+	 * Focuses the details tab
+	 */
+	public void selectDetailTab() {
+		this.setSelectedComponent(detailTab);
+		
+	}
+	
+	/**
+	 * Focuses the filter tab
+	 */
+	public void selectFilterTab() {
+		this.setSelectedComponent(categoryFilterTab);
+		
 	}
 	
 }

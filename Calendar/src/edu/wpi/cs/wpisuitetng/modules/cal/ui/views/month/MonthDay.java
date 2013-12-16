@@ -12,16 +12,23 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.font.TextAttribute;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
@@ -43,11 +50,18 @@ public class MonthDay extends JPanel
 	private Displayable selected;
 	private List<Displayable> allitems = new ArrayList<>();
 	private DateTime day;
+	private DayStyle style;
+	private MonthCalendar parent;
+	private boolean isSelected = false;
+
+	Color grayit, textit = Colors.TABLE_TEXT, bg = Colors.TABLE_BACKGROUND;
 	
 	public MonthDay(DateTime initDay, DayStyle style, final MonthCalendar parent)
 	{
 		this.day = initDay;
-		Color grayit, textit = Colors.TABLE_TEXT, bg = Colors.TABLE_BACKGROUND;
+		this.parent = parent;
+		this.style = style;
+		Color grayit = Colors.TABLE_GRAY_HEADER, textit = Colors.TABLE_TEXT, bg = Colors.TABLE_BACKGROUND;
 		switch (style)
 		{
 			case Normal:
@@ -58,8 +72,10 @@ public class MonthDay extends JPanel
 				grayit = bg;
 				break;
 			case Today:
-				grayit = Colors.SELECTED_BACKGROUND;
-				textit = Colors.SELECTED_TEXT;
+				grayit = Colors.TABLE_GRAY_HEADER;
+				textit = Colors.TABLE_GRAY_TEXT;
+				//grayit = Colors.SELECTED_BACKGROUND;
+				//textit = Colors.SELECTED_TEXT;
 				break;
 			default:
 				throw new IllegalStateException("DayStyle is not a valid DayStyle!");
@@ -78,6 +94,22 @@ public class MonthDay extends JPanel
 		header.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 		header.setMaximumSize(new java.awt.Dimension(10000, 17));
 		header.setOpaque(true);
+		
+		if(style == DayStyle.Today)
+		{
+			Font font = header.getFont();
+			Map attributes = font.getAttributes();
+			attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+			header.setFont(font.deriveFont(attributes));
+
+			/*
+			try {
+			    Image img = ImageIO.read(getClass().getResource("/edu/wpi/cs/wpisuitetng/modules/cal/img/today_label_blue.png"));
+			    header.setIcon(new ImageIcon(img));
+			} catch (IOException ex) {}
+			*/
+		}
+		
 		add(header);
 
 		addMouseListener(new MouseListener()
@@ -138,7 +170,10 @@ public class MonthDay extends JPanel
 			
 			@Override
 			public void mousePressed(MouseEvent e)
-			{}
+			{
+				MainPanel.getInstance().setSelectedDay(day);
+				MainPanel.getInstance().clearSelected();
+			}
 
 			@Override
 			public void mouseClicked(MouseEvent e)
@@ -328,4 +363,22 @@ public class MonthDay extends JPanel
 		return this.day;
 	}
 	
+	/**
+	 * Updates header and text to show selected status
+	 * @param b the selected status of the day
+	 */
+	public void setSelected(boolean b)
+	{
+		isSelected=b;
+		this.header.setBackground(b ? Colors.SELECTED_BACKGROUND : (this.style == DayStyle.OutOfMonth ? grayit : Colors.TABLE_GRAY_HEADER) );
+		this.header.setForeground(b ? Color.WHITE : Colors.TABLE_GRAY_TEXT);
+	}
+	
+	/**
+	 * Getter for isSelected
+	 * @return whether the day is selected
+	 */
+	public boolean isSelected() {
+		return isSelected;
+	}
 }

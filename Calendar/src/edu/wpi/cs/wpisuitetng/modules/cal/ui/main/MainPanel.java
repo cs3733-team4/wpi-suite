@@ -538,6 +538,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	public void updateSelectedDisplayable(Displayable item)
 	{
 		mCalendar.select(item);
+		this.sideTabbedPanel.selectDetailTab();
 		this.currentSelected = item;	
 		sideTabbedPanel.showDetails(item);
 	}
@@ -657,6 +658,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	public void setSelectedDay(DateTime time)
 	{
 		lastTime = time;
+		mCalendar.setSelectedDay(time);
 	}
 	
 	/**

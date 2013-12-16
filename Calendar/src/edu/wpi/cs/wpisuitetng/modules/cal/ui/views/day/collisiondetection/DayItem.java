@@ -20,8 +20,6 @@ import javax.swing.border.LineBorder;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventModel;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
@@ -32,7 +30,6 @@ import javax.swing.BoxLayout;
 
 import java.awt.Font;
 import java.awt.FontMetrics;
-import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -41,19 +38,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.swing.BoxLayout;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
 
-import org.joda.time.DateTime;
-import org.joda.time.Interval;
-
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
-import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 
 /**
  * Beautiful images of what is in the days.
@@ -378,10 +365,16 @@ public class DayItem extends JPanel
 	}
 	
 
-	// Set text color to white to indicate selected Displayable
+	/**
+	 * Set borders depending on selected status
+	 * @param b selected status of the item
+	 */
 	public void setSelected(boolean b)
 	{
-		lblEventTitle.setForeground(b?Color.WHITE:Color.BLACK);		
+		//lblEventTitle.setForeground(b?Color.WHITE:Color.BLACK);
+		//TODO: Fix the paint order or revert to old selection method
+		setBorder(b?new CompoundBorder(new LineBorder(displayable.getColor().darker()), new CompoundBorder(new LineBorder(displayable.getColor().darker()), new EmptyBorder(6, 6, 6, 6)))
+					:new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new LineBorder(displayable.getColor().darker()), new EmptyBorder(6, 6, 6, 6))));
 	}
 
 	public Displayable getEvent() {
