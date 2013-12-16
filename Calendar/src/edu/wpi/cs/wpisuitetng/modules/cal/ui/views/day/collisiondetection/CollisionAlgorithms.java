@@ -17,7 +17,7 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 
 /**
  * Takes events, which are made of two particles colliding, and smashes them together so fast

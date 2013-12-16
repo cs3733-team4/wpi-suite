@@ -8,7 +8,7 @@
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
 
-package edu.wpi.cs.wpisuitetng.modules.cal.models;
+package edu.wpi.cs.wpisuitetng.modules.cal.models.server;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -23,6 +23,8 @@ import edu.wpi.cs.wpisuitetng.exceptions.NotImplementedException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.Model;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Category;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 
 public class CategoryEntityManager implements EntityManager<Category> {
         /** The database */

@@ -13,7 +13,7 @@ import javax.swing.JComponent;
 
 import org.joda.time.DateTime;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
 
 /**
  * Abstract calendar is used to abstract month/week/day/year view

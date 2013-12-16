@@ -7,12 +7,14 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.cal.models;
+package edu.wpi.cs.wpisuitetng.modules.cal.models.client;
 
 import java.util.List;
 import java.util.UUID;
 
 import org.joda.time.DateTime;
+
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 
 public class EventModel extends CachingDisplayableModel<Event, Event.SerializedAction>
 {
