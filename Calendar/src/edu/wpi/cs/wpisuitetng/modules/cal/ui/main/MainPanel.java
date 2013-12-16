@@ -415,7 +415,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	 */
 	public void addCategory(Category newCategory)
 	{
-		categories.putCategory(newCategory);
+		categories.put(newCategory);
 	}
 	
 	/**
@@ -424,7 +424,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	 */
 	public void updateCategory(Category updateCategory)
 	{
-		categories.updateCategory(updateCategory);
+		categories.update(updateCategory);
 	}
 	
 	

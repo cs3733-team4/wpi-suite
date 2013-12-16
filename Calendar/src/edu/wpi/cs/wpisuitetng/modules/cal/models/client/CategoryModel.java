@@ -10,27 +10,21 @@
 
 package edu.wpi.cs.wpisuitetng.modules.cal.models.client;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Category;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 
-public class CategoryModel {
+public class CategoryModel extends CachingModel<Category, Category.SerializedAction> {
 
 	private static CategoryModel instance;
-	private List<Category> categories;
-	private Map<UUID, Category> categoryMap = new HashMap<>();
 	
 	/**
 	 * private singleton constructor
 	 */
 	private CategoryModel()
 	{
-		this.updateCache();
+		super("categories", Category.SerializedAction[].class, Category[].class);
 	}
 	
 	/**
@@ -51,49 +45,7 @@ public class CategoryModel {
 	 */
 	public List<Category> getAllCategories()
 	{
-		return categories;
-	}
-
-	/**
-	 * updates the cash of categories;
-	 */
-	public void updateCache()
-	{
-		final List<Category> categories = ServerManager.get("cal/categories/",
-				Category[].class, "get-all-categories");
-
-		List<Category> filteredCategories = new ArrayList<Category>();
-		boolean showPersonal = MainPanel.getInstance().showPersonal;
-		boolean showTeam = MainPanel.getInstance().showTeam;
-
-		for (Category c : categories) {
-			if (c.isProjectCategory() && showTeam) {
-				filteredCategories.add(c);
-			}
-			if (!c.isProjectCategory() && showPersonal) {
-				filteredCategories.add(c);
-			}
-		}
-
-		this.categories = filteredCategories;
-		this.categoryMap.clear();
-		for(Category c : categories)
-		{
-			this.categoryMap.put(c.getCategoryID(), c);
-		}
-	}
-
-	/**
-	 * always updates the cache
-	 * 
-	 * @param toAdd
-	 * @return boolean if the put request was successful
-	 */
-	public boolean putCategory(Category toAdd)
-	{
-		boolean result = ServerManager.put("cal/categories", toAdd.toJSON());
-		updateCache();
-		return result;
+		return getAll();
 	}
 	
 	/**
@@ -103,17 +55,24 @@ public class CategoryModel {
 	 */
 	public Category getCategoryByUUID(UUID categoryID)
 	{
-		return this.categoryMap.get(categoryID);
+		return getByUUID(categoryID);
 	}
-	
-	/**
-	* @param toUpdate
-	* @return boolean if the post request was succesful
-	*/
-	public boolean updateCategory(Category toUpdate)
-    {
-		boolean result = ServerManager.put("cal/categories", toUpdate.toJSON());
-		updateCache();
-		return result;
-    }
+
+	@Override
+	protected void applySerializedChange(Category.SerializedAction serializedAction)
+	{
+		//TODO: update lists
+	}
+
+	@Override
+	protected UUID getUuidFrom(Category obj)
+	{
+		return obj.getCategoryID();
+	}
+
+	@Override
+	protected boolean filter(Category obj)
+	{
+		return true;
+	}
 }

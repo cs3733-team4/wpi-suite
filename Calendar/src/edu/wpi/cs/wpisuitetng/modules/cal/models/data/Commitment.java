@@ -23,7 +23,6 @@ import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CachingModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CommitmentModel;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CachingModel.SerializedAction;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
@@ -327,7 +326,6 @@ public class Commitment extends AbstractModel implements Displayable
 	{
 		return commitmentID;
 	}
-	
 
 	public static class SerializedAction extends CachingModel.SerializedAction<Commitment>
 	{
