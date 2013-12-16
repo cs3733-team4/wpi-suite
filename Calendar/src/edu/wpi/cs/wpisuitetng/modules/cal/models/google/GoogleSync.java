@@ -79,6 +79,7 @@ public class GoogleSync {
 	}
 	
 	
+	
 	public boolean makeCalendar(String calendarName, String calendarColor) throws IOException, ServiceException
 	{
 		CalendarEntry newCalendar = new CalendarEntry();

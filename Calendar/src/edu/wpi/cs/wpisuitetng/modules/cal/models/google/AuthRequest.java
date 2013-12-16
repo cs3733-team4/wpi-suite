@@ -7,6 +7,7 @@ import com.google.gdata.util.AuthenticationException;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.cache.Pair;
 
 public interface AuthRequest {
+	
 	Pair<String, String> getAuthenticationInformation();
 	
 	void handleError(AuthenticationException ae);
