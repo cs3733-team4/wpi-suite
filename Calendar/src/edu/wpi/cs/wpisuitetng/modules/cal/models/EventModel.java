@@ -9,6 +9,7 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.models;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,10 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
+import com.google.gdata.util.ServiceException;
+
+import edu.wpi.cs.wpisuitetng.modules.cal.models.google.DisplayableSyncer;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.google.GoogleSync;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 
 public class EventModel
@@ -93,6 +98,12 @@ public class EventModel
 				filteredEvents.add(e);
 			}
 		}
+		
+		for(Event e : events)
+		{
+			new DisplayableSyncer(MainPanel.getInstance().getGoogleCalendarSyncer(), e);
+		}
+		
 		return filteredEvents;
 	}
 
