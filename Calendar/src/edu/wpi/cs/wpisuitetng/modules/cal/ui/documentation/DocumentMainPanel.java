@@ -11,6 +11,7 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui.documentation;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -80,8 +81,7 @@ public class DocumentMainPanel extends JFrame{
     	if (serverLocation!=null)
     		return;
     	
-    	System.out.println("initializing...");
-    	navPanel = new JPanel(new BorderLayout());
+    	navPanel = new JPanel(new FlowLayout());
     	forwardButton = new JButton("Forward");
     	backButton = new JButton("Back");
     	forwardButton.setEnabled(false);
@@ -149,7 +149,6 @@ public class DocumentMainPanel extends JFrame{
 				
 			}
 		});
-        System.out.println("Checkpoint 1");
         //create the JTextField that shows the HTML Page
         webPage.setBackground(Color.getColor("EFEFEF"));
         webPage.addHyperlinkListener(new HyperlinkListener() {
@@ -165,7 +164,7 @@ public class DocumentMainPanel extends JFrame{
           			}
           			else
           			{
-          				goToPage(e.getURL().toString().replace(serverLocation, ""), false, true);
+          				goToPage(e.getURL().toString().replace(serverLocation, ""), true);
           			}
                 }
             }//end hyperlinkUpdate()
@@ -175,14 +174,13 @@ public class DocumentMainPanel extends JFrame{
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         tocView.add(openInBrowser, BorderLayout.NORTH);
         tocView.add(tableOfContents, BorderLayout.CENTER);
-        navPanel.add(forwardButton, BorderLayout.EAST);
-        navPanel.add(backButton, BorderLayout.WEST);
+        navPanel.add(backButton);
+        navPanel.add(forwardButton);
         tocView.add(navPanel, BorderLayout.SOUTH);
         splitPane.add(tocView);
         splitPane.add(scroll);
        
         this.add(splitPane, BorderLayout.CENTER);
-        System.out.println("DUN");
     }
     
     /**
@@ -195,7 +193,7 @@ public class DocumentMainPanel extends JFrame{
 		{
 
 			onPage++;
-			goToPage(visitedPages.get(onPage), false, false);
+			goToPage(visitedPages.get(onPage), false);
 			backButton.setEnabled(true);
 			if (onPage == (visitedPages.size()-1))
 				forwardButton.setEnabled(false);
@@ -213,7 +211,7 @@ public class DocumentMainPanel extends JFrame{
 		{
 
 			onPage--;
-			goToPage(visitedPages.get(onPage), false, false);
+			goToPage(visitedPages.get(onPage), false);
 			forwardButton.setEnabled(true);
 			if (onPage == 0)
 				backButton.setEnabled(false);
@@ -538,48 +536,39 @@ public class DocumentMainPanel extends JFrame{
      * Navigates the documentation view to a specific page.  Will not work for link outside of the documentation
      * @param page the HTML page to navigate to
      */
-    public void goToPage(String page, boolean fromTOC, boolean addHistory)
+    public void goToPage(String page, boolean addHistory)
     {
-    	System.out.println("Going to: " + page + " at " + webPage.getPage().toString().replace(serverLocation, "") + " fromTOC: " + fromTOC);
     	if (page.replace(serverLocation, "").equals(webPage.getPage().toString().replace(serverLocation, "")))
-    	{
-    		System.out.println("Ignoring duplicate page....");
     		return;
-    	}
-    	if (!fromTOC)
-    	{
-    		tableOfContents.expandToPage(page.replace(serverLocation, ""));
-    		return;
-    	}
+    	
     	try {
     		System.out.println("Going to page: " + page);
 			webPage.setPage(new URL(serverLocation + page.replace(serverLocation, "")));
 			if (addHistory)
 			{
-				System.out.println("Adding history...");
 				backButton.setEnabled(true);
   				forwardButton.setEnabled(false);
   				while (visitedPages.size()>(onPage+1))
   				{//remove the future pages because they broke the chain
   					visitedPages.removeLast();
-  					System.out.println("Removing last");
   				}
 
 				visitedPages.add(page.replace(serverLocation, ""));
 				onPage = visitedPages.size()-1;
-				System.out.println(onPage);
 			}
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		tableOfContents.expandToPage(page.replace(serverLocation, ""));
     	
     }
 
     public void goToPage(String page)
     {
-    	goToPage(page, false, true);
+    	goToPage(page, true);
     	
     }
 

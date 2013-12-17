@@ -33,7 +33,7 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 
-public class TableOfContents extends JPanel implements TreeSelectionListener {
+public class TableOfContents extends JPanel {
     private JTree tree;
     private HashMap<String, DefaultMutableTreeNode> theMap;
     /**
@@ -53,8 +53,8 @@ public class TableOfContents extends JPanel implements TreeSelectionListener {
         tree = new JTree(top);
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         tree.setBackground(Color.getColor("EFEFEF"));
+        
         //Listen for when the selection changes.
-        //tree.addTreeSelectionListener(this);
         tree.addMouseListener(new MouseListener() {
 			
 			@Override
@@ -92,7 +92,7 @@ public class TableOfContents extends JPanel implements TreeSelectionListener {
 	                if (node.getUserObject() instanceof ListInfo)
 	                {
 	                	
-	                	DocumentMainPanel.getInstance().goToPage(((ListInfo)node.getUserObject()).getPageName(), true, true);
+	                	DocumentMainPanel.getInstance().goToPage(((ListInfo)node.getUserObject()).getPageName(), true);
 	                }
 	            }
 	            
@@ -113,20 +113,7 @@ public class TableOfContents extends JPanel implements TreeSelectionListener {
         add(treeView);
     }
 
-    /** Required by TreeSelectionListener interface. */
-    public void valueChanged(TreeSelectionEvent e) {
 
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
-        if (node==null)
-        	return;
-        System.out.println("Tree changed");
-        if (node.getUserObject() instanceof ListInfo)
-        {
-        	
-        	DocumentMainPanel.getInstance().goToPage(((ListInfo)node.getUserObject()).getPageName(), true, true);
-        }
-        
-  }
     /**
      * Expands the tree to only the shown page and selects the page
      * @param thePage
