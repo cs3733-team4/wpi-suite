@@ -74,7 +74,7 @@ public class CategoryEntityManager implements EntityManager<Category> {
     		PollPusher<Category> pp = PollPusher.getInstance(Category.class);
     		final String[] stringList = new String[]{"[]"}; // so we can modify the string from the listener
     		final Thread thisthread = Thread.currentThread();
-    		PushedInfo listener = (new PushedInfo(s) {
+    		PushedInfo listener = (new PushedInfo(s.getSessionId()) {
     			
     			@Override
     			public void pushUpdates(String item)

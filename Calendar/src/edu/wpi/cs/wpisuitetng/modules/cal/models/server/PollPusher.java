@@ -13,8 +13,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import edu.wpi.cs.wpisuitetng.Session;
-
 public class PollPusher<T>
 {
 	private HashMap<String, Integer> indexqueue = new HashMap<>();
@@ -79,9 +77,9 @@ public class PollPusher<T>
 	public static abstract class PushedInfo
 	{
 		private String session;
-		public PushedInfo(Session session)
+		public PushedInfo(String session)
 		{
-			this.session = session.getSessionId();
+			this.session = session;
 		}
 		public String getSessionID()
 		{
