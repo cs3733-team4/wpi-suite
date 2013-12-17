@@ -31,7 +31,6 @@ import edu.wpi.cs.wpisuitetng.modules.Model;
  * CommitmentManager module.
  *
  * @version $Revision: 1.0 $
- * @author BKMcLeod
  */
 public class CommitmentEntityManager implements EntityManager<Commitment> {
 

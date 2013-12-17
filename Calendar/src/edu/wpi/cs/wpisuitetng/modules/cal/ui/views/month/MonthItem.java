@@ -14,10 +14,14 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -25,6 +29,7 @@ import javax.swing.border.EmptyBorder;
 import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentStatus;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
@@ -104,6 +109,20 @@ public class MonthItem extends JPanel
         {
         	arrow.setForeground(Colors.COMMITMENT_NOTIFICATION);
         	arrow.setText("\uFF01");
+        	
+        	try {
+        		// Get the appropriate image based on the commitment's status and put it on the label.
+        		if (((Commitment) ndisp).getStatus() != null)
+        		{
+        			Image img = ImageIO.read(getClass().getResource("/edu/wpi/cs/wpisuitetng/modules/cal/img/commitment_unstarted.png"));
+        			if (((Commitment) ndisp).getStatus().equals(CommitmentStatus.InProgress.toString()))
+        				img = ImageIO.read(getClass().getResource("/edu/wpi/cs/wpisuitetng/modules/cal/img/commitment_in_progress.png"));
+        			else if (((Commitment) ndisp).getStatus().equals(CommitmentStatus.Complete.toString()))
+        				img = ImageIO.read(getClass().getResource("/edu/wpi/cs/wpisuitetng/modules/cal/img/commitment_complete.png"));
+        		    arrow = new JLabel(new ImageIcon(img));
+        		}    		    
+    		} catch (IOException ex) {}
+        	
         	categoryColor.setBackground((Colors.TABLE_BACKGROUND));
 	    	categoryColor.setBorder(new EmptyBorder(0, 0, 0, 0));
         }
