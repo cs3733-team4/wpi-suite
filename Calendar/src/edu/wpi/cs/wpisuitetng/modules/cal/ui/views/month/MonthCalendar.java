@@ -428,11 +428,12 @@ public class MonthCalendar extends AbstractCalendar
 			
 			// Filter for selected categories
 			Collection<UUID> selectedCategories = MainPanel.getInstance().getSelectedCategories();
+			Collection<String> selectedStatuses=MainPanel.getInstance().getSelectedStatuses();
 			List<Commitment> categoryFilteredCommitments = new ArrayList<Commitment>();
 			
 			// Else, loop through events and filter by selected categories
 			for (Commitment c : visibleCommitments){
-				if (selectedCategories.contains(c.getCategory()))
+				if (selectedCategories.contains(c.getCategory()) && selectedStatuses.contains(c.getStatus()))
 					categoryFilteredCommitments.add(c);
 			}
 			

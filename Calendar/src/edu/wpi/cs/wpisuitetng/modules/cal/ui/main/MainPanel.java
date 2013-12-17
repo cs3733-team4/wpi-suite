@@ -681,6 +681,13 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		return this.sideTabbedPanel.getSelectedCategories();
 	}
 	
+	/**
+	 * Gets the selected categories by the filters in side pane
+	 */
+	public Collection<String> getSelectedStatuses(){
+		return this.sideTabbedPanel.getSelectedStatuses();
+	}
+	
 	
 	/**
 	 * Determines whether commitments should be displayed or not

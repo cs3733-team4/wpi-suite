@@ -88,6 +88,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 	private List<Category> allPlusDefault = new ArrayList<Category>();
 	private HashMap<JCheckBox, Category> checkBoxCategoryMap = new HashMap<JCheckBox, Category>();
 	private Collection<UUID> selectedCategories = new ArrayList<UUID>();
+	private Collection<String> selectedStatuses = new ArrayList<String>();
 	
 	/**
 	 * Tabbed panel in the navigation sidebar to hold additional details of selected items
@@ -416,6 +417,18 @@ public class SidebarTabbedPane extends JTabbedPane{
 		// since the allCategories list is passed by reference
 		allPlusDefault.clear();
 		allPlusDefault.add(Category.DEFAULT_CATEGORY);
+		
+		// Adding categories to represent the commitment statuses
+		Category notStarted=new Category();
+		notStarted.setName("Not Started");
+		allPlusDefault.add(notStarted);
+		Category incomplete=new Category();
+		incomplete.setName("In Progress");
+		allPlusDefault.add(incomplete);
+		Category complete=new Category();
+		complete.setName("Complete");
+		allPlusDefault.add(complete);
+		
 		allPlusDefault.addAll(allCategories);
 		
 		for(Category c : allPlusDefault)
@@ -453,6 +466,18 @@ public class SidebarTabbedPane extends JTabbedPane{
 	    		doubleColor.add(red);
 	    		categoryColor.add(doubleColor);
 	    	}
+	    	else if (c.getName().equals("Not Started")) // If not started
+	    	{
+	    		categoryColor.setBackground(Color.RED);
+	    	}
+	    	else if (c.getName().equals("In Progress")) // If in progress
+	    	{
+	    		categoryColor.setBackground(Color.YELLOW);
+	    	}
+	    	else if (c.getName().equals("Complete")) // If uncategorized
+	    	{
+	    		categoryColor.setBackground(Color.GREEN);
+	    	}
 	    	else // If not, get category color
 	    		categoryColor.setBackground(c.getColor());
 	    	
@@ -467,7 +492,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 			container.setMaximumSize(new Dimension(10000, 20));
 			
 			// Store reference to check boxes and categories
-			if (categoryCheckBox.isSelected() && !(selectedCategories.contains(c.getCategoryID())))
+			if (categoryCheckBox.isSelected() && !(selectedCategories.contains(c.getCategoryID()) && c.getName()!="Not Started" && c.getName()!="In Progress" && c.getName()!="Complete"))
 			{
 					selectedCategories.add(c.getCategoryID());
 			}
@@ -498,6 +523,15 @@ public class SidebarTabbedPane extends JTabbedPane{
 	}
 	
 	/**
+	 * Get the collection of selected commitment statuses
+	 * @return the collection of selected UUIDs
+	 */
+	public Collection<String> getSelectedStatuses()
+	{
+		return this.selectedStatuses;
+	}
+	
+	/**
 	 * Custom listener for check boxes
 	 *
 	 * Maintains the selected category collection updated
@@ -521,7 +555,13 @@ public class SidebarTabbedPane extends JTabbedPane{
 					showCommitments = true;
 				else
 				{
-					if (! selectedCategories.contains(referencedCategory.getCategoryID()))
+					if(referencedCategory.getName()=="Not Started")
+						selectedStatuses.add("Not Started");
+					else if(referencedCategory.getName()=="In Progress")
+						selectedStatuses.add("In Progress");
+					else if(referencedCategory.getName()=="Complete")
+						selectedStatuses.add("Complete");
+					else if (! selectedCategories.contains(referencedCategory.getCategoryID()))
 						selectedCategories.add(referencedCategory.getCategoryID());
 				}
 			} else
@@ -532,7 +572,13 @@ public class SidebarTabbedPane extends JTabbedPane{
 					showCommitments = false;
 				else
 				{
-					if (selectedCategories.contains(referencedCategory.getCategoryID()))
+					if(referencedCategory.getName()=="Not Started")
+						selectedStatuses.remove("Not Started");
+					else if(referencedCategory.getName()=="In Progress")
+						selectedStatuses.remove("In Progress");
+					else if(referencedCategory.getName()=="Complete")
+						selectedStatuses.remove("Complete");
+					else if (selectedCategories.contains(referencedCategory.getCategoryID()))
 						selectedCategories.remove(referencedCategory.getCategoryID());
 				}
 			}
@@ -556,7 +602,13 @@ public class SidebarTabbedPane extends JTabbedPane{
 			if (!key.isSelected())
 			{
 				key.setSelected(true);
-				if(! selectedCategories.contains(value.getCategoryID()))
+				if(value.getName()=="Not Started")
+					selectedStatuses.add("Not Started");
+				else if(value.getName()=="In Progress")
+					selectedStatuses.add("In Progress");
+				else if(value.getName()=="Complete")
+					selectedStatuses.add("Complete");
+				else if(! selectedCategories.contains(value.getCategoryID()))
 					selectedCategories.add(value.getCategoryID());
 			}
 		}
@@ -572,6 +624,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 	{
 		// Clear previous selected categories
 		selectedCategories.clear();
+		selectedStatuses.clear();
 		
 		isUser = false; // Do not call db upon single each check and uncheck
 		
