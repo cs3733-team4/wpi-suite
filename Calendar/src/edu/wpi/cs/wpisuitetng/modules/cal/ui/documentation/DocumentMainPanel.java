@@ -14,6 +14,8 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -181,6 +183,46 @@ public class DocumentMainPanel extends JFrame{
         splitPane.add(scroll);
        
         this.add(splitPane, BorderLayout.CENTER);
+        
+        webPage.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent arg0) {
+				switch (arg0.getButton()){
+				case 4:
+					backward();
+					break;
+				case 5:
+					forward();
+					break;
+				}
+				
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
     }
     
     /**
@@ -188,7 +230,6 @@ public class DocumentMainPanel extends JFrame{
      */
     public void forward()
     {
-    	System.out.println(onPage);
     	if ((onPage +1 ) < visitedPages.size())
 		{
 
@@ -206,7 +247,6 @@ public class DocumentMainPanel extends JFrame{
      */
     public void backward()
     {
-    	System.out.println(onPage);
     	if (onPage>0)
 		{
 
@@ -542,7 +582,6 @@ public class DocumentMainPanel extends JFrame{
     		return;
     	
     	try {
-    		System.out.println("Going to page: " + page);
 			webPage.setPage(new URL(serverLocation + page.replace(serverLocation, "")));
 			if (addHistory)
 			{

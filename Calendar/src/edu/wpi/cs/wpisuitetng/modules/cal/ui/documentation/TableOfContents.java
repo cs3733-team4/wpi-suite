@@ -24,6 +24,7 @@ import java.util.HashMap;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
+import javax.swing.SwingUtilities;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -43,7 +44,7 @@ public class TableOfContents extends JPanel {
     public TableOfContents(String serverLocation) {
         super(new GridLayout(1,0));
         theMap = new HashMap<>();
-        this.setBackground(Color.getColor("EFEFEF"));
+        this.setBackground(Color.getColor("FFFFFF"));
         //Create the nodes.
         DefaultMutableTreeNode top = new DefaultMutableTreeNode("Team YOCO Calendar");
         populateFromTOC(top, serverLocation);
@@ -52,7 +53,7 @@ public class TableOfContents extends JPanel {
         //Create a tree that allows one selection at a time.
         tree = new JTree(top);
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-        tree.setBackground(Color.getColor("EFEFEF"));
+        tree.setBackground(Color.getColor("FFFFFF"));
         
         //Listen for when the selection changes.
         tree.addMouseListener(new MouseListener() {
@@ -65,7 +66,7 @@ public class TableOfContents extends JPanel {
 			
 			@Override
 			public void mousePressed(MouseEvent arg0) {
-				// TODO Auto-generated method stub
+				
 				
 			}
 			
@@ -88,7 +89,6 @@ public class TableOfContents extends JPanel {
 	            	DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 	                if (node==null)
 	                	return;
-	                System.out.println("Tree changed");
 	                if (node.getUserObject() instanceof ListInfo)
 	                {
 	                	
@@ -101,12 +101,12 @@ public class TableOfContents extends JPanel {
         if (tree.getCellRenderer() instanceof DefaultTreeCellRenderer)
         {
             final DefaultTreeCellRenderer renderer = (DefaultTreeCellRenderer)(tree.getCellRenderer());
-            renderer.setBackgroundNonSelectionColor(Color.getColor("EFEFEF"));
+            renderer.setBackgroundNonSelectionColor(Color.getColor("FFFFFF"));
         }
 
         //Create the scroll pane and add the tree to it. 
         JScrollPane treeView = new JScrollPane(tree);
-        treeView.setBackground(Color.getColor("EFEFEF"));
+        treeView.setBackground(Color.getColor("FFFFFF"));
 
         Dimension minimumSize = new Dimension(100, 50);
         treeView.setMinimumSize(minimumSize);
