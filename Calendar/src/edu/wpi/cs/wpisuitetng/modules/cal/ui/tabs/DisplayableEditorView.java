@@ -12,6 +12,8 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.Box;
 import javax.swing.ButtonGroup;
@@ -54,6 +56,27 @@ public class DisplayableEditorView extends JPanel
 		nameTextField = new JTextField();
 		nameTextField.setColumns(30);
 		nameTextField.addAncestorListener(new RequestFocusListener());
+		nameTextField.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyTyped(KeyEvent e)
+			{
+
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e)
+			{
+
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e)
+			{
+				if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_ENTER)
+					saveButton.doClick();
+			}
+		});
 
 		nameLabel = new JLabel("Name:");
 		this.setLayout(new MigLayout("", "[45px][334px,grow]",
