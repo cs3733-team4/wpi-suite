@@ -51,9 +51,9 @@ public class PollPusher<T>
 		for (PushedInfo pi : waiting)
 		{
 			pi.pushUpdates(item);
-			TimeOrderedList<String> iter = changesc.timeOrderedCallIterator(pi.getSessionID());
+			TimeOrderedList<String, String> iter = changesc.timeOrderedCallIterator(pi.getSessionID());
 			Iterator<String> is =  iter.iterator();
-			while(is.hasNext())
+			while (is.hasNext())
 			{
 				iter.setValue(is.next());
 			}

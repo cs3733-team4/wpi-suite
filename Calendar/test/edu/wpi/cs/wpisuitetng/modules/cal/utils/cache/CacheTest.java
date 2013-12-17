@@ -54,7 +54,7 @@ public class CacheTest {
 	public void highLevelIteraterFromCacheWorksOnce() {
 		Cache<String, String> c = new Cache<>("");
 		c.put("something", "epic!!!");
-		for(TimeOrderedList<String> q : c.accessOrderedCallIterator("something"))
+		for(TimeOrderedList<String, String> q : c.accessOrderedCallIterator("something"))
 		{
 			assertTrue(q.getValue().equals("epic!!!"));
 		}
@@ -83,7 +83,7 @@ public class CacheTest {
 		int xpCount = 0;
 		boolean successes = true;
 		
-		for(TimeOrderedList<String> q : c.accessOrderedCallIterator("something"))
+		for(TimeOrderedList<String, String> q : c.accessOrderedCallIterator("something"))
 		{
 			successes &= q.getValue().equals(expected[xpCount++]);
 		}
@@ -121,7 +121,7 @@ public class CacheTest {
 		int xpCount = 0;
 		boolean successes = true;
 		
-		for(TimeOrderedList<String> q : c.accessOrderedCallIterator("something"))
+		for(TimeOrderedList<String, String> q : c.accessOrderedCallIterator("something"))
 		{
 			successes &= q.getValue().equals(expected[xpCount++]);
 		}
@@ -137,9 +137,7 @@ public class CacheTest {
 		c.put("takes the", "cake");
 		c.put("next", "level");
 		
-		c.access("takes the");
-		
-		String[] expected = {"cake", "better", "epic!!!"};
+		String[] expected = {"level", "cake", "better", "epic!!!"};
 		int xpCount = 0;
 		
 		for(String q : c.timeOrderedCallIterator("next"))

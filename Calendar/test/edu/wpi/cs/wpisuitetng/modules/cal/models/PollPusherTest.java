@@ -103,7 +103,7 @@ public class PollPusherTest
 		assertNull(pp.listenSession(t2));
 		pp.unlistenSession(t1);
 		pp.updated("Mydata");
-		assertEquals("[MyData]", pp.listenSession(t1));
+		assertEquals("[Mydata]", pp.listenSession(t1));
 		pp.updated("Mydata2");
 		assertEquals(1, t2.calls);
 		assertEquals(0, t1.calls);
@@ -114,17 +114,54 @@ public class PollPusherTest
 	{
 		TestEvent t1 = new TestEvent("ses1", "Mydatax");
 		TestEvent t2 = new TestEvent("ses2", "Mydata");
-		TestEvent t3 = new TestEvent("ses1", "Mydata2");
+		TestEvent t3 = new TestEvent("ses3", "Mydata2");
 		assertNull(pp.listenSession(t1));
 		pp.updated("Mydatax");
 		assertNull(pp.listenSession(t2));
 		pp.updated("Mydata");
 		assertNull(pp.listenSession(t3));
 		pp.updated("Mydata2");
-		assertEquals("[MyData,Mydata2]", pp.listenSession(t1));
+		assertEquals("[Mydata,Mydata2]", pp.listenSession(t1));
 		assertEquals(1, t3.calls);
 		assertEquals(1, t2.calls);
 		assertEquals(1, t1.calls);
+	}
+
+	@Test
+	public void testEnsureMove()
+	{
+		TestEvent t1 = new TestEvent("ses1", "NOT_CALLED");
+		assertNull(pp.listenSession(t1));
+		pp.unlistenSession(t1);
+		pp.updated("Mydatax");
+		pp.updated("Mydata");
+		assertEquals("[Mydatax,Mydata]", pp.listenSession(t1));
+		pp.updated("Mydata2");
+		assertEquals("[Mydata2]", pp.listenSession(t1));
+		assertEquals(0, t1.calls);
+	}
+	
+	@Test
+	public void testPopOnTop()
+	{
+		TestEvent t1 = new TestEvent("ses1", "NOT_CALLED");
+		TestEvent t2 = new TestEvent("ses2", "ALSO_NEVER");
+		assertNull(pp.listenSession(t1));
+		pp.unlistenSession(t1);
+		pp.updated("Mydatax");
+		pp.updated("Mydata");
+		assertEquals("[Mydatax,Mydata]", pp.listenSession(t1));
+		assertNull(pp.listenSession(t2));
+		pp.unlistenSession(t2);
+		pp.updated("Mydata2");
+		assertEquals("[Mydata2]", pp.listenSession(t1));
+		assertEquals("[Mydata2]", pp.listenSession(t2));
+		assertNull(pp.listenSession(t1));
+		assertNull(pp.listenSession(t2));
+		pp.unlistenSession(t1);
+		pp.unlistenSession(t2);
+		assertEquals(0, t1.calls);
+		assertEquals(0, t2.calls);
 	}
 
 	private static class TestEvent extends PollPusher.PushedInfo
