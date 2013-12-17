@@ -70,8 +70,6 @@ public class MockRequest extends Request
 		}
 		if (!bitsOfUrl[0].equals("cal"))
 			throw new IllegalStateException("Not a calender!" + bitsOfUrl[0] + "|yay");
-		if (bitsOfUrl.length >= 3)
-			bitsOfUrl[2] = bitsOfUrl[2].replaceAll("%2C", ",");
 		
 		this.setResponse(new ResponseModel());
 		sent = true;
@@ -96,7 +94,7 @@ public class MockRequest extends Request
 			switch (getHttpMethod())
 			{
 				case GET:
-					this.response.setBody(advanced ? em.advancedGet(session, bitsOfUrl) : new Gson().toJson(em.getEntity(session, bitsOfUrl[2])));
+					this.response.setBody(advanced ? em.advancedGet(session, bitsOfUrl) : new Gson().toJson(bitsOfUrl.length > 2 ? em.getEntity(session, bitsOfUrl[2]) : em.getAll(session)));
 					break;
 				case POST:
 					em.update(session, getBody());

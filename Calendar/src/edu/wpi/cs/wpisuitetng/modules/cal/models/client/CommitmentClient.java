@@ -21,7 +21,7 @@ public class CommitmentClient extends CachingDisplayableClient<Commitment, Commi
 {
 	private static CommitmentClient instance;
 
-	private CommitmentClient()
+	protected CommitmentClient()
 	{
 		super("commitments", Commitment.SerializedAction[].class, Commitment[].class);
 	}
