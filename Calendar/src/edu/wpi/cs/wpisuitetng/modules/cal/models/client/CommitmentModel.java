@@ -9,6 +9,7 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.models.client;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -64,9 +65,19 @@ public class CommitmentModel extends CachingDisplayableModel<Commitment, Commitm
 		return getAll();
 	}
 	
+	
+	/**
+	 * 
+	 * @return get all the commitments that the user has access to
+	 */
+	public boolean visibleStatus(Commitment obj) {
+		Collection<String> statuses =MainPanel.getInstance().getSelectedStatuses();
+		return statuses.contains(obj);
+	}
+	
 	@Override
 	protected boolean visibleCategory(Commitment obj)
 	{
-		return MainPanel.getInstance().showCommitments() && super.visibleCategory(obj);
+		return MainPanel.getInstance().showCommitments() && super.visibleCategory(obj) && this.visibleStatus(obj);
 	}
 }
