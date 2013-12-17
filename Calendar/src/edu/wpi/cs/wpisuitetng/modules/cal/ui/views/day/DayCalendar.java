@@ -23,6 +23,7 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
 import org.joda.time.DateTime;
+import org.joda.time.Interval;
 import org.joda.time.MutableDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -44,7 +45,12 @@ public class DayCalendar extends AbstractCalendar
 {
 
 	private DateTime time;
+	private DateTime dayStart;
+	private DateTime dayEnd;
+	
 	private DayPanel current;
+	
+	private List<Displayable> displayableList = new ArrayList<Displayable>();
 	
 	private JPanel holder = new JPanel();
 	private JScrollPane scroll = new JScrollPane(holder);
@@ -54,6 +60,14 @@ public class DayCalendar extends AbstractCalendar
 	public DayCalendar(DateTime on)
 	{
 		this.time = on;
+		
+		MutableDateTime mdt = time.toMutableDateTime();
+		mdt.setMillis(0);
+		this.dayStart = mdt.toDateTime();
+		mdt.addDays(1);
+		mdt.addMillis(-1);
+		this.dayEnd = mdt.toDateTime();
+		
 		scroll.setBackground(Colors.TABLE_BACKGROUND);
 		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -78,8 +92,10 @@ public class DayCalendar extends AbstractCalendar
 		dayTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		this.add(dayTitle, BorderLayout.NORTH);
 
+		this.displayableList = getVisibleEvents();
+		
 		this.current = new DayPanel();
-		this.current.setEvents(getVisibleEvents(), time);
+		this.current.setEvents(getDisplayablesInInterval(time,time.plusDays(1)), time);
 		this.current.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, Colors.BORDER));
 		
 		this.holder.add(new DayGridLabel(), BorderLayout.WEST);
@@ -179,5 +195,39 @@ public class DayCalendar extends AbstractCalendar
 	public void setSelectedDay(DateTime time)
 	{
 		
+	}
+	
+	/**
+	 * Gets all the events in the week that also are in the given interval
+	 * @param intervalStart start of the interval to check
+	 * @param intervalEnd end of the interval to check
+	 * @return list of events that are both in the week and interval
+	 */
+	private List<Displayable> getDisplayablesInInterval(DateTime intervalStart, DateTime intervalEnd)
+	{
+		List<Displayable> retrievedDisplayables = new ArrayList<>();
+		Interval mInterval = new Interval(intervalStart, intervalEnd);
+
+		for (Displayable d : displayableList)
+		{
+			if (new Interval(d.getStart(),d.getEnd()).toDuration().getStandardHours()>24)
+				continue;
+
+			if (isDisplayableInInterval(d, mInterval))
+			{
+				retrievedDisplayables.add(d);
+			}
+		}
+
+		return retrievedDisplayables;
+	}
+	
+	private boolean isDisplayableInInterval(Displayable mDisplayable, Interval mInterval)
+	{
+		DateTime s = mDisplayable.getStart(), e = mDisplayable.getEnd();
+		if (this.time.isAfter(s))
+			s = this.time;
+
+		return (s.isBefore(e) && mInterval.contains(s));
 	}
 }

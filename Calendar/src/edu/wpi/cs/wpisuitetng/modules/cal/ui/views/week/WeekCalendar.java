@@ -33,6 +33,7 @@ import javax.swing.border.EmptyBorder;
 
 import net.miginfocom.swing.MigLayout;
 
+import org.jfree.date.DayOfWeekInMonthRule;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.MutableDateTime;
@@ -70,7 +71,7 @@ public class WeekCalendar extends AbstractCalendar
 	private DayPanel[] daysOfWeekArray = new DayPanel[7];
 	private List<Event> eventList = new ArrayList<Event>();
 	private List<Commitment> commitmentList = new ArrayList<Commitment>();
-	private List<WeekMultidayEventItem> multidayItems = new ArrayList<WeekMultidayEventItem>();;
+	private List<WeekMultidayEventItem> multidayItemList = new ArrayList<WeekMultidayEventItem>();;
 
 	private int currentDayUnderMouse;
 	private DateTimeFormatter monthDayFmt = DateTimeFormat.forPattern("MMM d");
@@ -140,9 +141,9 @@ public class WeekCalendar extends AbstractCalendar
 			public void mouseDragged(MouseEvent e) {
 				if(selected != null)
 				{
-					if(selected.getEvent().getDate().getDayOfWeek() != currentDayUnderMouse)
+					if(selected.getEvent().getStart().getDayOfWeek() != currentDayUnderMouse)
 					{
-						daysOfWeekArray[selected.getEvent().getDate().getDayOfWeek()].remove(selected);
+						daysOfWeekArray[selected.getEvent().getStart().getDayOfWeek()].remove(selected);
 						daysOfWeekArray[currentDayUnderMouse].add(selected);
 						revalidate();
 					}
@@ -159,6 +160,7 @@ public class WeekCalendar extends AbstractCalendar
 		// clear out the specifics
 		smithsonian.removeAll();
 		headerBox.removeAll();
+		
 		// add the day grid back in
 		smithsonian.add(new DayGridLabel(), "cell 0 0,grow");
 
@@ -208,7 +210,7 @@ public class WeekCalendar extends AbstractCalendar
 	private void populateMultidayEventGrid()
 	{
 		List<Event> multidayEvents = getMultidayEvents();
-		multidayItems.clear();
+		multidayItemList.clear();
 		Collections.sort(multidayEvents, new Comparator<Event>() {
 
 			@Override
@@ -251,7 +253,7 @@ public class WeekCalendar extends AbstractCalendar
 								multidayPanel.setRows(rows);
 								multidayPanel.setDynamicBorder(currEvent.getColor().darker(), false);
 								multiGrid.add(multidayPanel, "cell " + gridIndex + " 0, grow");
-								multidayItems.add(multidayPanel);
+								multidayItemList.add(multidayPanel);
 								firstPanel = false;
 							}
 							else
@@ -261,7 +263,7 @@ public class WeekCalendar extends AbstractCalendar
 								multidayPanel.setRows(rows);
 								multidayPanel.setDynamicBorder(currEvent.getColor().darker(), false);
 								multiGrid.add(multidayPanel, "cell " + gridIndex + " 0, grow");
-								multidayItems.add(multidayPanel);
+								multidayItemList.add(multidayPanel);
 							}
 							gridIndex++;
 						} while (gridIndex < 7 && daysOfWeekArray[gridIndex].getDisplayDate().isBefore(currEvent.getEnd()));
@@ -443,7 +445,7 @@ public class WeekCalendar extends AbstractCalendar
 				day = null;
 				for (DayPanel lt : daysOfWeekArray)
 				{
-					if (lastSelection.getDate().getDayOfYear() == lt.getDisplayDate().getDayOfYear())
+					if (lastSelection.getStart().getDayOfYear() == lt.getDisplayDate().getDayOfYear())
 					{
 						day = lt;
 						break;
@@ -464,7 +466,7 @@ public class WeekCalendar extends AbstractCalendar
 			day = null;
 			for (DayPanel lt : daysOfWeekArray)
 			{
-				if (oitem.getDate().getDayOfYear() == lt.getDisplayDate().getDayOfYear())
+				if (oitem.getStart().getDayOfYear() == lt.getDisplayDate().getDayOfYear())
 				{
 					day = lt;
 					break;
@@ -502,7 +504,7 @@ public class WeekCalendar extends AbstractCalendar
 		Interval eventLength = new Interval(startDay, endDay);
 		if(setTo == null || eventLength.toDuration().getStandardHours() > 24)
 		{
-			for(WeekMultidayEventItem multidayItem : multidayItems)
+			for(WeekMultidayEventItem multidayItem : multidayItemList)
 			{
 				if(setTo != null && multidayItem.getEvent().getIdentification().equals(((Event) on).getIdentification()))
 					multidayItem.setSelected(true);
@@ -565,7 +567,7 @@ public class WeekCalendar extends AbstractCalendar
 		
 		for (Displayable d : allVisibleDisplayables)
 		{
-			if (new Interval(d.getDate(),d.getEnd()).toDuration().getStandardHours()>24)
+			if (new Interval(d.getStart(),d.getEnd()).toDuration().getStandardHours()>24)
 				continue;
 
 			if (isDisplayableInInterval(d, mInterval))
@@ -599,7 +601,7 @@ public class WeekCalendar extends AbstractCalendar
 
 	private boolean isDisplayableInInterval(Displayable mDisplayable, Interval mInterval)
 	{
-		DateTime s = mDisplayable.getDate(), e = mDisplayable.getEnd();
+		DateTime s = mDisplayable.getStart(), e = mDisplayable.getEnd();
 		if (this.weekStartTime.isAfter(s))
 			s = weekStartTime;
 

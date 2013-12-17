@@ -57,7 +57,7 @@ public class DayPanel extends JPanel
 			public void mouseReleased(MouseEvent arg0) {
 				if(isSomethingDragging)
 				{
-					MainPanel.getInstance().display(selected.getEvent().getDate());
+					MainPanel.getInstance().display(selected.getEvent().getStart());
 				}
 				isSomethingDragging = false;
 				selected = null;
@@ -103,10 +103,10 @@ public class DayPanel extends JPanel
 					if(!isSomethingDragging)
 					{
 						offset = arg0.getY();
-						System.out.println(offset + " " + arg0.getY() + " " + selected.getEvent().getDate().getMinuteOfDay());
+						System.out.println(offset + " " + arg0.getY() + " " + selected.getEvent().getStart().getMinuteOfDay());
 						if(inWeekView)
 						{
-							inWeek.passTo(selected.getEvent().getDate().getDayOfYear(),selected);
+							inWeek.passTo(selected.getEvent().getStart().getDayOfYear(),selected);
 							getParent().dispatchEvent(arg0);
 						}
 						isSomethingDragging = true;	

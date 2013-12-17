@@ -216,15 +216,7 @@ public class Event extends AbstractModel implements Displayable
 	{
 		this.start = start.toDate();
 	}
-	
-	/**
-	 * @param start
-	 *            the start to set
-	 */
-	public void setDate(DateTime date)
-	{
-		setStart(date);
-	}
+
 
 	/**
 	 * @return the end
@@ -361,12 +353,6 @@ public class Event extends AbstractModel implements Displayable
 	public boolean isMultiDayEvent()
 	{
 		return (getEnd().getYear()!=getStart().getYear() || getEnd().getDayOfYear()!=getStart().getDayOfYear());		
-	}
-	
-	@Override
-	public DateTime getDate()
-	{
-		return this.getStart();
 	}
 	
 	@Override

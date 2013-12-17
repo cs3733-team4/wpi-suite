@@ -41,12 +41,12 @@ public interface Displayable
 	/**
 	 * The date to display. If there are more than one, the default date (start)
 	 */
-	public DateTime getDate();
+	public DateTime getStart();
 	
 	/**
 	 * Sets the date to display. If there are more than one, the default date (start)
 	 */
-	public void setDate(DateTime newDate);
+	public void setStart(DateTime newDate);
 	
 	public DateTime getEnd();
 	

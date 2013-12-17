@@ -71,7 +71,7 @@ public class Commitment extends AbstractModel implements Displayable
 	 */
 	public Commitment setDueDate(DateTime date)
 	{
-		setDate(date);
+		setStart(date);
 		return this;
 	}
 	
@@ -142,18 +142,10 @@ public class Commitment extends AbstractModel implements Displayable
 	}
 
 	/**
-	 * @return the commitmentID
-	 */
-	public UUID getCommitmentID()
-	{
-		return commitmentID;
-	}
-
-	/**
 	 * @param CommitmentID
 	 *            the CommitmentID to set
 	 */
-	public void setCommitmentID(UUID commitmentID)
+	public void setIdentification(UUID commitmentID)
 	{
 		this.commitmentID = commitmentID;
 	}
@@ -195,7 +187,7 @@ public class Commitment extends AbstractModel implements Displayable
 	/**
 	 * @return the start
 	 */
-	public DateTime getDate()
+	public DateTime getStart()
 	{
 		return new DateTime(duedate);
 	}
@@ -204,17 +196,17 @@ public class Commitment extends AbstractModel implements Displayable
 	 * @param start
 	 *            the start to set
 	 */
-	public void setDate(DateTime start)
+	public void setStart(DateTime start)
 	{
 		this.duedate = start.toDate();
 	}
 	
 	/**
-	 * @return the end (only used for displaying on day calendar)
+	 * @return the end (only used for displaying on day calendar, commitments don't actually hve duration)
 	 */
 	public DateTime getEnd()
 	{
-		return new DateTime(duedate).plusMinutes(15);
+		return new DateTime(duedate).plusMinutes(45);
 	}
 	
 	/**
@@ -298,7 +290,7 @@ public class Commitment extends AbstractModel implements Displayable
 	@Override
 	public Interval getInterval()
 	{
-		return new Interval(getDate(), getDate());
+		return new Interval(getStart(), getStart());
 	}
 
 	@Override
@@ -356,12 +348,12 @@ public class Commitment extends AbstractModel implements Displayable
 		MutableDateTime mDisplayedDay = new MutableDateTime(givenDay);
 		mDisplayedDay.setMillisOfDay(1);
 		//if it starts before the beginning of the day then its a multi day event, or all day event
-		if (this.getDate().isBefore(mDisplayedDay)){
+		if (this.getStart().isBefore(mDisplayedDay)){
 			mDisplayedDay.setMillisOfDay(0);
 			return(mDisplayedDay.toDateTime());
 		}
 		else
-			return this.getDate();
+			return this.getStart();
 	}
 	
 	/**
@@ -374,11 +366,11 @@ public class Commitment extends AbstractModel implements Displayable
 	{
 		MutableDateTime mDisplayedDay = new MutableDateTime(givenDay);;
 		mDisplayedDay.setMillisOfDay(86400000-2);
-		if (this.getDate().plusMinutes(30).isAfter(mDisplayedDay))
+		if (this.getStart().plusMinutes(30).isAfter(mDisplayedDay))
 		{
 			return mDisplayedDay.toDateTime();
 		}
 		else
-			return this.getDate().plusMinutes(30); 
+			return this.getStart().plusMinutes(30); 
 	}
 }

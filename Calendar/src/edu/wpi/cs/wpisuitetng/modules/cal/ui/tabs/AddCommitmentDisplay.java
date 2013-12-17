@@ -52,7 +52,7 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		super(false);
 		this.isEditingCommitment = true;
 		this.commitmentToEdit = mCommitment;
-		this.existingCommitmentID = commitmentToEdit.getCommitmentID();
+		this.existingCommitmentID = commitmentToEdit.getIdentification();
 		populateCommitmentFields(commitmentToEdit);
 		setUpListeners();
 	}
@@ -60,7 +60,7 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 	private void populateCommitmentFields(Commitment mCommitment)
 	{
 		nameTextField.setText(mCommitment.getName());
-		startTimeDatePicker.setDateTime(mCommitment.getDate());
+		startTimeDatePicker.setDateTime(mCommitment.getStart());
 		participantsTextField.setText(mCommitment.getParticipants());
 		this.rdbtnPersonal.setSelected(!mCommitment.isProjectwide());
 		this.rdbtnTeam.setSelected(mCommitment.isProjectwide());
@@ -148,13 +148,13 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		Commitment e = new Commitment();
 		e.setName(nameTextField.getText().trim());
 		e.setDescription(descriptionTextArea.getText());
-		e.setDate(startTimeDatePicker.getDateTime());
+		e.setStart(startTimeDatePicker.getDateTime());
 		e.setProjectCommitment(rdbtnTeam.isSelected());
 		e.setParticipants(participantsTextField.getText().trim());
 		e.setCategory(((Category)eventCategoryPicker.getSelectedItem()).getCategoryID());
 		
 		if (isEditingCommitment) {
-			e.setCommitmentID(existingCommitmentID);
+			e.setIdentification(existingCommitmentID);
 			MainPanel.getInstance().updateCommitment(e);
 		} else
 			MainPanel.getInstance().addCommitment(e);

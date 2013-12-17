@@ -138,7 +138,7 @@ public class MonthDay extends JPanel
 					Displayable selected = MainPanel.getInstance().getSelectedEvent();
 					if (selected != null)
 					{
-						MutableDateTime newTime = new MutableDateTime(selected.getDate());
+						MutableDateTime newTime = new MutableDateTime(selected.getStart());
 						
 						newTime.setYear(releasedDay.day.getYear());
 						newTime.setDayOfYear(releasedDay.day.getDayOfYear());
@@ -268,7 +268,7 @@ public class MonthDay extends JPanel
 						return 1;
 				}
 				//if it gets to this poing then they are both commitments, or both multi day events, or both single day events
-				if (o1.getDate().isBefore(o2.getDate()))
+				if (o1.getStart().isBefore(o2.getStart()))
 					return -1;
 				else//will default to 1, no need to check if they start at the same time....
 					return 1;

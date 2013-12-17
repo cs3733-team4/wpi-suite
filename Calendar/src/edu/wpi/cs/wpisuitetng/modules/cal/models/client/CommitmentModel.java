@@ -39,7 +39,7 @@ public class CommitmentModel extends CachingDisplayableModel<Commitment, Commitm
 	protected Commitment buildUuidOnlyObject(UUID uuid)
 	{
 		Commitment c = new Commitment();
-		c.setCommitmentID(uuid);
+		c.setIdentification(uuid);
 		return c;
 	}
 

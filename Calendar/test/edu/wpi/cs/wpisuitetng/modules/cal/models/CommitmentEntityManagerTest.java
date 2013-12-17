@@ -94,7 +94,7 @@ public class CommitmentEntityManagerTest {
                 cem.makeEntity(ses1, eString);
                 
                 assertEquals("GetAll will return commitments in the database in Commitment[] form; in the case of only 1 commitment being stored, it will return that Commitment", e.getName(), cem.getAll(ses1)[0].getName());
-                assertEquals("GetAll will return commitments in the database in Commitment[] form; in the case of only 1 commitment being stored, it will return that Commitment", e.getDate(), cem.getAll(ses1)[0].getDate());
+                assertEquals("GetAll will return commitments in the database in Commitment[] form; in the case of only 1 commitment being stored, it will return that Commitment", e.getStart(), cem.getAll(ses1)[0].getStart());
 
         }
         

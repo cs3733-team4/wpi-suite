@@ -267,7 +267,7 @@ public class CommitmentEntityManager implements EntityManager<Commitment> {
 	
 	private String updated(Commitment e)
 	{
-		return new Gson().toJson(new Commitment.SerializedAction(e, e.getCommitmentID(), false));
+		return new Gson().toJson(new Commitment.SerializedAction(e, e.getIdentification(), false));
 	}
 	
 	private String deleted(UUID id)

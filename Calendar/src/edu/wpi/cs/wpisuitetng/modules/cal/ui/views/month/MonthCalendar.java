@@ -154,7 +154,7 @@ public class MonthCalendar extends AbstractCalendar
 					Displayable selected = MainPanel.getInstance().getSelectedEvent();
 					if (selected != null && escaped)
 					{
-						display(selected.getDate());
+						display(selected.getStart());
 					}
 				}
 			}

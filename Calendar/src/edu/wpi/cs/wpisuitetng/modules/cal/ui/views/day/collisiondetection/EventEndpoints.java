@@ -49,7 +49,7 @@ public class EventEndpoints implements Comparable<EventEndpoints>
 		{
 			if (!isEnd)
 			{
-				this.time = displayable.getDate();
+				this.time = displayable.getStart();
 			}
 			else
 			{

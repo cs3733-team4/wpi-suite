@@ -82,7 +82,7 @@ public class DayItem extends JPanel
 		this.eventPositionalInformation = eventPositionalInformation;
 		height = 25;
 		displayable = eventPositionalInformation.getEvent();
-		length = new Interval(displayable.getDate(), displayable.getEnd());
+		length = new Interval(displayable.getStart(), displayable.getEnd());
 		
 		Color bg = Colors.TABLE_GRAY_HEADER;
 		
@@ -398,9 +398,9 @@ public class DayItem extends JPanel
 	
 	public void updateTime(DateTime t)
 	{
-		if(!this.displayable.getDate().equals(t))
+		if(!this.displayable.getStart().equals(t))
 		{
-			this.displayable.setDate(t);
+			this.displayable.setStart(t);
 			if(this.displayable instanceof Event)
 				((Event) this.displayable).setEnd(t.plus(this.length.toDuration()));
 			putTimeOn();
@@ -421,7 +421,7 @@ public class DayItem extends JPanel
 				else
 					lblTimeInfo.setText("\u2190 \u2192");
 			}else
-				lblTimeInfo.setText(formatTime(displayable.getDate()) + " - " + formatTime(displayable.getEnd()));
+				lblTimeInfo.setText(formatTime(displayable.getStart()) + " - " + formatTime(displayable.getEnd()));
 		}else if(displayable instanceof Commitment)
 		{
 			lblTimeInfo.setText("<html></i><b><font face = \"DejaVu Sans\""
@@ -429,7 +429,7 @@ public class DayItem extends JPanel
 													+ Colors.COMMITMENT_NOTIFICATION.getGreen() + "," 
 													+ Colors.COMMITMENT_NOTIFICATION.getBlue() 
 													+ "\">\uFF01</font></b>" 
-													+ formatTime(displayable.getDate()) + "</html>");
+													+ formatTime(displayable.getStart()) + "</html>");
 		}
 	}
 }
