@@ -19,6 +19,15 @@ public class AccessOrderedList<V> implements Iterable<V>{
 	}
 	
 	/**
+	 * Sets the current element
+	 * @param value new value
+	 */
+	public void setValue(V value)
+	{
+		element = value;
+	}
+	
+	/**
 	 * 
 	 * @param currentLeadingEdge the current head of the list that this will be added to
 	 * @return a pair of our element and ourself
