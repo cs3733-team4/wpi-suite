@@ -25,6 +25,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentClientTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventClientTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventEntityManagerTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentEntityManagerTest;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.PollPusherTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthDayTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthItemTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.week.WeekCalendarTest;
@@ -51,7 +52,8 @@ import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
 @SuiteClasses({
 	//sorted by package
 	MonthsTest.class,
-	CommitmentEntityManagerTest.class, EventEntityManagerTest.class, CommitmentClientTest.class, EventClientTest.class, CategoryEntityManagerTest.class,
+	CommitmentEntityManagerTest.class, EventEntityManagerTest.class, CommitmentClientTest.class,
+		EventClientTest.class, CategoryEntityManagerTest.class, PollPusherTest.class,
 	CalendarNavigationModuleTest.class, GoToPanelTest.class, MainCalendarNavigationTest.class, SidebarTabbedPaneTest.class,
 	MonthCalendarTest.class, MonthDayTest.class, MonthItemTest.class,
 	WeekCalendarTest.class,
