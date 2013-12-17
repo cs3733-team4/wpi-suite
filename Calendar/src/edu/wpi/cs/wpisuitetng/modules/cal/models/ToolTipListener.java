@@ -14,6 +14,8 @@ import java.awt.event.MouseListener;
 
 import javax.swing.ToolTipManager;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
+
 public class ToolTipListener implements MouseListener {
 	@Override
 	public void mouseReleased(MouseEvent e) {
@@ -34,7 +36,12 @@ public class ToolTipListener implements MouseListener {
 	
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		ToolTipManager.sharedInstance().setEnabled(true);
+		if (true)
+			ToolTipManager.sharedInstance().setEnabled(true);
+		else
+			ToolTipManager.sharedInstance().setEnabled(false);
+			
+		ToolTipManager.sharedInstance().setDismissDelay(500);
 		
 	}
 	
