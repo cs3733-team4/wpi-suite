@@ -43,11 +43,11 @@ public class CacheTest {
 		assertTrue(c.timeOrderedCallIterator("something") != null);
 	}
 	
-	@Test(expected=NullPointerException.class)
+	@Test
 	public void lowLevelIteraterFromCacheNPE() {
 		Cache<String, String> c = new Cache<>("");
 		c.put("something", "epic!!!");
-		c.timeOrderedCallIterator("borked");
+		c.timeOrderedCallIterator("borked"); // should not throw NPE, should create session
 	}
 	
 	@Test
@@ -139,15 +139,13 @@ public class CacheTest {
 		
 		c.access("takes the");
 		
-		String[] expected = {"level", "cake", "better", "epic!!!"};
+		String[] expected = {"cake", "better", "epic!!!"};
 		int xpCount = 0;
-		boolean successes = true;
 		
 		for(String q : c.timeOrderedCallIterator("next"))
 		{
-			System.out.println(q);
-			successes &= q.equals(expected[xpCount++]);
+			assertEquals(q, expected[xpCount++]);
+			assertTrue(xpCount <= expected.length);
 		}
-		assertTrue(successes);
 	}
 }

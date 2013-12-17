@@ -119,57 +119,16 @@ public class EventEntityManagerTest {
                 assertTrue("GetAll will return multiple events in a random order; if the result has all of the inputs, this method is working correctly",hasThird);
         }
         
-       
-        
-        @Test
-        public void testGetEntity() throws WPISuiteException {
-                EventEntityManager eem = new EventEntityManager(db);
-                eem.makeEntity(ses1, eString);
-                eem.makeEntity(ses1, eeString);
-                eem.makeEntity(ses1, eeeString);
-                
-                // The huge string being used as input is "filter-events-by-range," + string form of starting dateTime + "," + string form of ending dateTime
-                // This method is really just another way of calling getEventsByRange with new inputs; as such, it has the same limitations and only needs basic testing
-                
-                assertEquals("getEntity will return an event in the database if it was stored there before",e.getName(),eem.getEntity(ses1,"filter-events-by-range,20000101T010000.000Z,20000102T020000.000Z")[0].getName());
-                assertEquals("getEntity will return an event in the database if it was stored there before",eee.getName(),eem.getEntity(ses1,"filter-events-by-range,20000104T030000.000Z,20000104T070100.000Z")[0].getName());
-                assertEquals("getEntity will return an empty array if no events are within the given range", 0 ,eem.getEntity(ses1,"filter-events-by-range,20500101T010100.000Z,20500101T010100.000Z").length);
-        }
-        
-        @Test(expected=NotFoundException.class)
-        public void testGetEntityWrongInput() throws WPISuiteException {
-                EventEntityManager eem = new EventEntityManager(db);
-                eem.makeEntity(ses1, eString);
-                eem.makeEntity(ses1, eeString);
-                eem.makeEntity(ses1, eeeString);
-                
-                assertEquals("getEntity return an error if anything but filter-events-by-range is the first string argument", null, eem.getEntity(ses1,"filter-events-by-time,20000101T000000.000Z,20000102T010000.000Z")[0].getName());
-        }
-        
         @Test
         public void testDeleteEntity() throws WPISuiteException {
                 EventEntityManager eem = new EventEntityManager(db);
                 eem.makeEntity(ses1, eString);
                 eem.makeEntity(ses1, eeString);
                 assertEquals("At this point, there should be 2 events in the database", 2, eem.Count());											// Events from 1/1/2000 1:00 - 1/2/2000 1:00
-                assertEquals("The deleteEntity method will return true if the deletion was successful", true, eem.deleteEntity(ses1, "filter-events-by-range,20000101T000000.000Z,20000102T010000.000Z"));
+                assertEquals("The deleteEntity method will return true if the deletion was successful", true, eem.deleteEntity(ses1, e.getIdentification().toString()));
                 assertEquals("At this point, there should be only one event in the database", 1, eem.Count());
                 assertEquals("At this point, only the second event should still be in the database", "Second", eem.getAll(ses1)[0].getName());
                 
-        }
-        
-        @Test
-        public void testDeleteEntityOverLap() throws WPISuiteException {
-                EventEntityManager eem = new EventEntityManager(db);
-                
-                // Pointing out that the function will continue if more than one event is within the ID field; if this will never happen in a real run, delete this test
-                
-                eem.makeEntity(ses1, eString);
-                eem.makeEntity(ses1, eeString);
-                assertEquals("At this point, there should be 2 events in the database", 2, eem.Count());											// Events from 1/1/2000 1:00 - 1/3/2000 1:00 
-                assertEquals("The deleteEntity method will return true if the deletion was successful", true, eem.deleteEntity(ses1, "filter-events-by-range,20000101T000000.000Z,20000103T010000.000Z"));
-                assertEquals("At this point, there should be only one event in the database", 1, eem.Count());
-                // This will randomly delete one of the events within that timeframe; either event "First" or "Second" can still be in the database
         }
         
         @Test

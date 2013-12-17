@@ -1,6 +1,7 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.models;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
@@ -9,9 +10,13 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.junit.Test;
 
+import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
+import edu.wpi.cs.wpisuitetng.modules.cal.MockNetwork;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CommitmentClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.server.CommitmentEntityManager;
+import edu.wpi.cs.wpisuitetng.network.Network;
 
 
 
@@ -37,7 +42,7 @@ public class CommitmentClientTest {
 	
 	   @Test
        public void testGetCommitmentsByRangeAll() throws WPISuiteException {
-               CommitmentClient cem = CommitmentClient.getInstance();
+    	   CommitmentClient cem = new NonFilteringCommitmentClient();
                cem.put(e);
                cem.put(ee);
                cem.put(eee);
@@ -45,6 +50,8 @@ public class CommitmentClientTest {
                DateTime before= new DateTime(1950, 01, 01, 01, 01); //"19500101T010100.050Z"; // String representing a DateTime at Jan 1, 1950
                DateTime after = new DateTime(2050, 01, 02, 01, 01); //"20500102T010100.050Z"; // String representing a DateTime at Jan 1, 2050
                List<Commitment> eList=cem.getCommitments(before,after);
+               
+               assertEquals(3, eList.size());
 
                boolean hasFirst=false, hasSecond=false, hasThird=false;
                
@@ -64,7 +71,7 @@ public class CommitmentClientTest {
        
        @Test
        public void testGetCommitmentsByRangeSome() throws WPISuiteException {
-               CommitmentClient cem = CommitmentClient.getInstance();
+    	   CommitmentClient cem = new NonFilteringCommitmentClient();
                // adding Commitments to the database
                cem.put(e);
                cem.put(ee);
@@ -105,7 +112,7 @@ public class CommitmentClientTest {
        
        @Test
        public void testGetCommitmentsByRangeByHour() throws WPISuiteException {
-               CommitmentClient cem = CommitmentClient.getInstance();
+    	   CommitmentClient cem = new NonFilteringCommitmentClient();
                // adding Commitments to the database
                cem.put(e);
                cem.put(ee);
@@ -127,4 +134,44 @@ public class CommitmentClientTest {
 
        }
        
+       @Test
+       public void testGetEntity() throws WPISuiteException {
+    	   CommitmentClient cem = new NonFilteringCommitmentClient();
+               // adding Commitments to the database
+               cem.put(e);
+               cem.put(ee);
+               cem.put(eee);
+               
+               // This method is really just another way of calling getCommitmentsByRange with new inputs; as such, it has the same limitations and only needs basic testing
+               
+               assertEquals("getEntity will return a commitment in the database if it was stored there before",e.getName(),cem.getCommitments(new DateTime(2000,01,01,01,00),new DateTime(2000,01,02,02,00)).get(0).getName());
+               assertEquals("getEntity will return a commitment in the database if it was stored there before",eee.getName(),cem.getCommitments(new DateTime(2000,01,03,03,00),new DateTime(2000,01,04,07,01)).get(0).getName());
+               assertEquals("getEntity will return an empty array if no commitments are within the given range", 0 ,cem.getCommitments(new DateTime(2050,01,01,01,01),new DateTime(2050,01,01,01,01)).size());
+       }
+       
+       
+       @Test(expected=NullPointerException.class)
+       public void testGetEntityWrongInput() throws WPISuiteException {
+    	   CommitmentClient cem = new NonFilteringCommitmentClient();
+              // adding Commitments to the database
+              cem.put(e);
+              cem.put(ee);
+              cem.put(eee);
+               
+               assertNotNull("getEntity return an error if anything but the previous two strings are the first string argument", cem.getCommitments(new DateTime(2000,01,01,00,00), new DateTime(2000,01,02,01,00)).get(0).getName());
+       }
+	
+	private static class NonFilteringCommitmentClient extends CommitmentClient
+	{
+		public NonFilteringCommitmentClient()
+		{
+			super();
+			((MockNetwork)Network.getInstance()).clearCache();
+		}
+		@Override
+		protected boolean filter(Commitment obj)
+		{
+			return true;
+		}
+	}
 }

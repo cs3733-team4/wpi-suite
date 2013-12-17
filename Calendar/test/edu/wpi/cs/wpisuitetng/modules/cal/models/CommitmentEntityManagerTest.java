@@ -125,24 +125,6 @@ public class CommitmentEntityManagerTest {
                 assertTrue("GetAll will return multiple commitments in a random order; if the result has all of the inputs, this method is working correctly",hasThird);
         }
         
-     
-        
-        @Test
-        public void testGetEntity() throws WPISuiteException {
-
-                CommitmentEntityManager cem = new CommitmentEntityManager(db);
-                cem.makeEntity(ses1, eString);
-                cem.makeEntity(ses1, eeString);
-                cem.makeEntity(ses1, eeeString);
-                
-                // The huge string being used as input is "filter-commitments-by-range," + string form of starting dateTime + "," + string form of ending dateTime
-                // This method is really just another way of calling getCommitmentsByRange with new inputs; as such, it has the same limitations and only needs basic testing
-                
-                assertEquals("getEntity will return a commitment in the database if it was stored there before",e.getName(),cem.getEntity(ses1,"filter-commitments-by-range,20000101T010000.000Z,20000102T020000.000Z")[0].getName());
-                assertEquals("getEntity will return a commitment in the database if it was stored there before",eee.getName(),cem.getEntity(ses1,"filter-commitments-by-range,20000103T030000.000Z,20000104T070100.000Z")[0].getName());
-                assertEquals("getEntity will return an empty array if no commitments are within the given range", 0 ,cem.getEntity(ses1,"filter-commitments-by-range,20500101T010100.000Z,20500101T010100.000Z").length);
-        }
-        
         @Test
         public void testGetEntityAll() throws WPISuiteException {
                 CommitmentEntityManager cem = new CommitmentEntityManager(db);
@@ -153,18 +135,8 @@ public class CommitmentEntityManagerTest {
                 // The huge string being used as input is "get-all-commitments," + string form of starting dateTime + "," + string form of ending dateTime
                 // This method is really just another way of calling getAll, and as such the strings for the start / end time don't matter so long as they're valid DateTime strings
                 
-                assertEquals("getEntity will return all commitments in the database if get-all-commitments is the initial string argument", 3, cem.getEntity(ses1,"get-all-commitments,20000101T010000.000Z,20000102T030000.000Z").length);
-                assertEquals("getEntity will return all commitments in the database if get-all-commitments is the initial string argument, regardless of the datetime strings", 3, cem.getEntity(ses1,"get-all-commitments,20000101T000000.000Z,12000101T000000.000Z").length);
-        }
-        
-        @Test(expected=NotFoundException.class)
-        public void testGetEntityWrongInput() throws WPISuiteException {
-                CommitmentEntityManager cem = new CommitmentEntityManager(db);
-                cem.makeEntity(ses1, eString);
-                cem.makeEntity(ses1, eeString);
-                cem.makeEntity(ses1, eeeString);
-                
-                assertNotNull("getEntity return an error if anything but the previous two strings are the first string argument", cem.getEntity(ses1,"filter-Commitments-by-time,20000101T000000.000Z,20000102T010000.000Z")[0].getName());
+                assertEquals("getEntity will return all commitments in the database if get-all-commitments is the initial string argument", 3, cem.getAll(ses1).length);
+                assertEquals("getEntity will return all commitments in the database if get-all-commitments is the initial string argument, regardless of the datetime strings", 3, cem.getAll(ses1).length);
         }
         
         @Test
@@ -173,24 +145,10 @@ public class CommitmentEntityManagerTest {
                 cem.makeEntity(ses1, eString);
                 cem.makeEntity(ses1, eeString);
                 assertEquals("At this point, there should be 2 commitments in the database", 2, cem.Count());											// Commitments from 1/1/2000 1:00 - 1/2/2000 1:00
-                assertEquals("The deleteEntity method will return true if the deletion was successful", true, cem.deleteEntity(ses1, "filter-commitments-by-range,20000101T000000.000Z,20000102T010000.000Z"));
+                assertEquals("The deleteEntity method will return true if the deletion was successful", true, cem.deleteEntity(ses1, e.getIdentification().toString()));
                 assertEquals("At this point, there should be only one commitment in the database", 1, cem.Count());
                 assertEquals("At this point, only the second commitment should still be in the database", "Second", cem.getAll(ses1)[0].getName());
                 
-        }
-        
-        @Test
-        public void testDeleteEntityOverLap() throws WPISuiteException {
-                CommitmentEntityManager cem = new CommitmentEntityManager(db);
-                
-                // Pointing out that the function will continue if more than one commitment is within the ID field; if this will never happen in a real run, delete this test
-                
-                cem.makeEntity(ses1, eString);
-                cem.makeEntity(ses1, eeString);
-                assertEquals("At this point, there should be 2 commitments in the database", 2, cem.Count());											// Commitments from 1/1/2000 1:00 - 1/3/2000 1:00 
-                assertEquals("The deleteEntity method will return true if the deletion was successful", true, cem.deleteEntity(ses1, "filter-commitments-by-range,20000101T000000.000Z,20000103T010000.000Z"));
-                assertEquals("At this point, there should be only one commitment in the database", 1, cem.Count());
-                // This will randomly delete one of the commitments within that timeframe; either commitment "First" or "Second" can still be in the database
         }
         
         @Test
