@@ -26,13 +26,13 @@ import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CachingClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CommitmentClient;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 /**
  * Basic Commitment class that contains the information required to represent a
  * Commitment on a calendar.
- * 
  */
 public class Commitment extends AbstractModel implements Displayable
 {
@@ -44,9 +44,11 @@ public class Commitment extends AbstractModel implements Displayable
 	private String participants;
 	private boolean isProjectCommitment;
 	private User owner;
+	private Status status;
+	// Default status for new commitments.
+	public static final Status DEFAULT_STATUS = Status.NOT_STARTED;
 
 	/**
-	 * 
 	 * @param name the name of the event
 	 * @return this event after having it's name set
 	 */
@@ -99,6 +101,7 @@ public class Commitment extends AbstractModel implements Displayable
 	public Commitment()
 	{
 		super();
+		status=DEFAULT_STATUS;
 	}
 
 	/**
@@ -354,5 +357,57 @@ public class Commitment extends AbstractModel implements Displayable
 		myEntry.addTime(eventTimes);
 		
 		return myEntry;
+	}
+	
+	public void select(MonthCalendar monthCalendar)
+	{
+		monthCalendar.select(this);
+	}
+	
+	/**
+	 * Gets the current status the commitment is at.
+	 * @return the current commitment status as a String.
+	 */
+	public Status getStatus()
+	{
+		return this.status;
+	}
+	
+	public Commitment addStatus(Status status) {
+		this.status=status;
+		return this;
+	}
+	
+	/**
+	 * Set the status to a given status input.
+	 * @param status
+	 */
+	public void setStatus(Status status)
+	{
+		this.status = status;
+	}
+	
+	
+	/**
+	 * an enum to describe the commitment type
+	 */
+	public enum Status
+	{
+		NOT_STARTED("Not Started"),
+		IN_PROGRESS("In Progress"),
+		COMPLETE("Completed");
+		
+		private String status;
+		
+		private Status(String s)
+		{
+			this.status = s;
+		}
+		
+		@Override
+		public String toString()
+		{
+			return status;
+		}
 	}
 }

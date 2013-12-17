@@ -26,6 +26,11 @@ import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
 /**
  * This is the entity manager for the Commitment in the
  * CommitmentManager module.
+<<<<<<< HEAD:Calendar/src/edu/wpi/cs/wpisuitetng/modules/cal/models/server/CommitmentEntityManager.java
+=======
+ *
+ * @version $Revision: 1.0 $
+>>>>>>> dev:Calendar/src/edu/wpi/cs/wpisuitetng/modules/cal/models/CommitmentEntityManager.java
  */
 public class CommitmentEntityManager extends CachedEntityManager<Commitment> {
 	
