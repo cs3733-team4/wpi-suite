@@ -22,17 +22,20 @@ import edu.wpi.cs.wpisuitetng.modules.cal.utils.field.JSearchPasswordField;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.field.JSearchTextField;
 
 public class GoogleCalendarSyncAuthenticateDisplay extends JPanel {
-	JSearchTextField username = new JSearchTextField("example@gmail.com", 23);
-	JSearchPasswordField password = new JSearchPasswordField("google account password", 23);
+	private JSearchTextField username = new JSearchTextField("example@gmail.com", 23);
+	private JSearchPasswordField password = new JSearchPasswordField("google account password", 23);
 
-	JButton authenticateButton = new JButton("Authenticate");
+	private JButton authenticateButton = new JButton("Authenticate");
 
-	JPanel usernamePanel = new JPanel();
-	JPanel passwordPanel = new JPanel();
-	JPanel buttonPanel = new JPanel();
+	private JPanel usernamePanel = new JPanel();
+	private JPanel passwordPanel = new JPanel();
+	private JPanel buttonPanel = new JPanel();
 
 	JPanel panelContainer = new JPanel();
 
+	/**
+	 * the login panel for gcal
+	 */
 	public GoogleCalendarSyncAuthenticateDisplay() {
 		setLayout(new GridBagLayout());
 

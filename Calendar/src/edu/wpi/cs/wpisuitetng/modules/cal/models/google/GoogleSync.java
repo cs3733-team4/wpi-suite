@@ -129,7 +129,11 @@ public class GoogleSync {
 		System.out.println("Synced down "+resultFeed.getEntries().size()+" total events from google");
 	}
 	
-	
+	/**
+	 * get all the events from the janeway database as well as from the google servers
+	 * 
+	 * @return a list of events
+	 */
 	public List<Event> getAllEvents()
 	{
 		List<Event> result = new LinkedList<Event>();
@@ -140,7 +144,11 @@ public class GoogleSync {
 		return result;
 	}
 	
-	
+	/**
+	 * add the displayables to the sync pool
+	 * 
+	 * @param disp a list of displayables
+	 */
 	public void addAllDisplayablesToMap(List<? extends Displayable> disp)
 	{
 		for(Displayable d : disp)

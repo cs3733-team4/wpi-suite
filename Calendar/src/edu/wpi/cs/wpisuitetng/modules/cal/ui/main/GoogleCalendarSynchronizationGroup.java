@@ -13,6 +13,9 @@ public class GoogleCalendarSynchronizationGroup extends ToolbarGroupView {
 	
 	private final JButton syncButton;
 	
+	/**
+	 * make the menu for syncing with gcal
+	 */
 	public GoogleCalendarSynchronizationGroup() {
 		super("GCal Synchronization");
 		setPreferredWidth(200);
