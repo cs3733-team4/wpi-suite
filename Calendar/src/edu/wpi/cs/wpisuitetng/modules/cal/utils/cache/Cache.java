@@ -11,6 +11,14 @@ public class Cache<K, V>{
 	AccessOrderedList<TimeOrderedList<V>> head;
 	TimeOrderedList<V> latest;
 	
+	public Cache(V value)
+	{
+		TimeOrderedList<V> newLatest = new TimeOrderedList<V>(value, latest);
+		latest = newLatest;
+		AccessOrderedList<TimeOrderedList<V>> newHead = new AccessOrderedList<TimeOrderedList<V>>(newLatest);
+		head = newHead.access(head).getB();
+	}
+	
 	
 	/**
 	 * insert a key value pair into the cache
@@ -44,6 +52,16 @@ public class Cache<K, V>{
 			fromMap.access(head);
 			cache.remove(key);
 		}
+	}
+	
+	/**
+	 * Adds a new change at the top of the queue
+	 * @param value the value to add to the list
+	 */
+	public void pushChange(V value)
+	{
+		TimeOrderedList<V> newLatest = new TimeOrderedList<V>(value, latest);
+		latest = newLatest;
 	}
 	
 	/**
@@ -92,8 +110,10 @@ public class Cache<K, V>{
 	 * @param key the key from the KVP to start the iterator at
 	 * @return an iterator over the values in time order
 	 */
-	public Iterable<V> timeOrderedCallIterator(K key)
+	public TimeOrderedList<V> timeOrderedCallIterator(K key)
 	{
+		if (cache.get(key) == null)
+			cache.put(key, new AccessOrderedList<TimeOrderedList<V>>(latest));
 		return cache.get(key).access(head).getA();
 	}
 	

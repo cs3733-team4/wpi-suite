@@ -9,14 +9,14 @@ public class CacheTest {
 
 	@Test
 	public void creatingCacheNoFail() {
-		Cache<String, String> c = new Cache<>();
+		Cache<String, String> c = new Cache<>("");
 		//we didnt error!
 		assertTrue(true);
 	}
 	
 	@Test
 	public void addingToCacheNoFail() {
-		Cache<String, String> c = new Cache<>();
+		Cache<String, String> c = new Cache<>("");
 		c.put("something", "epic!!!");
 		//we didnt error!
 		assertTrue(true);
@@ -24,35 +24,35 @@ public class CacheTest {
 	
 	@Test
 	public void highLevelIteraterFromCacheNoFail() {
-		Cache<String, String> c = new Cache<>();
+		Cache<String, String> c = new Cache<>("");
 		c.put("something", "epic!!!");
 		assertTrue(c.accessOrderedCallIterator("something") != null);
 	}
 	
 	@Test
 	public void highLevelIteraterFromCacheNull() {
-		Cache<String, String> c = new Cache<>();
+		Cache<String, String> c = new Cache<>("");
 		c.put("something", "epic!!!");
 		assertTrue(c.accessOrderedCallIterator("borked") == null);
 	}
 	
 	@Test
 	public void lowLevelIteraterFromCacheNoFail() {
-		Cache<String, String> c = new Cache<>();
+		Cache<String, String> c = new Cache<>("");
 		c.put("something", "epic!!!");
 		assertTrue(c.timeOrderedCallIterator("something") != null);
 	}
 	
 	@Test(expected=NullPointerException.class)
 	public void lowLevelIteraterFromCacheNPE() {
-		Cache<String, String> c = new Cache<>();
+		Cache<String, String> c = new Cache<>("");
 		c.put("something", "epic!!!");
 		c.timeOrderedCallIterator("borked");
 	}
 	
 	@Test
 	public void highLevelIteraterFromCacheWorksOnce() {
-		Cache<String, String> c = new Cache<>();
+		Cache<String, String> c = new Cache<>("");
 		c.put("something", "epic!!!");
 		for(TimeOrderedList<String> q : c.accessOrderedCallIterator("something"))
 		{
@@ -63,7 +63,7 @@ public class CacheTest {
 	
 	@Test
 	public void cacheUpdatesAccessOrder() {
-		Cache<String, String> c = new Cache<>();
+		Cache<String, String> c = new Cache<>("");
 		c.put("something", "epic!!!");
 		c.put("even", "better");
 		
@@ -73,7 +73,7 @@ public class CacheTest {
 	
 	@Test
 	public void highLevelIteraterFromCacheWorksMultiInsert() {
-		Cache<String, String> c = new Cache<>();
+		Cache<String, String> c = new Cache<>("");
 		c.put("something", "epic!!!");
 		c.put("even", "better");
 		c.put("takes the", "cake");
@@ -92,7 +92,7 @@ public class CacheTest {
 	
 	@Test
 	public void cacheUpdatesAccessOrderAfterAccess() {
-		Cache<String, String> c = new Cache<>();
+		Cache<String, String> c = new Cache<>("");
 		c.put("something", "epic!!!");
 		c.put("even", "better");
 		c.put("a", "a");
@@ -109,7 +109,7 @@ public class CacheTest {
 	
 	@Test
 	public void highLevelIteraterFromCacheWorksMultiInsertShuffle() {
-		Cache<String, String> c = new Cache<>();
+		Cache<String, String> c = new Cache<>("");
 		c.put("something", "epic!!!");
 		c.put("even", "better");
 		c.put("takes the", "cake");
@@ -131,7 +131,7 @@ public class CacheTest {
 	
 	@Test
 	public void lowLevelIteraterFromCacheWorksMultiInsertShuffle() {
-		Cache<String, String> c = new Cache<>();
+		Cache<String, String> c = new Cache<>("");
 		c.put("something", "epic!!!");
 		c.put("even", "better");
 		c.put("takes the", "cake");
