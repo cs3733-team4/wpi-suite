@@ -62,7 +62,7 @@ public class DayPanel extends JPanel
 				}
 				isSomethingDragging = false;
 				selected = null;
-				
+				inWeek.passTo(null);
 			}
 			
 			@Override
@@ -73,7 +73,8 @@ public class DayPanel extends JPanel
 			
 			@Override
 			public void mouseEntered(MouseEvent arg0) {
-
+				if(inWeekView)
+					inWeek.mouseOverDay(displayDate.getDayOfWeek()%7);
 			}
 			public void mousePressed(MouseEvent e) {
 				MainPanel.getInstance().setSelectedDay(displayDate);
@@ -91,8 +92,6 @@ public class DayPanel extends JPanel
 			
 			@Override
 			public void mouseMoved(MouseEvent arg0) {
-				if(inWeekView)
-					inWeek.mouseOverDay(displayDate.getDayOfWeek());
 			}
 			
 			@Override
@@ -103,14 +102,15 @@ public class DayPanel extends JPanel
 					selected.updateTime(getTimeAtCursor());
 					if(!isSomethingDragging)
 					{
+						isSomethingDragging = true;
 						offset = arg0.getY();
-						System.out.println(offset + " " + arg0.getY() + " " + selected.getEvent().getStart().getMinuteOfDay());
+						System.out.println(offset + " " + arg0.getY() + " " + selected.getEvent().getStart().getMinuteOfDay() + "\nIn Week View? " + inWeekView);
 						if(inWeekView)
 						{
-							inWeek.passTo(selected.getEvent().getStart().getDayOfYear(),selected);
-							getParent().dispatchEvent(arg0);
+							inWeek.passTo(selected);
+							inWeek.dispatchEvent(arg0);
 						}
-						isSomethingDragging = true;	
+							
 					}
 					revalidate();
 					repaint();
@@ -221,4 +221,5 @@ public class DayPanel extends JPanel
 		d.setMinuteOfHour(min);
 		return d.toDateTime();
 	}
+	
 }
