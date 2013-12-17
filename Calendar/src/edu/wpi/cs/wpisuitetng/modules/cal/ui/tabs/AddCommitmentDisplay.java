@@ -84,14 +84,7 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		{
 			this.eventCategoryPicker.setSelectedItem(Category.DEFAULT_CATEGORY);
 		}
-		if (mCommitment.getStatus()!=null)
-		{
-			this.commitmentStatusPicker.setSelectedItem(mCommitment.getStatus());
-		}
-		else
-		{
-			this.commitmentStatusPicker.setSelectedItem(Commitment.DEFAULT_STATUS.toString());
-		}
+		this.commitmentStatusPicker.setSelectedItem(mCommitment.getStatus().toString());
 	}
 
 	/**

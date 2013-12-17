@@ -24,6 +24,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentStatus;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CachingModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CommitmentModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
@@ -381,9 +382,9 @@ public class Commitment extends AbstractModel implements Displayable
 	 * Gets the current status the commitment is at.
 	 * @return the current commitment status as a String.
 	 */
-	public String getStatus()
+	public CommitmentStatus getStatus()
 	{
-		return this.status.toString();
+		return this.status;
 	}
 	
 	public Commitment addStatus(CommitmentStatus status) {
@@ -398,5 +399,12 @@ public class Commitment extends AbstractModel implements Displayable
 	public void setStatus(CommitmentStatus status)
 	{
 		this.status = status;
+	}
+	
+	public Color getStatusColor()
+	{
+		return status == CommitmentStatus.NotStarted ? Colors.COMMITMENT_NOT_STARTED :
+				status == CommitmentStatus.InProgress ? Colors.COMMITMENT_IN_PROGRESS :
+														Colors.COMMITMENT_COMPLETE;
 	}
 }

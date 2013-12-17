@@ -425,9 +425,9 @@ public class DayItem extends JPanel
 		}else if(displayable instanceof Commitment)
 		{
 			lblTimeInfo.setText("<html></i><b><font face = \"DejaVu Sans\""
-								 + "color=\"rgb(" + Colors.COMMITMENT_NOTIFICATION.getRed() + ","
-													+ Colors.COMMITMENT_NOTIFICATION.getGreen() + "," 
-													+ Colors.COMMITMENT_NOTIFICATION.getBlue() 
+								 + "color=\"rgb(" + Colors.COMMITMENT_NOT_STARTED.getRed() + ","
+													+ Colors.COMMITMENT_NOT_STARTED.getGreen() + "," 
+													+ Colors.COMMITMENT_NOT_STARTED.getBlue() 
 													+ "\">\uFF01</font></b>" 
 													+ formatTime(displayable.getStart()) + "</html>");
 		}
