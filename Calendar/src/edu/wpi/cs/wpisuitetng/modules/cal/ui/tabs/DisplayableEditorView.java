@@ -16,6 +16,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import javax.swing.Box;
+import javax.swing.Box.Filler;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -27,12 +28,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
-import javax.swing.Box.Filler;
 
 import net.miginfocom.swing.MigLayout;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentStatus;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.SelectableField;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Category;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.DatePicker;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.RequestFocusListener;
@@ -44,11 +46,12 @@ public class DisplayableEditorView extends JPanel
 {
 	protected JTextField nameTextField, participantsTextField;
 	protected final ButtonGroup buttonGroup = new ButtonGroup();
-	protected JLabel nameLabel, nameErrorLabel, dateAndTimeLabel, lblUntil, dateErrorLabel, participantsLabel, lblCategory, lblCalendar, descriptionLabel;
+	protected JLabel nameLabel, nameErrorLabel, dateAndTimeLabel, lblUntil, dateErrorLabel, participantsLabel, lblCategory, lblStatus, lblCalendar, descriptionLabel;
 	protected JRadioButton rdbtnTeam, rdbtnPersonal;
 	protected JTextArea descriptionTextArea;
 	protected DatePicker startTimeDatePicker, endTimeDatePicker;
 	protected JComboBox<Category> eventCategoryPicker;
+	protected JComboBox<String> commitmentStatusPicker;
 	protected JButton cancelButton, saveButton;
 
 	public DisplayableEditorView(boolean showEnd)
@@ -80,7 +83,7 @@ public class DisplayableEditorView extends JPanel
 
 		nameLabel = new JLabel("Name:");
 		this.setLayout(new MigLayout("", "[45px][334px,grow]",
-				"[sizegroup 1line][sizegroup 1line][sizegroup 1line][sizegroup 1line][sizegroup 1line][30px:n,grow][grow][25px]"));
+				"[sizegroup 1line][sizegroup 1line][sizegroup 1line][sizegroup 1line][sizegroup 1line][sizegroup 1line][30px:n,grow][grow][25px]"));
 		this.add(nameLabel, "cell 0 0,alignx right,growy");
 		this.add(nameTextField, "cell 1 0,alignx left,aligny baseline");
 
@@ -130,20 +133,35 @@ public class DisplayableEditorView extends JPanel
 
 		this.add(eventCategoryPicker, "cell 1 3,alignx left,aligny baseline");
 
+		
+		if(!showEnd)
+		{
+		lblStatus = new JLabel("Status:");
+		this.add(lblStatus, "cell 0 4,alignx right,aligny baseline");
+
+		commitmentStatusPicker = new JComboBox<>();
+		this.commitmentStatusPicker.addItem(Commitment.DEFAULT_STATUS.toString());
+		this.commitmentStatusPicker.addItem(CommitmentStatus.InProgress.toString());
+		this.commitmentStatusPicker.addItem(CommitmentStatus.Complete.toString());
+
+		this.add(commitmentStatusPicker, "cell 1 4,alignx left,aligny baseline");
+		}
+		
+		
 		lblCalendar = new JLabel("Calendar:");
-		this.add(lblCalendar, "cell 0 4,alignx right,aligny baseline");
+		this.add(lblCalendar, "cell 0 5,alignx right,aligny baseline");
 
 		rdbtnPersonal = new JRadioButton("Personal");
 		buttonGroup.add(rdbtnPersonal);
-		this.add(rdbtnPersonal, "flowx,cell 1 4,alignx left,growy");
+		this.add(rdbtnPersonal, "flowx,cell 1 5,alignx left,growy");
 
 		rdbtnTeam = new JRadioButton("Team");
 		rdbtnTeam.setSelected(true);
 		buttonGroup.add(rdbtnTeam);
-		this.add(rdbtnTeam, "cell 1 4");
+		this.add(rdbtnTeam, "cell 1 5");
 
 		descriptionLabel = new JLabel("Description:");
-		this.add(descriptionLabel, "cell 0 5,alignx right,aligny top");
+		this.add(descriptionLabel, "cell 0 6,alignx right,aligny top");
 
 		descriptionTextArea = new JTextArea();
 		descriptionTextArea.setLineWrap(true);
@@ -152,17 +170,22 @@ public class DisplayableEditorView extends JPanel
 
 		JScrollPane descriptionScrollPane = new JScrollPane(descriptionTextArea);
 		descriptionScrollPane.setBorder(nameTextField.getBorder());
-		this.add(descriptionScrollPane, "cell 1 5,grow");
+		this.add(descriptionScrollPane, "cell 1 6,grow");
 
 		cancelButton = new JButton("Cancel");
 		cancelButton.setMinimumSize(new Dimension(80, 0));
-		this.add(cancelButton, "flowx,cell 1 7,alignx right,aligny bottom,tag cancel");
+		this.add(cancelButton, "flowx,cell 1 8,alignx right,aligny bottom,tag cancel");
 
 		saveButton = new JButton("Save");
 		saveButton.setMinimumSize(new Dimension(80, 0));
-		this.add(saveButton, "cell 1 7,alignx right,aligny bottom,tag ok");
+		this.add(saveButton, "cell 1 8,alignx right,aligny bottom,tag ok");
 	}
 	
+	/**
+	 * Sets the selected field based on user selection
+	 * @param field
+	 * 			the field that was selected
+	 */
 	public void setSelected(SelectableField field)
 	{
 		if (field==SelectableField.NAME)
@@ -181,8 +204,14 @@ public class DisplayableEditorView extends JPanel
 			participantsTextField.requestFocus();
 		else if (field == SelectableField.CATEGORY)
 			eventCategoryPicker.showPopup();
+		else if (field == SelectableField.STATUS)
+			commitmentStatusPicker.showPopup();
 	}
 	
+	/**
+	 * Renders the fields for the category drop-down menu
+	 * (Necessary because of the colored squares for each category) 
+	 */
 	private class CategoryComboBoxRenderer implements ListCellRenderer<Category>
 	{
 		@Override

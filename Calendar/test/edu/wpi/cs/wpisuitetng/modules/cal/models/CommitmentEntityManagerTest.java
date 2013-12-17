@@ -39,13 +39,13 @@ public class CommitmentEntityManagerTest {
         
         
         
-        Commitment e = new Commitment().addName("First").setDueDate(one);
+        Commitment e = new Commitment().addName("First").setDueDate(one).addStatus(CommitmentStatus.NotStarted);
         String eString=e.toJSON();
         
-        Commitment ee=new Commitment().setDueDate(two).addName("Second");
+        Commitment ee=new Commitment().setDueDate(two).addName("Second").addStatus(CommitmentStatus.InProgress);
         String eeString=ee.toJSON();
         
-        Commitment eee=new Commitment().setDueDate(three).addName("Third");
+        Commitment eee=new Commitment().setDueDate(three).addName("Third").addStatus(CommitmentStatus.Complete);
 
         String eeeString=eee.toJSON();
         
@@ -95,6 +95,7 @@ public class CommitmentEntityManagerTest {
                 
                 assertEquals("GetAll will return commitments in the database in Commitment[] form; in the case of only 1 commitment being stored, it will return that Commitment", e.getName(), cem.getAll(ses1)[0].getName());
                 assertEquals("GetAll will return commitments in the database in Commitment[] form; in the case of only 1 commitment being stored, it will return that Commitment", e.getDate(), cem.getAll(ses1)[0].getDate());
+                assertEquals("GetAll will return commitments in the database in Commitment[] form; in the case of only 1 commitment being stored, it will return that Commitment", e.getStatus(), cem.getAll(ses1)[0].getStatus());
 
         }
         
