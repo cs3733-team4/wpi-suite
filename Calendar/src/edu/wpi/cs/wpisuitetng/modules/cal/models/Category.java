@@ -30,7 +30,7 @@ public class Category extends AbstractModel
         public static final Category DEFAULT_DISPLAY_CATEGORY = new Category("No Categories");
         public static final Category COMMITMENT_CATEGORY = new Category("Commitments");
         public static final Category EVENT_CATEGORY = new Category("Events");
-        public static final Category GOOGLE_EVENT_DEFAULT = new Category("GCal Event", new Color(73, 0, 152));
+        public static final Category GOOGLE_EVENT_DEFAULT = new Category("GCal Event", new Color(41, 82, 163));
         
         private Category(String s)
         {
