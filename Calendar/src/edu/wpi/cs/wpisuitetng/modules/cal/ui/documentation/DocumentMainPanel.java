@@ -80,8 +80,9 @@ public class DocumentMainPanel extends JFrame{
     	this.setTitle("YOCO Calendar Help");
     	this.setLayout(new BorderLayout());
     	
-    	serverLocation = Network.getInstance().makeRequest("docs/Calendar/", HttpMethod.GET).getUrl().toString().replace("API/", "");
-        //serverLocation = "http://www.wpi.edu/~bkmcleod/newDocs/";
+//    	serverLocation = Network.getInstance().makeRequest("docs/Calendar/", HttpMethod.GET).getUrl().toString().replace("API/", "");
+        serverLocation = "file:///C:/Users/Prateek/Documents/Prateek/College%20Junior/CS%203733/TestOut/";
+//        						  C:\Users\Prateek\Documents\Prateek\College Junior\CS 3733\TestOut
     	System.out.println(serverLocation);
     	tableOfContents=new TableOfContents(serverLocation);
     	try
