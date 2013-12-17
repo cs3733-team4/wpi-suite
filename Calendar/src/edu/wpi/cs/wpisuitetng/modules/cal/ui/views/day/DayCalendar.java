@@ -11,9 +11,7 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day;
 
 import java.awt.BorderLayout;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoundedRangeModel;
