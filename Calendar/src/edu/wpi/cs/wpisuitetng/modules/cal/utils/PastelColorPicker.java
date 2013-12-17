@@ -54,7 +54,7 @@ public class PastelColorPicker extends JPanel implements MouseListener, MouseMot
 			float colorAtMouse = 360f * (((float)this.lastMousePosition) / ((float)this.getWidth()));
 			
 			this.currentColor = new HSLColor(colorAtMouse, 64f, 82f).getRGB();
-		}else if(lastMousePosition == DEFAULT_SELECTOR_LOCATION) //TODO: make this initial case better
+		}else if(lastMousePosition == DEFAULT_SELECTOR_LOCATION)
 		{
 			lastMousePosition = this.getWidth()/2;
 			float colorAtMouse = 360f * (((float)this.lastMousePosition) / ((float)this.getWidth()));
