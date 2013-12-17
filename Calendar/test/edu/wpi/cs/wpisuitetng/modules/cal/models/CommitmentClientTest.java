@@ -23,22 +23,19 @@ import edu.wpi.cs.wpisuitetng.network.Network;
 public class CommitmentClientTest {
 
 
-    DateTime one=new DateTime(2000,1,1,1,1, DateTimeZone.UTC);
-    DateTime two=new DateTime(2000,1,2,2,1, DateTimeZone.UTC);
-    DateTime three=new DateTime(2000,1,3,3,1, DateTimeZone.UTC);
-    DateTime four=new DateTime(2000,1,4,4,1, DateTimeZone.UTC);
+    DateTime one=new DateTime(2000,1,1,1,1);
+    DateTime two=new DateTime(2000,1,2,2,1);
+    DateTime three=new DateTime(2000,1,3,3,1);
+    DateTime four=new DateTime(2000,1,4,4,1);
     
     
     
     Commitment e = new Commitment().addName("First").setDueDate(one);
-    String eString=e.toJSON();
     
     Commitment ee=new Commitment().setDueDate(two).addName("Second");
-    String eeString=ee.toJSON();
     
     Commitment eee=new Commitment().setDueDate(three).addName("Third");
 
-    String eeeString=eee.toJSON();
 	
 	   @Test
        public void testGetCommitmentsByRangeAll() throws WPISuiteException {
@@ -142,6 +139,10 @@ public class CommitmentClientTest {
                cem.put(ee);
                cem.put(eee);
                
+               
+               System.out.println(cem.getCommitments(new DateTime(2000,01,01,01,00),new DateTime(2000,01,02,02,00)).get(0));
+               
+               
                // This method is really just another way of calling getCommitmentsByRange with new inputs; as such, it has the same limitations and only needs basic testing
                
                assertEquals("getEntity will return a commitment in the database if it was stored there before",e.getName(),cem.getCommitments(new DateTime(2000,01,01,01,00),new DateTime(2000,01,02,02,00)).get(0).getName());
@@ -149,17 +150,6 @@ public class CommitmentClientTest {
                assertEquals("getEntity will return an empty array if no commitments are within the given range", 0 ,cem.getCommitments(new DateTime(2050,01,01,01,01),new DateTime(2050,01,01,01,01)).size());
        }
        
-       
-       @Test(expected=NullPointerException.class)
-       public void testGetEntityWrongInput() throws WPISuiteException {
-    	   CommitmentClient cem = new NonFilteringCommitmentClient();
-              // adding Commitments to the database
-              cem.put(e);
-              cem.put(ee);
-              cem.put(eee);
-               
-               assertNotNull("getEntity return an error if anything but the previous two strings are the first string argument", cem.getCommitments(new DateTime(2000,01,01,00,00), new DateTime(2000,01,02,01,00)).get(0).getName());
-       }
 	
 	private static class NonFilteringCommitmentClient extends CommitmentClient
 	{

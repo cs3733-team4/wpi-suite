@@ -1,21 +1,16 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.models;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.List;
 
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 import org.junit.Test;
 
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.cal.MockNetwork;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CommitmentClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventClient;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
@@ -23,10 +18,10 @@ import edu.wpi.cs.wpisuitetng.network.Network;
 
 public class EventClientTest {
 
-	DateTime one=new DateTime(2000,1,1,1,30, DateTimeZone.UTC);   // Datetime at Jan 1st, 2000: 1:30
-    DateTime two=new DateTime(2000,1,2,2,30, DateTimeZone.UTC);   // Datetime at Jan 2nd, 2000: 2:30
-    DateTime three=new DateTime(2000,1,3,3,30, DateTimeZone.UTC); // Datetime at Jan 3rd, 2000: 3:30
-    DateTime four=new DateTime(2000,1,4,4,30, DateTimeZone.UTC);  // Datetime at Jan 4th, 2000: 4:30
+	DateTime one=new DateTime(2000,1,1,1,30);   // Datetime at Jan 1st, 2000: 1:30
+    DateTime two=new DateTime(2000,1,2,2,30);   // Datetime at Jan 2nd, 2000: 2:30
+    DateTime three=new DateTime(2000,1,3,3,30); // Datetime at Jan 3rd, 2000: 3:30
+    DateTime four=new DateTime(2000,1,4,4,30);  // Datetime at Jan 4th, 2000: 4:30
     
     
     
@@ -145,23 +140,11 @@ public class EventClientTest {
             cem.put(eee);
             // This method is really just another way of calling getEventsByRange with new inputs; as such, it has the same limitations and only needs basic testing
 
-            assertEquals("getEntity will return a commitment in the database if it was stored there before",e.getName(),cem.getEvents(new DateTime(2000,01,01,01,00),new DateTime(2000,01,02,02,00)).get(0).getName());
-            assertEquals("getEntity will return a commitment in the database if it was stored there before",eee.getName(),cem.getEvents(new DateTime(2000,01,03,03,00),new DateTime(2000,01,04,07,01)).get(0).getName());
+            assertEquals("getEntity will return a commitment in the database if it was stored there before",e.getName(),cem.getEvents(new DateTime(2000,01,01,01,00),new DateTime(2000,01,01,02,00)).get(0).getName());
+            assertEquals("getEntity will return a commitment in the database if it was stored there before",eee.getName(),cem.getEvents(new DateTime(2000,01,04,03,00),new DateTime(2000,01,04,07,01)).get(0).getName());
             assertEquals("getEntity will return an empty array if no commitments are within the given range", 0 ,cem.getEvents(new DateTime(2050,01,01,01,01),new DateTime(2050,01,01,01,01)).size());
 
      }
-     
-     @Test(expected=NullPointerException.class)
-     public void testGetEntityWrongInput() throws WPISuiteException {
-
-    	 EventClient cem = new NonFilteringEventClient();
-            // adding Commitments to the database
-            cem.put(e);
-            cem.put(ee);
-            cem.put(eee);
-             
-             assertNotNull("getEntity return an error if anything but the previous two strings are the first string argument", cem.getEvents(new DateTime(2000,01,01,00,00), new DateTime(2000,01,02,01,00)).get(0).getName());
-         }
 
  	private static class NonFilteringEventClient extends EventClient
  	{
