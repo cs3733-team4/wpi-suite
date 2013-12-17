@@ -29,6 +29,8 @@ import edu.wpi.cs.wpisuitetng.modules.cal.models.server.PollPusher.PushedInfo;
 /**
  * This is the entity manager for the Commitment in the
  * CommitmentManager module.
+ *
+ * @version $Revision: 1.0 $
  */
 public class CommitmentEntityManager implements EntityManager<Commitment> {
 	/** The database */

@@ -24,9 +24,15 @@ import org.joda.time.MutableDateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentStatus;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.DatePickerListener;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 
+/**
+ * UI for adding and editing a commitment
+ * @author TeamYOCO
+ *
+ */
 public class AddCommitmentDisplay extends DisplayableEditorView
 {
 	
@@ -57,6 +63,11 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		setUpListeners();
 	}
 	
+	/**
+	 * Fill fields of commitment UI with existing data of commitment
+	 * @param mCommitment
+	 * 				the commitment being edited
+	 */
 	private void populateCommitmentFields(Commitment mCommitment)
 	{
 		nameTextField.setText(mCommitment.getName());
@@ -66,11 +77,26 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		this.rdbtnTeam.setSelected(mCommitment.isProjectwide());
 		descriptionTextArea.setText(mCommitment.getDescription());
 		if (mCommitment.getAssociatedCategory()!=null)
+		{
 			this.eventCategoryPicker.setSelectedItem(mCommitment.getAssociatedCategory());
+		}
 		else
+		{
 			this.eventCategoryPicker.setSelectedItem(Category.DEFAULT_CATEGORY);
+		}
+		if (mCommitment.getStatus()!=null)
+		{
+			this.commitmentStatusPicker.setSelectedItem(mCommitment.getStatus());
+		}
+		else
+		{
+			this.commitmentStatusPicker.setSelectedItem(Commitment.DEFAULT_STATUS.toString());
+		}
 	}
 
+	/**
+	 * Set up listeners for UI operation
+	 */
 	private void setUpListeners(){
 		saveButton.addActionListener(new ActionListener() {
 			
@@ -100,9 +126,7 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 			
 			@Override
 			public void focusGained(FocusEvent e)
-			{
-				// TODO Auto-generated method stub
-				
+			{				
 			}
 		});
 
@@ -141,6 +165,10 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		validateDate(startTimeDatePicker.getDateTime(), dateErrorLabel);
 		saveButton.setEnabled(isSaveable());
 	}
+	
+	/**
+	 * Checks to see if fields need saving, if so, saves to server database
+	 */
 	public void attemptSave()
 	{
 		if(!isSaveable())
@@ -152,6 +180,12 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		e.setProjectCommitment(rdbtnTeam.isSelected());
 		e.setParticipants(participantsTextField.getText().trim());
 		e.setCategory(((Category)eventCategoryPicker.getSelectedItem()).getCategoryID());
+		if(commitmentStatusPicker.getSelectedItem()=="Not Started")
+			e.setStatus(CommitmentStatus.NotStarted);
+		else if(commitmentStatusPicker.getSelectedItem()=="In Progress")
+			e.setStatus(CommitmentStatus.InProgress);
+		else
+			e.setStatus(CommitmentStatus.Complete);
 		
 		if (isEditingCommitment) {
 			e.setIdentification(existingCommitmentID);
@@ -164,10 +198,23 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		MainPanel.getInstance().closeTab(tabid);
 		MainPanel.getInstance().refreshView();
 	}
+	
+	/**
+	 * Checks to see if a field can be saved, or if it is incorrect
+	 * @return
+	 * 		True/False
+	 */
 	public boolean isSaveable()
 	{
 		return validateText(nameTextField.getText(), nameErrorLabel) && validateDate(startTimeDatePicker.getDateTime(), dateErrorLabel);
 	}
+	
+	/**
+	 * Checks to see if the commitment is being edited
+	 * (as opposed to added)
+	 * @return
+	 * 		True/False
+	 */
 	public boolean editingCommitment()
 	{
 		return this.isEditingCommitment; 
@@ -213,15 +260,27 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		return true;
 	}
 
+	/**
+	 * Sets the ID of the tab
+	 * @param id
+	 * 			ID to be set
+	 */
 	public void setTabId(int id)
 	{
 		tabid = id;
 	}
 
 	/**
+<<<<<<< HEAD
 	 * Checks if this display has the same commitment as the display provided
 	 * @param other the other display to compare
 	 * @return true if the displays' commitments match
+=======
+	 * Makes sure a commitment isn't being edited in another tab
+	 * @param other
+	 * 		Other tab being compared
+	 * @return true if both are the same, false if they are different or if the current commitment is null
+>>>>>>> origin/commitment_status
 	 */
 	public boolean matchingCommitment(AddCommitmentDisplay other)
 	{
