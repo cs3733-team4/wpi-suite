@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * Copyright (c) 2013 WPI-Suite
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors: Team YOCO (You Only Compile Once)
+ ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.utils.field;
 
 import java.awt.Graphics;
@@ -13,11 +22,19 @@ public class JIconPasswordField extends JPasswordField {
 	private Icon icon;
 	private Insets dummyInsets;
 
+	/**
+	 * makes a new password field of length zero
+	 */
 	public JIconPasswordField()
 	{
 		this(0);
 	}
 
+	/**
+	 * makes a new password field of the provided length
+	 * 
+	 * @param size the default size
+	 */
 	public JIconPasswordField(int size)
 	{
 		super(size);
@@ -28,11 +45,21 @@ public class JIconPasswordField extends JPasswordField {
 		this.dummyInsets = border.getBorderInsets(dummy);
 	}
 
+	/**
+	 * sets the default icon
+	 * 
+	 * @param icon the default icon
+	 */
 	public void setIcon(Icon icon)
 	{
 		this.icon = icon;
 	}
-
+	
+	/**
+	 * gets the icon for the field
+	 * 
+	 * @return the default icon
+	 */
 	public Icon getIcon()
 	{
 		return this.icon;

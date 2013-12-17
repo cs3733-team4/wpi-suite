@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * Copyright (c) 2013 WPI-Suite
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors: Team YOCO (You Only Compile Once)
+ ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.utils.field;
 
 import java.awt.Color;
@@ -14,9 +23,9 @@ public class JSearchPasswordField extends JIconPasswordField implements FocusLis
 	private String textWhenNotFocused;
 
 	/**
+	 * creates a zero length password field with the provided background text
 	 * 
-	 * @param greyMSG
-	 *            the default grey message
+	 * @param greyMSG the default grey message
 	 */
 	public JSearchPasswordField(String greyMSG)
 	{
@@ -24,9 +33,9 @@ public class JSearchPasswordField extends JIconPasswordField implements FocusLis
 	}
 
 	/**
+	 * creates an X length password field with no background text
 	 * 
-	 * @param i
-	 *            the length of the password box
+	 * @param i the length of the password box
 	 */
 	public JSearchPasswordField(int i)
 	{
@@ -34,19 +43,17 @@ public class JSearchPasswordField extends JIconPasswordField implements FocusLis
 	}
 
 	/**
-     * 
+     * creates an 8 length password field with the text "password" in the background
      */
 	public JSearchPasswordField()
 	{
-		this("password");
+		this("password", 8);
 	}
 
 	/**
 	 * 
-	 * @param greyMSG
-	 *            the default grey message
-	 * @param i
-	 *            the length of the password box
+	 * @param greyMSG the default grey message
+	 * @param i the length of the password box
 	 */
 	public JSearchPasswordField(String greyMSG, int i)
 	{
@@ -55,17 +62,26 @@ public class JSearchPasswordField extends JIconPasswordField implements FocusLis
 		this.addFocusListener(this);
 	}
 
+	/**
+	 * return the text that is shown when the field isn't focused and has no user-input text
+	 * 
+	 * @return get the background text
+	 */
 	public String getTextWhenNotFocused()
 	{
 		return this.textWhenNotFocused;
 	}
 
+	/**
+	 * update the text that is shown in the background of the field
+	 * 
+	 * @param newText the background text
+	 */
 	public void setTextWhenNotFocused(String newText)
 	{
 		this.textWhenNotFocused = newText;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	protected void paintComponent(Graphics g)
 	{
@@ -94,12 +110,13 @@ public class JSearchPasswordField extends JIconPasswordField implements FocusLis
 
 	}
 
-	// FocusListener implementation:
+	@Override
 	public void focusGained(FocusEvent e)
 	{
 		this.repaint();
 	}
 
+	@Override
 	public void focusLost(FocusEvent e)
 	{
 		this.repaint();

@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * Copyright (c) 2013 WPI-Suite
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors: Team YOCO (You Only Compile Once)
+ ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.utils.field;
 
 import java.awt.Color;
@@ -14,9 +23,7 @@ public class JSearchTextField extends JIconTextField implements FocusListener {
 	/**
 	 * This sets the length of the bar to be the length of the grey message
 	 * 
-	 * @param greyMSG
-	 *            the message to be displayed on the search bar when out of
-	 *            focus
+	 * @param greyMSG the message to be displayed on the search bar when out of focus
 	 */
 	public JSearchTextField(String greyMSG)
 	{
@@ -26,8 +33,7 @@ public class JSearchTextField extends JIconTextField implements FocusListener {
 	/**
 	 * This sets the default text to "Search..."
 	 * 
-	 * @param i
-	 *            the length that the search bar should be in characters
+	 * @param i the length that the search bar should be in characters
 	 */
 	public JSearchTextField(int i)
 	{
@@ -44,11 +50,8 @@ public class JSearchTextField extends JIconTextField implements FocusListener {
 
 	/**
 	 * 
-	 * @param greyMSG
-	 *            the message to be displayed on the search bar when out of
-	 *            focus
-	 * @param i
-	 *            the length of the search bar
+	 * @param greyMSG the message to be displayed on the search bar when out of focus
+	 * @param i the length of the search bar
 	 */
 	public JSearchTextField(String greyMSG, int i)
 	{
@@ -68,8 +71,7 @@ public class JSearchTextField extends JIconTextField implements FocusListener {
 
 	/**
 	 * 
-	 * @param newText
-	 *            the text to set as the grey text
+	 * @param newText the text to set as the grey text
 	 */
 	public void setTextWhenNotFocused(String newText)
 	{
@@ -105,17 +107,13 @@ public class JSearchTextField extends JIconTextField implements FocusListener {
 
 	}
 
-	/**
-     * 
-     */
+	@Override
 	public void focusGained(FocusEvent e)
 	{
 		this.repaint();
 	}
 
-	/**
-     * 
-     */
+	@Override
 	public void focusLost(FocusEvent e)
 	{
 		this.repaint();

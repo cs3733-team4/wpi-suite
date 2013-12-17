@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * Copyright (c) 2013 WPI-Suite
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors: Team YOCO (You Only Compile Once)
+ ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.utils.field;
 
 import java.awt.Graphics;
@@ -12,11 +21,19 @@ public class JIconTextField extends JTextField {
 	private Icon icon;
 	private Insets dummyInsets;
 
+	/**
+	 * sets up a zero-length text field with no background
+	 */
 	public JIconTextField()
 	{
 		this(0);
 	}
 
+	/**
+	 * creates an X length text field with no background
+	 * 
+	 * @param size the size (in characters) of the panel
+	 */
 	public JIconTextField(int size)
 	{
 		super(size);
@@ -27,11 +44,21 @@ public class JIconTextField extends JTextField {
 		this.dummyInsets = border.getBorderInsets(dummy);
 	}
 
+	/**
+	 * sets the Icon for the text field
+	 * 
+	 * @param icon the field icon
+	 */
 	public void setIcon(Icon icon)
 	{
 		this.icon = icon;
 	}
 
+	/**
+	 * get the icon that is being shown on the field
+	 * 
+	 * @return the icon for the field
+	 */
 	public Icon getIcon()
 	{
 		return this.icon;
@@ -52,9 +79,7 @@ public class JIconTextField extends JTextField {
 			int y = (this.getHeight() - iconHeight) / 2;
 			icon.paintIcon(this, g, x, y);
 		}
-
+		
 		setMargin(new Insets(2, textX, 2, 2));
-
 	}
-
 }
