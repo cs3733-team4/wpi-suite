@@ -68,12 +68,12 @@ public class TimeOrderedList<V> implements Iterable<V>{
 		
 		@Override
 		public boolean hasNext() {
-			return current != null;
+			return current != null && current.later != null;
 		}
 
 		@Override
 		public K next() {
-			K elem = this.current.value;
+			K elem = this.current.later.value;
 			remove();
 			return elem;
 		}
