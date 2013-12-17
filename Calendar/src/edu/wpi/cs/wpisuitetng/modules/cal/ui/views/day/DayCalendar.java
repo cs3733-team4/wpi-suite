@@ -115,40 +115,24 @@ public class DayCalendar extends AbstractCalendar
 	 */
 	private List<Displayable> getVisibleEvents()
 	{
-		if (MainPanel.getInstance().showEvents()){
-			// Set up from and to datetime for search
-			MutableDateTime f = new MutableDateTime(time);
-			f.setMillisOfDay(0);
-			DateTime from = f.toDateTime();
-			f.addDays(1);
-			DateTime to = f.toDateTime();
-			
-			// Filter events by date
-			List<Event> visibleEvents = EventModel.getInstance().getEvents(from, to);
-			
-			 // Filter commitments by date
-			List<Commitment> visibleCommitments = CommitmentModel.getInstance().getCommitments(from, to);
-			
-			// Filter for selected categories
-			Collection<UUID> selectedCategories = MainPanel.getInstance().getSelectedCategories();
-			List<Displayable> categoryFilteredEvents = new ArrayList<Displayable>();
-			
-			// Else, loop through events and filter by selected categories
-			for (Displayable e : visibleEvents){
-				if (selectedCategories.contains(e.getCategory()))
-					categoryFilteredEvents.add(e);
-			}
-			
-			for (Displayable e : visibleCommitments){
-				if (selectedCategories.contains(e.getCategory()))
-					categoryFilteredEvents.add(e);
-			}
-			
-			// Return list of events to be displayed
-			return categoryFilteredEvents;
-		} else {
-			return new ArrayList<Displayable>();
-		}
+		// Set up from and to datetime for search
+		MutableDateTime f = new MutableDateTime(time);
+		f.setMillisOfDay(0);
+		DateTime from = f.toDateTime();
+		f.addDays(1);
+		DateTime to = f.toDateTime();
+		
+		// Filter events by date
+		List<Event> visibleEvents = EventModel.getInstance().getEvents(from, to);
+		
+		 // Filter commitments by date
+		List<Commitment> visibleCommitments = CommitmentModel.getInstance().getCommitments(from, to);
+		
+		// Return list of events to be displayed
+		List<Displayable> allDisplayablesList = new ArrayList<Displayable>();
+		allDisplayablesList.addAll(visibleCommitments);
+		allDisplayablesList.addAll(visibleEvents);
+		return allDisplayablesList;
 	}
 
 	@Override
