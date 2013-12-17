@@ -90,10 +90,13 @@ public class EventModel
 		GoogleSync gs = MainPanel.getInstance().getGoogleCalendarSyncer();
 		if (gs != null)
 		{
-			System.out.println("There were " + filteredEvents.size() + " Events before the sync");
 			try
 			{
 				gs.pullEventsBetween(from, to);
+				for(Event e : gs.getAllEvents())
+				{
+					updateEvent(e);
+				}
 				gs.addAllDisplayablesToMap(filteredEvents);
 				
 				filteredEvents = gs.getAllEvents();
@@ -101,7 +104,6 @@ public class EventModel
 			catch(Exception e){
 				e.printStackTrace();
 			}
-			System.out.println("there are " + filteredEvents.size() + " Events after the sync");
 		}
 		
 		
@@ -117,13 +119,6 @@ public class EventModel
 			{
 				filteredEvents.add(e);
 			}
-		}
-		
-		System.out.println("there are " + filteredEvents.size() + " Events after the filter");
-		if (filteredEvents.size() > 0)
-		{
-			System.out.println(filteredEvents.get(0).getStart().toString(ISODateTimeFormat.basicDateTime()));
-			System.out.println(filteredEvents.get(0).getEnd().toString(ISODateTimeFormat.basicDateTime()));
 		}
 		//for(Event e : events)
 		//{

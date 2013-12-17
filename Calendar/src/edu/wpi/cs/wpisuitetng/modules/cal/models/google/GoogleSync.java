@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.UUID;
 
 import org.joda.time.DateTime;
 
@@ -23,8 +24,6 @@ import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.EventDualityFactory;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.cache.Pair;
-
-
 
 public class GoogleSync {
 	
@@ -79,11 +78,11 @@ public class GoogleSync {
 	
 	private CalendarService service;
 	private URL feedURL;
-	private Map<String, Pair<Displayable, CalendarEventEntry>> syncedEvents;
+	private Map<UUID, Pair<Displayable, CalendarEventEntry>> syncedEvents;
 	
 	private GoogleSync(String username, String password) throws AuthenticationException, MalformedURLException
 	{
-		syncedEvents = new HashMap<String, Pair<Displayable, CalendarEventEntry>>();
+		syncedEvents = new HashMap<UUID, Pair<Displayable, CalendarEventEntry>>();
 		service = new CalendarService("WPISuiteCalendarSync");
 		service.setUserCredentials(username, password);
 		feedURL = new URL("https://www.google.com/calendar/feeds/" + username + "/private/full");
@@ -116,15 +115,22 @@ public class GoogleSync {
 		{
 			CalendarEventEntry cee = resultFeed.getEntries().get(i);
 			When times = cee.getTimes().remove(0);
+			long startMillis = times.getStartTime().getValue(),
+			     endMillis = times.getEndTime().getValue();
+			String name, description;
 			
-			EventDualityFactory edf = EventDualityFactory.init(cee.getTitle().getPlainText());
-			edf.setDisplayableDescription(cee.getContent().toString())
-			   .setDisplayableStart(times.getStartTime().getValue())
-			   .setDisplayableEnd(times.getEndTime().getValue());
-			   
-			this.syncedEvents.put(cee.getId(), edf.getDuality());
+			name = cee.getTitle()!=null ? cee.getTitle().getPlainText() : "Event";
+			description = cee.getSummary()!=null ? cee.getSummary().getPlainText() : "";
+			UUID id = new UUID(startMillis ^ name.hashCode(), endMillis ^ description.hashCode());
 			
-			System.out.println("Syncing: "+cee.getTitle().getPlainText());
+			EventDualityFactory edf = 
+					EventDualityFactory.init(name)
+									   .setDisplayableDescription(description)
+									   .setDisplayableStart(startMillis)
+									   .setDisplayableID(id)
+									   .setDisplayableEnd(endMillis);
+			
+			this.syncedEvents.put(id, edf.getDuality());
 		}
 		System.out.println("Synced down "+resultFeed.getEntries().size()+" total events from google");
 	}
@@ -137,7 +143,7 @@ public class GoogleSync {
 	public List<Event> getAllEvents()
 	{
 		List<Event> result = new LinkedList<Event>();
-		for(Entry<String, Pair<Displayable, CalendarEventEntry>> e : this.syncedEvents.entrySet())
+		for(Entry<UUID, Pair<Displayable, CalendarEventEntry>> e : this.syncedEvents.entrySet())
 		{
 			result.add((Event) e.getValue().getA());
 		}
@@ -154,20 +160,7 @@ public class GoogleSync {
 		for(Displayable d : disp)
 		{
 			CalendarEventEntry cee = d.getGoogleCalendarEntry();
-			this.syncedEvents.put(cee.getId(), new Pair<Displayable, CalendarEventEntry>(d, cee));
+			this.syncedEvents.put(d.getIdentification(), new Pair<Displayable, CalendarEventEntry>(d, cee));
 		}
-	}
-	
-	
-	/**
-	 * 
-	 * @param toConvert
-	 * @throws IOException
-	 * @throws ServiceException
-	 */
-	public void addEventToCalendar(Displayable toConvert) throws IOException, ServiceException
-	{
-		CalendarEventEntry myEntry = toConvert.getGoogleCalendarEntry();
-		service.insert(feedURL, myEntry);
 	}
 }

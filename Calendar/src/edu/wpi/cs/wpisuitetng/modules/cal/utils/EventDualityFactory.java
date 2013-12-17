@@ -27,7 +27,7 @@ public class EventDualityFactory {
 	
 	private String title, description;
 	private Date start, end;
-	private UUID id = UUID.randomUUID();
+	UUID defaultID = UUID.randomUUID();
 	private boolean project;
 	
 	/**
@@ -116,7 +116,7 @@ public class EventDualityFactory {
 	 */
 	public EventDualityFactory setDisplayableID(UUID id)
 	{
-		this.id = id;
+		this.defaultID = id;
 		return this;
 	}
 	
@@ -145,7 +145,9 @@ public class EventDualityFactory {
 		 .addName(title)
 		 .addStartTime(new DateTime(start));
 		e.addIsProjectEvent(project);
-		e.setCategory(Category.DEFAULT_CATEGORY.getCategoryID());
+		e.setEventID(defaultID);
+		e.setCategory(Category.GOOGLE_EVENT_DEFAULT.getCategoryID());
+		System.out.println(defaultID.toString());
 		
 		CalendarEventEntry cee = new CalendarEventEntry();
 		cee.setTitle(new PlainTextConstruct(title));

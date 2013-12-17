@@ -30,6 +30,7 @@ public class Category extends AbstractModel
         public static final Category DEFAULT_DISPLAY_CATEGORY = new Category("No Categories");
         public static final Category COMMITMENT_CATEGORY = new Category("Commitments");
         public static final Category EVENT_CATEGORY = new Category("Events");
+        public static final Category GOOGLE_EVENT_DEFAULT = new Category("GCal Event", new Color(73, 0, 152));
         
         private Category(String s)
         {
@@ -42,6 +43,19 @@ public class Category extends AbstractModel
         public Category(){}
         
         /**
+         * makes a new category for google events
+         * 
+         * @param string the name
+         * @param color2 the color
+         */
+        public Category(String string, Color color2) {
+			name = string;
+			color = color2;
+			owner = null;
+			categoryID = new UUID(0, 1);
+		}
+
+		/**
          * Sets the name of the category
          * @param name the name to set to the category        
          */

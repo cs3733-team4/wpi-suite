@@ -41,6 +41,7 @@ public class CategoryModel {
 		if (instance == null)
 		{
 			instance = new CategoryModel();
+			instance.putCategory(Category.GOOGLE_EVENT_DEFAULT);
 		}
 		return instance;
 	}
