@@ -9,7 +9,6 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.ui;
 
-import java.awt.Component;
 import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -28,7 +27,6 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.MaskFormatter;
@@ -37,10 +35,8 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.navigation.MiniCalendarHostIface;
 
-import javax.swing.SwingConstants;
 import javax.swing.BoxLayout;
 
 /**
@@ -272,7 +268,10 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 			linked.display(value);
 		}
 	}
-	
+	/**
+	 * Return the Date in the date field.
+	 * @return DateTime
+	 */
 	public DateTime getDate()	{
 		try
 		{
@@ -282,7 +281,10 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 			return null;
 		}
 	}
-	
+	/**
+	 * Return the Date and Time from their respective fields.
+	 * @return DateTime
+	 */
 	public DateTime getDateTime() {
 		try
 		{
@@ -308,21 +310,32 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 				this.AMPM.setSelectedIndex(0);
 			}
 	}
-	
+	/**
+	 * Add a listener to the changeListeners
+	 * @param newListener
+	 */
 	public void addChangeListener(DatePickerListener newListener)
 	{
 		changeListeners.add(newListener);
 	}
-	
+	/**
+	 * Date field gets focus and opens a calendar popup.
+	 */
 	public void requestDateFocus()
 	{
 		date.requestFocus();
 		showMiniCalendar();
 	}
+	/**
+	 * Request focus for date field.
+	 */
 	public void requestDateFocusPost()
 	{
 		date.requestFocus();
 	}
+	/**
+	 * Request focus for time field.
+	 */
 	public void requestTimeFocus()
 	{
 		time.requestFocus();
