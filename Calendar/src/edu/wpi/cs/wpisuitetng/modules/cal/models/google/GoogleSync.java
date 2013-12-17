@@ -20,8 +20,8 @@ import com.google.gdata.data.extensions.When;
 import com.google.gdata.util.AuthenticationException;
 import com.google.gdata.util.ServiceException;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.EventDualityFactory;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.cache.Pair;
 

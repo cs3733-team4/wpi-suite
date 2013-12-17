@@ -12,7 +12,7 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.collisiondetection;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 
 public class OverlappedEvent implements Comparable<OverlappedEvent>
 {

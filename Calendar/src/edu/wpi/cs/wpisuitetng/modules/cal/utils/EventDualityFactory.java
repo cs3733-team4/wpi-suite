@@ -18,9 +18,9 @@ import com.google.gdata.data.PlainTextConstruct;
 import com.google.gdata.data.calendar.CalendarEventEntry;
 import com.google.gdata.data.extensions.When;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Category;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.cache.Pair;
 
 public class EventDualityFactory {

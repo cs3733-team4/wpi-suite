@@ -7,7 +7,7 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.cal.models;
+package edu.wpi.cs.wpisuitetng.modules.cal.models.data;
 
 import java.awt.Color;
 import java.util.Date;
@@ -26,6 +26,9 @@ import com.google.gson.Gson;
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.EventDualityFactory;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CachingClient;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryClient;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
@@ -132,7 +135,7 @@ public class Event extends AbstractModel implements Displayable
 	@Override
 	public void delete()
 	{
-		EventModel.getInstance().deleteEvent(this);
+		EventClient.getInstance().delete(this);
 	}
 
 	@Override
@@ -239,7 +242,7 @@ public class Event extends AbstractModel implements Displayable
 	/**
 	 * @return the isProjectEvent
 	 */
-	public boolean isProjectEvent()
+	public boolean isProjectwide()
 	{
 		return isProjectEvent;
 	}
@@ -327,14 +330,14 @@ public class Event extends AbstractModel implements Displayable
 	 */
 	public Category getAssociatedCategory()
 	{
-		return CategoryModel.getInstance().getCategoryByUUID(category);
+		return CategoryClient.getInstance().getCategoryByUUID(category);
 	}
 	
 	@Override
 	public Color getColor()
 	{
 		Color fallbackColor = isProjectEvent ? new Color(125,157,227) : new Color(227,125,147);
-		Category cat = CategoryModel.getInstance().getCategoryByUUID(category);
+		Category cat = CategoryClient.getInstance().getCategoryByUUID(category);
 		if (cat == null)
 		{
 			return fallbackColor;
@@ -360,6 +363,12 @@ public class Event extends AbstractModel implements Displayable
 	public DateTime getDate()
 	{
 		return this.getStart();
+	}
+	
+	@Override
+	public Interval getInterval()
+	{
+		return new Interval(getStart(), getEnd());
 	}
 	
 	/**
@@ -437,7 +446,7 @@ public class Event extends AbstractModel implements Displayable
 	@Override
 	public void update()
 	{
-		EventModel.getInstance().updateEvent(this);
+		EventClient.getInstance().update(this);
 	}
 	
 	@Override
@@ -487,18 +496,14 @@ public class Event extends AbstractModel implements Displayable
 	}
 	
 	@Override
-	public void deselect(MonthCalendar monthCalendar)
+	public String toString()
 	{
-		monthCalendar.deselect(this);
+		return new StringBuilder(super.toString()).append("{name: ").append(getName())
+				.append(", from: ").append(getStart().toString())
+				.append(", to: ").append(getEnd().toString()).append("}").toString();
 	}
 	
-	@Override
-	public void select(MonthCalendar monthCalendar)
-	{
-		monthCalendar.select(this);
-	}
-	
-	public static class SerializedAction
+	public static class SerializedAction extends CachingClient.SerializedAction<Event>
 	{
 		public SerializedAction(Event e, UUID eventID, boolean b)
 		{
@@ -506,9 +511,6 @@ public class Event extends AbstractModel implements Displayable
 			uuid = eventID;
 			isDeleted = b;
 		}
-		public Event object;
-		public UUID uuid;
-		public boolean isDeleted;
 	}
 
 	@Override

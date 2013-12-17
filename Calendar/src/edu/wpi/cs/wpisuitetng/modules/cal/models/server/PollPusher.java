@@ -7,23 +7,19 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.cal.models;
+package edu.wpi.cs.wpisuitetng.modules.cal.models.server;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.HashMap;
-import java.util.UUID;
 
-import com.google.gson.Gson;
-
-import edu.wpi.cs.wpisuitetng.Session;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.cache.Cache;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.cache.TimeOrderedList;
 
 public class PollPusher<T>
-{
-	private HashMap<String, Integer> indexqueue = new HashMap<>();
-	private List<String> changes = new LinkedList<>();
+{	
+	private Cache<String, String> changesc = new Cache<>(" ");
 	private List<PushedInfo> waiting = new LinkedList<>();
 	@SuppressWarnings("rawtypes")
 	private static HashMap<Class, PollPusher> instances = new HashMap<>(3);
@@ -42,36 +38,38 @@ public class PollPusher<T>
 	
 	public synchronized void updated(String item)
 	{
-		changes.add(item);
-		int newidx = changes.size() - 1;
+		changesc.pushChange(item);
 		for (PushedInfo pi : waiting)
 		{
 			pi.pushUpdates(item);
-			indexqueue.put(pi.getSessionID(), newidx);
+			TimeOrderedList<String> iter = changesc.timeOrderedCallIterator(pi.getSessionID());
+			Iterator<String> is =  iter.iterator();
+			while(is.hasNext())
+			{
+				iter.setValue(is.next());
+			}
 		}
 		waiting.clear();
 	}
 	
 	public synchronized String listenSession(PushedInfo listener)
 	{
-		// TODO: expire
-		Integer previdx = indexqueue.get(listener.getSessionID());
-		indexqueue.put(listener.getSessionID(), changes.size() - 1);
-		if (previdx == null || previdx == changes.size() - 1)
+		Iterable<String> iter = changesc.timeOrderedCallIterator(listener.getSessionID());
+		if (!iter.iterator().hasNext())
 		{
 			waiting.add(listener);
 			return null;
 		}
 		else
 		{
+			Iterator<String> is = iter.iterator();
 			StringBuilder sb = new StringBuilder("[");
-			for (int i = previdx; i < changes.size(); i++)
+			while (is.hasNext())
 			{
-				sb.append(changes.get(i));// TODO: not efficient
-				if (i + 1 < changes.size())
-					sb.append(",");
+				sb.append(is.next());
+				sb.append(",");
 			}
-			sb.append("]");
+			sb.setCharAt(sb.length() - 1, ']');
 			return sb.toString();
 		}
 	}
@@ -84,9 +82,9 @@ public class PollPusher<T>
 	public static abstract class PushedInfo
 	{
 		private String session;
-		public PushedInfo(Session session)
+		public PushedInfo(String session)
 		{
-			this.session = session.getSessionId();
+			this.session = session;
 		}
 		public String getSessionID()
 		{

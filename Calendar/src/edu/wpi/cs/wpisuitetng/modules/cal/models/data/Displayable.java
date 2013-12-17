@@ -7,16 +7,14 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.cal.models;
+package edu.wpi.cs.wpisuitetng.modules.cal.models.data;
 
 import java.awt.Color;
 import java.util.UUID;
 
 import org.joda.time.DateTime;
-
 import com.google.gdata.data.calendar.CalendarEventEntry;
-
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthCalendar;
+import org.joda.time.Interval;
 
 /**
  * Any object that is displayable on the calendar with a date and time, such as events and commitments.
@@ -45,6 +43,10 @@ public interface Displayable
 	 * The date to display. If there are more than one, the default date (start)
 	 */
 	public DateTime getDate();
+	
+	public Interval getInterval();
+	
+	public boolean isProjectwide();
 	
 	/**
 	 * deletes this Displayable
@@ -92,20 +94,8 @@ public interface Displayable
 	 * @return a Color Object
 	 */
 	public Color getColor();
-
-	/**
-	 * deselects this from the month calendar
-	 * 
-	 * @param monthCalendar 
-	 */
-	public void deselect(MonthCalendar monthCalendar);
-
-	/**
-	 * selects this from the month calendar
-	 * 
-	 * @param monthCalendar 
-	 */
-	public void select(MonthCalendar monthCalendar);
+	
+	public String toJSON();
 	
 	/**
 	 * 

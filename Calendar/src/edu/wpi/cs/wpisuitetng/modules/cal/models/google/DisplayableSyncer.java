@@ -1,6 +1,7 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.models.google;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
+
 
 /**
  * 

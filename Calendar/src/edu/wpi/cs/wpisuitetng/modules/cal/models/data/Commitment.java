@@ -7,13 +7,14 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.cal.models;
+package edu.wpi.cs.wpisuitetng.modules.cal.models.data;
 
 import java.awt.Color;
 import java.util.Date;
 import java.util.UUID;
 
 import org.joda.time.DateTime;
+import org.joda.time.Interval;
 import org.joda.time.MutableDateTime;
 
 import com.google.gdata.data.PlainTextConstruct;
@@ -22,7 +23,9 @@ import com.google.gdata.data.extensions.When;
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthCalendar;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CachingClient;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryClient;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CommitmentClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
@@ -118,7 +121,7 @@ public class Commitment extends AbstractModel implements Displayable
 	@Override
 	public void delete()
 	{
-		CommitmentModel.getInstance().deleteCommitment(this);
+		CommitmentClient.getInstance().delete(this);
 	}
 
 	/**
@@ -226,7 +229,7 @@ public class Commitment extends AbstractModel implements Displayable
 		this.participants = participants;
 	}
 	
-	public boolean isProjectCommitment()
+	public boolean isProjectwide()
 	{
 		return isProjectCommitment;
 	}
@@ -242,13 +245,13 @@ public class Commitment extends AbstractModel implements Displayable
 	
 	public Category getAssociatedCategory()
 	{
-		return CategoryModel.getInstance().getCategoryByUUID(category);
+		return CategoryClient.getInstance().getCategoryByUUID(category);
 	}
 	
 	public Color getColor()
 	{
 		Color fallbackColor = isProjectCommitment ? new Color(125,157,227) : new Color(227,125,147);
-		Category cat = CategoryModel.getInstance().getCategoryByUUID(category);
+		Category cat = CategoryClient.getInstance().getCategoryByUUID(category);
 		if (cat == null)
 		{
 			return fallbackColor;
@@ -286,11 +289,17 @@ public class Commitment extends AbstractModel implements Displayable
 		mdt.setYear(newTime.getYear());
 		this.duedate = mdt.toDate();
 	}
+	
+	@Override
+	public Interval getInterval()
+	{
+		return new Interval(getDate(), getDate());
+	}
 
 	@Override
 	public void update()
 	{
-		CommitmentModel.getInstance().updateCommitment(this);
+		CommitmentClient.getInstance().update(this);
 	}
 	
 	@Override
@@ -320,19 +329,17 @@ public class Commitment extends AbstractModel implements Displayable
 	{
 		return commitmentID;
 	}
-	
-	@Override
-	public void deselect(MonthCalendar monthCalendar)
-	{
-		monthCalendar.deselect(this);
-	}
-	
-	@Override
-	public void select(MonthCalendar monthCalendar)
-	{
-		monthCalendar.select(this);
-	}
 
+	public static class SerializedAction extends CachingClient.SerializedAction<Commitment>
+	{
+		public SerializedAction(Commitment e, UUID eventID, boolean b)
+		{
+			object = e;
+			uuid = eventID;
+			isDeleted = b;
+		}
+	}
+	
 	@Override
 	public CalendarEventEntry getGoogleCalendarEntry() {
 		CalendarEventEntry myEntry = new CalendarEventEntry();
@@ -348,5 +355,4 @@ public class Commitment extends AbstractModel implements Displayable
 		
 		return myEntry;
 	}
-
 }

@@ -7,18 +7,12 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.cal.models;
+package edu.wpi.cs.wpisuitetng.modules.cal.models.server;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-
-import org.joda.time.DateTime;
-import org.joda.time.Interval;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
 
 import com.google.gson.Gson;
 
@@ -26,23 +20,14 @@ import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.database.Data;
 import edu.wpi.cs.wpisuitetng.exceptions.BadRequestException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
-import edu.wpi.cs.wpisuitetng.exceptions.NotImplementedException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
-import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.Model;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.PollPusher.PushedInfo;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 /**
  * This is the entity manager for the Event in the
  * EventManager module.
- *
- * @version $Revision: 1.0 $
- * @author NileshP
  */
-public class EventEntityManager implements EntityManager<Event> {
-
-	private static final DateTimeFormatter serializer = ISODateTimeFormat.basicDateTime();
-	/** The database */
-	Data db;
+public class EventEntityManager extends CachedEntityManager<Event> {
 	
 	/**
 	 * Constructs the entity manager. This constructor is called by
@@ -53,7 +38,8 @@ public class EventEntityManager implements EntityManager<Event> {
 	 * @param db a reference to the persistent database
 	 */
 	public EventEntityManager(Data db) {
-		this.db = db; 
+		super(db);
+		pollPusher = PollPusher.getInstance(Event.class);
 	}
 
 	/**
@@ -69,6 +55,7 @@ public class EventEntityManager implements EntityManager<Event> {
 		if(!db.save(newEvent, s.getProject())) {
 			throw new WPISuiteException();
 		}
+		PollPusher.getInstance(Event.class).updated(updated(newEvent));
 		return newEvent;
 	}
 	
@@ -83,46 +70,9 @@ public class EventEntityManager implements EntityManager<Event> {
 	{
 		return getEventByUUID(s, data);	
 	}
-	
-	/**
-	 * Comet/Long Polling implementation for real-time updating. Waits 20s for any changes, then returns
-	 * @param s Session this is on
-	 * @return json string
-	 */
-	private String getFromPoll(Session s)
-	{
-		PollPusher<Event> pp = PollPusher.getInstance(Event.class);
-		final String[] stringList = new String[]{"[]"}; // so we can modify the string from the listener
-		final Thread thisthread = Thread.currentThread();
-		PushedInfo listener = (new PushedInfo(s) {
-			
-			@Override
-			public void pushUpdates(String item)
-			{
-				stringList[0] = item;
-				thisthread.interrupt();
-			}
-		});
-		String events = pp.listenSession(listener);
-		if (events == null)
-		{
-			try
-			{
-				Thread.sleep(20000);
-			}
-			catch (InterruptedException e)
-			{
-				// we were interruped!
-			}
-			return stringList[0];
-		}
-		else
-			return events;
-	}
 
 	/**
 	 * gets the event with the current UUID
-	 * 
 	 * @param ses the session
 	 * @param uuid the event's UUID
 	 * @return an array containing just this event
@@ -142,32 +92,6 @@ public class EventEntityManager implements EntityManager<Event> {
 		}
 		
 	}
-
-	/**
-	 * Query database to retrieve events with overlapping range
-	 * @param sfrom date from, DateTime formatted as String
-	 * @param sto date to, DateTime formatted as String
-	 * @return retrieved events with overlapping range
-	 */
-	Event[] getEventsByRange(Session ses, String sfrom, String sto) {
-		DateTime from = serializer.parseDateTime(sfrom);
-		DateTime to = serializer.parseDateTime(sto);
-		List<Event> retrievedEvents = new ArrayList<>();
-		
-		Event[] all = getAll(ses);
-
-		final Interval range = new Interval(from, to);
-		
-		for (Event event : all)
-		{
-			DateTime s = event.getStart(), e = event.getEnd();
-			if (s.isBefore(e) && range.overlaps(new Interval(s, e)))
-			{
-				retrievedEvents.add(event);
-			}
-		}
-		return retrievedEvents.toArray(new Event[0]);
-	}
 	
 	/**
 	 * Retrieves all events from the database
@@ -180,7 +104,7 @@ public class EventEntityManager implements EntityManager<Event> {
 		ArrayList<Event> eventArray = new ArrayList<>();
 		for (Event e: allEvents)
 		{
-			if (s.getUser().equals(e.getOwner()) || e.isProjectEvent())
+			if (s.getUser().equals(e.getOwner()) || e.isProjectwide())
 					eventArray.add(e);
 		}
 		return eventArray.toArray(new Event[0]);
@@ -193,10 +117,10 @@ public class EventEntityManager implements EntityManager<Event> {
 	 */
 	@Override
 	public void save(Session s, Event model) {
-		if (model.isProjectEvent())
+		if (model.isProjectwide())
 			model.setProject(s.getProject());
 		db.save(model);
-		PollPusher.getInstance(Event.class).updated(json(model));
+		PollPusher.getInstance(Event.class).updated(updated(model));
 	}
 	
 
@@ -264,7 +188,7 @@ public class EventEntityManager implements EntityManager<Event> {
 			throw new WPISuiteException();
 		}
 
-		PollPusher.getInstance(Event.class).updated(updated(existingEvent));
+		PollPusher.getInstance(Event.class).updated(updated(updatedEvent));
 		
 		return existingEvent;
 		
@@ -284,11 +208,9 @@ public class EventEntityManager implements EntityManager<Event> {
 	public String advancedGet(Session s, String[] args) throws NotFoundException
 	{
 		// shift cal/events off
-		args = Arrays.copyOfRange(args, 2, args.length-1);
+		args = Arrays.copyOfRange(args, 2, args.length);
 		switch (args[0])
 		{
-			case "filter-events-by-range":
-				return json((Object[])getEventsByRange(s, args[1], args[2]));
 			case "filter-event-by-uuid":
 				return json((Object[])getEventByUUID(s, args[1]));
 			case "poll":
@@ -298,57 +220,16 @@ public class EventEntityManager implements EntityManager<Event> {
 				throw new NotFoundException("Error: " + args[0] + " not a valid method");
 		}
 	}
-
-	/**
-	 * Simple wrapper to make json from event array
-	 * @param events list of events to stringify
-	 * @return json data
-	 */
-	private String json(Object... events)
-	{
-		return new Gson().toJson(events);
-	}
 	
-	private String updated(Event e)
-	{
-		return json(new Event.SerializedAction(e, e.getEventID(), false));
-	}
-	
-	private String deleted(UUID id)
-	{
-		return json(new Event.SerializedAction(null, id, true));
-	}
-
-	/**
-	 * Method advancedPost.
-	 * @param arg0 Session
-	 * @param arg1 String
-	 * @param arg2 String
-	
-	
-	
-	 * @return String * @throws NotImplementedException * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#advancedPost(Session, String, String) * @throws NotImplementedException
-	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#advancedPost(Session, String, String)
-	 */
 	@Override
-	public String advancedPost(Session arg0, String arg1, String arg2) throws NotImplementedException {
-		throw new NotImplementedException();
+	protected String updated(Event e)
+	{
+		return new Gson().toJson(new Event.SerializedAction(e, e.getEventID(), false));
 	}
 
-	/**
-	 * Method advancedPut.
-	 * @param arg0 Session
-	 * @param arg1 String[]
-	 * @param arg2 String
-	
-	
-	
-	 * @return String * @throws NotImplementedException * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#advancedPut(Session, String[], String) * @throws NotImplementedException
-	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#advancedPut(Session, String[], String)
-	 */
 	@Override
-	public String advancedPut(Session arg0, String[] arg1, String arg2) throws NotImplementedException {
-		throw new NotImplementedException();
+	protected String deleted(UUID id)
+	{
+		return new Gson().toJson(new Event.SerializedAction(null, id, true));
 	}
-
 }
