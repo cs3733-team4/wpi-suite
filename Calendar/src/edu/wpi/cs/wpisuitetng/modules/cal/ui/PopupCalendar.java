@@ -32,14 +32,14 @@ public class PopupCalendar extends JFrame {
 		MiniCalendarPanel cal = new MiniCalendarPanel(date, mc, true);
 		this.add(cal);
 		final JFrame me = this;
-		
+		((DatePicker)mc).requestDateFocusPost();
 		((JComponent) getContentPane()).setBorder(BorderFactory.createLineBorder(Colors.BORDER));
 		
 		this.addWindowListener(new WindowListener(){
 
 			@Override
 			public void windowActivated(WindowEvent arg0) {
-				((DatePicker)mc).requestDateFocusPost();
+				//((DatePicker)mc).requestDateFocusPost();
 			}
 
 			@Override
@@ -56,7 +56,7 @@ public class PopupCalendar extends JFrame {
 
 			@Override
 			public void windowDeactivated(WindowEvent arg0) {
-				// TODO Auto-generated method stub
+				((DatePicker)mc).hideMiniCalendar();
 			}
 
 			@Override

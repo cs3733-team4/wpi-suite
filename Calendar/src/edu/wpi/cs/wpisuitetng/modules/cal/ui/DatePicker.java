@@ -209,7 +209,7 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 				}
 
 				public void mouseReleased(MouseEvent e) {
-					requestDateFocus();
+					showMiniCalendar();
 				}
 
 				public void mouseEntered(MouseEvent e) {

@@ -213,17 +213,4 @@ public class DisplayableEditorView extends JPanel
 			return jPanel1;
 		}
 	}
-	@Override
-	public void paintComponent(Graphics g)
-	{
-		super.paintComponent(g);
-		if (startTimeDatePicker == null)
-		{
-			startTimeDatePicker.hideMiniCalendar();
-		}
-		if (endTimeDatePicker == null)
-		{
-			endTimeDatePicker.hideMiniCalendar();
-		}
-	}
 }
