@@ -32,7 +32,7 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 
-public class CategoryRefreshing {
+public class CategoryRefreshingTest {
 	MockData db = new MockData(new HashSet<Object>());
 	AddEventDisplay aed = new AddEventDisplay();
 	
