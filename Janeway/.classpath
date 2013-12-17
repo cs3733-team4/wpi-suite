@@ -14,6 +14,5 @@
 	<classpathentry kind="lib" path="lib/miglayout-4.0-swing.jar"/>
 	<classpathentry kind="lib" path="lib/swingx-all-1.6.4.jar"/>
 	<classpathentry kind="lib" path="lib/joda-time-2.3.jar"/>
-	<classpathentry kind="lib" path="lib/jfxrt.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

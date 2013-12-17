@@ -12,6 +12,8 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui.documentation;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -34,7 +36,6 @@ import javax.swing.tree.TreeSelectionModel;
 public class TableOfContents extends JPanel implements TreeSelectionListener {
     private JTree tree;
     private HashMap<String, DefaultMutableTreeNode> theMap;
-    private boolean fromTOC;
     /**
      * Constructor for the TableOfContents
      * @param serverLocation the String location of the server
@@ -53,8 +54,50 @@ public class TableOfContents extends JPanel implements TreeSelectionListener {
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         tree.setBackground(Color.getColor("EFEFEF"));
         //Listen for when the selection changes.
-        tree.addTreeSelectionListener(this);
-
+        //tree.addTreeSelectionListener(this);
+        tree.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+	            TreePath path = tree.getPathForLocation(e.getX(), e.getY());
+	            if (path != null) {
+	            	DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+	                if (node==null)
+	                	return;
+	                System.out.println("Tree changed");
+	                if (node.getUserObject() instanceof ListInfo)
+	                {
+	                	
+	                	DocumentMainPanel.getInstance().goToPage(((ListInfo)node.getUserObject()).getPageName(), true, true);
+	                }
+	            }
+	            
+			}
+		});
         if (tree.getCellRenderer() instanceof DefaultTreeCellRenderer)
         {
             final DefaultTreeCellRenderer renderer = (DefaultTreeCellRenderer)(tree.getCellRenderer());
@@ -76,10 +119,11 @@ public class TableOfContents extends JPanel implements TreeSelectionListener {
         DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
         if (node==null)
         	return;
+        System.out.println("Tree changed");
         if (node.getUserObject() instanceof ListInfo)
         {
-        	DocumentMainPanel.getInstance().goToPage(((ListInfo)node.getUserObject()).getPageName());
-        	fromTOC=true;
+        	
+        	DocumentMainPanel.getInstance().goToPage(((ListInfo)node.getUserObject()).getPageName(), true, true);
         }
         
   }
@@ -96,12 +140,9 @@ public class TableOfContents extends JPanel implements TreeSelectionListener {
     		return;
     	
     	
-    	if (!fromTOC)
-    	{
-        	tree.setSelectionPath(new TreePath(theNode.getPath()));
-        	tree.scrollPathToVisible(new TreePath(theNode.getPath()));
-    	}
-    	fromTOC=false;
+    	tree.setSelectionPath(new TreePath(theNode.getPath()));
+    	tree.scrollPathToVisible(new TreePath(theNode.getPath()));
+    	
     	
     	
     }
