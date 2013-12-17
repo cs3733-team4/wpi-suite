@@ -36,8 +36,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryClient;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.PastelColorPicker;
@@ -66,7 +66,7 @@ public class CategoryManager extends JPanel {
 	// to avoid deleting unwanted categories
 	
 	public CategoryManager() {
-		allCategories = CategoryModel.getInstance().getAllCategories();
+		allCategories = CategoryClient.getInstance().getAllCategories();
 		
 		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		leftCategoryList = new JPanel();

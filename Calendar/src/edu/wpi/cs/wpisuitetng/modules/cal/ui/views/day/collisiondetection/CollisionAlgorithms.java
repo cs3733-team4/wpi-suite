@@ -17,7 +17,7 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 
 /**
  * Detects collisions in the events and sets positional values for them accordingly,

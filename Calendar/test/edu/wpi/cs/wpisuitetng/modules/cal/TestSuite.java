@@ -20,16 +20,24 @@ import org.junit.runners.Suite.SuiteClasses;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthCalendarTest;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryEntityManagerTest;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentClientTest;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.EventClientTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.EventEntityManagerTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentEntityManagerTest;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.PollPusherTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthDayTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthItemTest;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.week.WeekCalendarTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.MonthsTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.GoToPanelTest;
+import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MainCalendarNavigationTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.SidebarTabbedPaneTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.CommitmentUIValidationTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.DatePickerTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.EventUIValidationTest;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.cache.AccessOrderedListTest;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.cache.CacheTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.CalendarNavigationModuleTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.year.YearCalendarTest;
 import edu.wpi.cs.wpisuitetng.network.Network;
@@ -42,13 +50,18 @@ import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
 
 @RunWith(Suite.class)
 @SuiteClasses({
+	//sorted by package
 	MonthsTest.class,
-	CommitmentEntityManagerTest.class, EventEntityManagerTest.class,
-	CalendarNavigationModuleTest.class, GoToPanelTest.class, SidebarTabbedPaneTest.class,
+	CommitmentEntityManagerTest.class, EventEntityManagerTest.class, CommitmentClientTest.class,
+		EventClientTest.class, CategoryEntityManagerTest.class, PollPusherTest.class,
+	CalendarNavigationModuleTest.class, GoToPanelTest.class, MainCalendarNavigationTest.class, SidebarTabbedPaneTest.class,
 	MonthCalendarTest.class, MonthDayTest.class, MonthItemTest.class,
+	WeekCalendarTest.class,
 	CommitmentUIValidationTest.class, DatePickerTest.class,
 	EventUIValidationTest.class,
-	YearCalendarTest.class })
+	AccessOrderedListTest.class, CacheTest.class,
+	YearCalendarTest.class})
+
 public class TestSuite
 {
 	@BeforeClass

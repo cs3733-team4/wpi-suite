@@ -16,9 +16,9 @@ import org.joda.time.DateTime;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentModel;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CommitmentClient;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventClient;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.MockNetwork;
 import edu.wpi.cs.wpisuitetng.network.Network;
 
@@ -29,8 +29,8 @@ import edu.wpi.cs.wpisuitetng.network.Network;
 
 public class WeekCalendarTest{
 	
-	private EventModel dummyModel = EventModel.getInstance();
-	private CommitmentModel dummyModel2 = CommitmentModel.getInstance();
+	private EventClient dummyModel = EventClient.getInstance();
+	private CommitmentClient dummyModel2 = CommitmentClient.getInstance();
 	
 	@BeforeClass
 	public static void setUp() throws Exception

@@ -7,36 +7,27 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.cal.models;
+package edu.wpi.cs.wpisuitetng.modules.cal.models.server;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import org.joda.time.DateTime;
-import org.joda.time.Interval;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
+import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.database.Data;
 import edu.wpi.cs.wpisuitetng.exceptions.BadRequestException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
-import edu.wpi.cs.wpisuitetng.exceptions.NotImplementedException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
-import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.Model;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
 /**
  * This is the entity manager for the Commitment in the
  * CommitmentManager module.
- *
- * @version $Revision: 1.0 $
  */
-public class CommitmentEntityManager implements EntityManager<Commitment> {
-
-	private static final DateTimeFormatter serializer = ISODateTimeFormat.basicDateTime();
-	/** The database */
-	Data db;
+public class CommitmentEntityManager extends CachedEntityManager<Commitment> {
 	
 	/**
 	 * Constructs the entity manager. This constructor is called by
@@ -47,7 +38,8 @@ public class CommitmentEntityManager implements EntityManager<Commitment> {
 	 * @param db a reference to the persistent database
 	 */
 	public CommitmentEntityManager(Data db) {
-		this.db = db;
+		super(db);
+		pollPusher = PollPusher.getInstance(Commitment.class);
 	}
 
 	/**
@@ -63,6 +55,7 @@ public class CommitmentEntityManager implements EntityManager<Commitment> {
 		if(!db.save(newCommitment, s.getProject())) {
 			throw new WPISuiteException();
 		}
+		PollPusher.getInstance(Commitment.class).updated(updated(newCommitment));
 		return newCommitment;
 	}
 	
@@ -73,22 +66,13 @@ public class CommitmentEntityManager implements EntityManager<Commitment> {
 	 * @return the event matching the given id * @throws NotFoundException * @throws NotFoundException * @throws NotFoundException
 	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#getEntity(Session, String) */
 	@Override
-	public Commitment[] getEntity(Session s, String data) throws NotFoundException {
-		String[] args = data.split(",");		
-		switch (args[0]) {
-			case "filter-commitments-by-range":
-				return getCommitmentsByRange(s, args[1], args[2]);
-			case "get-all-commitments":
-				return getAll(s);
-			case "filter-commitment-by-uuid":
-				return getCommitmentByUUID(s, args[1]);
-			default:
-				throw new NotFoundException("Error: " + args[0] + " not a valid method");
-		}
+	public Commitment[] getEntity(Session s, String data) throws NotFoundException
+	{
+		return getCommitmentByUUID(s, data);
 	}
 	
 	/**
-	 * 
+	 * Gets the Commitment with the current UUID
 	 * @param ses the session
 	 * @param uuid the uuid of the commitment
 	 * @return an array containing the commitment that matches this uuid
@@ -104,32 +88,6 @@ public class CommitmentEntityManager implements EntityManager<Commitment> {
 		{
 			throw new NotFoundException(uuid);
 		}
-	}
-
-	/**
-	 * Query database to retrieve commitments with overlapping range
-	 * @param sfrom date from, DateTime formatted as String
-	 * @param sto date to, DateTime formatted as String
-	 * @return retrieved events with overlapping range
-	 */
-	Commitment[] getCommitmentsByRange(Session ses, String sfrom, String sto) {
-		DateTime from = serializer.parseDateTime(sfrom);
-		DateTime to = serializer.parseDateTime(sto);
-		List<Commitment> retrievedCommitments = new ArrayList<>();
-		
-		Commitment[] all = getAll(ses);
-
-		final Interval range = new Interval(from, to);
-		
-		for (Commitment commitment : all)
-		{
-			DateTime s = commitment.getDate();
-			if (range.contains(s))
-			{
-				retrievedCommitments.add(commitment);
-			}
-		}
-		return retrievedCommitments.toArray(new Commitment[0]);
 	}
 
 	/**
@@ -156,9 +114,10 @@ public class CommitmentEntityManager implements EntityManager<Commitment> {
 	 */
 	@Override
 	public void save(Session s, Commitment model) {
-		
+		if (model.isProjectwide())
+			model.setProject(s.getProject());
 		db.save(model);
-
+		PollPusher.getInstance(Commitment.class).updated(updated(model));
 	}
 	
 
@@ -170,7 +129,10 @@ public class CommitmentEntityManager implements EntityManager<Commitment> {
 	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#deleteEntity(Session, String) */
 	@Override
 	public boolean deleteEntity(Session s, String id) throws WPISuiteException {
-		return (db.delete(getEntity(s, id)[0]) != null) ? true : false;
+		boolean res = (db.delete(getEntity(s, id)[0]) != null) ? true : false;
+		if (res)
+			PollPusher.getInstance(Commitment.class).updated(deleted(UUID.fromString(id)));
+		return res;
 	}
 	
 	/**
@@ -223,6 +185,8 @@ public class CommitmentEntityManager implements EntityManager<Commitment> {
 		if(!db.save(updatedCommitment, session.getProject())) {
 			throw new WPISuiteException();
 		}
+
+		PollPusher.getInstance(Commitment.class).updated(updated(updatedCommitment));
 		
 		return updatedCommitment;
 	}
@@ -235,34 +199,30 @@ public class CommitmentEntityManager implements EntityManager<Commitment> {
 	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#advancedGet(Session, String[])
 	 */
 	@Override
-	public String advancedGet(Session arg0, String[] arg1) throws NotImplementedException {
-		throw new NotImplementedException();
+	public String advancedGet(Session s, String[] args) throws NotFoundException {
+		// shift cal/events off
+		args = Arrays.copyOfRange(args, 2, args.length);
+		switch (args[0])
+		{
+			case "filter-commitments-by-uuid":
+				return json((Object[])getCommitmentByUUID(s, args[1]));
+			case "poll":
+				return getFromPoll(s);
+			default:
+				System.out.println(args[0]);
+				throw new NotFoundException("Error: " + args[0] + " not a valid method");
+		}
 	}
-
-	/**
-	 * Method advancedPost.
-	 * @param arg0 Session
-	 * @param arg1 String
-	 * @param arg2 String
-	 * @return String * @throws NotImplementedException * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#advancedPost(Session, String, String) * @throws NotImplementedException
-	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#advancedPost(Session, String, String)
-	 */
+	
 	@Override
-	public String advancedPost(Session arg0, String arg1, String arg2) throws NotImplementedException {
-		throw new NotImplementedException();
+	protected String updated(Commitment e)
+	{
+		return new Gson().toJson(new Commitment.SerializedAction(e, e.getCommitmentID(), false));
 	}
 
-	/**
-	 * Method advancedPut.
-	 * @param arg0 Session
-	 * @param arg1 String[]
-	 * @param arg2 String
-	 * @return String * @throws NotImplementedException * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#advancedPut(Session, String[], String) * @throws NotImplementedException
-	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#advancedPut(Session, String[], String)
-	 */
 	@Override
-	public String advancedPut(Session arg0, String[] arg1, String arg2) throws NotImplementedException {
-		throw new NotImplementedException();
+	protected String deleted(UUID id)
+	{
+		return new Gson().toJson(new Commitment.SerializedAction(null, id, true));
 	}
-
 }
