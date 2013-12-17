@@ -90,8 +90,8 @@ public class DayItem extends JPanel
 		{
 			bg = displayable.getColor();
 			setBorder(new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new LineBorder(bg.darker()), new EmptyBorder(6, 6, 6, 6))));
-		}else
-			setBorder(new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new MatteBorder(1, 0, 0, 0, Colors.COMMITMENT_NOTIFICATION), new CompoundBorder(new LineBorder(bg.darker()), new EmptyBorder(6, 6, 6, 6)))));
+		}else if(displayable instanceof Commitment)
+			setBorder(new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new MatteBorder(1, 0, 0, 0, ((Commitment) displayable).getStatusColor()), new CompoundBorder(new LineBorder(bg.darker()), new EmptyBorder(6, 6, 6, 6)))));
 		
 		setBackground(bg);
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -387,9 +387,9 @@ public class DayItem extends JPanel
 		if(displayable instanceof Event)
 			setBorder(b ? new CompoundBorder(new LineBorder(displayable.getColor().darker()), new CompoundBorder(new LineBorder(displayable.getColor().darker()), new EmptyBorder(6, 6, 6, 6)))
 						: new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new LineBorder(displayable.getColor().darker()), new EmptyBorder(6, 6, 6, 6))));
-		else
-			setBorder(b ? new CompoundBorder(new LineBorder(displayable.getColor().darker()), new CompoundBorder(new MatteBorder(1, 0, 0, 0, Colors.COMMITMENT_NOTIFICATION), new CompoundBorder(new LineBorder(Colors.TABLE_GRAY_HEADER.darker()), new EmptyBorder(6, 6, 6, 6))))
-						: new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new MatteBorder(1, 0, 0, 0, Colors.COMMITMENT_NOTIFICATION), new CompoundBorder(new LineBorder(Colors.TABLE_GRAY_HEADER.darker()), new EmptyBorder(6, 6, 6, 6)))));
+		else if(displayable instanceof Commitment)
+			setBorder(b ? new CompoundBorder(new LineBorder(displayable.getColor().darker()), new CompoundBorder(new MatteBorder(1, 0, 0, 0, ((Commitment) displayable).getStatusColor()), new CompoundBorder(new LineBorder(Colors.TABLE_GRAY_HEADER.darker()), new EmptyBorder(6, 6, 6, 6))))
+						: new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new MatteBorder(1, 0, 0, 0, ((Commitment) displayable).getStatusColor()), new CompoundBorder(new LineBorder(Colors.TABLE_GRAY_HEADER.darker()), new EmptyBorder(6, 6, 6, 6)))));
 	}
 
 	public Displayable getEvent() {
