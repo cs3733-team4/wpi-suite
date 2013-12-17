@@ -40,9 +40,9 @@ import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.documentation.DocumentMainPanel;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryModel;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CommitmentModel;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryClient;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CommitmentClient;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
@@ -87,9 +87,9 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	private int tabPosition;
 	private final HashMap<Integer, JComponent> tabs = new HashMap<Integer, JComponent>();
 	private int tab_id = 0;
-	private EventModel events;
-	private CategoryModel categories;
-	private CommitmentModel commitments;
+	private EventClient events;
+	private CategoryClient categories;
+	private CommitmentClient commitments;
 	private ViewSize view = ViewSize.Month;
 	private static MainPanel instance;
 	private Displayable currentSelected;
@@ -180,9 +180,9 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		// exception will be thrown
 		sideTabbedPanel = new SidebarTabbedPane();
 		
-		categories = CategoryModel.getInstance();
-		events = EventModel.getInstance(); // used for accessing events
-		commitments= CommitmentModel.getInstance();
+		categories = CategoryClient.getInstance();
+		events = EventClient.getInstance(); // used for accessing events
+		commitments= CommitmentClient.getInstance();
 		this.mainPaneContainer = new JPanel(); // Container for the navigation and calendars
 		this.sidePanel = new JPanel(); // Container to hold the top and bottom side sub-panels
 		this.sidePanelTop = new JPanel(); // Panel to hold the mini calendar and the goto date
@@ -426,7 +426,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	 * Returns the category model of the main panel
 	 * @return category model of the main panel instance
 	 */
-	public CategoryModel getCategoryModel(){
+	public CategoryClient getCategoryModel(){
 		return this.categories;
 	}
 	

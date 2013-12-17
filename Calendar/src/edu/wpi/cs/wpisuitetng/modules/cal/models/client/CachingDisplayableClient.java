@@ -21,9 +21,9 @@ import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 
-public abstract class CachingDisplayableModel<T extends Model & Displayable, SA extends CachingModel.SerializedAction<T>> extends CachingModel<T, SA>
+public abstract class CachingDisplayableClient<T extends Model & Displayable, SA extends CachingClient.SerializedAction<T>> extends CachingClient<T, SA>
 {
-	public CachingDisplayableModel(String urlname, Class<SA[]> serializedActionClass, Class<T[]> singleClass)
+	public CachingDisplayableClient(String urlname, Class<SA[]> serializedActionClass, Class<T[]> singleClass)
 	{
 		super(urlname, serializedActionClass, singleClass);
 	}

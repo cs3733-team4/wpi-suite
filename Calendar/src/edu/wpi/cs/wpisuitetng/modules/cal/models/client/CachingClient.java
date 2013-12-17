@@ -16,14 +16,14 @@ import java.util.UUID;
 
 import edu.wpi.cs.wpisuitetng.modules.Model;
 
-public abstract class CachingModel<T extends Model, SA extends CachingModel.SerializedAction<T>>
+public abstract class CachingClient<T extends Model, SA extends CachingClient.SerializedAction<T>>
 {
 	protected HashMap<UUID, T> cache = new HashMap<>();
 	protected boolean valid = false;
 	final private String urlname;
 	final private Class<T[]> singleClass;
 
-	public CachingModel(final String urlname, final Class<SA[]> serializedActionClass, final Class<T[]> singleClass)
+	public CachingClient(final String urlname, final Class<SA[]> serializedActionClass, final Class<T[]> singleClass)
 	{
 		this.urlname = urlname;
 		this.singleClass = singleClass;
@@ -37,7 +37,7 @@ public abstract class CachingModel<T extends Model, SA extends CachingModel.Seri
 				{
 					try
 					{
-						List<SA> acts = ServerManager.get("Advanced/cal/" + urlname + "/poll", serializedActionClass);
+						List<SA> acts = ServerClient.get("Advanced/cal/" + urlname + "/poll", serializedActionClass);
 						for (SA serializedAction : acts)
 						{
 							applySerializedChange(serializedAction);
@@ -102,7 +102,7 @@ public abstract class CachingModel<T extends Model, SA extends CachingModel.Seri
 		if (valid)
 			return;
 		cache.clear();
-		List<T> all = ServerManager.get("cal/" + urlname, this.singleClass);
+		List<T> all = ServerClient.get("cal/" + urlname, this.singleClass);
 		for (T event : all)
 		{
 			cache(event);
@@ -113,19 +113,19 @@ public abstract class CachingModel<T extends Model, SA extends CachingModel.Seri
 	public boolean put(T toAdd)
 	{
 		cache(toAdd);
-		return ServerManager.put("cal/" + urlname, toAdd.toJSON());
+		return ServerClient.put("cal/" + urlname, toAdd.toJSON());
 	}
 
 	public boolean update(T toUpdate)
 	{
 		cache(toUpdate);
-		return ServerManager.post("cal/" + urlname, toUpdate.toJSON());
+		return ServerClient.post("cal/" + urlname, toUpdate.toJSON());
 	}
 
 	public boolean delete(T toRemove)
 	{
 		cache(toRemove);
-		return ServerManager.delete("cal/" + urlname, getUuidFrom(toRemove).toString());
+		return ServerClient.delete("cal/" + urlname, getUuidFrom(toRemove).toString());
 	}
 	
 	public static abstract class SerializedAction<T>

@@ -20,9 +20,9 @@ import org.joda.time.MutableDateTime;
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CachingModel;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryModel;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CommitmentModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CachingClient;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryClient;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CommitmentClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
@@ -118,7 +118,7 @@ public class Commitment extends AbstractModel implements Displayable
 	@Override
 	public void delete()
 	{
-		CommitmentModel.getInstance().delete(this);
+		CommitmentClient.getInstance().delete(this);
 	}
 
 	/**
@@ -242,13 +242,13 @@ public class Commitment extends AbstractModel implements Displayable
 	
 	public Category getAssociatedCategory()
 	{
-		return CategoryModel.getInstance().getCategoryByUUID(category);
+		return CategoryClient.getInstance().getCategoryByUUID(category);
 	}
 	
 	public Color getColor()
 	{
 		Color fallbackColor = isProjectCommitment ? new Color(125,157,227) : new Color(227,125,147);
-		Category cat = CategoryModel.getInstance().getCategoryByUUID(category);
+		Category cat = CategoryClient.getInstance().getCategoryByUUID(category);
 		if (cat == null)
 		{
 			return fallbackColor;
@@ -296,7 +296,7 @@ public class Commitment extends AbstractModel implements Displayable
 	@Override
 	public void update()
 	{
-		CommitmentModel.getInstance().update(this);
+		CommitmentClient.getInstance().update(this);
 	}
 	
 	@Override
@@ -327,7 +327,7 @@ public class Commitment extends AbstractModel implements Displayable
 		return commitmentID;
 	}
 
-	public static class SerializedAction extends CachingModel.SerializedAction<Commitment>
+	public static class SerializedAction extends CachingClient.SerializedAction<Commitment>
 	{
 		public SerializedAction(Commitment e, UUID eventID, boolean b)
 		{

@@ -29,7 +29,7 @@ import javax.swing.Box.Filler;
 
 import net.miginfocom.swing.MigLayout;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.SelectableField;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.DatePicker;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
@@ -100,7 +100,7 @@ public class DisplayableEditorView extends JPanel
 		eventCategoryPicker = new JComboBox<>();
 		eventCategoryPicker.setRenderer(new CategoryComboBoxRenderer());
 		this.eventCategoryPicker.addItem(Category.DEFAULT_CATEGORY);
-		for (Category c : CategoryModel.getInstance().getAllCategories())
+		for (Category c : CategoryClient.getInstance().getAllCategories())
 		{
 			this.eventCategoryPicker.addItem(c);
 		}

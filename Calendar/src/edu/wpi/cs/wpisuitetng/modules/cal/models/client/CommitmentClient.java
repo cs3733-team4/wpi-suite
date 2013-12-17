@@ -17,20 +17,20 @@ import org.joda.time.DateTime;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 
-public class CommitmentModel extends CachingDisplayableModel<Commitment, Commitment.SerializedAction>
+public class CommitmentClient extends CachingDisplayableClient<Commitment, Commitment.SerializedAction>
 {
-	private static CommitmentModel instance;
+	private static CommitmentClient instance;
 
-	private CommitmentModel()
+	private CommitmentClient()
 	{
 		super("commitments", Commitment.SerializedAction[].class, Commitment[].class);
 	}
 	
-	public static CommitmentModel getInstance()
+	public static CommitmentClient getInstance()
 	{
 		if (instance == null)
 		{
-			instance = new CommitmentModel();
+			instance = new CommitmentClient();
 		}
 		return instance;
 	}

@@ -26,7 +26,7 @@ import org.joda.time.format.DateTimeFormatter;
 import com.lowagie.text.Font;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
@@ -97,7 +97,7 @@ public class DayCalendar extends AbstractCalendar
 		DateTime from = f.toDateTime();
 		f.addDays(1);
 		DateTime to = f.toDateTime();
-		return EventModel.getInstance().getEvents(from, to);
+		return EventClient.getInstance().getEvents(from, to);
 	}
 
 	@Override

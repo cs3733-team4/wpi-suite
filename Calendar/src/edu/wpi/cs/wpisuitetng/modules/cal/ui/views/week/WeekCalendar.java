@@ -38,7 +38,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
@@ -296,7 +296,7 @@ public class WeekCalendar extends AbstractCalendar
 	 */
 	private List<Event> getVisibleEvents(DateTime curDay)
 	{
-		return EventModel.getInstance().getEvents(weekStartTime, weekEndTime);
+		return EventClient.getInstance().getEvents(weekStartTime, weekEndTime);
 	}
 
 	@Override
