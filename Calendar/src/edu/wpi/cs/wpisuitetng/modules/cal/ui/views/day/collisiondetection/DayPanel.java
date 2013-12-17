@@ -21,12 +21,11 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
-
 import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.week.WeekCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
@@ -36,7 +35,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
  */
 public class DayPanel extends JPanel
 {
-	HashMap<Event, DayItem> guides = new HashMap<>();
+	HashMap<Displayable, DayItem> guides = new HashMap<>();
 	private DateTime date;
 	private DayItem selected;
 	private boolean isSomethingDragging;
@@ -126,7 +125,7 @@ public class DayPanel extends JPanel
 		this.inWeekView = inWeekView;
 	}
 	
-	public void setEvents(List<Event> events, DateTime displayedDay)
+	public void setEvents(List<Displayable> events, DateTime displayedDay)
 	{
 		this.date = displayedDay;
 		List<DayItem> collidingEvents = CollisionAlgorithms.createEventsReallyNicely(events, displayedDay);
@@ -173,11 +172,11 @@ public class DayPanel extends JPanel
 	{
 		for (DayItem v : guides.values())
 		{
-			if(item instanceof Event && v.getEvent().getEventID().equals(((Event) item).getEventID()))
+			if(item instanceof Displayable && v.getEvent().getIdentification().equals(((Displayable) item).getIdentification()))
 				item = v.getEvent();
 			v.setSelected(false);
 		}
-		if (item instanceof Event)
+		if (item instanceof Displayable)
 		{
 			selected = guides.get(item);
 			if(selected != null)

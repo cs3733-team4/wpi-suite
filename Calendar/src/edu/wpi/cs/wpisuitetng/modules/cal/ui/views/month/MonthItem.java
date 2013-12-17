@@ -28,10 +28,10 @@ import javax.swing.border.EmptyBorder;
 
 import org.joda.time.DateTime;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentStatus;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 
@@ -146,12 +146,12 @@ public class MonthItem extends JPanel
         	}
         	else if(isEndAfterCurrent(day, eventEnd))
         	{
-        		time.setText(simpleTime(mDisplayable.getDate()));
+        		time.setText(simpleTime(mDisplayable.getStart()));
         		arrow.setText("\u2192");
         	}
         	else
         	{
-        		time.setText(simpleTime(mDisplayable.getDate()));
+        		time.setText(simpleTime(mDisplayable.getStart()));
         	}
         }
 

@@ -50,11 +50,11 @@ import org.joda.time.format.DateTimeFormatter;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryModel;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Category;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 
 public class SidebarTabbedPane extends JTabbedPane{
 	
@@ -213,7 +213,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 	    // put entire tab into a scroll pane
 	    detailScrollPane = new JScrollPane(detailTextPane);
 	    detailScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-	    detailScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+	    detailScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 	    detailScrollPane.setBorder( new EmptyBorder(5,5,5,5));
 	    
 	    // add text area and button container to detail tab
@@ -359,10 +359,8 @@ public class SidebarTabbedPane extends JTabbedPane{
 		{
 			try
 	        {
-				detailTitleLabel.setText(mDisplayable.getName());
-				detailTitleLabel.setOpaque(false);
-	        	detailTextDoc.insertString(detailTextDoc.getLength(), "Date:\n   " + ((Commitment) mDisplayable).getDate().toString(dateFormatter) + "\n", normalTextStyle);
-	        	detailTextDoc.insertString(detailTextDoc.getLength(), "Time:\n   " + ((Commitment) mDisplayable).getDate().toString(timeFormatter) + "\n", normalTextStyle);
+	        	detailTextDoc.insertString(detailTextDoc.getLength(), "Date:\n   " + ((Commitment) mDisplayable).getStart().toString(dateFormatter) + "\n", normalTextStyle);
+	        	detailTextDoc.insertString(detailTextDoc.getLength(), "Time:\n   " + ((Commitment) mDisplayable).getStart().toString(timeFormatter) + "\n", normalTextStyle);
 	        	detailTextDoc.insertString(detailTextDoc.getLength(), "Description:\n   " + mDisplayable.getDescription() + "\n", normalTextStyle);
 	        	if (((Commitment)mDisplayable).getAssociatedCategory() != null)
 	        	{
@@ -428,7 +426,6 @@ public class SidebarTabbedPane extends JTabbedPane{
 		Category complete=new Category();
 		complete.setName("Complete");
 		allPlusDefault.add(complete);
-		
 		allPlusDefault.addAll(allCategories);
 		
 		for(Category c : allPlusDefault)
@@ -523,6 +520,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 	}
 	
 	/**
+<<<<<<< HEAD
 	 * Get the collection of selected commitment statuses
 	 * @return the collection of selected UUIDs
 	 */
@@ -532,6 +530,8 @@ public class SidebarTabbedPane extends JTabbedPane{
 	}
 	
 	/**
+=======
+>>>>>>> origin/commitment_views
 	 * Custom listener for check boxes
 	 *
 	 * Maintains the selected category collection updated
@@ -650,6 +650,22 @@ public class SidebarTabbedPane extends JTabbedPane{
 	 */
 	public boolean showEvents(){
 		return this.showEvents;
+	}
+
+	/**
+	 * Focuses the details tab
+	 */
+	public void selectDetailTab() {
+		this.setSelectedComponent(detailTab);
+		
+	}
+	
+	/**
+	 * Focuses the filter tab
+	 */
+	public void selectFilterTab() {
+		this.setSelectedComponent(categoryFilterTab);
+		
 	}
 	
 }

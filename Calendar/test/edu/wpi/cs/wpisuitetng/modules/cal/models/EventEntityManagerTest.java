@@ -23,7 +23,8 @@ import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
 import edu.wpi.cs.wpisuitetng.modules.cal.MockData;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.EventEntityManager;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.server.EventEntityManager;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 
@@ -127,7 +128,7 @@ public class EventEntityManagerTest {
                 
                 String before="19500101T010100.050Z"; // String representing a DateTime at Jan 1, 1950
                 String after ="20500102T010100.050Z"; // String representing a DateTime at Jan 1, 2050
-                Event[] eList=eem.getEventsByRange(ses1,before,after);
+                Event[] eList=eem.getEntity(ses1,before);
                 boolean hasFirst=false, hasSecond=false, hasThird=false;
                 
                 if(eList[0].getName().equals("First")||eList[1].getName().equals("First")||eList[2].getName().equals("First"))
@@ -158,7 +159,7 @@ public class EventEntityManagerTest {
                 
                 String before="20000101T010000.000Z"; // DateTime string at 1/1/2000, 1:00; ie a little before datetime one in basicDateTime string format
                 String after ="20000102T020000.000Z"; // DateTime string at 1/2/2000, 2:00; ie a little before datetime two in basicDateTime string format
-                Event[] eList=eem.getEventsByRange(ses1,before,after);
+                Event[] eList=eem.getEntity(ses1,before);
                 boolean hasEvent=false;
                 
                 if(eList[0].getName().equals("First"))
@@ -166,7 +167,7 @@ public class EventEntityManagerTest {
                 assertTrue("GetEventsByRange, if given a time range that only one event is within, will return only that event",hasEvent);
                 
                 after="20000103T020000.000Z"; // DateTime string at 1/3/2000, 2:00am; ie a little before datetime three in basicDateTime string format
-                eList=eem.getEventsByRange(ses1,before,after);
+                eList=eem.getEntity(ses1,before);
                 
                 assertEquals("GetEventsByRange, if given a time range that some events are within, will return only those events in a random order", 2, eList.length);
                 
@@ -178,7 +179,7 @@ public class EventEntityManagerTest {
                 assertTrue("GetEventsByRange, if given a time range that some events are within, will return only those events in a random order",hasFirst);
                 assertTrue("GetEventsByRange, if given a time range that some events are within, will return only those events in a random order",hasSecond);
                 
-                eList=eem.getEventsByRange(ses1, before, before);
+                eList=eem.getEntity(ses1, before);
                 assertEquals("GetEventsByRange, if given a time range that no events are within, will return an empty Event[]", 0, eList.length);
                 
         }
@@ -196,7 +197,7 @@ public class EventEntityManagerTest {
                 
                 String before="20000101T010000.000Z"; // DateTime string at 1/1/2000, 1:00am; ie a little before datetime one in basicDateTime string format
                 String after ="20000101T060000.000Z"; // DateTime string at 1/1/2000, 6:00am; ie a little past datetime one in basicDateTime string format
-                Event[] eList=eem.getEventsByRange(ses1,before,after);
+                Event[] eList=eem.getEntity(ses1,before);
                 boolean hasEvent=false;
                 
                 assertEquals("GetEventsByRange, if given a time range that only one event is within, *should* return only that event", 1, eList.length);

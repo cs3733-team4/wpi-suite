@@ -12,24 +12,31 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.font.TextAttribute;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.DayStyle;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 
@@ -41,17 +48,20 @@ public class MonthDay extends JPanel
 	private boolean borderTop;
 	JLabel header = new JLabel();
 	private Displayable selected;
-	private List<Event> events = new ArrayList<Event>();
-	private List<Commitment> commitments = new ArrayList<Commitment>();
+	private List<Displayable> allitems = new ArrayList<>();
 	private DateTime day;
+	private DayStyle style;
 	private MonthCalendar parent;
+	private boolean isSelected = false;
 
+	Color grayit, textit = Colors.TABLE_TEXT, bg = Colors.TABLE_BACKGROUND;
 	
 	public MonthDay(DateTime initDay, DayStyle style, final MonthCalendar parent)
 	{
 		this.day = initDay;
 		this.parent = parent;
-		Color grayit, textit = Colors.TABLE_TEXT, bg = Colors.TABLE_BACKGROUND;
+		this.style = style;
+		Color grayit = Colors.TABLE_GRAY_HEADER, textit = Colors.TABLE_TEXT, bg = Colors.TABLE_BACKGROUND;
 		switch (style)
 		{
 			case Normal:
@@ -62,8 +72,10 @@ public class MonthDay extends JPanel
 				grayit = bg;
 				break;
 			case Today:
-				grayit = Colors.SELECTED_BACKGROUND;
-				textit = Colors.SELECTED_TEXT;
+				grayit = Colors.TABLE_GRAY_HEADER;
+				textit = Colors.TABLE_GRAY_TEXT;
+				//grayit = Colors.SELECTED_BACKGROUND;
+				//textit = Colors.SELECTED_TEXT;
 				break;
 			default:
 				throw new IllegalStateException("DayStyle is not a valid DayStyle!");
@@ -82,6 +94,22 @@ public class MonthDay extends JPanel
 		header.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 		header.setMaximumSize(new java.awt.Dimension(10000, 17));
 		header.setOpaque(true);
+		
+		if(style == DayStyle.Today)
+		{
+			Font font = header.getFont();
+			Map attributes = font.getAttributes();
+			attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+			header.setFont(font.deriveFont(attributes));
+
+			/*
+			try {
+			    Image img = ImageIO.read(getClass().getResource("/edu/wpi/cs/wpisuitetng/modules/cal/img/today_label_blue.png"));
+			    header.setIcon(new ImageIcon(img));
+			} catch (IOException ex) {}
+			*/
+		}
+		
 		add(header);
 
 		addMouseListener(new MouseListener()
@@ -110,7 +138,7 @@ public class MonthDay extends JPanel
 					Displayable selected = MainPanel.getInstance().getSelectedEvent();
 					if (selected != null)
 					{
-						MutableDateTime newTime = new MutableDateTime(selected.getDate());
+						MutableDateTime newTime = new MutableDateTime(selected.getStart());
 						
 						newTime.setYear(releasedDay.day.getYear());
 						newTime.setDayOfYear(releasedDay.day.getDayOfYear());
@@ -142,7 +170,10 @@ public class MonthDay extends JPanel
 			
 			@Override
 			public void mousePressed(MouseEvent e)
-			{}
+			{
+				MainPanel.getInstance().setSelectedDay(day);
+				MainPanel.getInstance().clearSelected();
+			}
 
 			@Override
 			public void mouseClicked(MouseEvent e)
@@ -187,47 +218,28 @@ public class MonthDay extends JPanel
 	}
 
 	/**
-	 * Add an event to a given day of the month
-	 * 
-	 * @param e
+	 * Add an event or commitment to a given day of the month
+	 * @param d the displayable to add
 	 */
-	public void addEvent(Event e)
+	public void addDisplayable(Displayable d)
 	{
-		this.events.add(e);
+		allitems.add(d);
+		this.removeAll();
 		revalidate();
+		repaint();
 	}
 
 	/**
-	 * Add a commitment to a given day of the month.
+	 * removes a displayable from this monthday
 	 * 
-	 * @param c
+	 * @param d the commitment or event to remove
 	 */
-	public void addCommitment(Commitment c)
+	public void removeDisplayable(Displayable d)
 	{
-		this.commitments.add(c);
+		allitems.remove(d);
+		this.removeAll();
 		revalidate();
-	}
-
-	/**
-	 * Remove an event from a given day of the month
-	 * 
-	 * @param e
-	 */
-	public void removeEvent(Event e)
-	{
-		this.events.remove(e);
-		revalidate();
-	}
-
-	/**
-	 * removes a commitment from this monthday
-	 * 
-	 * @param c the commitment to remove
-	 */
-	public void removeCommitment(Commitment c)
-	{
-		this.commitments.remove(c);
-		revalidate();
+		repaint();
 	}
 
 	// call revalidate, not this method directly, it is an override
@@ -239,10 +251,6 @@ public class MonthDay extends JPanel
 		removeAll();
 		add(header);
 		total -= header.getHeight();
-		
-		ArrayList<Displayable> allitems = new ArrayList<>(events.size() + commitments.size());
-		allitems.addAll(events);
-		allitems.addAll(commitments);
 		
 		Collections.sort(allitems, new Comparator<Displayable>() {
 
@@ -260,7 +268,7 @@ public class MonthDay extends JPanel
 						return 1;
 				}
 				//if it gets to this poing then they are both commitments, or both multi day events, or both single day events
-				if (o1.getDate().isBefore(o2.getDate()))
+				if (o1.getStart().isBefore(o2.getStart()))
 					return -1;
 				else//will default to 1, no need to check if they start at the same time....
 					return 1;
@@ -303,19 +311,12 @@ public class MonthDay extends JPanel
 	/**
 	 * remove all events from the monthday
 	 */
-	public void clearEvents()
+	public void clearDisplayable()
 	{
-		events.clear();
+		allitems.clear();
+		removeAll();
 		revalidate();
-	}
-
-	/**
-	 * remove all commitments from the monthday
-	 */
-	public void clearComms()
-	{
-		commitments.clear();
-		revalidate();
+		repaint();
 	}
 
 	/**
@@ -362,4 +363,22 @@ public class MonthDay extends JPanel
 		return this.day;
 	}
 	
+	/**
+	 * Updates header and text to show selected status
+	 * @param b the selected status of the day
+	 */
+	public void setSelected(boolean b)
+	{
+		isSelected=b;
+		this.header.setBackground(b ? Colors.SELECTED_BACKGROUND : (this.style == DayStyle.OutOfMonth ? grayit : Colors.TABLE_GRAY_HEADER) );
+		this.header.setForeground(b ? Color.WHITE : Colors.TABLE_GRAY_TEXT);
+	}
+	
+	/**
+	 * Getter for isSelected
+	 * @return whether the day is selected
+	 */
+	public boolean isSelected() {
+		return isSelected;
+	}
 }

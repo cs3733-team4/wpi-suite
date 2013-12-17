@@ -22,7 +22,8 @@ import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
 import edu.wpi.cs.wpisuitetng.modules.cal.MockData;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentEntityManager;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.server.CommitmentEntityManager;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 
@@ -93,9 +94,8 @@ public class CommitmentEntityManagerTest {
                 cem.makeEntity(ses1, eString);
                 
                 assertEquals("GetAll will return commitments in the database in Commitment[] form; in the case of only 1 commitment being stored, it will return that Commitment", e.getName(), cem.getAll(ses1)[0].getName());
-                assertEquals("GetAll will return commitments in the database in Commitment[] form; in the case of only 1 commitment being stored, it will return that Commitment", e.getDate(), cem.getAll(ses1)[0].getDate());
+                assertEquals("GetAll will return commitments in the database in Commitment[] form; in the case of only 1 commitment being stored, it will return that Commitment", e.getStart(), cem.getAll(ses1)[0].getStart());
                 assertEquals("GetAll will return commitments in the database in Commitment[] form; in the case of only 1 commitment being stored, it will return that Commitment", e.getStatus(), cem.getAll(ses1)[0].getStatus());
-
         }
         
         
@@ -134,7 +134,7 @@ public class CommitmentEntityManagerTest {
                 
                 String before="19500101T010100.050Z"; // String representing a DateTime at Jan 1, 1950
                 String after ="20500102T010100.050Z"; // String representing a DateTime at Jan 1, 2050
-                Commitment[] eList=cem.getCommitmentsByRange(ses1,before,after);
+                Commitment[] eList=cem.getEntity(ses1,before);
 
                 boolean hasFirst=false, hasSecond=false, hasThird=false;
                 
@@ -167,14 +167,14 @@ public class CommitmentEntityManagerTest {
                 
                 String before="20000101T010000.000Z"; // DateTime string at 1/1/2000, 1:00; ie a little before datetime one in basicDateTime string format
                 String after ="20000102T020000.000Z"; // DateTime string at 1/2/2000, 2:00; ie a little before datetime two in basicDateTime string format
-                Commitment[] eList=cem.getCommitmentsByRange(ses1,before,after);
+                Commitment[] eList=cem.getEntity(ses1,before);
                 boolean hasCommitment=false;
                 if(eList[0].getName().equals("First"))
                         hasCommitment=true;
                 assertTrue("GetCommitmentsByRange, if given a time range that only one Commitment is within, will return only that Commitment",hasCommitment);
                 
                 after="20000103T020000.000Z"; // DateTime string at 1/3/2000, 2:00am; ie a little before datetime three in basicDateTime string format
-                eList=cem.getCommitmentsByRange(ses1,before,after);
+                eList=cem.getEntity(ses1,before);
                 
                 assertEquals("GetCommitmentsByRange, if given a time range that some Commitments are within, will return only those Commitments in a random order", 2, eList.length);
                 
@@ -188,7 +188,7 @@ public class CommitmentEntityManagerTest {
                 assertTrue("GetCommitmentsByRange, if given a time range that some commitments are within, will return only those commitments in a random order",hasFirst);
                 assertTrue("GetCommitmentsByRange, if given a time range that some commitments are within, will return only those commitments in a random order",hasSecond);
                 
-                eList=cem.getCommitmentsByRange(ses1, before, before);
+                eList=cem.getEntity(ses1, before);
                 assertEquals("GetCommitmentsByRange, if given a time range that no Commitments are within, will return an empty commitment[]", 0, eList.length);
                 
         }
@@ -206,7 +206,7 @@ public class CommitmentEntityManagerTest {
                 
                 String before="20000101T010000.000Z"; // DateTime string at 1/1/2000, 1:00am; ie a little before datetime one in basicDateTime string format
                 String after ="20000101T060000.000Z"; // DateTime string at 1/1/2000, 6:00am; ie a little past datetime one in basicDateTime string format
-                Commitment[] eList=cem.getCommitmentsByRange(ses1,before,after);
+                Commitment[] eList=cem.getEntity(ses1,before);
                 boolean hasCommitment=false;
                 
                 assertEquals("GetCommitmentsByRange, if given a time range that only one commitment is within, *should* return only that commitment", 1, eList.length);
@@ -258,7 +258,7 @@ public class CommitmentEntityManagerTest {
                 // The huge string being used as input is "filter-commitment-by-uuid," + UUID of a commitment in string form
                 // This method is just another wa of calling getCommitmentByUUID
                 
-                String cat1UUID=e.getCommitmentID().toString();
+                String cat1UUID=e.getIdentification().toString();
                 
                 assertEquals("getEntity will return an array of a single commitment if filter-commitment-by-uuid is the initial string argument", 1, cem.getEntity(ses1,"filter-commitment-by-uuid," + cat1UUID).length);
                 assertEquals("getEntity will return an array containing only the commitment referenced by the UUID", e.getName(), cem.getEntity(ses1,"filter-commitment-by-uuid," + cat1UUID)[0].getName());

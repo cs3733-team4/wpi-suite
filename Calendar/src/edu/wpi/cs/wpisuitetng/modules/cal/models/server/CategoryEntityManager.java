@@ -8,13 +8,15 @@
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
 
-package edu.wpi.cs.wpisuitetng.modules.cal.models;
+package edu.wpi.cs.wpisuitetng.modules.cal.models.server;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.database.Data;
@@ -24,6 +26,9 @@ import edu.wpi.cs.wpisuitetng.exceptions.NotImplementedException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.Model;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Category;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.server.PollPusher.PushedInfo;
 
 public class CategoryEntityManager implements EntityManager<Category> {
         /** The database */
@@ -55,8 +60,46 @@ public class CategoryEntityManager implements EntityManager<Category> {
                 if(!db.save(newCategory, s.getProject())) {
                         throw new WPISuiteException();
                 }
+        		PollPusher.getInstance(Category.class).updated(updated(newCategory));
                 return newCategory;
         }
+
+    	/**
+    	 * Comet/Long Polling implementation for real-time updating. Waits 20s for any changes, then returns
+    	 * @param s Session this is on
+    	 * @return json string with the results
+    	 */
+    	private String getFromPoll(Session s)
+    	{
+    		PollPusher<Category> pp = PollPusher.getInstance(Category.class);
+    		final String[] stringList = new String[]{"[]"}; // so we can modify the string from the listener
+    		final Thread thisthread = Thread.currentThread();
+    		PushedInfo listener = (new PushedInfo(s) {
+    			
+    			@Override
+    			public void pushUpdates(String item)
+    			{
+    				// poor mans json. its only one item
+    				stringList[0] = "[" + item + "]";
+    				thisthread.interrupt();
+    			}
+    		});
+    		String events = pp.listenSession(listener);
+    		if (events == null)
+    		{
+    			try
+    			{
+    				Thread.sleep(20000);
+    			}
+    			catch (InterruptedException e)
+    			{
+    				// we were interruped!
+    			}
+    			return stringList[0];
+    		}
+    		else
+    			return events;
+    	}
 
         /**
          * gets entity depending on parameter passed in the string
@@ -237,6 +280,8 @@ public class CategoryEntityManager implements EntityManager<Category> {
                 if(!db.save(updatedCategory, session.getProject())) {
                         throw new WPISuiteException();
                 }
+
+        		PollPusher.getInstance(Category.class).updated(updated(updatedCategory));
                 
                 return updatedCategory;
         }
@@ -246,12 +291,15 @@ public class CategoryEntityManager implements EntityManager<Category> {
                 if (model.isProjectCategory())
                         model.setProject(s.getProject());
                 db.save(model);
-                
+        		PollPusher.getInstance(Category.class).updated(updated(model));
         }
 
         @Override
         public boolean deleteEntity(Session s, String id) throws WPISuiteException {
-                return (db.delete(getEntity(s, id)[0]) != null) ? true : false;
+    		boolean res = (db.delete(getEntity(s, id)[0]) != null) ? true : false;
+    		if (res)
+    			PollPusher.getInstance(Category.class).updated(deleted(UUID.fromString(id)));
+    		return res;
         }
 
         @Override
@@ -266,10 +314,40 @@ public class CategoryEntityManager implements EntityManager<Category> {
         }
 
         @Override
-        public String advancedGet(Session s, String[] args) throws NotImplementedException {
-                throw new NotImplementedException();
-        }
-        
+        public String advancedGet(Session s, String[] args) throws WPISuiteException {
+    		// shift cal/events off
+    		args = Arrays.copyOfRange(args, 2, args.length);
+    		switch (args[0])
+    		{
+    			case "filter-category-by-uuid":
+    				return json((Object[])getCategoryByID(s, args[1]));
+    			case "poll":
+    				return getFromPoll(s);
+    			default:
+    				System.out.println(args[0]);
+    				throw new NotFoundException("Error: " + args[0] + " not a valid method");
+    		}
+    	}
+
+    	/**
+    	 * Simple wrapper to make json from event array
+    	 * @param events list of events to stringify
+    	 * @return json data
+    	 */
+    	private String json(Object... events)
+    	{
+    		return new Gson().toJson(events);
+    	}
+    	
+    	private String updated(Category e)
+    	{
+    		return new Gson().toJson(new Category.SerializedAction(e, e.getCategoryID(), false));
+    	}
+    	
+    	private String deleted(UUID id)
+    	{
+    		return new Gson().toJson(new Category.SerializedAction(null, id, true));
+    	}
         @Override
         public String advancedPut(Session s, String[] args, String content) throws NotImplementedException {
                 throw new NotImplementedException();

@@ -14,9 +14,10 @@ import javax.swing.event.DocumentListener;
 import javax.swing.JLabel;
 
 import org.joda.time.DateTime;
+import org.joda.time.MutableDateTime;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Category;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.DatePickerListener;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 
@@ -33,7 +34,7 @@ public class AddEventDisplay extends DisplayableEditorView
 	private Event eventToEdit;
 	private boolean isEditingEvent;
 	private UUID existingEventID; // UUID of event being edited
-	private DateTime currentTime;
+	private DateTime selectedTime;
 	
 	// Constructor for edit event.
 	public AddEventDisplay(Event mEvent)
@@ -52,7 +53,7 @@ public class AddEventDisplay extends DisplayableEditorView
 	{
 		super(true);
 		this.isEditingEvent = false;
-		this.currentTime = new DateTime();
+		this.selectedTime = MainPanel.getInstance().getSelectedDay();
 		setCurrentDateAndTime();
 		setUpListeners();
 	}
@@ -66,8 +67,8 @@ public class AddEventDisplay extends DisplayableEditorView
 		this.participantsTextField.setText(eventToEdit.getParticipants());
 		this.nameTextField.setText(eventToEdit.getName());
 		this.descriptionTextArea.setText(eventToEdit.getDescription());
-		this.rdbtnPersonal.setSelected(!eventToEdit.isProjectEvent());
-		this.rdbtnTeam.setSelected(eventToEdit.isProjectEvent());
+		this.rdbtnPersonal.setSelected(!eventToEdit.isProjectwide());
+		this.rdbtnTeam.setSelected(eventToEdit.isProjectwide());
 		this.startTimeDatePicker.setDateTime(eventToEdit.getStart());
 		this.endTimeDatePicker.setDateTime(eventToEdit.getEnd());
 		if (eventToEdit.getAssociatedCategory()!=null)
@@ -255,7 +256,7 @@ public class AddEventDisplay extends DisplayableEditorView
 	 */
 	public boolean matchingEvent(AddEventDisplay other)
 	{
-		return this.eventToEdit != null && this.eventToEdit.getEventID().equals(other.eventToEdit.getEventID());
+		return this.eventToEdit != null && this.eventToEdit.getIdentification().equals(other.eventToEdit.getIdentification());
 	}
 	
 	
@@ -267,8 +268,22 @@ public class AddEventDisplay extends DisplayableEditorView
 	 */
 	public void setCurrentDateAndTime()
 	{
-		this.startTimeDatePicker.setDateTime(currentTime);
-		this.endTimeDatePicker.setDateTime(currentTime.plusHours(1));
+		this.startTimeDatePicker.setDate(selectedTime);
+		this.endTimeDatePicker.setDate(selectedTime);
+		
+		MutableDateTime mdt = DateTime.now().toMutableDateTime();
+		int quarterHours = mdt.getMinuteOfHour()/15;
+		int minutes = quarterHours < 4 ? (quarterHours + 1)*15 : (quarterHours)*15;
+		if(minutes == 60)
+		{
+			mdt.addHours(1);
+			mdt.setMinuteOfHour(0);
+		}else
+			mdt.setMinuteOfHour(minutes);
+		
+		this.startTimeDatePicker.setTime(mdt.toDateTime());
+		mdt.addHours(1);
+		this.endTimeDatePicker.setTime(mdt.toDateTime());
 	}
 	
 	public boolean editingEvent()
