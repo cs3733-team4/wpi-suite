@@ -12,6 +12,13 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import javax.swing.Box;
 import javax.swing.ButtonGroup;
@@ -159,7 +166,6 @@ public class DisplayableEditorView extends JPanel
 		else if (field == SelectableField.CATEGORY)
 			eventCategoryPicker.showPopup();
 	}
-	
 	private class CategoryComboBoxRenderer implements ListCellRenderer<Category>
 	{
 		@Override
@@ -205,6 +211,19 @@ public class DisplayableEditorView extends JPanel
 			jLabel1.setFont(list.getFont());
 
 			return jPanel1;
+		}
+	}
+	@Override
+	public void paintComponent(Graphics g)
+	{
+		super.paintComponent(g);
+		if (startTimeDatePicker == null)
+		{
+			startTimeDatePicker.hideMiniCalendar();
+		}
+		if (endTimeDatePicker == null)
+		{
+			endTimeDatePicker.hideMiniCalendar();
 		}
 	}
 }

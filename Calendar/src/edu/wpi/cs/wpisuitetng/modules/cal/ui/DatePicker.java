@@ -250,16 +250,25 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 	    this.cal.setVisible(true);
 		}
 	}
-	private void hideMiniCalendar()
+	/**
+	 * Hides the calendar popup.
+	 */
+	public void hideMiniCalendar()
 	{
 		this.miniCalendarInstance(false);
 		this.cal.setVisible(false);
 	}
+	/**
+	 * Set this to true when there is an instance of a popup already open.
+	 * @param status
+	 */
 	public void miniCalendarInstance(boolean status)
 	{
 		this.instance = status;
 	}
-	
+	/**
+	 * Make the date field display the selected date.
+	 */
 	public void display(DateTime value) {
 		this.miniCalendarInstance(false);
 		this.cal.setVisible(false);
