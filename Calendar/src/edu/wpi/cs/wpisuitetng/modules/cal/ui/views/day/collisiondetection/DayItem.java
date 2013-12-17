@@ -17,13 +17,16 @@ import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -438,8 +441,9 @@ public class DayItem extends JPanel
 					 + "color=\"rgb(" + Colors.COMMITMENT_NOT_STARTED.getRed() + ","
 										+ Colors.COMMITMENT_NOT_STARTED.getGreen() + "," 
 										+ Colors.COMMITMENT_NOT_STARTED.getBlue() 
-										+ "\">" + imgtag + "</font></b>" 
+										+ "\"></font></b>" 
 										+ formatTime(displayable.getStart()) + "</html>");
+			try { lblEventTitle.setIcon(new ImageIcon(ImageIO.read(imgurl))); } catch (IOException e) {}
 		}
 	}
 }
