@@ -33,7 +33,11 @@ import edu.wpi.cs.wpisuitetng.modules.cal.formulae.MonthsTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.GoToPanelTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MainCalendarNavigationTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.SidebarTabbedPaneTest;
+<<<<<<< HEAD
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.CategoryManagerTest;
+=======
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.CategoryRefreshingTest;
+>>>>>>> dev
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.CommitmentUIValidationTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.DatePickerTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.EventUIValidationTest;
@@ -61,7 +65,8 @@ import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
 	CategoryManagerTest.class, CommitmentUIValidationTest.class, DatePickerTest.class,
 	EventUIValidationTest.class,
 	AccessOrderedListTest.class, CacheTest.class,
-	YearCalendarTest.class})
+	EventUIValidationTest.class, CategoryRefreshingTest.class,
+	YearCalendarTest.class })
 
 public class TestSuite
 {

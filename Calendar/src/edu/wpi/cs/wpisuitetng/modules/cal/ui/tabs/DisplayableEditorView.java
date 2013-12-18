@@ -216,7 +216,7 @@ public class DisplayableEditorView extends JPanel implements ICategoryRegister
 		else if (field == SelectableField.STATUS)
 			commitmentStatusPicker.showPopup();
 	}
-	
+
 	/**
 	 * Renders the fields for the category drop-down menu
 	 * (Necessary because of the colored squares for each category) 

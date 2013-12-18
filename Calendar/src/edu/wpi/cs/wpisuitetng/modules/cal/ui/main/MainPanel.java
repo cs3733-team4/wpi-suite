@@ -331,6 +331,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 				public void actionPerformed(ActionEvent e)
 				{
 					int ID = ((Title)e.getSource()).ID;
+
 					JComponent jc = tabs.get(ID);
 					mTabbedPane.remove(jc);
 					tabs.remove(ID);
@@ -466,6 +467,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	{
 		view = ViewSize.Day;
 		refreshView(dayCal);
+		this.mCalendarSelector.toDay();
 	}
 	
 	public void viewYear()
