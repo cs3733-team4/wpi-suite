@@ -481,7 +481,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 	    	{
 	    		categoryColor.setBackground(Color.YELLOW);
 	    	}
-	    	else if ("Complete".equals(c.getName())) // If uncategorized
+	    	else if ("Complete".equals(c.getName())) // If complete
 	    	{
 	    		categoryColor.setBackground(Color.GREEN);
 	    	}
@@ -523,7 +523,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 		
 		categoryListHolder.add(Box.createVerticalGlue());
 		
-		catsLeft=this.getSelectedCategories().size();
+		catsLeft=this.selectedCategories.size()+this.selectedStatuses.size();
 	}
 	
 	/**
@@ -571,6 +571,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 					showCommitments = true;
 				}
 				else
+				{
 					if("Not Started".equals(referencedCategory.getName()))
 					{
 						selectedStatuses.add("Not Started");
@@ -587,6 +588,9 @@ public class SidebarTabbedPane extends JTabbedPane{
 					{
 						selectedCategories.add(referencedCategory.getUuid());
 					}
+					catsLeft++;
+					clearAllButton.setEnabled(true);
+				}
 			}
 			else 
 			{
@@ -616,6 +620,9 @@ public class SidebarTabbedPane extends JTabbedPane{
 					{
 						selectedCategories.remove(referencedCategory.getUuid());
 					}
+					catsLeft--;
+					if(catsLeft<=0)
+						clearAllButton.setEnabled(false);
 				}
 			}
 			if (isUser)
@@ -657,11 +664,11 @@ public class SidebarTabbedPane extends JTabbedPane{
 			}
 		}
 		
+		catsLeft=this.selectedCategories.size()+3;
+		clearAllButton.setEnabled(true);
+		
 		MainPanel.getInstance().refreshView(); //Update all events	
 		isUser = true; // set is user back to true
-		
-		catsLeft=this.getSelectedCategories().size();
-		clearAllButton.setEnabled(true);
 	}
 	
 	/**
