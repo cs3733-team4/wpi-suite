@@ -38,12 +38,9 @@ public class Category extends AbstractModel
         	owner = null;
         	categoryID = new UUID(0,0);
         }
-        public Category() {
-			name = null;
-			color = null;
-        	owner = null;
-        	categoryID = new UUID(0,0);
-		}
+        
+        public Category() {}
+        
 		/**
          * Sets the name of the category
          * @param name the name to set to the category        
