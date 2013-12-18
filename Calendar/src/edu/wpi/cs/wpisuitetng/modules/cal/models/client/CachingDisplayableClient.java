@@ -66,7 +66,7 @@ public abstract class CachingDisplayableClient<T extends Model & Displayable, SA
 	@Override
 	protected UUID getUuidFrom(T obj)
 	{
-		return obj.getIdentification();
+		return obj.getUuid();
 	}
 	
 	protected boolean visibleCategory(T obj)

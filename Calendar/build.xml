@@ -47,7 +47,7 @@
 		<copy todir="../Core/WPISuite/WebContent/docs/Calendar" >  
 			<fileset dir="documentation_html" includes="**"/>  
 		</copy>
-		<copy file="documentation_html/YOCO Calendar.html" tofile="../Core/WPISuite/WebContent/docs/Calendar/index.html" />
+		<copy file="documentation_html/Calendar.html" tofile="../Core/WPISuite/WebContent/docs/Calendar/index.html" />
 	</target>
 	<target name="compile-test" depends="compile">
 		<mkdir dir="build-test" />

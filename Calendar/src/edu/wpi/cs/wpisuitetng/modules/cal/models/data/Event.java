@@ -36,7 +36,7 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
  */
 public class Event extends AbstractModel implements Displayable
 {
-	private UUID eventID = UUID.randomUUID();
+	private UUID uuid = UUID.randomUUID();
 	private String name;
 	private String description;
 	private Date start;
@@ -145,27 +145,33 @@ public class Event extends AbstractModel implements Displayable
 	public Boolean identify(Object o)
 	{
 		if (o instanceof String)
-			return getIdentification().toString().equals((String)(o));
+		{
+			return getUuid().toString().equals((String)(o));
+		}
 		else if (o instanceof UUID)
-			return getIdentification().equals((UUID)(o));
+		{
+			return getUuid().equals((UUID)(o));
+		}
 		else if (o instanceof Event)
-			return getIdentification().equals(((Event)(o)).getIdentification());
+		{
+			return getUuid().equals(((Event)(o)).getUuid());
+		}
 		return false;
 	}
 
 	@Override
-	public UUID getIdentification()
+	public UUID getUuid()
 	{
-		return eventID;
+		return uuid;
 	}
 
 	/**
 	 * @param eventID
 	 *            the eventID to set
 	 */
-	public void setEventID(UUID eventID)
+	public void setUuid(UUID eventID)
 	{
-		this.eventID = eventID;
+		this.uuid = eventID;
 	}
 
 	/**
@@ -218,6 +224,7 @@ public class Event extends AbstractModel implements Displayable
 	{
 		this.start = start.toDate();
 	}
+
 
 	/**
 	 * @return the end
@@ -366,12 +373,6 @@ public class Event extends AbstractModel implements Displayable
 	}
 	
 	@Override
-	public DateTime getDate()
-	{
-		return this.getStart();
-	}
-	
-	@Override
 	public Interval getInterval()
 	{
 		return new Interval(getStart(), getEnd());
@@ -493,14 +494,6 @@ public class Event extends AbstractModel implements Displayable
 		}
 	}
 
-	/**
-	 * 
-	 * @return the events UUID
-	 */
-	public UUID getEventID() {
-		return this.eventID;
-	}
-	
 	@Override
 	public String toString()
 	{
@@ -524,7 +517,7 @@ public class Event extends AbstractModel implements Displayable
 		EventDualityFactory edf = EventDualityFactory.init(name);
 		edf.setDisplayableEnd(end)
 		   .setDisplayableStart(start)
-		   .setDisplayableID(eventID)
+		   .setDisplayableID(uuid)
 		   .setDisplayableDescription(getDescription())
 		   .setProject(isProjectEvent);
 		return edf.getDuality().getB();

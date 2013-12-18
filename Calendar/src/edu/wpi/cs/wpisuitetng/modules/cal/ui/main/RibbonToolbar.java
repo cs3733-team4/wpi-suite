@@ -13,14 +13,14 @@ import edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar.DefaultToolbarView;
 
 public class RibbonToolbar extends DefaultToolbarView {
 	
-	public EventToolbarGroup eventButtonGroup;
+	public DisplayableToolbarGroup eventButtonGroup;
 	public CategoryToolbarGroup categoryButtonGroup;
 	public HelpToolbarGroup helpButtonGroup;
 	public GoogleCalendarSynchronizationGroup syncGroup;
 	
 	public RibbonToolbar(final MainPanel mMainPanel, boolean visible) {
 		helpButtonGroup = new HelpToolbarGroup();
-		eventButtonGroup = new EventToolbarGroup(mMainPanel);
+		eventButtonGroup = new DisplayableToolbarGroup(mMainPanel);
 		categoryButtonGroup = new CategoryToolbarGroup(mMainPanel);
 		syncGroup = new GoogleCalendarSynchronizationGroup();
 		

@@ -36,7 +36,7 @@ public class DayGridLabel extends JPanel
 				currtime.append("pm");
 			JLabel text = new JLabel(currtime.append(padding).toString());
 			text.setBackground(Colors.TABLE_BACKGROUND);
-			text.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 1, Colors.BORDER));
+			text.setBorder(BorderFactory.createMatteBorder(1, 1, i == 23 ? 1 : 0, 1, Colors.BORDER));
 			this.add(text);
 		}
 	}

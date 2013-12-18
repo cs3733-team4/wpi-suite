@@ -102,7 +102,7 @@ public class CategoryEntityManager extends CachedEntityManager<Category>
 		UUID idVal = UUID.fromString(id);
 		for (Category c : all)
 		{
-			if (c.getCategoryID().equals(idVal))
+			if (c.getUuid().equals(idVal))
 			{
 				retrievedCategories.add(c);
 				return new Category[] { retrievedCategories.get(0) };
@@ -128,7 +128,7 @@ public class CategoryEntityManager extends CachedEntityManager<Category>
 		 * properties from updatedCategory, then save the original Category
 		 * again.
 		 */
-		List<Model> oldCategories = db.retrieve(Category.class, "categoryID", updatedCategory.getCategoryID(), session.getProject());
+		List<Model> oldCategories = db.retrieve(Category.class, "uuid", updatedCategory.getUuid(), session.getProject());
 		if (oldCategories.size() < 1 || oldCategories.get(0) == null)
 		{
 			throw new BadRequestException("Category with ID does not exist.");
@@ -197,7 +197,7 @@ public class CategoryEntityManager extends CachedEntityManager<Category>
 	@Override
 	protected String updated(Category e)
 	{
-		return new Gson().toJson(new Category.SerializedAction(e, e.getCategoryID(), false));
+		return new Gson().toJson(new Category.SerializedAction(e, e.getUuid(), false));
 	}
 
 	@Override

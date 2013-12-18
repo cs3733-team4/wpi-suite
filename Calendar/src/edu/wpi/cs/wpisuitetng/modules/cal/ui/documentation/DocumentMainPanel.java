@@ -11,11 +11,16 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui.documentation;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import java.util.LinkedList;
 
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
@@ -24,16 +29,17 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.border.Border;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.models.SelectableField;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs.AddCommitmentDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs.AddEventDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs.CategoryManager;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.BareBonesBrowserLaunch;
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
@@ -42,44 +48,57 @@ public class DocumentMainPanel extends JFrame{
 
     private JEditorPane webPage;
     private JScrollPane scroll;
+    private JPanel navPanel;
     private URL url;
     private String serverLocation;
     private TableOfContents tableOfContents;
     private static DocumentMainPanel instance;
     private JButton openInBrowser;
     private JPanel tocView;
+    private LinkedList<String> visitedPages;
+    private int onPage;
+    private JButton forwardButton, backButton;
     private DocumentMainPanel()
     {
     	super();
     	this.setVisible(false);
     }
-    private String extractPage(String sIn)
-    {
-    	String sOut="";
-    	int index=0;
-    	for (int i=sIn.length()-1; i>-1; i--)
-    	{
-    		if (sIn.charAt(i) == '/')
-    		{
-    			index=i;
-    			break;
-    		}
-    	}
-    	sOut=sIn.substring(index +1, sIn.length());
-    	return sOut;
-    }
     
+    /**
+     * Initializes the documentation main panel
+     */
     public void init()
     {
     	if (serverLocation!=null)
     		return;
+    	
+    	navPanel = new JPanel(new FlowLayout());
+    	forwardButton = new JButton("Forward");
+    	backButton = new JButton("Back");
+    	forwardButton.setEnabled(false);
+    	backButton.setEnabled(false);
+    	forwardButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				forward();
+				
+			}
+		});
+    	backButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				backward();
+				
+			}
+		});
     	tocView = new JPanel(new BorderLayout());
     	openInBrowser = new JButton("Open In Browser");
-    	this.setTitle("YOCO Calendar Help");
+    	this.setTitle("Calendar Help");
     	this.setLayout(new BorderLayout());
     	
     	serverLocation = Network.getInstance().makeRequest("docs/Calendar/", HttpMethod.GET).getUrl().toString().replace("API/", "");
-        //serverLocation = "http://www.wpi.edu/~bkmcleod/newDocs/";
     	System.out.println(serverLocation);
     	tableOfContents=new TableOfContents(serverLocation);
     	try
@@ -90,8 +109,12 @@ public class DocumentMainPanel extends JFrame{
             JOptionPane.showMessageDialog(null,mue);
         }
         
-        //create the JEditorPane
+
+    	
+    	visitedPages = new LinkedList<>();
         try {
+        	onPage=0;
+        	visitedPages.add(url.toString().replace(serverLocation, ""));
             webPage = new JEditorPane(url);
             
             //set the editor pane to false.
@@ -101,6 +124,8 @@ public class DocumentMainPanel extends JFrame{
             JOptionPane.showMessageDialog(null,ioe);
         }
         
+    	
+    	
         
         //create the scroll pane and add the JEditorPane to it.
         scroll = new JScrollPane(webPage);
@@ -110,7 +135,7 @@ public class DocumentMainPanel extends JFrame{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				BareBonesBrowserLaunch.openURL(serverLocation + "YOCO Calendar.html?" + extractPage(webPage.getPage().getPath()));
+				BareBonesBrowserLaunch.openURL(serverLocation + "Calendar.html?" + webPage.getPage().getPath().replace(serverLocation, ""));
 				
 			}
 		});
@@ -119,30 +144,108 @@ public class DocumentMainPanel extends JFrame{
         webPage.addHyperlinkListener(new HyperlinkListener() {
             public void hyperlinkUpdate(HyperlinkEvent e) {
                 if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED)
-                      	try {
-                      			if (doAction(e.getURL().toString()))
-                      				return;
-                      			else if (!e.getURL().toString().contains("html"))
-                      			{
-                      				BareBonesBrowserLaunch.openURL(e.getURL().toString());
-                      				return;
-                      			}
-                      			else
-                      				webPage.setPage(e.getURL());
-                            }
-                            catch(IOException | IllegalArgumentException ioe) {
-                                JOptionPane.showMessageDialog(null,ioe);
-                            }
-                    }//end hyperlinkUpdate()
-                });//end HyperlinkListener
+                {
+          			if (doAction(e.getURL().toString()))
+          				return;
+          			else if (!e.getURL().toString().contains("html"))
+          			{
+          				BareBonesBrowserLaunch.openURL(e.getURL().toString());
+          				return;
+          			}
+          			else
+          			{
+          				goToPage(e.getURL().toString().replace(serverLocation, ""), true);
+          			}
+                }
+            }//end hyperlinkUpdate()
+        });//end HyperlinkListener
 
+        
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         tocView.add(openInBrowser, BorderLayout.NORTH);
         tocView.add(tableOfContents, BorderLayout.CENTER);
+        navPanel.add(backButton);
+        navPanel.add(forwardButton);
+        tocView.add(navPanel, BorderLayout.SOUTH);
         splitPane.add(tocView);
         splitPane.add(scroll);
+       
         this.add(splitPane, BorderLayout.CENTER);
+        
+        webPage.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent arg0) {
+				switch (arg0.getButton()){
+				case 4:
+					backward();
+					break;
+				case 5:
+					forward();
+					break;
+				}
+				
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
     }
+    
+    /**
+     * Navigates the page forward
+     */
+    public void forward()
+    {
+    	if ((onPage +1 ) < visitedPages.size())
+		{
+
+			onPage++;
+			goToPage(visitedPages.get(onPage), false);
+			backButton.setEnabled(true);
+			if (onPage == (visitedPages.size()-1))
+				forwardButton.setEnabled(false);
+			
+		}
+    }
+    
+    /**
+     * Navigates the page backwards
+     */
+    public void backward()
+    {
+    	if (onPage>0)
+		{
+
+			onPage--;
+			goToPage(visitedPages.get(onPage), false);
+			forwardButton.setEnabled(true);
+			if (onPage == 0)
+				backButton.setEnabled(false);
+		}
+    }
+    
     /**
      * doAction will return true if there is/was an action committed as a result of the link
      * @param actionPath The URL Path that is requested
@@ -324,6 +427,11 @@ public class DocumentMainPanel extends JFrame{
     		setSelectedForCommitment(SelectableField.DESCRIPTION);
 			return true;
     	}
+    	else if (actionPath.contains("#SelectNameInNewCommitment"))
+    	{
+    		setSelectedForCommitment(SelectableField.NAME);
+			return true;
+    	}
     	else if (actionPath.contains("#SwitchToDayView"))
     	{
     		MainPanel.getInstance().openCalendarViewTab();
@@ -454,18 +562,44 @@ public class DocumentMainPanel extends JFrame{
     
     /**
      * Navigates the documentation view to a specific page.  Will not work for link outside of the documentation
-     * @param page the HTML page to navigate to. DO NOT INCLUDE THE SERVER PATH!!!!
+     * @param page the HTML page to navigate to
      */
-    public void goToPage(String page)
+    public void goToPage(String page, boolean addHistory)
     {
+    	if (page.replace(serverLocation, "").equals(webPage.getPage().toString().replace(serverLocation, "")))
+    		return;
+    	
     	try {
-			webPage.setPage(new URL(serverLocation + page));
+			webPage.setPage(new URL(serverLocation + page.replace(serverLocation, "")));
+			if (addHistory)
+			{
+				backButton.setEnabled(true);
+  				forwardButton.setEnabled(false);
+  				while (visitedPages.size()>(onPage+1))
+  				{//remove the future pages because they broke the chain
+  					visitedPages.removeLast();
+  				}
+
+				visitedPages.add(page.replace(serverLocation, ""));
+				onPage = visitedPages.size()-1;
+			}
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		tableOfContents.expandToPage(page.replace(serverLocation, ""));
     	
+    }
+
+    /**
+     * an overload for going to a page, defaults to adding to history
+     * @param page
+     */
+    public void goToPage(String page)
+    {
+    	goToPage(page, true);
     }
 
 }

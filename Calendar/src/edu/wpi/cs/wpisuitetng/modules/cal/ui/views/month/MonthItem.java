@@ -112,7 +112,7 @@ public class MonthItem extends JPanel
         // If displayable is commitment, show commitment sign and name
         if (ndisp instanceof Commitment)
         {
-        	arrow.setForeground(Colors.COMMITMENT_NOTIFICATION);
+        	arrow.setForeground(Colors.COMMITMENT_NOT_STARTED);
         	arrow.setText("\uFF01");
         	
         	try 
@@ -159,12 +159,12 @@ public class MonthItem extends JPanel
         	}
         	else if(isEndAfterCurrent(day, eventEnd))
         	{
-        		time.setText(simpleTime(mDisplayable.getDate()));
+        		time.setText(simpleTime(mDisplayable.getStart()));
         		arrow.setText("\u2192");
         	}
         	else
         	{
-        		time.setText(simpleTime(mDisplayable.getDate()));
+        		time.setText(simpleTime(mDisplayable.getStart()));
         	}
         }
 

@@ -10,24 +10,25 @@
 
 package edu.wpi.cs.wpisuitetng.modules.cal.models;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.HashSet;
 
-import org.junit.After;
-import org.junit.Test;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.junit.After;
+import org.junit.Test;
 
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
-import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
 import edu.wpi.cs.wpisuitetng.modules.cal.MockData;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.server.EventEntityManager;
-import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
+import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 public class EventEntityManagerTest {
 
@@ -40,7 +41,7 @@ public class EventEntityManagerTest {
         
         Category cat1 = new Category();
         
-        Event e = new Event().addStartTime(one).addEndTime(two).addName("First").addCategory(cat1.getCategoryID());
+        Event e = new Event().addStartTime(one).addEndTime(two).addName("First").addCategory(cat1.getUuid());
         String event1String=e.toJSON();
         
         Event ee=new Event().addStartTime(two).addEndTime(three).addName("Second");
@@ -53,7 +54,7 @@ public class EventEntityManagerTest {
         Project p=new Project("p","26");
         User u1 = new User("User1", "U1", null, 0);
         Session ses1 = new Session(u1, p, "26");
-                
+        
         @After
         public void resetDB()
         {
@@ -126,7 +127,7 @@ public class EventEntityManagerTest {
                 eem.makeEntity(ses1, event1String);
                 eem.makeEntity(ses1, event2String);
                 assertEquals("At this point, there should be 2 events in the database", 2, eem.Count());											// Events from 1/1/2000 1:00 - 1/2/2000 1:00
-                assertEquals("The deleteEntity method will return true if the deletion was successful", true, eem.deleteEntity(ses1, e.getIdentification().toString()));
+                assertEquals("The deleteEntity method will return true if the deletion was successful", true, eem.deleteEntity(ses1, e.getUuid().toString()));
                 assertEquals("At this point, there should be only one event in the database", 1, eem.Count());
                 assertEquals("At this point, only the second event should still be in the database", "Second", eem.getAll(ses1)[0].getName());
                 
@@ -142,5 +143,4 @@ public class EventEntityManagerTest {
                 eem.deleteAll(ses1);
                 assertEquals("At this point, there should be no events for session 1 in the database", 0, eem.Count());
         }
-        
 }

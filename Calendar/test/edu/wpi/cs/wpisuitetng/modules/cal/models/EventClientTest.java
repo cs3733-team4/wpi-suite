@@ -27,7 +27,7 @@ public class EventClientTest {
     
     Category cat1 = new Category();
     
-    Event e = new Event().addStartTime(one).addEndTime(two).addName("First").addCategory(cat1.getCategoryID());
+    Event e = new Event().addStartTime(one).addEndTime(two).addName("First").addCategory(cat1.getUuid());
     String eString=e.toJSON();
     
     Event ee=new Event().addStartTime(two).addEndTime(three).addName("Second");
@@ -155,7 +155,7 @@ public class EventClientTest {
      	eem.put(ee);
      	eem.put(eee);
          
-         assertEquals("GetEventsByCategory, if given a category UUID, should return all events with that category UUID", e.getName(), eem.getEventsByCategory(cat1.getCategoryID()).get(0).getName());
+         assertEquals("GetEventsByCategory, if given a category UUID, should return all events with that category UUID", e.getName(), eem.getEventsByCategory(cat1.getUuid()).get(0).getName());
      }
 
  	private static class NonFilteringEventClient extends EventClient

@@ -217,7 +217,7 @@ public class SidebarTabbedPaneTest {
 		assertNotNull("sidebar exists", sidebar);
 		
 		assertEquals("The filtering tab list starts with all added categories as well as an uncategorized checkbox", 2, sidebar.getSelectedCategories().size());
-		assertEquals("The filtering tab list will contain the newly created category", blue.getCategoryID(), sidebar.getSelectedCategories().toArray()[1]);
+		assertEquals("The filtering tab list will contain the newly created category", blue.getUuid(), sidebar.getSelectedCategories().toArray()[1]);
 	}
 	
 	@Test
@@ -269,8 +269,7 @@ public class SidebarTabbedPaneTest {
 		assertNotNull("sidebar exists", sidebar);
 		
 		assertEquals("The filtering tab list starts with all added categories as well as an uncategorized checkbox", 3, sidebar.getSelectedCategories().size());
-		assertTrue("The filtering tab list starts with all added categories as well as an uncategorized checkbox", sidebar.getSelectedCategories().contains(red.getCategoryID()));
-		
+		assertTrue("The filtering tab list starts with all added categories as well as an uncategorized checkbox", sidebar.getSelectedCategories().contains(red.getUuid()));
 		
 		// insert manual unchecking of red's box here
 		Field cBoxList = ReflectUtils.getField(sidebar, "checkBoxCategoryMap");

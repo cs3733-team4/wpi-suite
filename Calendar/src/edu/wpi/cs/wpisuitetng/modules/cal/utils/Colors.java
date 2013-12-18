@@ -24,7 +24,9 @@ public class Colors
 			SELECTED_TEXT = UIManager.getDefaults().getColor("textHighlightText"),
 			BORDER = UIManager.getDefaults().getColor("Separator.foreground"),
 			TABLE_GRAY_TEXT = UIManager.getDefaults().getColor("Label.foreground"),
-			COMMITMENT_NOTIFICATION = Color.RED,
+			COMMITMENT_NOT_STARTED = Color.RED,
+			COMMITMENT_IN_PROGRESS = new Color(252, 255, 30),
+			COMMITMENT_COMPLETE = new Color(42, 175, 21),
 			TABLE_TEXT = UIManager.getDefaults().getColor("Label.foreground");
 	
 	

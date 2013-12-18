@@ -90,7 +90,7 @@ public class CategoryManager extends JPanel implements ICategoryRegister {
 		
 		// Get categories
 		allCategories = CategoryClient.getInstance().getAllCategories();
-
+		
 		
 		/** Set up UI **/
 		
@@ -193,9 +193,9 @@ public class CategoryManager extends JPanel implements ICategoryRegister {
 		
 		JListModel = new DefaultListModel<Category>();
 		categoriesList = new JList<Category>(JListModel);
-
-		categoriesList.getInputMap().getParent().clear();// Disable keyboard listeners
 		
+		categoriesList.getInputMap().getParent().clear();// Disable keyboard listeners
+		    	
 		categoriesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		// Set up cell renderer
@@ -307,7 +307,7 @@ public class CategoryManager extends JPanel implements ICategoryRegister {
 
 		if (isEditing)
 		{
-			c.setCategoryID(selectedCategory.getCategoryID());
+			c.setUuid(selectedCategory.getUuid());
 			MainPanel.getInstance().updateCategory(c);
 		} else 
 		{
@@ -338,7 +338,7 @@ public class CategoryManager extends JPanel implements ICategoryRegister {
 		
 		for(Event e: affectedEvents)
 		{
-			e.setCategory(Category.DEFAULT_CATEGORY.getCategoryID());
+			e.setCategory(Category.DEFAULT_CATEGORY.getUuid());
 			MainPanel.getInstance().updateEvent(e);
 			MainPanel.getInstance().refreshView();
 		}
@@ -354,7 +354,7 @@ public class CategoryManager extends JPanel implements ICategoryRegister {
 		
 		for(Commitment c: affectedCommitments)
 		{
-			c.setCategory(Category.DEFAULT_CATEGORY.getCategoryID());
+			c.setCategory(Category.DEFAULT_CATEGORY.getUuid());
 			MainPanel.getInstance().updateCommitment(c);
 			MainPanel.getInstance().refreshView();
 		}
@@ -394,8 +394,8 @@ public class CategoryManager extends JPanel implements ICategoryRegister {
 
 				clearSelectedCategory();
 
-				changeEventOnDelete(selectedCategory2.getCategoryID());
-				changeCommitmentOnDelete(selectedCategory2.getCategoryID());
+				changeEventOnDelete(selectedCategory2.getUuid());
+				changeCommitmentOnDelete(selectedCategory2.getUuid());
 				removeCategory(selectedCategory2);
 
 				
@@ -512,12 +512,12 @@ public class CategoryManager extends JPanel implements ICategoryRegister {
 			
 			
 		});
-
+		
 		saveCategoryButton.setEnabled(isSaveable());
 		
 
 	}
-	
+
 	/**
 	 * Remove category from database and UI
 	 * @param category the category to remove

@@ -31,7 +31,7 @@ public class EventClient extends CachingDisplayableClient<Event, Event.Serialize
 	protected Event buildUuidOnlyObject(UUID uuid)
 	{
 		Event e = new Event();
-		e.setEventID(uuid);
+		e.setUuid(uuid);
 		return e;
 	}
 

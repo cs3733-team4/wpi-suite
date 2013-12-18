@@ -172,7 +172,7 @@ public class GoogleSync {
 		for(Displayable d : disp)
 		{
 			CalendarEventEntry cee = d.getGoogleCalendarEntry();
-			this.syncedEvents.put(d.getIdentification(), new Pair<Displayable, CalendarEventEntry>(d, cee));
+			this.syncedEvents.put(d.getUuid(), new Pair<Displayable, CalendarEventEntry>(d, cee));
 		}
 	}
 	

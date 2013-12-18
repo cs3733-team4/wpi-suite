@@ -37,7 +37,7 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
  */
 public class Commitment extends AbstractModel implements Displayable
 {
-	private UUID commitmentID = UUID.randomUUID();
+	private UUID uuid = UUID.randomUUID();
 	private String name;
 	private String description;
 	private Date duedate;
@@ -77,7 +77,7 @@ public class Commitment extends AbstractModel implements Displayable
 	 */
 	public Commitment setDueDate(DateTime date)
 	{
-		setDate(date);
+		setStart(date);
 		return this;
 	}
 	
@@ -140,29 +140,21 @@ public class Commitment extends AbstractModel implements Displayable
 	public Boolean identify(Object o)
 	{
 		if (o instanceof String)
-			return getIdentification().toString().equals((String)(o));
+			return getUuid().toString().equals((String)(o));
 		else if (o instanceof UUID)
-			return getIdentification().equals((UUID)(o));
+			return getUuid().equals((UUID)(o));
 		else if (o instanceof Commitment)
-			return getIdentification().equals(((Commitment)(o)).getIdentification());
+			return getUuid().equals(((Commitment)(o)).getUuid());
 		return false;
-	}
-
-	/**
-	 * @return the commitmentID
-	 */
-	public UUID getCommitmentID()
-	{
-		return commitmentID;
 	}
 
 	/**
 	 * @param CommitmentID
 	 *            the CommitmentID to set
 	 */
-	public void setCommitmentID(UUID commitmentID)
+	public void setUuid(UUID commitmentID)
 	{
-		this.commitmentID = commitmentID;
+		this.uuid = commitmentID;
 	}
 
 	/**
@@ -202,7 +194,7 @@ public class Commitment extends AbstractModel implements Displayable
 	/**
 	 * @return the start
 	 */
-	public DateTime getDate()
+	public DateTime getStart()
 	{
 		return new DateTime(duedate);
 	}
@@ -211,9 +203,17 @@ public class Commitment extends AbstractModel implements Displayable
 	 * @param start
 	 *            the start to set
 	 */
-	public void setDate(DateTime start)
+	public void setStart(DateTime start)
 	{
 		this.duedate = start.toDate();
+	}
+	
+	/**
+	 * @return the end (only used for displaying on day calendar, commitments don't actually hve duration)
+	 */
+	public DateTime getEnd()
+	{
+		return new DateTime(duedate).plusMinutes(45);
 	}
 	
 	/**
@@ -297,7 +297,7 @@ public class Commitment extends AbstractModel implements Displayable
 	@Override
 	public Interval getInterval()
 	{
-		return new Interval(getDate(), getDate());
+		return new Interval(getStart(), getStart());
 	}
 
 	@Override
@@ -329,9 +329,9 @@ public class Commitment extends AbstractModel implements Displayable
 	}
 	
 	@Override
-	public UUID getIdentification()
+	public UUID getUuid()
 	{
-		return commitmentID;
+		return uuid;
 	}
 
 	public static class SerializedAction extends CachingClient.SerializedAction<Commitment>
@@ -366,6 +366,43 @@ public class Commitment extends AbstractModel implements Displayable
 	}
 	
 	/**
+	 * this is primarily used for multiday events
+	 * 
+	 * @param givenDay gets the time that this event starts on a given day
+	 * @return when this event starts
+	 */
+	public DateTime getStartTimeOnDay(DateTime givenDay)
+	{
+		MutableDateTime mDisplayedDay = new MutableDateTime(givenDay);
+		mDisplayedDay.setMillisOfDay(1);
+		//if it starts before the beginning of the day then its a multi day event, or all day event
+		if (this.getStart().isBefore(mDisplayedDay)){
+			mDisplayedDay.setMillisOfDay(0);
+			return(mDisplayedDay.toDateTime());
+		}
+		else
+			return this.getStart();
+	}
+	
+	/**
+	 * this is primarily used for multiday events
+	 * 
+	 * @param givenDay gets the time that this event ends on a given day
+	 * @return when this event ends
+	 */
+	public DateTime getEndTimeOnDay(DateTime givenDay)
+	{
+		MutableDateTime mDisplayedDay = new MutableDateTime(givenDay);;
+		mDisplayedDay.setMillisOfDay(86400000-2);
+		if (this.getStart().plusMinutes(30).isAfter(mDisplayedDay))
+		{
+			return mDisplayedDay.toDateTime();
+		}
+		else
+			return this.getStart().plusMinutes(30); 
+	}
+	
+	/**
 	 * Gets the current status the commitment is at.
 	 * @return the current commitment status as a String.
 	 */
@@ -387,7 +424,6 @@ public class Commitment extends AbstractModel implements Displayable
 	{
 		this.status = status;
 	}
-	
 	
 	/**
 	 * an enum to describe the commitment type

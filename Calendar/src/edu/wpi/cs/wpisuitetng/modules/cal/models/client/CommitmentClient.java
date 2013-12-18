@@ -39,7 +39,7 @@ public class CommitmentClient extends CachingDisplayableClient<Commitment, Commi
 	protected Commitment buildUuidOnlyObject(UUID uuid)
 	{
 		Commitment c = new Commitment();
-		c.setCommitmentID(uuid);
+		c.setUuid(uuid);
 		return c;
 	}
 

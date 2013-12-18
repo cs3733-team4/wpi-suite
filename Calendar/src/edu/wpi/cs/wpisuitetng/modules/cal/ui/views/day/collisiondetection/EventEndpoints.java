@@ -11,6 +11,8 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.collisiondetection;
 
 import org.joda.time.DateTime;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 
 /**
@@ -18,39 +20,51 @@ import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
  */
 public class EventEndpoints implements Comparable<EventEndpoints>
 {
-	private Event event;
+	private Displayable displayable;
 	private DateTime time;
 	private boolean isEnd;
-	private OverlappedEvent result;
+	private OverlappedDisplayable result;
 	
 	/**
 	 * 
-	 * @param event the event to getEndpoints from
-	 * @param isEnd whether this is the end of an event (for multiday)
-	 * @param displayedDay the day on which the event is being displayed
+	 * @param displayable the Displayable to getEndpoints from
+	 * @param isEnd whether this is the end of an Displayable (for multiday)
+	 * @param displayedDay the day on which the Displayable is being displayed
 	 */
-	public EventEndpoints(Event event, boolean isEnd, DateTime displayedDay)
+	public EventEndpoints(Displayable displayable, boolean isEnd, DateTime displayedDay)
 	{
-		this.event = event;
+		this.displayable = displayable;
 		this.isEnd = isEnd;
-		
-		if (!isEnd)
+		if(displayable instanceof Event)
 		{
-			this.time=event.getStartTimeOnDay(displayedDay);
-		}
-		else
+			if (!isEnd)
+			{
+				this.time=((Event) displayable).getStartTimeOnDay(displayedDay);
+			}
+			else
+			{
+				this.time=((Event) displayable).getEndTimeOnDay(displayedDay);
+			}
+		}else if (displayable instanceof Commitment)
 		{
-			this.time=event.getEndTimeOnDay(displayedDay);
+			if (!isEnd)
+			{
+				this.time = displayable.getStart();
+			}
+			else
+			{
+				this.time = displayable.getEnd();
+			}
 		}
 	}
 	
 	/**
 	 * 
-	 * @return this event
+	 * @return this Displayable
 	 */
-	public Event getEvent()
+	public Displayable getEvent()
 	{
-		return event;
+		return displayable;
 	}
 	
 	/**
@@ -84,7 +98,7 @@ public class EventEndpoints implements Comparable<EventEndpoints>
 	 * 
 	 * @return get the overlappingEvent that we encapsulate
 	 */
-	public OverlappedEvent getResult()
+	public OverlappedDisplayable getResult()
 	{
 		return result;
 	}
@@ -92,9 +106,9 @@ public class EventEndpoints implements Comparable<EventEndpoints>
 	/**
 	 * 
 	 * @param result the overlap to set
-	 * @return this overlapping event once it has been set
+	 * @return this overlapping Displayable once it has been set
 	 */
-	public OverlappedEvent setResult(OverlappedEvent result)
+	public OverlappedDisplayable setResult(OverlappedDisplayable result)
 	{
 		this.result = result;
 		return result;
@@ -107,7 +121,10 @@ public class EventEndpoints implements Comparable<EventEndpoints>
 		if (res == 0 && isEnd != o.isEnd)
 			res = isEnd ? -1 : 1;
 		if (res == 0 && !isEnd) // sort by start, and if they are the same, by last end time
-			res = o.event.getEnd().compareTo(event.getEnd());
+		{
+			// at this point, will always return 0 for commitments
+			res = o.displayable.getEnd().compareTo(displayable.getEnd());
+		}
 		return res;
 	}
 }

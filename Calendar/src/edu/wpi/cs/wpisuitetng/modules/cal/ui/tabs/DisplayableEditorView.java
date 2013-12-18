@@ -134,7 +134,7 @@ public class DisplayableEditorView extends JPanel implements ICategoryRegister
 		for (Category c : CategoryClient.getInstance().getAllCategories())
 		{
 			this.eventCategoryPicker.addItem(c);
-			savedMap.put(c.getCategoryID(), c);
+			savedMap.put(c.getUuid(), c);
 		}
 
 		this.add(eventCategoryPicker, "cell 1 3,alignx left,aligny baseline");

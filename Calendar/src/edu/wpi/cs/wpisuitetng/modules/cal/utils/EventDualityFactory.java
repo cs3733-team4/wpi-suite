@@ -145,8 +145,8 @@ public class EventDualityFactory {
 		 .addName(title)
 		 .addStartTime(new DateTime(start));
 		e.addIsProjectEvent(project);
-		e.setEventID(defaultID);
-		e.setCategory(Category.GOOGLE_EVENT_DEFAULT.getCategoryID());
+		e.setUuid(defaultID);
+		e.setCategory(Category.GOOGLE_EVENT_DEFAULT.getUuid());
 		
 		CalendarEventEntry cee = new CalendarEventEntry();
 		cee.setTitle(new PlainTextConstruct(title));

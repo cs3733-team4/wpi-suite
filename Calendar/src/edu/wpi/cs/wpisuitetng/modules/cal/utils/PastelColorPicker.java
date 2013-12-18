@@ -19,11 +19,11 @@ import javax.swing.JPanel;
 
 public class PastelColorPicker extends JPanel implements MouseListener, MouseMotionListener{
 	
+	public static final int DEFAULT_SELECTOR_LOCATION = -9000;
+	
 	private int lastMousePosition = DEFAULT_SELECTOR_LOCATION;
 	private Color currentColor = null;
 	private HSLColor inputColor;
-	
-	public static final int DEFAULT_SELECTOR_LOCATION = -9000;
 	
 	/**
 	 * a color picker for category colors. uses pastel colors only
@@ -54,6 +54,7 @@ public class PastelColorPicker extends JPanel implements MouseListener, MouseMot
 			float colorAtMouse = 360f * (((float)this.lastMousePosition) / ((float)this.getWidth()));
 			
 			this.currentColor = new HSLColor(colorAtMouse, 64f, 82f).getRGB();
+
 		}else if(lastMousePosition == DEFAULT_SELECTOR_LOCATION)
 		{
 			lastMousePosition = this.getWidth()/2;

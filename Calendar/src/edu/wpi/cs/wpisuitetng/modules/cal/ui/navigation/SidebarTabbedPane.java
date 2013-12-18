@@ -130,7 +130,6 @@ public class SidebarTabbedPane extends JTabbedPane implements ICategoryRegister
         boldRedTextStyle = new SimpleAttributeSet(normalTextStyle);
         StyleConstants.setBold(boldRedTextStyle, true);
         StyleConstants.setForeground(boldRedTextStyle, Color.MAGENTA);
-		
 	}
 	
 	/**
@@ -217,7 +216,7 @@ public class SidebarTabbedPane extends JTabbedPane implements ICategoryRegister
 	    // put entire tab into a scroll pane
 	    detailScrollPane = new JScrollPane(detailTextPane);
 	    detailScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-	    detailScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+	    detailScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 	    detailScrollPane.setBorder( new EmptyBorder(5,5,5,5));
 	    
 	    // add text area and button container to detail tab
@@ -365,8 +364,8 @@ public class SidebarTabbedPane extends JTabbedPane implements ICategoryRegister
 	        {
 				detailTitleLabel.setText(mDisplayable.getName());
 				detailTitleLabel.setOpaque(false);
-	        	detailTextDoc.insertString(detailTextDoc.getLength(), "Date:\n   " + ((Commitment) mDisplayable).getDate().toString(dateFormatter) + "\n", normalTextStyle);
-	        	detailTextDoc.insertString(detailTextDoc.getLength(), "Time:\n   " + ((Commitment) mDisplayable).getDate().toString(timeFormatter) + "\n", normalTextStyle);
+	        	detailTextDoc.insertString(detailTextDoc.getLength(), "Date:\n   " + ((Commitment) mDisplayable).getStart().toString(dateFormatter) + "\n", normalTextStyle);
+	        	detailTextDoc.insertString(detailTextDoc.getLength(), "Time:\n   " + ((Commitment) mDisplayable).getStart().toString(timeFormatter) + "\n", normalTextStyle);
 	        	detailTextDoc.insertString(detailTextDoc.getLength(), "Description:\n   " + mDisplayable.getDescription() + "\n", normalTextStyle);
 	        	if (((Commitment)mDisplayable).getAssociatedCategory() != null)
 	        	{
@@ -474,9 +473,9 @@ public class SidebarTabbedPane extends JTabbedPane implements ICategoryRegister
 			container.setMaximumSize(new Dimension(10000, 20));
 			
 			// Store reference to check boxes and categories
-			if (categoryCheckBox.isSelected() && !(selectedCategories.contains(c.getCategoryID())))
+			if (categoryCheckBox.isSelected() && !(selectedCategories.contains(c.getUuid())))
 			{
-					selectedCategories.add(c.getCategoryID());
+					selectedCategories.add(c.getUuid());
 			}
 			
 			if (!checkBoxCategoryMap.containsKey(categoryCheckBox))
@@ -530,10 +529,8 @@ public class SidebarTabbedPane extends JTabbedPane implements ICategoryRegister
 					showCommitments = true;
 				else
 				{
-					if (! selectedCategories.contains(referencedCategory.getCategoryID()))
-						selectedCategories.add(referencedCategory.getCategoryID());
-					catsLeft++;
-					clearAllButton.setEnabled(true);
+					if (! selectedCategories.contains(referencedCategory.getUuid()))
+						selectedCategories.add(referencedCategory.getUuid());
 				}
 			} else
 			{
@@ -543,11 +540,11 @@ public class SidebarTabbedPane extends JTabbedPane implements ICategoryRegister
 					showCommitments = false;
 				else
 				{
-					if (selectedCategories.contains(referencedCategory.getCategoryID()))
-						selectedCategories.remove(referencedCategory.getCategoryID());
+					if (selectedCategories.contains(referencedCategory.getUuid()))
+						selectedCategories.remove(referencedCategory.getUuid());
 					catsLeft--;
-					if(catsLeft==0)
-						clearAllButton.setEnabled(false);
+					 if(catsLeft==0)
+						 clearAllButton.setEnabled(false);
 				}
 			}
 			if (isUser)
@@ -570,8 +567,8 @@ public class SidebarTabbedPane extends JTabbedPane implements ICategoryRegister
 			if (!key.isSelected())
 			{
 				key.setSelected(true);
-				if(! selectedCategories.contains(value.getCategoryID()))
-					selectedCategories.add(value.getCategoryID());
+				if(! selectedCategories.contains(value.getUuid()))
+					selectedCategories.add(value.getUuid());
 			}
 		}
 		
@@ -620,6 +617,22 @@ public class SidebarTabbedPane extends JTabbedPane implements ICategoryRegister
 		return this.showEvents;
 	}
 
+	/**
+	 * Focuses the details tab
+	 */
+	public void selectDetailTab() {
+		this.setSelectedComponent(detailTab);
+		
+	}
+	
+	/**
+	 * Focuses the filter tab
+	 */
+	public void selectFilterTab() {
+		this.setSelectedComponent(categoryFilterTab);
+		
+	}
+	
 	@Override
 	public void fire(Category.SerializedAction sa) {
 		populateCategoryList(categoryList);

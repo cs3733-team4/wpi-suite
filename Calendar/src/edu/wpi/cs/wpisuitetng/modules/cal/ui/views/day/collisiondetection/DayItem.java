@@ -9,41 +9,44 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.collisiondetection;
 
-import javax.swing.JPanel;
-
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.Graphics;
-
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
-
-import org.joda.time.DateTime;
-import org.joda.time.Interval;
-import org.joda.time.MutableDateTime;
-
-import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.ResizingHandle;
-import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
-
-import javax.swing.Box;
-import javax.swing.JLabel;
-import javax.swing.BoxLayout;
-
 import java.awt.Font;
 import java.awt.FontMetrics;
+import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.imageio.ImageIO;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.border.MatteBorder;
+
+import org.joda.time.DateTime;
+import org.joda.time.Interval;
+import org.joda.time.MutableDateTime;
+
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.ResizingHandle;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 
 /**
  * Beautiful images of what is in the days.
@@ -55,7 +58,7 @@ public class DayItem extends JPanel
 	
 	private Rational width;
 	private Rational x;
-	public Event event;
+	private Displayable displayable;
 	private JLabel lblEventTitle, lblTimeInfo;
 	private JLabel lblStarryNightdutch;
 	private HashMap<String, Integer> wordLengths = new HashMap<>();
@@ -64,7 +67,7 @@ public class DayItem extends JPanel
 	private List<Rational> lineLengths;
 	private boolean firstDraw = true;
 	private int height;
-	private OverlappedEvent eventPositionalInformation;
+	private OverlappedDisplayable eventPositionalInformation;
 	private DateTime displayedDay;
 	private Interval length;
 	private boolean isBeingDragged;
@@ -73,12 +76,12 @@ public class DayItem extends JPanel
 	private ResizingHandle bottom;
 	private ResizingHandle top;
 	/**
-	 * Creates a DayItem (drawable) based on an overlapping event (Information) on the given day
+	 * Creates a DayItem (drawable) based on an overlapping Displayable (Information) on the given day
 	 * 
-	 * @param eventPositionalInformation the positional information for the event
+	 * @param eventPositionalInformation the positional information for the Displayable
 	 * @param displayedDay the day to display this panel on
 	 */
-	public DayItem(OverlappedEvent eventPositionalInformation, DateTime displayedDay)
+	public DayItem(OverlappedDisplayable eventPositionalInformation, DateTime displayedDay)
 	{
 		bottom = new ResizingHandle(this, false);
 		top = new ResizingHandle(this, true);
@@ -91,17 +94,45 @@ public class DayItem extends JPanel
 		this.displayedDay=displayedDay;
 		this.eventPositionalInformation = eventPositionalInformation;
 		height = 25;
-		event = eventPositionalInformation.getEvent();
-		length = new Interval(event.getStart(), event.getEnd());
-		Color bg = event.getColor();
-		setBorder(new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new LineBorder(bg.darker()), new EmptyBorder(0, 6, 0, 6))));
+		displayable = eventPositionalInformation.getEvent();
+		length = new Interval(displayable.getStart(), displayable.getEnd());
+		
+		Color bg = Colors.TABLE_GRAY_HEADER;
+		
+		if(displayable instanceof Event)
+		{
+			bg = displayable.getColor();
+			setBorder(new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new LineBorder(bg.darker()), new EmptyBorder(6, 6, 6, 6))));
+		}else if(displayable instanceof Commitment)
+		{
+			Color b;
+			Commitment.Status s = ((Commitment) displayable).getStatus();
+			switch(s)
+			{
+				case COMPLETE:
+					b = new Color(192,255,192);
+					break;
+				case IN_PROGRESS:
+					b = new Color(255,255,192);
+					break;
+				case NOT_STARTED:
+					b = new Color(240,110, 110);
+					break;
+				default:
+					b = Color.BLACK;
+					break;
+			}
+			setBorder(new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new MatteBorder(1, 0, 0, 0,b ), new CompoundBorder(new LineBorder(bg.darker()), new EmptyBorder(0, 6, 0, 6)))));
+			top.setEnabled(false);
+			bottom.setEnabled(false);
+		}
 		setBackground(bg);
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		lblEventTitle = new JLabel();
 		add(lblEventTitle);
 		lblEventTitle.setFont(new Font("Tahoma", Font.BOLD, 14));
 		lblEventTitle.putClientProperty("html.disable", true); //prevents html parsing
-		lblEventTitle.setText(event.getName());
+		lblEventTitle.setText(displayable.getName());		
 		lblTimeInfo = new JLabel();
 		putTimeOn();
 		lblTimeInfo.setBorder(new EmptyBorder(0,0,3,0));
@@ -125,18 +156,18 @@ public class DayItem extends JPanel
 			@Override
 			public void mouseReleased(MouseEvent e)
 			{
-				if(isBeingDragged){
+				if(isBeingDragged) {
 					if(puppet != null)
 					{
 						day = puppet.day;
-						int previous = event.getStart().getDayOfWeek()%7;
+						int previous = displayable.getStart().getDayOfWeek()%7;
 						if(day > previous)
-							updateTime(event.getStart().plusDays(day - previous));
+							updateTime(displayable.getStart().plusDays(day - previous));
 						if(previous > day)
-							updateTime(event.getStart().minusDays(previous - day));
+							updateTime(displayable.getStart().minusDays(previous - day));
 					}
-					event.update();
-					MainPanel.getInstance().display(event.getStart());
+					displayable.update();
+					MainPanel.getInstance().display(displayable.getStart());
 				}
 				getParent().dispatchEvent(e);
 			}
@@ -146,9 +177,9 @@ public class DayItem extends JPanel
 			{
 				if (e.getClickCount() > 1)
 				{
-					MainPanel.getInstance().editSelectedDisplayable(event);
+					MainPanel.getInstance().editSelectedDisplayable(displayable);
 				} else {
-					MainPanel.getInstance().updateSelectedDisplayable(event);
+					MainPanel.getInstance().updateSelectedDisplayable(displayable);
 				}
 			}
 			
@@ -161,13 +192,13 @@ public class DayItem extends JPanel
 			@Override
 			public void mouseEntered(MouseEvent e)
 			{
-				// TODO Auto-generated method stub
+				
 			}
 			
 			@Override
 			public void mouseClicked(MouseEvent e)
 			{
-				// TODO Auto-generated method stub	
+				
 			}
 		});
 		
@@ -206,7 +237,7 @@ public class DayItem extends JPanel
 	{
 		if(firstDraw)
 		{
-			height = (int) map(new Interval(event.getStartTimeOnDay(displayedDay), event.getEndTimeOnDay(displayedDay)).toDurationMillis(), this.getParent().getHeight());
+			height = (int) map(new Interval(displayable.getStartTimeOnDay(displayedDay), displayable.getEndTimeOnDay(displayedDay)).toDurationMillis(), this.getParent().getHeight());
 			height = Math.max(height, 45);
 			recalcBounds(getParent().getWidth(), getParent().getHeight());
 			FontMetrics descriptionMetrics = getGraphics().getFontMetrics(lblStarryNightdutch.getFont());
@@ -249,7 +280,7 @@ public class DayItem extends JPanel
 	{
 		lblStarryNightdutch.setMaximumSize(new Dimension(width.toInt(parentWidth), height-20));
 		int outWidth = width.toInt(parentWidth);
-		this.setBounds(x.toInt(parentWidth), (int) map(event.getStartTimeOnDay(displayedDay).getMillisOfDay(), parentHeight), outWidth, height);
+		this.setBounds(x.toInt(parentWidth), (int) map(displayable.getStartTimeOnDay(displayedDay).getMillisOfDay(), parentHeight), outWidth, height);
 		if(!firstDraw)
 		{
 			wrapDescription(outWidth-16);
@@ -362,7 +393,7 @@ public class DayItem extends JPanel
 		{
 			ratpack.add(new Rational(1, 1));
 		}
-		for (OverlappedEvent who : eventPositionalInformation.getOverlappedEvents())
+		for (OverlappedDisplayable who : eventPositionalInformation.getOverlappedEvents())
 		{
 			if (who.getXpos().toInt(10000) < eventPositionalInformation.getXpos().toInt(10000))
 				continue;
@@ -380,51 +411,97 @@ public class DayItem extends JPanel
 		}
 		// remote buffer overflow
 		ratpack.remove(rows - 1);
-		
-		
 		return ratpack;
 	}
 	
 
-	// Set text color to white to indicate selected event
+	/**
+	 * Set borders depending on selected status
+	 * @param b selected status of the item
+	 */
 	public void setSelected(boolean b)
 	{
-		lblEventTitle.setForeground(b?Color.WHITE:Color.BLACK);		
+		//TODO: Fix the paint order or revert to old selection method
+		if(displayable instanceof Event)
+			setBorder(b ? new CompoundBorder(new LineBorder(displayable.getColor().darker()), new CompoundBorder(new LineBorder(displayable.getColor().darker()), new EmptyBorder(6, 6, 6, 6)))
+						: new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new LineBorder(displayable.getColor().darker()), new EmptyBorder(6, 6, 6, 6))));
+		else if(displayable instanceof Commitment)
+		{
+			Color c;
+			Commitment.Status s = ((Commitment) displayable).getStatus();
+			switch(s)
+			{
+				case COMPLETE:
+					c = new Color(192,255,192);
+					break;
+				case IN_PROGRESS:
+					c = new Color(255,255,192);
+					break;
+				case NOT_STARTED:
+					c = new Color(240,110, 110);
+					break;
+				default:
+					c = Color.BLACK;
+					break;
+			}
+			setBorder(b ? new CompoundBorder(new LineBorder(displayable.getColor().darker()), new CompoundBorder(new MatteBorder(1, 0, 0, 0, c), new CompoundBorder(new LineBorder(Colors.TABLE_GRAY_HEADER.darker()), new EmptyBorder(6, 6, 6, 6))))
+						: new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new MatteBorder(1, 0, 0, 0, c), new CompoundBorder(new LineBorder(Colors.TABLE_GRAY_HEADER.darker()), new EmptyBorder(6, 6, 6, 6)))));
+		}
 	}
 
-	public Event getEvent() {
-		return event;
+	public Displayable getDisplayable() {
+		return displayable;
 	}
 	
 	public void updateTime(DateTime t)
 	{
-		if(puppet != null){
-			puppet.updateTime(t);
-		}
-		if(!this.event.getStart().equals(t))
+		if(!this.displayable.getStart().equals(t))
 		{
-			this.event.setStart(t);
-			this.event.setEnd(t.plus(this.length.toDuration()));
+			if(puppet != null)
+				puppet.updateTime(t);
+			this.displayable.setStart(t);
+			if(this.displayable instanceof Event)
+				((Event) this.displayable).setEnd(t.plus(this.length.toDuration()));
 			putTimeOn();
 		}
 	}
 	
 	private void putTimeOn()
 	{
-		if (event.isMultiDayEvent())
+		if(displayable instanceof Event)
 		{
-			if (event.getStart().compareTo(event.getStartTimeOnDay(displayedDay))==0)//if their the same time, its the first day
-				lblTimeInfo.setText(formatTime(event.getStart()) + " \u2192");
-			else if (event.getEnd().compareTo(event.getEndTimeOnDay(displayedDay))==0)
-				lblTimeInfo.setText("\u2190 " + formatTime(event.getEnd()));
-			else
-				lblTimeInfo.setText("\u2190 \u2192");
-				
+			if(((Event) displayable).isMultiDayEvent())
+			{
+				Event eDisplayable = (Event) displayable;
+				if (eDisplayable.getStart().compareTo(eDisplayable.getStartTimeOnDay(displayedDay))==0)//if their the same time, its the first day
+					lblTimeInfo.setText(formatTime(eDisplayable.getStart()) + " \u2192");
+				else if (eDisplayable.getEnd().compareTo(eDisplayable.getEndTimeOnDay(displayedDay))==0)
+					lblTimeInfo.setText("\u2190 " + formatTime(eDisplayable.getEnd()));
+				else
+					lblTimeInfo.setText("\u2190 \u2192");
+			}else
+				lblTimeInfo.setText(formatTime(displayable.getStart()) + " - " + formatTime(displayable.getEnd()));
+		}else if(displayable instanceof Commitment)
+		{
+			URL imgurl = getClass().getResource("/edu/wpi/cs/wpisuitetng/modules/cal/img/commitment_unstarted.png");
+        	// Get the appropriate image based on the commitment's status and put it on the label.
+        	if (((Commitment) displayable).getStatus() != null)
+        	{
+        		// Set the appropriate url source based on the status.
+        		if (((Commitment) displayable).getStatus() == Commitment.Status.IN_PROGRESS)
+        			imgurl = getClass().getResource("/edu/wpi/cs/wpisuitetng/modules/cal/img/commitment_in_progress.png");
+        		else if (((Commitment) displayable).getStatus() == Commitment.Status.COMPLETE)
+        			imgurl = getClass().getResource("/edu/wpi/cs/wpisuitetng/modules/cal/img/commitment_complete.png");
+        	}
+			lblTimeInfo.setText("<html></i><b><font face = \"DejaVu Sans\""
+					 + "color=\"rgb(" + Colors.COMMITMENT_NOT_STARTED.getRed() + ","
+										+ Colors.COMMITMENT_NOT_STARTED.getGreen() + "," 
+										+ Colors.COMMITMENT_NOT_STARTED.getBlue() 
+										+ "\"></font></b>" 
+										+ formatTime(displayable.getStart()) + "</html>");
+			try { lblEventTitle.setIcon(new ImageIcon(ImageIO.read(imgurl))); } catch (IOException e) {}
 		}
-		else
-			lblTimeInfo.setText(formatTime(event.getStart()) + " - " + formatTime(event.getEnd()));
-	}
-	
+	}	
 	public DayItem createPuppet(){
 		this.setVisible(false);
 		if(puppet != null)
@@ -436,10 +513,11 @@ public class DayItem extends JPanel
 	
 	public void addMinutesToEnd(int minutes)
 	{
-		MutableDateTime d = event.getEnd().toMutableDateTime();
+		MutableDateTime d = displayable.getEnd().toMutableDateTime();
 		d.addMinutes(minutes);
-		event.setEnd(d.toDateTime());
-		length = new Interval ( event.getStart(), event.getEnd());
+		if (displayable instanceof Event)
+			((Event) displayable).setEnd(d.toDateTime());
+		length = new Interval ( displayable.getStart(), displayable.getEnd());
 		height = Math.max(45, height+minutes);
 		firstDraw = true;
 		isBeingDragged = true;
@@ -450,10 +528,10 @@ public class DayItem extends JPanel
 	
 	public void addMinutesToStart(int minutes)
 	{
-		MutableDateTime d = event.getStart().toMutableDateTime();
+		MutableDateTime d = displayable.getStart().toMutableDateTime();
 		d.addMinutes(minutes);
-		event.setStart(d.toDateTime());
-		length = new Interval ( event.getStart(), event.getEnd());
+		displayable.setStart(d.toDateTime());
+		length = new Interval ( displayable.getStart(), displayable.getEnd());
 		height += minutes;
 		firstDraw = true;
 		isBeingDragged = true;
