@@ -160,7 +160,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 			finishInit();
 		}
 		super.paint(g);
-		this.mainCalendarNavigationPanel.grabFocus();
+		//this.mainCalendarNavigationPanel.grabFocus();
 	}
 	
 	/**
