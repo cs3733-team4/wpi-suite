@@ -422,6 +422,8 @@ public class DayItem extends JPanel
 	{
 		if(!this.displayable.getStart().equals(t))
 		{
+			if(puppet != null)
+				puppet.updateTime(t);
 			this.displayable.setStart(t);
 			if(this.displayable instanceof Event)
 				((Event) this.displayable).setEnd(t.plus(this.length.toDuration()));
