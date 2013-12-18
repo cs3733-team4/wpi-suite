@@ -67,17 +67,20 @@ public class CommitmentModel extends CachingDisplayableModel<Commitment, Commitm
 	
 	
 	/**
+	 *
+	 * checks if the given commitment's status is among the visible commitment statuses
 	 * 
-	 * @return get all the commitments that the user has access to
+	 * @param commitment to be checked
+	 * @return if the commitment is visible or not
 	 */
 	public boolean visibleStatus(Commitment obj) {
 		Collection<String> statuses =MainPanel.getInstance().getSelectedStatuses();
-		return statuses.contains(obj);
+		return statuses.contains(obj.getStatus().toString());
 	}
 	
 	@Override
 	protected boolean visibleCategory(Commitment obj)
 	{
-		return MainPanel.getInstance().showCommitments() && super.visibleCategory(obj) && this.visibleStatus(obj);
+		return MainPanel.getInstance().showCommitments() && this.visibleStatus(obj) && super.visibleCategory(obj);
 	}
 }

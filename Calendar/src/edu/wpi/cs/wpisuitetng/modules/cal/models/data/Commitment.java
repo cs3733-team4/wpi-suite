@@ -380,7 +380,7 @@ public class Commitment extends AbstractModel implements Displayable
 	
 	/**
 	 * Gets the current status the commitment is at.
-	 * @return the current commitment status as a String.
+	 * @return the current commitment status
 	 */
 	public CommitmentStatus getStatus()
 	{
