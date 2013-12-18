@@ -19,6 +19,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -474,6 +478,40 @@ public class CategoryManager extends JPanel {
                       System.out.println("Leaving selection listener, and firstEdit is" + firstEdit);
               }
 		});
+		
+		colorPicker.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				saveCategoryButton.setEnabled(isSaveable());				
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			
+		});
 
 		saveCategoryButton.setEnabled(isSaveable());
 		
@@ -493,18 +531,36 @@ public class CategoryManager extends JPanel {
 	 * Populate the provided list with the categories
 	 * @param listModel the model of the list to populate
 	 */
+	@SuppressWarnings("unchecked")
 	private void populateCategories(DefaultListModel<Category> listModel)
 	{	
 		clearSelected = true;
 		listModel.clear();
+		
+		List<Category> toSort = new ArrayList<Category>();
 		
 		allCategories = CategoryModel.getInstance().getAllCategories();
 		
 		for (int i = 0; i < allCategories.size(); i++) {
 			Category temp = allCategories.get(i);
 			clearSelected = true;
-			listModel.addElement(temp);
+			toSort.add(temp);
 		}
+						
+		Collections.sort(toSort, new Comparator<Category>() {
+
+			@Override
+			public int compare(Category o1, Category o2) {
+				return o1.getName().compareTo(o2.getName());
+			}
+			
+		});
+		
+		for(Category c: toSort)
+		{
+			listModel.addElement(c);
+		}
+	
 	}
 	
 	
