@@ -32,11 +32,9 @@ import org.joda.time.format.DateTimeFormatter;
 import com.lowagie.text.Font;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CommitmentModel;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventModel;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CommitmentClient;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.collisiondetection.DayPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
@@ -120,8 +118,8 @@ public class DayCalendar extends AbstractCalendar
 		
 		// Return list of events to be displayed
 		List<Displayable> visibleDisplayables = new ArrayList<Displayable>();
-		visibleDisplayables.addAll(EventModel.getInstance().getEvents(from, to));
-		visibleDisplayables.addAll(CommitmentModel.getInstance().getCommitments(from, to));
+		visibleDisplayables.addAll(EventClient.getInstance().getEvents(from, to));
+		visibleDisplayables.addAll(CommitmentClient.getInstance().getCommitments(from, to));
 		
 		Collections.sort(visibleDisplayables, new Comparator<Displayable>() {
 			public int compare(Displayable d1, Displayable d2) {

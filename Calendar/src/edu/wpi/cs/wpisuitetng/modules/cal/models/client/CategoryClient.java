@@ -15,14 +15,14 @@ import java.util.UUID;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Category;
 
-public class CategoryModel extends CachingModel<Category, Category.SerializedAction> {
+public class CategoryClient extends CachingClient<Category, Category.SerializedAction> {
 
-	private static CategoryModel instance;
+	private static CategoryClient instance;
 	
 	/**
 	 * private singleton constructor
 	 */
-	private CategoryModel()
+	private CategoryClient()
 	{
 		super("categories", Category.SerializedAction[].class, Category[].class);
 	}
@@ -31,11 +31,11 @@ public class CategoryModel extends CachingModel<Category, Category.SerializedAct
 	 * 
 	 * @return the singleton category model
 	 */
-	public static CategoryModel getInstance()
+	public static CategoryClient getInstance()
 	{
 		if (instance == null)
 		{
-			instance = new CategoryModel();
+			instance = new CategoryClient();
 		}
 		return instance;
 	}

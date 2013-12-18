@@ -38,9 +38,8 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CommitmentModel;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
@@ -305,6 +304,7 @@ public class WeekCalendar extends AbstractCalendar
 
 	private List<Displayable> getVisibleDisplayables()
 	{
+<<<<<<< HEAD
 		List<Displayable> visibleDisplayables = new ArrayList<Displayable>();
 		visibleDisplayables.addAll(EventModel.getInstance().getEvents(weekStartTime, weekEndTime));
 		visibleDisplayables.addAll(CommitmentModel.getInstance().getCommitments(weekStartTime, weekEndTime));
@@ -318,6 +318,9 @@ public class WeekCalendar extends AbstractCalendar
 		
 		// Return list of displayables to be displayed
 		return visibleDisplayables;
+=======
+		return EventClient.getInstance().getEvents(weekStartTime, weekEndTime);
+>>>>>>> origin/dev
 	}
 	
 	@Override

@@ -1,6 +1,9 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.ui;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
@@ -12,7 +15,6 @@ import org.junit.Test;
 import edu.wpi.cs.wpisuitetng.modules.cal.ReflectUtils;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentStatus;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs.AddCommitmentDisplay;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.DatePicker;
 
 public class CommitmentUIValidationTest
 {
