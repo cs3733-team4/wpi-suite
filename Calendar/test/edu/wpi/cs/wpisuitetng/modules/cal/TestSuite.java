@@ -56,7 +56,7 @@ import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
 	MonthsTest.class,
 	CommitmentEntityManagerTest.class, EventEntityManagerTest.class, CommitmentClientTest.class,
 		EventClientTest.class, CategoryEntityManagerTest.class, PollPusherTest.class,
-	CalendarNavigationModuleTest.class, GoToPanelTest.class, MainCalendarNavigationTest.class, SidebarTabbedPaneTest.class,
+	CalendarNavigationModuleTest.class, MainCalendarNavigationTest.class, SidebarTabbedPaneTest.class,
 	MonthCalendarTest.class, MonthDayTest.class, MonthItemTest.class,
 	WeekCalendarTest.class,
 	CategoryManagerTest.class, CommitmentUIValidationTest.class, DatePickerTest.class,

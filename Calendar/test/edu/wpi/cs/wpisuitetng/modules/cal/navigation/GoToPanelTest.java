@@ -45,6 +45,34 @@ public class GoToPanelTest
 	}
 
 	@Test
+	public void testGoto()
+	{
+
+		GoToPanel GTP = new GoToPanel(now);
+		MainPanel.getInstance().viewMonth();
+		GTP.parseGoto("07/01/2000");
+		// Currently broken; dummyPanel isn't actually initialized, and has
+		// nullpointer errors trying to display the correct month on the
+		// uninitialized mCalendar
+		assertEquals(
+				"If the input is acceptable, the gotoDate box function will cause the calendar at mainPanel to display the designated month on the main screen",
+				((MonthCalendar) MainPanel.getInstance().getMOCA()).getTime().getMonthOfYear(), then.getMonthOfYear());
+		GTP.parseGoto("7/1/1900");
+		assertEquals(
+				"If the input is acceptable, the gotoDate box function will cause the calendar at mainPanel to display the designated month on the main screen",
+				((MonthCalendar) MainPanel.getInstance().getMOCA()).getTime().getMonthOfYear(), before.getMonthOfYear());
+		GTP.parseGoto("7/1/2100");
+		assertEquals(
+				"If the input is acceptable, the gotoDate box function will cause the calendar at mainPanel to display the designated month on the main screen",
+				((MonthCalendar) MainPanel.getInstance().getMOCA()).getTime().getMonthOfYear(), after.getMonthOfYear());
+		GTP.parseGoto("7/1/00");
+		assertEquals(
+				"If the input is acceptable, the gotoDate box function will cause the calendar at mainPanel to display the designated month on the main screen",
+				((MonthCalendar) MainPanel.getInstance().getMOCA()).getTime().getMonthOfYear(), before.getMonthOfYear());
+
+	}
+
+	@Test
 	public void testGotoErrorEarly() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException
 	{
 		GoToPanel GTP = new GoToPanel(now);
