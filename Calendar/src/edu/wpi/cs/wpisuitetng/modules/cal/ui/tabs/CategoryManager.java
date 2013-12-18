@@ -80,19 +80,6 @@ public class CategoryManager extends JPanel implements ICategoryRegister {
 	private boolean isEditing = false;
 	private boolean firstEdit = false;
 	
-	// TODO LIST 
-	// DONE -- When selecting category from list, repeated name alert shouldn't pop up
-	// DONE -- First click on category doesn't allow saving
-	// TODO NAME IS OK, BUT HAVE TO MAKE COLOR SELECTOR POSITION MORE ACCURATE -- Constraint moving if name or color changed on editing category
-	// TODO CHOOSE BETTER LOCATION FOR ERROR MESSAGE -- Display error message if trying to select different category while in edit mode
-	// DONE -- Properly refresh category list upon change
-	// DONE -- Disable arrow key navigation in list
-	// TODO NEED TO TEST -- Avoid deleting no category
-	// DONE -- Format UI to be consistent with other panels in pROJECT
-	// DONE -- Populate categories may not be getting updated list since database is not being called
-	// DONE -- Update filter immediately -- DONE
-	// TODO -- Clean up code and add comments
-	
 	/**
 	 * 1 - Categories should not have repeated names. When creating a new category, save button should be disabled if name is repeated
 	 * 
