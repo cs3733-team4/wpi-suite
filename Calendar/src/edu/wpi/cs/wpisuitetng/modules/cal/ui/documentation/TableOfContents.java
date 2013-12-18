@@ -153,16 +153,32 @@ public class TableOfContents extends JPanel {
         	return PageName;
         }
     }
-
+    
+	/**
+	 * Extracts the ID name from the given string
+	 * @param lineIn the line to parse
+	 * @return the ID name
+	 */
     private String getIDFromLine(String lineIn)
     {
     	return lineIn.substring(8, lineIn.length()-4);
     }
+    
+    /**
+     * Extract the link from a string
+     * @param lineIn the line to parse
+     * @return the HREF
+     */
     private String getHREFFromLine(String lineIn)
     {
     	return lineIn.substring(lineIn.indexOf("href=\"") + 6, lineIn.length()-1);  
     }
     
+    /**
+     * This parses the ToC page and generates a tree from it
+     * @param top the top level node
+     * @param server the location of the sever
+     */
     private void populateFromTOC(DefaultMutableTreeNode top, String server) {
     	String holdLine;
     	String nameHold;

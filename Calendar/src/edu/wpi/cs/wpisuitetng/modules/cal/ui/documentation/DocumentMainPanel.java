@@ -62,22 +62,10 @@ public class DocumentMainPanel extends JFrame{
     	super();
     	this.setVisible(false);
     }
-    private String extractPage(String sIn)
-    {
-    	String sOut="";
-    	int index=0;
-    	for (int i=sIn.length()-1; i>-1; i--)
-    	{
-    		if (sIn.charAt(i) == '/')
-    		{
-    			index=i;
-    			break;
-    		}
-    	}
-    	sOut=sIn.substring(index +1, sIn.length());
-    	return sOut;
-    }
     
+    /**
+     * Initializes the documentation main panel
+     */
     public void init()
     {
     	if (serverLocation!=null)
@@ -147,7 +135,7 @@ public class DocumentMainPanel extends JFrame{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				BareBonesBrowserLaunch.openURL(serverLocation + "YOCO Calendar.html?" + extractPage(webPage.getPage().getPath()));
+				BareBonesBrowserLaunch.openURL(serverLocation + "YOCO Calendar.html?" + webPage.getPage().getPath().replace(serverLocation, ""));
 				
 			}
 		});
@@ -605,6 +593,10 @@ public class DocumentMainPanel extends JFrame{
     	
     }
 
+    /**
+     * an overload for going to a page, defaults to adding to history
+     * @param page
+     */
     public void goToPage(String page)
     {
     	goToPage(page, true);

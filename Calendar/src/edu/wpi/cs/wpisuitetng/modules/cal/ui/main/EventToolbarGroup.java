@@ -52,7 +52,7 @@ public class EventToolbarGroup extends ToolbarGroupView {
 		    public JToolTip createToolTip() {  
 				if (toolTip == null) {  
 					JPanel panel = new JPanel(new GridLayout(0, 1));  
-					JLabel label = new JLabel("<html> Lets you make a new event in<br>the calendar</html>");
+					JLabel label = new JLabel(" Lets you make a new event in<br>the calendar");
 			        JButton button = new JButton("Get Help");  
 			        button.addActionListener(new ActionListener() {  
 			        	public void actionPerformed(ActionEvent e) { 
@@ -92,7 +92,6 @@ public class EventToolbarGroup extends ToolbarGroupView {
 				AddEventDisplay ned = new AddEventDisplay();
 				ned.setTabId(mMainPanel.addTopLevelTab(ned, "New Event", true));
 				
-				//TODO: use selected times. ned.display(DateTime.now());
 			}
 		});
 		
@@ -103,7 +102,7 @@ public class EventToolbarGroup extends ToolbarGroupView {
 		    public JToolTip createToolTip() {  
 				if (toolTip == null) {  
 					JPanel panel = new JPanel(new GridLayout(0, 1));  
-					JLabel label = new JLabel("<html> Lets you make a new commitment in<br>the calendar</html>");
+					JLabel label = new JLabel(" Lets you make a new commitment in<br>the calendar");
 			        JButton button = new JButton("Get Help");  
 			        button.addActionListener(new ActionListener() {  
 			        	public void actionPerformed(ActionEvent e) { 
