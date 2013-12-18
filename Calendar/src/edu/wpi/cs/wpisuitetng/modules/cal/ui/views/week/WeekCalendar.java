@@ -152,6 +152,7 @@ public class WeekCalendar extends AbstractCalendar
 
 		MutableDateTime increment = new MutableDateTime(weekStartTime);
 		increment.setMillisOfDay(0);
+		DateTime now = DateTime.now().withMillisOfDay(0);
 
 		displayableList = getVisibleDisplayables();
 		
@@ -166,6 +167,7 @@ public class WeekCalendar extends AbstractCalendar
 
 			// add day titles to the title grid
 			dayHeaders[i].setText(increment.toDateTime().toString(dayTitleFmt));
+			dayHeaders[i].setFont(dayHeaders[i].getFont().deriveFont(increment.isEqual(now)? Font.BOLD : Font.PLAIN));
 
 			increment.addDays(1);
 		}

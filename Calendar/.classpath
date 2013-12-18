@@ -16,5 +16,7 @@
 	<classpathentry kind="lib" path="/Janeway/lib/joda-time-2.3.jar"/>
 	<classpathentry kind="lib" path="../Janeway/lib/gdata-calendar-2.0.jar"/>
 	<classpathentry kind="lib" path="../Janeway/lib/guava-11.0.2.jar"/>
+	<classpathentry kind="lib" path="/Janeway/lib/gdata-client-1.0.jar"/>
+	<classpathentry kind="lib" path="/Janeway/lib/gdata-core-1.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

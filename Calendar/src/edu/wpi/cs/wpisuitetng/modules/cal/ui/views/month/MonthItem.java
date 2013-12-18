@@ -138,6 +138,7 @@ public class MonthItem extends JPanel
         	
         	categoryColor.setBackground((Colors.TABLE_BACKGROUND));
 	    	categoryColor.setBorder(new EmptyBorder(0, 0, 0, 0));
+	    	time.setText(simpleTime(mDisplayable.getStart()));
         }
         else if (ndisp instanceof Event) // Else, show date, name, category, and whether event is multiple day
         {

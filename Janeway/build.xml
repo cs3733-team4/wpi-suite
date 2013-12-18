@@ -15,6 +15,10 @@
 			<include name="miglayout-4.0-swing.jar"/>
 			<include name="swingx-all-1.6.4.jar"/>
 			<include name="joda-time-2.3.jar"/>
+			<include name="gdata-calendar-2.0.jar"/>
+			<include name="gdata-client-1.0.jar"/>
+			<include name="gdata-core-1.0.jar"/>
+			<include name="guava-11.0.2.jar"/>
 		</fileset>
 	</path>
 	<path id="test-classpath">
@@ -65,6 +69,10 @@
             <zipfileset src="./lib/gnujaxp.jar"/>
             <zipfileset src="./lib/jcommon-1.0.17.jar"/>
             <zipfileset src="./lib/jfreechart-1.0.14.jar"/>
+            <zipfileset src="./lib/gdata-calendar-2.0.jar"/>
+            <zipfileset src="./lib/gdata-client-1.0.jar"/>
+            <zipfileset src="./lib/gdata-core-1.0.jar"/>
+            <zipfileset src="./lib/guava-11.0.2.jar"/>
             <zipfileset src="./lib/joda-time-2.3.jar"/>
 			<zipfileset src="${core-lib}/gson-2.2.2.jar" />
 			<zipfileset src="${core-lib}/commons-codec-1.7.jar" />

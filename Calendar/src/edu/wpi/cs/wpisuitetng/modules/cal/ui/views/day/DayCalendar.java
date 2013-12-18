@@ -55,6 +55,7 @@ public class DayCalendar extends AbstractCalendar
 	private JScrollPane scroll = new JScrollPane(holder);
 
 	private DateTimeFormatter titleFmt = DateTimeFormat.forPattern("EEEE, MMM d, yyyy");
+	private boolean scrolled = false;
 
 	public DayCalendar(DateTime on)
 	{
@@ -71,6 +72,7 @@ public class DayCalendar extends AbstractCalendar
 		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scroll.getVerticalScrollBar().setUnitIncrement(20);
+		scroll.setAutoscrolls(true);
 		scroll.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		holder.setBackground(Colors.TABLE_BACKGROUND);
 		
@@ -78,12 +80,6 @@ public class DayCalendar extends AbstractCalendar
 		this.holder.setLayout(new BorderLayout());
 		
 		generateDay();
-
-		BoundedRangeModel jsb = scroll.getVerticalScrollBar().getModel();
-		double day = time.getMinuteOfDay();
-		day /= time.minuteOfDay().getMaximumValue();
-		day *= (jsb.getMaximum()) - jsb.getMinimum();
-		jsb.setValue((int)day);
 	}
 
 	private void generateDay()
@@ -100,7 +96,7 @@ public class DayCalendar extends AbstractCalendar
 		this.displayableList = getVisibleDisplayables();
 		
 		this.current = new DayPanel();
-		this.current.setEvents(getDisplayablesInInterval(time,time.plusDays(1)), time);
+		this.current.setEvents(getDisplayablesInInterval(time.withMillisOfDay(0),time.plusDays(1).withMillisOfDay(0)), time);
 		this.current.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, Colors.BORDER));
 		
 		this.holder.add(new DayGridLabel(), BorderLayout.WEST);
@@ -156,6 +152,37 @@ public class DayCalendar extends AbstractCalendar
 	{
 		this.time = newTime;
 		this.generateDay();
+		
+
+		SwingUtilities.invokeLater(new Runnable() {
+			
+			@Override
+			public void run()
+			{
+				if (scrolled)
+					return;
+				scrolled = true;
+				// Scroll to now
+				BoundedRangeModel jsb = scroll.getVerticalScrollBar().getModel();
+				
+				double day;
+				
+				if(!displayableList.isEmpty())
+				{
+					day = displayableList.get(0).getStart().getMinuteOfDay();
+				}else
+				{
+					day = DateTime.now().getMinuteOfDay();
+				}
+					
+				day-= (day > 60) ? 60 : day;
+				
+				day /= time.minuteOfDay().getMaximumValue();
+				day *= (jsb.getMaximum()) - jsb.getMinimum();
+				jsb.setValue((int) day);
+			}
+		});
+
 
 		MainPanel.getInstance().revalidate();
 		MainPanel.getInstance().repaint();
@@ -197,6 +224,7 @@ public class DayCalendar extends AbstractCalendar
 			{
 				retrievedDisplayables.add(d);
 			}
+
 		}
 
 		return retrievedDisplayables;
@@ -204,10 +232,10 @@ public class DayCalendar extends AbstractCalendar
 	
 	private boolean isDisplayableInInterval(Displayable mDisplayable, Interval mInterval)
 	{
-		DateTime s = mDisplayable.getStart(), e = mDisplayable.getEnd();
+		DateTime s = mDisplayable.getStart();
 		if (this.time.isAfter(s))
 			s = this.time;
 
-		return (s.isBefore(e) && mInterval.contains(s));
+		return (mInterval.contains(s));
 	}
 }
