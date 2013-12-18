@@ -15,7 +15,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.cache.Cache;
-import edu.wpi.cs.wpisuitetng.modules.cal.utils.cache.TimeOrderedList;
 
 /**
  * Keeps track of who needs to be notified when using long polling.

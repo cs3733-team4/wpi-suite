@@ -11,7 +11,6 @@ package edu.wpi.cs.wpisuitetng.modules.cal.utils;
 
 import java.awt.Color;
 
-import javax.swing.JPanel;
 import javax.swing.UIManager;
 
 /**
