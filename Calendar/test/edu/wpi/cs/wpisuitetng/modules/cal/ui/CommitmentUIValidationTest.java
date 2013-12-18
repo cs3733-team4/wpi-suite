@@ -13,7 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.ReflectUtils;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentStatus;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs.AddCommitmentDisplay;
 
 public class CommitmentUIValidationTest
@@ -103,13 +103,13 @@ public class CommitmentUIValidationTest
 			IllegalAccessException
 	{
 		setUpAndTestValidCommitmentFields();
-		statusPick.setSelectedItem(CommitmentStatus.InProgress.toString());
+		statusPick.setSelectedItem(Commitment.Status.IN_PROGRESS.toString());
 		assertTrue("Commitment is saveable with a new status", mCommitDisplay.isSaveable());
 		
-		statusPick.setSelectedItem(CommitmentStatus.Complete.toString());
+		statusPick.setSelectedItem(Commitment.Status.COMPLETE.toString());
 		assertTrue("Commitment is saveable with a new status", mCommitDisplay.isSaveable());
 		
-		statusPick.setSelectedItem(CommitmentStatus.NotStarted.toString());
+		statusPick.setSelectedItem(Commitment.Status.NOT_STARTED.toString());
 		assertTrue("Commitment is saveable with the default status (Not started)", mCommitDisplay.isSaveable());
 	}
 	
