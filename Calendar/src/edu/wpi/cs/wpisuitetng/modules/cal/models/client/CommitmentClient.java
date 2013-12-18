@@ -64,9 +64,20 @@ public class CommitmentClient extends CachingDisplayableClient<Commitment, Commi
 		return getAll();
 	}
 	
+	/**
+	 * Get all events by category
+	 * @param id id of the category
+	 * @return all events with given category id
+	 */
+	public List<Commitment> getCommitmentsByCategory(UUID id)
+	{
+		return getByCategory(id);
+	}
+	
 	@Override
 	protected boolean visibleCategory(Commitment obj)
 	{
 		return MainPanel.getInstance().showCommitments() && super.visibleCategory(obj);
 	}
+
 }

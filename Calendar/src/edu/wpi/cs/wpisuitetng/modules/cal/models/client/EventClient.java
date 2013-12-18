@@ -75,14 +75,33 @@ public class EventClient extends CachingDisplayableClient<Event, Event.Serialize
 		return getRange(from, to);
 	}
 
+	/**
+	 * Gets event by id
+	 * @param id id of the event to get
+	 * @return event with given id
+	 */
 	public Event getEventById(UUID id)
 	{
 		return getByUUID(id);
 	}
 
+	/**
+	 * Gets all events
+	 * @return all events in database
+	 */
 	public List<Event> getAllEvents()
 	{
 		return getAll();
+	}
+	
+	/**
+	 * Get all events by category
+	 * @param id id of the category
+	 * @return all events with given category id
+	 */
+	public List<Event> getEventsByCategory(UUID id)
+	{
+		return getByCategory(id);
 	}
 	
 	@Override

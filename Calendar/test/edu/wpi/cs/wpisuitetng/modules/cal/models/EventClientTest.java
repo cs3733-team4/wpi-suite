@@ -11,7 +11,9 @@ import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.cal.MockNetwork;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventClient;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.server.EventEntityManager;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.network.Network;
@@ -23,9 +25,9 @@ public class EventClientTest {
     DateTime three=new DateTime(2000,1,3,3,30); // Datetime at Jan 3rd, 2000: 3:30
     DateTime four=new DateTime(2000,1,4,4,30);  // Datetime at Jan 4th, 2000: 4:30
     
+    Category cat1 = new Category();
     
-    
-    Event e = new Event().addStartTime(one).addEndTime(two).addName("First");
+    Event e = new Event().addStartTime(one).addEndTime(two).addName("First").addCategory(cat1.getCategoryID());
     String eString=e.toJSON();
     
     Event ee=new Event().addStartTime(two).addEndTime(three).addName("Second");
@@ -144,6 +146,16 @@ public class EventClientTest {
             assertEquals("getEntity will return a commitment in the database if it was stored there before",eee.getName(),cem.getEvents(new DateTime(2000,01,04,03,00),new DateTime(2000,01,04,07,01)).get(0).getName());
             assertEquals("getEntity will return an empty array if no commitments are within the given range", 0 ,cem.getEvents(new DateTime(2050,01,01,01,01),new DateTime(2050,01,01,01,01)).size());
 
+     }
+     
+     @Test
+     public void testGetEntityByCategory() throws WPISuiteException {        	
+     	EventClient eem = new NonFilteringEventClient();
+     	eem.put(e);
+     	eem.put(ee);
+     	eem.put(eee);
+         
+         assertEquals("GetEventsByCategory, if given a category UUID, should return all events with that category UUID", e.getName(), eem.getEventsByCategory(cat1.getCategoryID()).get(0).getName());
      }
 
  	private static class NonFilteringEventClient extends EventClient

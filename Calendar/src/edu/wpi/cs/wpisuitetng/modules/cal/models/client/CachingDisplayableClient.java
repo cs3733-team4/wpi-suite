@@ -105,4 +105,27 @@ public abstract class CachingDisplayableClient<T extends Model & Displayable, SA
 		}
 		return filteredEvents;
 	}
+	
+	/**
+	 * gets events with specified category
+	 * 
+	 * @param categoryUUID the category's UUID to get
+	 * @return a list containing all events with that category
+	 */
+	protected List<T> getByCategory(UUID categoryUUID)
+	{
+		validateCache();
+		
+		List<T> retrievedEvents = new ArrayList<>();
+		
+		for (T e: cache.values())
+		{
+			if (filter(e) && e.getCategory() != null && e.getCategory().equals(categoryUUID))
+			{
+				retrievedEvents.add(e);
+			}
+		}
+		
+		return retrievedEvents;
+	}
 }
