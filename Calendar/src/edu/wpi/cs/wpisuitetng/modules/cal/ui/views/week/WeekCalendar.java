@@ -571,8 +571,8 @@ public class WeekCalendar extends AbstractCalendar
 		selected = toPass;
 		if(selected != null)
 		{
-			this.daysOfWeekArray[selected.getEvent().getStart().getDayOfWeek()%7].add(selected.createPuppet());
-			selected.createPuppet().day = selected.getEvent().getStart().getDayOfWeek()%7;
+			this.daysOfWeekArray[selected.getDisplayable().getStart().getDayOfWeek()%7].add(selected.createPuppet());
+			selected.createPuppet().day = selected.getDisplayable().getStart().getDayOfWeek()%7;
 		}
 	}
 	public void mouseOverDay(int day)

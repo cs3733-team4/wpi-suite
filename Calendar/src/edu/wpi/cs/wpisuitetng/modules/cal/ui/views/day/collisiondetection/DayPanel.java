@@ -56,7 +56,7 @@ public class DayPanel extends JPanel
 			public void mouseReleased(MouseEvent arg0) {
 				if(isSomethingDragging)
 				{
-					MainPanel.getInstance().display(selected.getEvent().getStart());
+					MainPanel.getInstance().display(selected.getDisplayable().getStart());
 				}
 				isSomethingDragging = false;
 				selected = null;
@@ -132,7 +132,7 @@ public class DayPanel extends JPanel
 		guides.clear();
 		for (DayItem dayItem : collidingEvents)
 		{
-			guides.put(dayItem.getEvent(), dayItem);
+			guides.put(dayItem.getDisplayable(), dayItem);
 			add(dayItem);
 		}
 		revalidate();
@@ -170,8 +170,8 @@ public class DayPanel extends JPanel
 	{
 		for (DayItem v : guides.values())
 		{
-			if(item instanceof Displayable && v.getEvent().getUuid().equals(((Displayable) item).getUuid()))
-				item = v.getEvent();
+			if(item instanceof Displayable && v.getDisplayable().getUuid().equals(((Displayable) item).getUuid()))
+				item = v.getDisplayable();
 			v.setSelected(false);
 		}
 		if (item instanceof Displayable)

@@ -136,7 +136,19 @@ public class DayItem extends JPanel
 			@Override
 			public void mouseReleased(MouseEvent e)
 			{
-				displayable.update();
+				if(isBeingDragged) {
+					if(puppet != null)
+					{
+						day = puppet.day;
+						int previous = displayable.getStart().getDayOfWeek()%7;
+						if(day > previous)
+							updateTime(displayable.getStart().plusDays(day - previous));
+						if(previous > day)
+							updateTime(displayable.getStart().minusDays(previous - day));
+					}
+					displayable.update();
+					MainPanel.getInstance().display(displayable.getStart());
+				}
 				getParent().dispatchEvent(e);
 			}
 			
