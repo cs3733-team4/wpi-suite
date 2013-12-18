@@ -24,7 +24,6 @@
 			<include name="gdata-calendar-2.0.jar"/>
 			<include name="gdata-client-1.0.jar"/>
 			<include name="guava-11.0.2.jar"/>
-
 		</fileset>
 		<pathelement path="build"/>
 	</path>
