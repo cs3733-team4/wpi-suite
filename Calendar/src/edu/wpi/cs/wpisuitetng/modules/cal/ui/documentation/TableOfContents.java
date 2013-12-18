@@ -12,30 +12,39 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui.documentation;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.Enumeration;
+import java.util.HashMap;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
+import javax.swing.SwingUtilities;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 
-public class TableOfContents extends JPanel implements TreeSelectionListener {
+public class TableOfContents extends JPanel {
     private JTree tree;
-
-    
-
+    private HashMap<String, DefaultMutableTreeNode> theMap;
+    /**
+     * Constructor for the TableOfContents
+     * @param serverLocation the String location of the server
+     */
     public TableOfContents(String serverLocation) {
         super(new GridLayout(1,0));
-
-        this.setBackground(Color.getColor("EFEFEF"));
+        theMap = new HashMap<>();
+        this.setBackground(Color.getColor("FFFFFF"));
         //Create the nodes.
         DefaultMutableTreeNode top = new DefaultMutableTreeNode("Team YOCO Calendar");
         populateFromTOC(top, serverLocation);
@@ -44,34 +53,89 @@ public class TableOfContents extends JPanel implements TreeSelectionListener {
         //Create a tree that allows one selection at a time.
         tree = new JTree(top);
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-        tree.setBackground(Color.getColor("EFEFEF"));
+        tree.setBackground(Color.getColor("FFFFFF"));
+        
         //Listen for when the selection changes.
-        tree.addTreeSelectionListener(this);
-
+        tree.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent arg0) {
+				
+				
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+	            TreePath path = tree.getPathForLocation(e.getX(), e.getY());
+	            if (path != null) {
+	            	DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+	                if (node==null)
+	                	return;
+	                if (node.getUserObject() instanceof ListInfo)
+	                {
+	                	
+	                	DocumentMainPanel.getInstance().goToPage(((ListInfo)node.getUserObject()).getPageName(), true);
+	                }
+	            }
+	            
+			}
+		});
         if (tree.getCellRenderer() instanceof DefaultTreeCellRenderer)
         {
             final DefaultTreeCellRenderer renderer = (DefaultTreeCellRenderer)(tree.getCellRenderer());
-            renderer.setBackgroundNonSelectionColor(Color.getColor("EFEFEF"));
+            renderer.setBackgroundNonSelectionColor(Color.getColor("FFFFFF"));
         }
 
         //Create the scroll pane and add the tree to it. 
         JScrollPane treeView = new JScrollPane(tree);
-        treeView.setBackground(Color.getColor("EFEFEF"));
+        treeView.setBackground(Color.getColor("FFFFFF"));
 
         Dimension minimumSize = new Dimension(100, 50);
         treeView.setMinimumSize(minimumSize);
         add(treeView);
     }
 
-    /** Required by TreeSelectionListener interface. */
-    public void valueChanged(TreeSelectionEvent e) {
 
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
-        
-        if (node.getUserObject() instanceof ListInfo)
-        	DocumentMainPanel.getInstance().goToPage(((ListInfo)node.getUserObject()).getPageName());
-  }
+    /**
+     * Expands the tree to only the shown page and selects the page
+     * @param thePage
+     */
+    public void expandToPage(String thePage)
+    {
+    
+    	DefaultMutableTreeNode theNode = theMap.get(thePage);
 
+    	if (theNode==null)
+    		return;
+    	
+    	
+    	tree.setSelectionPath(new TreePath(theNode.getPath()));
+    	tree.scrollPathToVisible(new TreePath(theNode.getPath()));
+    	
+    	
+    	
+    }
+/**
+ * A class that contains information about the tree node
+ */
     private class ListInfo {
         private String Name;
         private String PageName;
@@ -96,8 +160,7 @@ public class TableOfContents extends JPanel implements TreeSelectionListener {
     }
     private String getHREFFromLine(String lineIn)
     {
-    	lineIn = lineIn.substring(lineIn.indexOf("href=\"") + 6, lineIn.length()-1);
-    	return lineIn;
+    	return lineIn.substring(lineIn.indexOf("href=\"") + 6, lineIn.length()-1);  
     }
     
     private void populateFromTOC(DefaultMutableTreeNode top, String server) {
@@ -120,13 +183,13 @@ public class TableOfContents extends JPanel implements TreeSelectionListener {
 	        }
 			while(true)
 			{
-				if (holdLine.contains("<ul>"))
+				if (holdLine.contains("<ul>"))//if it contains a <ul> the the list index goes one deeper
 					level++;
 				if (holdLine.contains("</ul>"))
 				{
 					for (int i=0; i<holdLine.length(); i++)
 					{
-						if (holdLine.indexOf("</ul>", i)>0)
+						if (holdLine.indexOf("</ul>", i)>0)//decrease for every instance of </ul>
 						{
 
 							level--;
@@ -144,16 +207,17 @@ public class TableOfContents extends JPanel implements TreeSelectionListener {
 				nameHold=getIDFromLine(holdLine);
 				holdLine=read.readLine();
 				holdLine=read.readLine();
-				//System.out.println("Level: " + level + " Name: " + nameHold + " HREF: " + dataHold);
 				
 				if (level ==0)
 				{
 					levels[level]=new DefaultMutableTreeNode(new ListInfo(nameHold, dataHold));
+					theMap.put(dataHold, levels[level]);
 					top.add(levels[level]);
 				}
 				else
 				{
 					levels[level] = new DefaultMutableTreeNode(new ListInfo(nameHold, dataHold));
+					theMap.put(dataHold, levels[level]);
 					levels[level-1].add(levels[level]);
 				}
 			}
@@ -161,12 +225,5 @@ public class TableOfContents extends JPanel implements TreeSelectionListener {
         } catch (IOException e) {
 			e.printStackTrace();
 		}       
-    }
-    
-    /**
-     * Create the GUI and show it.  For thread safety,
-     * this method should be invoked from the
-     * event dispatch thread.
-     */
-   
+    }   
 }

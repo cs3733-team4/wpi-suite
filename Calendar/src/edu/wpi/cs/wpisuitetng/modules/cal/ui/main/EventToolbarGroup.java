@@ -65,13 +65,13 @@ public class EventToolbarGroup extends ToolbarGroupView {
 			        panel.add(label);
 			        panel.add(button); 
 			        toolTip = super.createToolTip();  
-			        toolTip.setLayout(new BorderLayout());  
+			        toolTip.setLayout(new BorderLayout()); 
+			        toolTip.setFocusable(false);  
 			        Insets insets = toolTip.getInsets();  
 			        Dimension panelSize = panel.getPreferredSize();  
 			        panelSize.width += insets.left + insets.right+5;  
 			        panelSize.height += insets.top + insets.bottom;  
 			        toolTip.setPreferredSize(panelSize);  
-			        toolTip.setBackground(super.createToolTip().getBackground());
 			        label.setBackground(toolTip.getBackground());
 			        toolTip.add(panel);  
 		        }  
@@ -117,12 +117,12 @@ public class EventToolbarGroup extends ToolbarGroupView {
 			        panel.add(button); 
 			        toolTip = super.createToolTip();  
 			        toolTip.setLayout(new BorderLayout());  
+			        toolTip.setFocusable(false); 
 			        Insets insets = toolTip.getInsets();  
 			        Dimension panelSize = panel.getPreferredSize();  
 			        panelSize.width += insets.left + insets.right+5;  
 			        panelSize.height += insets.top + insets.bottom;  
 			        toolTip.setPreferredSize(panelSize);  
-			        toolTip.setBackground(super.createToolTip().getBackground());
 			        label.setBackground(toolTip.getBackground());
 			        toolTip.add(panel);  
 		        }  
