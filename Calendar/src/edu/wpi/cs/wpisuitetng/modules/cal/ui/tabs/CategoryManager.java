@@ -16,11 +16,8 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -61,7 +58,6 @@ import edu.wpi.cs.wpisuitetng.modules.cal.utils.RequestFocusListener;
 
 public class CategoryManager extends JPanel implements ICategoryRegister {
 	
-	private int tabid;
 	private JPanel leftCategoryList;
 	private JPanel rightCategoryEdit;
 	private JTextField categoryName;
@@ -308,7 +304,6 @@ public class CategoryManager extends JPanel implements ICategoryRegister {
 	 */
 	public void setTabId(int id)
 	{
-		tabid = id;
 	}
 	
 	/**
@@ -396,7 +391,6 @@ public class CategoryManager extends JPanel implements ICategoryRegister {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				attemptSave();
-				MainPanel.getInstance().refreshView();
 			}
 		});
 		
