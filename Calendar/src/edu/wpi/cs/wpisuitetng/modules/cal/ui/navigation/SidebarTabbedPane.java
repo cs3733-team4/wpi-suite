@@ -275,6 +275,7 @@ public class SidebarTabbedPane extends JTabbedPane implements ICategoryRegister
 		categoryScroll.putClientProperty("html.disable", true);
 		categoryScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 	    categoryScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+	    categoryScroll.getVerticalScrollBar().setUnitIncrement(10);
 		categoryScroll.setBorder(new EmptyBorder(5,5,5,5));
 		categoryScroll.setAlignmentY(LEFT_ALIGNMENT);
 		

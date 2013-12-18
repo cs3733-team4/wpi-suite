@@ -72,6 +72,7 @@ public class DayCalendar extends AbstractCalendar
 		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scroll.getVerticalScrollBar().setUnitIncrement(20);
+		scroll.setAutoscrolls(true);
 		scroll.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		holder.setBackground(Colors.TABLE_BACKGROUND);
 		
