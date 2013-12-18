@@ -25,7 +25,6 @@ import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToolTip;
@@ -34,7 +33,6 @@ import javax.swing.ToolTipManager;
 import edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar.ToolbarGroupView;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.documentation.DocumentMainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.ToolTipListener;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs.AddEventDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs.CategoryManager;
 
 public class CategoryToolbarGroup extends ToolbarGroupView {

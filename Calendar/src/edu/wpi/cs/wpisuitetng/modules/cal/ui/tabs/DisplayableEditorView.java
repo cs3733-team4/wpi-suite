@@ -14,6 +14,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.HashMap;
+import java.util.UUID;
 
 import javax.swing.Box;
 import javax.swing.Box.Filler;
@@ -33,16 +35,19 @@ import net.miginfocom.swing.MigLayout;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentStatus;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.SelectableField;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryClient;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.ICategoryRegister;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Category;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Category.SerializedAction;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.DatePicker;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.RequestFocusListener;
 
 /**
  * The UI for AddEvent & AddCommitment
  */
-public class DisplayableEditorView extends JPanel
+public class DisplayableEditorView extends JPanel implements ICategoryRegister
 {
 	protected JTextField nameTextField, participantsTextField;
 	protected final ButtonGroup buttonGroup = new ButtonGroup();
@@ -51,6 +56,7 @@ public class DisplayableEditorView extends JPanel
 	protected JTextArea descriptionTextArea;
 	protected DatePicker startTimeDatePicker, endTimeDatePicker;
 	protected JComboBox<Category> eventCategoryPicker;
+	protected HashMap<UUID, Category> savedMap = new HashMap<>();
 	protected JComboBox<String> commitmentStatusPicker;
 	protected JButton cancelButton, saveButton;
 
@@ -129,6 +135,7 @@ public class DisplayableEditorView extends JPanel
 		for (Category c : CategoryClient.getInstance().getAllCategories())
 		{
 			this.eventCategoryPicker.addItem(c);
+			savedMap.put(c.getUuid(), c);
 		}
 
 		this.add(eventCategoryPicker, "cell 1 3,alignx left,aligny baseline");
@@ -179,6 +186,8 @@ public class DisplayableEditorView extends JPanel
 		saveButton = new JButton("Save");
 		saveButton.setMinimumSize(new Dimension(80, 0));
 		this.add(saveButton, "cell 1 8,alignx right,aligny bottom,tag ok");
+		
+		MainPanel.getInstance().registerCategory(this);
 	}
 	
 	/**
@@ -257,6 +266,19 @@ public class DisplayableEditorView extends JPanel
 			jLabel1.setFont(list.getFont());
 
 			return jPanel1;
+		}
+	}
+
+	@Override
+	public void fire(SerializedAction sa) {
+		if (savedMap.get(sa.uuid) != null) 
+		{
+			eventCategoryPicker.removeItem(savedMap.get(sa.uuid));
+		}
+		if (!sa.isDeleted)
+		{
+			eventCategoryPicker.addItem(sa.object);
+			savedMap.put(sa.uuid, sa.object);
 		}
 	}
 }

@@ -265,6 +265,15 @@ public class Event extends AbstractModel implements Displayable
 	}
 
 	/**
+	 * 
+	 */
+	public Event addCategory(UUID category)
+	{
+		setCategory(category);
+		return this;
+	}
+	
+	/**
 	 * @param category
 	 *            the category to set
 	 */

@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CachingClient;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryClient;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 public class Category extends AbstractModel
@@ -44,6 +45,17 @@ public class Category extends AbstractModel
 	{
 	}
 
+    /**
+     * 
+     * @param name the name of the category
+     * @return the category after name has been set
+     */
+    public Category addName(String name)
+    {
+    	setName(name);
+    	return this;
+    }
+
 	/**
 	 * Sets the name of the category
 	 * 
@@ -64,6 +76,17 @@ public class Category extends AbstractModel
 	{
 		return this.name;
 	}
+
+    /**
+     * 
+     * @param color the color of the category
+     * @return the category after color has been set
+     */
+    public Category addColor(Color color)
+    {
+    	setColor(color);
+    	return this;
+    }
 
 	/**
 	 * Sets the color of the category
@@ -106,8 +129,7 @@ public class Category extends AbstractModel
 	@Override
 	public void delete()
 	{
-		// TODO Auto-generated method stub
-
+        CategoryClient.getInstance().delete(this);
 	}
 
 	@Override

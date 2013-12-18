@@ -24,6 +24,7 @@ import org.junit.Test;
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.cal.MockData;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.server.EventEntityManager;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
@@ -38,16 +39,16 @@ public class EventEntityManagerTest {
         DateTime three=new DateTime(2000,1,3,3,30, DateTimeZone.UTC); // Datetime at Jan 3rd, 2000: 3:30
         DateTime four=new DateTime(2000,1,4,4,30, DateTimeZone.UTC);  // Datetime at Jan 4th, 2000: 4:30
         
+        Category cat1 = new Category();
         
-        
-        Event e = new Event().addStartTime(one).addEndTime(two).addName("First");
-        String eString=e.toJSON();
+        Event e = new Event().addStartTime(one).addEndTime(two).addName("First").addCategory(cat1.getUuid());
+        String event1String=e.toJSON();
         
         Event ee=new Event().addStartTime(two).addEndTime(three).addName("Second");
-        String eeString=ee.toJSON();
+        String event2String=ee.toJSON();
         
         Event eee=new Event().addStartTime(three).addEndTime(four).addName("Third");
-        String eeeString=eee.toJSON();
+        String event3String=eee.toJSON();
         
         
         Project p=new Project("p","26");
@@ -77,11 +78,11 @@ public class EventEntityManagerTest {
         @Test
         public void testMakeEntity() throws WPISuiteException {
                 EventEntityManager eem = new EventEntityManager(db);
-                assertNotNull("An Event Entity Manager will return an event upon sucessfully sending an Event into the database", eem.makeEntity(ses1, eString));
+                assertNotNull("An Event Entity Manager will return an event upon sucessfully sending an Event into the database", eem.makeEntity(ses1, event1String));
                 assertEquals("After making events, Count() will return the updated # of events", 1, eem.Count());
-                assertNotNull("An Event Entity Manager will return an event upon sucessfully sending an Event into the database", eem.makeEntity(ses1, eeString));
+                assertNotNull("An Event Entity Manager will return an event upon sucessfully sending an Event into the database", eem.makeEntity(ses1, event2String));
                 assertEquals("After making events, Count() will return the updated # of events", 2, eem.Count());
-                assertNotNull("An Event Entity Manager will return an event upon sucessfully sending an Event into the database", eem.makeEntity(ses1, eeeString));
+                assertNotNull("An Event Entity Manager will return an event upon sucessfully sending an Event into the database", eem.makeEntity(ses1, event3String));
                 assertEquals("After making events, Count() will return the updated # of events", 3, eem.Count());
                 //Testing that each individual event is saved in the database correctly is tested in the Get* tests
         }
@@ -89,7 +90,7 @@ public class EventEntityManagerTest {
         @Test
         public void testGetAllSingle() throws WPISuiteException {
                 EventEntityManager eem = new EventEntityManager(db);
-                eem.makeEntity(ses1, eString);
+                eem.makeEntity(ses1, event1String);
                 
                 assertEquals("GetAll will return event event in the database in Event[] form; in the case of only 1 event being stored, it will return that event", e.getName(), eem.getAll(ses1)[0].getName());
                 assertEquals("GetAll will return event event in the database in Event[] form; in the case of only 1 event being stored, it will return that event", e.getStart(), eem.getAll(ses1)[0].getStart());
@@ -101,9 +102,9 @@ public class EventEntityManagerTest {
         public void testGetAllMultiple() throws WPISuiteException {
                 EventEntityManager eem = new EventEntityManager(db);
                 // Adding events to the database
-                eem.makeEntity(ses1, eString);
-                eem.makeEntity(ses1, eeString);
-                eem.makeEntity(ses1, eeeString);
+                eem.makeEntity(ses1, event1String);
+                eem.makeEntity(ses1, event2String);
+                eem.makeEntity(ses1, event3String);
                 Event[] eList=eem.getAll(ses1);
                 boolean hasFirst=false, hasSecond=false, hasThird=false;
                 
@@ -123,8 +124,8 @@ public class EventEntityManagerTest {
         @Test
         public void testDeleteEntity() throws WPISuiteException {
                 EventEntityManager eem = new EventEntityManager(db);
-                eem.makeEntity(ses1, eString);
-                eem.makeEntity(ses1, eeString);
+                eem.makeEntity(ses1, event1String);
+                eem.makeEntity(ses1, event2String);
                 assertEquals("At this point, there should be 2 events in the database", 2, eem.Count());											// Events from 1/1/2000 1:00 - 1/2/2000 1:00
                 assertEquals("The deleteEntity method will return true if the deletion was successful", true, eem.deleteEntity(ses1, e.getUuid().toString()));
                 assertEquals("At this point, there should be only one event in the database", 1, eem.Count());
@@ -135,9 +136,9 @@ public class EventEntityManagerTest {
         @Test
         public void testDeleteAll() throws WPISuiteException {
                 EventEntityManager eem = new EventEntityManager(db);
-                eem.makeEntity(ses1, eString);
-                eem.makeEntity(ses1, eeString);
-                eem.makeEntity(ses1, eeeString);
+                eem.makeEntity(ses1, event1String);
+                eem.makeEntity(ses1, event2String);
+                eem.makeEntity(ses1, event3String);
                 assertEquals("At this point, there should be 3 events in the database", 3, eem.Count());											
                 eem.deleteAll(ses1);
                 assertEquals("At this point, there should be no events for session 1 in the database", 0, eem.Count());

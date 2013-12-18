@@ -305,6 +305,9 @@ public class Request extends RequestModel {
 		if (running) {
 			throw new IllegalStateException("Request is being sent.");
 		}
+		if (o == null) {
+			throw new IllegalStateException("Adding null observer");
+		}
 
 		observers.add(o);
 	}
@@ -330,6 +333,8 @@ public class Request extends RequestModel {
 		}
 
 		for (RequestObserver obs : observers) {
+			if (obs == null)
+				continue;
 			obs.responseSuccess((IRequest) this);
 		}
 	}
