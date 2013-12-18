@@ -43,13 +43,6 @@ public class CacheTest {
 		assertTrue(c.timeOrderedCallIterator("something") != null);
 	}
 	
-	@Test(expected=NullPointerException.class)
-	public void lowLevelIteraterFromCacheNPE() {
-		Cache<String, String> c = new Cache<>("");
-		c.put("something", "epic!!!");
-		c.timeOrderedCallIterator("borked");
-	}
-	
 	@Test
 	public void highLevelIteraterFromCacheWorksOnce() {
 		Cache<String, String> c = new Cache<>("");
