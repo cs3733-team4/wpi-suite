@@ -30,7 +30,6 @@ import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthDayTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthItemTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.week.WeekCalendarTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.MonthsTest;
-import edu.wpi.cs.wpisuitetng.modules.cal.navigation.GoToPanelTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MainCalendarNavigationTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.SidebarTabbedPaneTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.CategoryManagerTest;
