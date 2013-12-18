@@ -11,6 +11,8 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day;
 
 import java.awt.BorderLayout;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -19,6 +21,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
@@ -90,7 +93,7 @@ public class DayCalendar extends AbstractCalendar
 		dayTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		this.add(dayTitle, BorderLayout.NORTH);
 
-		this.displayableList = getVisibleEvents();
+		this.displayableList = getVisibleDisplayables();
 		
 		this.current = new DayPanel();
 		this.current.setEvents(getDisplayablesInInterval(time,time.plusDays(1)), time);
@@ -98,11 +101,6 @@ public class DayCalendar extends AbstractCalendar
 		
 		this.holder.add(new DayGridLabel(), BorderLayout.WEST);
 		this.holder.add(this.current, BorderLayout.CENTER);
-		BoundedRangeModel jsb = scroll.getVerticalScrollBar().getModel();
-		double day = time.getMinuteOfDay();
-		day /= time.minuteOfDay().getMaximumValue();
-		day *= (jsb.getMaximum()) - jsb.getMinimum();
-		jsb.setValue((int)day);
 		// notify mini-calendar to change
 		MainPanel.getInstance().miniMove(time);
 	}
@@ -111,7 +109,7 @@ public class DayCalendar extends AbstractCalendar
 	 * Get visible events for the current day view
 	 * @return returns the list of events to display
 	 */
-	private List<Displayable> getVisibleEvents()
+	private List<Displayable> getVisibleDisplayables()
 	{
 		// Set up from and to datetime for search
 		MutableDateTime f = new MutableDateTime(time);
@@ -120,32 +118,31 @@ public class DayCalendar extends AbstractCalendar
 		f.addDays(1);
 		DateTime to = f.toDateTime();
 		
-		// Filter events by date
-		List<Event> visibleEvents = EventModel.getInstance().getEvents(from, to);
-		
-		 // Filter commitments by date
-		List<Commitment> visibleCommitments = CommitmentModel.getInstance().getCommitments(from, to);
-		
 		// Return list of events to be displayed
-		List<Displayable> allDisplayablesList = new ArrayList<Displayable>();
-		allDisplayablesList.addAll(visibleCommitments);
-		allDisplayablesList.addAll(visibleEvents);
-		return allDisplayablesList;
+		List<Displayable> visibleDisplayables = new ArrayList<Displayable>();
+		visibleDisplayables.addAll(EventModel.getInstance().getEvents(from, to));
+		visibleDisplayables.addAll(CommitmentModel.getInstance().getCommitments(from, to));
+		
+		Collections.sort(visibleDisplayables, new Comparator<Displayable>() {
+			public int compare(Displayable d1, Displayable d2) {
+		        return d1.getStart().getMinuteOfDay() < d2.getStart().getMinuteOfDay() ? -1 :
+		        		d1.getStart().getMinuteOfDay() > d2.getStart().getMinuteOfDay() ? 1 : 0;
+		    }
+		});
+		
+		return visibleDisplayables;
 	}
 
 	@Override
 	public void next()
 	{
-		this.time = Months.nextDay(this.time);
-		this.generateDay();
+		display(Months.nextDay(this.time));
 	}
 
 	@Override
 	public void previous()
 	{
-		this.time = Months.prevDay(this.time);
-		this.generateDay();
-
+		display(Months.prevDay(this.time));
 	}
 
 	@Override
@@ -154,8 +151,32 @@ public class DayCalendar extends AbstractCalendar
 		this.time = newTime;
 		this.generateDay();
 
-		this.current.repaint();
-		
+		SwingUtilities.invokeLater(new Runnable() {
+			
+			@Override
+			public void run()
+			{
+				// Scroll to now
+				BoundedRangeModel jsb = scroll.getVerticalScrollBar().getModel();
+				
+				double day;
+				
+				if(!displayableList.isEmpty())
+				{
+					day = displayableList.get(0).getStart().getMinuteOfDay();
+				}else
+				{
+					day = DateTime.now().getMinuteOfDay();
+				}
+				
+				day-= (day > 60) ? 60 : day;
+				
+				day /= time.minuteOfDay().getMaximumValue();
+				day *= (jsb.getMaximum()-jsb.getMinimum());
+				jsb.setValue((int) day);
+			}
+		});
+
 		MainPanel.getInstance().revalidate();
 		MainPanel.getInstance().repaint();
 	}

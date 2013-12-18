@@ -125,7 +125,6 @@ public class SidebarTabbedPane extends JTabbedPane{
         boldRedTextStyle = new SimpleAttributeSet(normalTextStyle);
         StyleConstants.setBold(boldRedTextStyle, true);
         StyleConstants.setForeground(boldRedTextStyle, Color.MAGENTA);
-		
 	}
 	
 	/**
