@@ -42,6 +42,8 @@ import edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs.AddCommitmentDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs.AddEventDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs.CategoryManager;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.BareBonesBrowserLaunch;
+import edu.wpi.cs.wpisuitetng.network.Network;
+import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 
 public class DocumentMainPanel extends JFrame{
 
@@ -97,8 +99,7 @@ public class DocumentMainPanel extends JFrame{
     	this.setTitle("YOCO Calendar Help");
     	this.setLayout(new BorderLayout());
     	
-    	//serverLocation = Network.getInstance().makeRequest("docs/Calendar/", HttpMethod.GET).getUrl().toString().replace("API/", "");
-        serverLocation = "http://users.wpi.edu/~bkmcleod/Test%20Out/";
+    	serverLocation = Network.getInstance().makeRequest("docs/Calendar/", HttpMethod.GET).getUrl().toString().replace("API/", "");
     	System.out.println(serverLocation);
     	tableOfContents=new TableOfContents(serverLocation);
     	try
