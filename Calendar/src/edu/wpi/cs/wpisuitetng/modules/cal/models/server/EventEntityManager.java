@@ -55,7 +55,8 @@ public class EventEntityManager extends CachedEntityManager<Event> {
 		if(!db.save(newEvent, s.getProject())) {
 			throw new WPISuiteException();
 		}
-		PollPusher.getInstance(Event.class).updated(updated(newEvent));
+		if(newEvent.isProjectwide())
+			PollPusher.getInstance(Event.class).updated(updated(newEvent));
 		return newEvent;
 	}
 	
@@ -120,7 +121,8 @@ public class EventEntityManager extends CachedEntityManager<Event> {
 		if (model.isProjectwide())
 			model.setProject(s.getProject());
 		db.save(model);
-		PollPusher.getInstance(Event.class).updated(updated(model));
+		if(model.isProjectwide())
+			PollPusher.getInstance(Event.class).updated(updated(model));
 	}
 	
 
@@ -132,10 +134,10 @@ public class EventEntityManager extends CachedEntityManager<Event> {
 	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#deleteEntity(Session, String) */
 	@Override
 	public boolean deleteEntity(Session s, String id) throws WPISuiteException {
-		boolean res = (db.delete(getEntity(s, id)[0]) != null) ? true : false;
-		if (res)
+		Event toDelete = db.delete(getEntity(s, id)[0]);
+		if (toDelete != null && toDelete.isProjectwide())
 			PollPusher.getInstance(Event.class).updated(deleted(UUID.fromString(id)));
-		return res;
+		return toDelete != null;
 	}
 	
 	/**

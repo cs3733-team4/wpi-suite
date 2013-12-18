@@ -13,6 +13,7 @@ import java.awt.Color;
 import java.util.UUID;
 
 import org.joda.time.DateTime;
+import com.google.gdata.data.calendar.CalendarEventEntry;
 import org.joda.time.Interval;
 
 /**
@@ -122,6 +123,11 @@ public interface Displayable
 	public String toJSON();
 	
 	/**
+	 * 
+	 * @return this Displayable event converted to a GoogleCalendar compatable entry
+	 */
+	public CalendarEventEntry getGoogleCalendarEntry();
+	/*
 	 * Gets the start time of the event on a given day.
 	 * @param givenDay the day to check
 	 * @return the start time for that day

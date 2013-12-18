@@ -19,14 +19,16 @@ import org.joda.time.Interval;
 import org.joda.time.MutableDateTime;
 import org.joda.time.format.DateTimeFormat;
 
+import com.google.gdata.data.PlainTextConstruct;
+import com.google.gdata.data.calendar.CalendarEventEntry;
+import com.google.gdata.data.extensions.When;
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentStatus;
-import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CachingClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CommitmentClient;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
@@ -45,9 +47,9 @@ public class Commitment extends AbstractModel implements Displayable
 	private String participants;
 	private boolean isProjectCommitment;
 	private User owner;
-	private CommitmentStatus status;
+	private Status status;
 	// Default status for new commitments.
-	public static final CommitmentStatus DEFAULT_STATUS = CommitmentStatus.NotStarted;
+	public static final Status DEFAULT_STATUS = Status.NOT_STARTED;
 
 	/**
 	 * @param name the name of the event
@@ -329,6 +331,37 @@ public class Commitment extends AbstractModel implements Displayable
 		return uuid;
 	}
 
+	public static class SerializedAction extends CachingClient.SerializedAction<Commitment>
+	{
+		public SerializedAction(Commitment e, UUID eventID, boolean b)
+		{
+			object = e;
+			uuid = eventID;
+			isDeleted = b;
+		}
+	}
+	
+	@Override
+	public CalendarEventEntry getGoogleCalendarEntry() {
+		CalendarEventEntry myEntry = new CalendarEventEntry();
+
+		myEntry.setTitle(new PlainTextConstruct(this.getName()));
+		myEntry.setContent(new PlainTextConstruct(this.getDescription()));
+
+		//oh what fun it is to have two identically named classes
+		com.google.gdata.data.DateTime dueTime = new com.google.gdata.data.DateTime(this.duedate);
+		When eventTimes = new When();
+		eventTimes.setEndTime(dueTime);
+		myEntry.addTime(eventTimes);
+		
+		return myEntry;
+	}
+	
+	public void select(MonthCalendar monthCalendar)
+	{
+		monthCalendar.select(this);
+	}
+	
 	/**
 	 * this is primarily used for multiday events
 	 * 
@@ -370,12 +403,12 @@ public class Commitment extends AbstractModel implements Displayable
 	 * Gets the current status the commitment is at.
 	 * @return the current commitment status as a String.
 	 */
-	public CommitmentStatus getStatus()
+	public Status getStatus()
 	{
 		return this.status;
 	}
 	
-	public Commitment addStatus(CommitmentStatus status) {
+	public Commitment addStatus(Status status) {
 		this.status=status;
 		return this;
 	}
@@ -384,25 +417,31 @@ public class Commitment extends AbstractModel implements Displayable
 	 * Set the status to a given status input.
 	 * @param status
 	 */
-	public void setStatus(CommitmentStatus status)
+	public void setStatus(Status status)
 	{
 		this.status = status;
 	}
 	
-	public Color getStatusColor()
+	/**
+	 * an enum to describe the commitment type
+	 */
+	public enum Status
 	{
-		return status == CommitmentStatus.NotStarted ? Colors.COMMITMENT_NOT_STARTED :
-				status == CommitmentStatus.InProgress ? Colors.COMMITMENT_IN_PROGRESS :
-														Colors.COMMITMENT_COMPLETE;
-	}
-	
-	public static class SerializedAction extends CachingClient.SerializedAction<Commitment>
-	{
-		public SerializedAction(Commitment e, UUID eventID, boolean b)
+		NOT_STARTED("Not Started"),
+		IN_PROGRESS("In Progress"),
+		COMPLETE("Completed");
+		
+		private String status;
+		
+		private Status(String s)
 		{
-			object = e;
-			uuid = eventID;
-			isDeleted = b;
+			this.status = s;
+		}
+		
+		@Override
+		public String toString()
+		{
+			return status;
 		}
 	}
 }

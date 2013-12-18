@@ -41,7 +41,6 @@ import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.MutableDateTime;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentStatus;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
@@ -106,7 +105,24 @@ public class DayItem extends JPanel
 			setBorder(new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new LineBorder(bg.darker()), new EmptyBorder(6, 6, 6, 6))));
 		}else if(displayable instanceof Commitment)
 		{
-			setBorder(new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new MatteBorder(1, 0, 0, 0, ((Commitment) displayable).getStatusColor()), new CompoundBorder(new LineBorder(bg.darker()), new EmptyBorder(0, 6, 0, 6)))));
+			Color b;
+			Commitment.Status s = ((Commitment) displayable).getStatus();
+			switch(s)
+			{
+				case COMPLETE:
+					b = new Color(192,255,192);
+					break;
+				case IN_PROGRESS:
+					b = new Color(255,255,192);
+					break;
+				case NOT_STARTED:
+					b = new Color(240,110, 110);
+					break;
+				default:
+					b = Color.BLACK;
+					break;
+			}
+			setBorder(new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new MatteBorder(1, 0, 0, 0,b ), new CompoundBorder(new LineBorder(bg.darker()), new EmptyBorder(0, 6, 0, 6)))));
 			top.setEnabled(false);
 			bottom.setEnabled(false);
 		}
@@ -410,8 +426,27 @@ public class DayItem extends JPanel
 			setBorder(b ? new CompoundBorder(new LineBorder(displayable.getColor().darker()), new CompoundBorder(new LineBorder(displayable.getColor().darker()), new EmptyBorder(6, 6, 6, 6)))
 						: new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new LineBorder(displayable.getColor().darker()), new EmptyBorder(6, 6, 6, 6))));
 		else if(displayable instanceof Commitment)
-			setBorder(b ? new CompoundBorder(new LineBorder(displayable.getColor().darker()), new CompoundBorder(new MatteBorder(1, 0, 0, 0, ((Commitment) displayable).getStatusColor()), new CompoundBorder(new LineBorder(Colors.TABLE_GRAY_HEADER.darker()), new EmptyBorder(0, 6, 0, 6))))
-						: new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new MatteBorder(1, 0, 0, 0, ((Commitment) displayable).getStatusColor()), new CompoundBorder(new LineBorder(Colors.TABLE_GRAY_HEADER.darker()), new EmptyBorder(0, 6, 0, 6)))));
+		{
+			Color c;
+			Commitment.Status s = ((Commitment) displayable).getStatus();
+			switch(s)
+			{
+				case COMPLETE:
+					c = new Color(192,255,192);
+					break;
+				case IN_PROGRESS:
+					c = new Color(255,255,192);
+					break;
+				case NOT_STARTED:
+					c = new Color(240,110, 110);
+					break;
+				default:
+					c = Color.BLACK;
+					break;
+			}
+			setBorder(b ? new CompoundBorder(new LineBorder(displayable.getColor().darker()), new CompoundBorder(new MatteBorder(1, 0, 0, 0, c), new CompoundBorder(new LineBorder(Colors.TABLE_GRAY_HEADER.darker()), new EmptyBorder(0, 6, 0, 6))))
+						: new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new MatteBorder(1, 0, 0, 0, c), new CompoundBorder(new LineBorder(Colors.TABLE_GRAY_HEADER.darker()), new EmptyBorder(0, 6, 0, 6)))));
+		}
 	}
 
 	public Displayable getDisplayable() {
@@ -422,6 +457,8 @@ public class DayItem extends JPanel
 	{
 		if(!this.displayable.getStart().equals(t))
 		{
+			if(puppet != null)
+				puppet.updateTime(t);
 			this.displayable.setStart(t);
 			if(this.displayable instanceof Event)
 				((Event) this.displayable).setEnd(t.plus(this.length.toDuration()));
@@ -451,9 +488,9 @@ public class DayItem extends JPanel
         	if (((Commitment) displayable).getStatus() != null)
         	{
         		// Set the appropriate url source based on the status.
-        		if (((Commitment) displayable).getStatus() == CommitmentStatus.InProgress)
+        		if (((Commitment) displayable).getStatus() == Commitment.Status.IN_PROGRESS)
         			imgurl = getClass().getResource("/edu/wpi/cs/wpisuitetng/modules/cal/img/commitment_in_progress.png");
-        		else if (((Commitment) displayable).getStatus() == CommitmentStatus.Complete)
+        		else if (((Commitment) displayable).getStatus() == Commitment.Status.COMPLETE)
         			imgurl = getClass().getResource("/edu/wpi/cs/wpisuitetng/modules/cal/img/commitment_complete.png");
         	}
 			lblTimeInfo.setText("<html></i><b><font face = \"DejaVu Sans\""

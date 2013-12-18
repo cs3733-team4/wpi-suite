@@ -27,6 +27,8 @@ import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
 /**
  * This is the entity manager for the Commitment in the
  * CommitmentManager module.
+ *
+ * @version $Revision: 1.0 $
  */
 public class CommitmentEntityManager extends CachedEntityManager<Commitment> {
 	
@@ -56,7 +58,8 @@ public class CommitmentEntityManager extends CachedEntityManager<Commitment> {
 		if(!db.save(newCommitment, s.getProject())) {
 			throw new WPISuiteException();
 		}
-		PollPusher.getInstance(Commitment.class).updated(updated(newCommitment));
+		if(newCommitment.isProjectwide())
+			PollPusher.getInstance(Commitment.class).updated(updated(newCommitment));
 		return newCommitment;
 	}
 	
@@ -118,7 +121,8 @@ public class CommitmentEntityManager extends CachedEntityManager<Commitment> {
 		if (model.isProjectwide())
 			model.setProject(s.getProject());
 		db.save(model);
-		PollPusher.getInstance(Commitment.class).updated(updated(model));
+		if(model.isProjectwide())
+			PollPusher.getInstance(Commitment.class).updated(updated(model));
 	}
 	
 
@@ -130,10 +134,10 @@ public class CommitmentEntityManager extends CachedEntityManager<Commitment> {
 	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#deleteEntity(Session, String) */
 	@Override
 	public boolean deleteEntity(Session s, String id) throws WPISuiteException {
-		boolean res = (db.delete(getEntity(s, id)[0]) != null) ? true : false;
-		if (res)
+		Commitment toDelete = db.delete(getEntity(s, id)[0]);
+		if (toDelete != null && toDelete.isProjectwide())
 			PollPusher.getInstance(Commitment.class).updated(deleted(UUID.fromString(id)));
-		return res;
+		return toDelete != null;
 	}
 	
 	/**

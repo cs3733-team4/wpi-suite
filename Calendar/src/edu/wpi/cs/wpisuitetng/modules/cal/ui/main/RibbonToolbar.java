@@ -16,15 +16,21 @@ public class RibbonToolbar extends DefaultToolbarView {
 	public DisplayableToolbarGroup eventButtonGroup;
 	public CategoryToolbarGroup categoryButtonGroup;
 	public HelpToolbarGroup helpButtonGroup;
+	public GoogleCalendarSynchronizationGroup syncGroup;
 	
 	public RibbonToolbar(final MainPanel mMainPanel, boolean visible) {
 		helpButtonGroup = new HelpToolbarGroup();
 		eventButtonGroup = new DisplayableToolbarGroup(mMainPanel);
 		categoryButtonGroup = new CategoryToolbarGroup(mMainPanel);
+		syncGroup = new GoogleCalendarSynchronizationGroup();
+		
+		this.setFocusable(false);
+		
 		this.addGroup(eventButtonGroup);
 		this.addGroup(categoryButtonGroup);
-		this.setFocusable(false);
 		this.addGroup(helpButtonGroup);
+		this.addGroup(syncGroup);
+		
 		eventButtonGroup.disableRemoveEventButton();
 	}
 }

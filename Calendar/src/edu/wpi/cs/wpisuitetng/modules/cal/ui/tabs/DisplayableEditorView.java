@@ -32,7 +32,6 @@ import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 
 import net.miginfocom.swing.MigLayout;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentStatus;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.SelectableField;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.ICategoryRegister;
@@ -148,8 +147,8 @@ public class DisplayableEditorView extends JPanel implements ICategoryRegister
 
 		commitmentStatusPicker = new JComboBox<>();
 		this.commitmentStatusPicker.addItem(Commitment.DEFAULT_STATUS.toString());
-		this.commitmentStatusPicker.addItem(CommitmentStatus.InProgress.toString());
-		this.commitmentStatusPicker.addItem(CommitmentStatus.Complete.toString());
+		this.commitmentStatusPicker.addItem(Commitment.Status.IN_PROGRESS.toString());
+		this.commitmentStatusPicker.addItem(Commitment.Status.COMPLETE.toString());
 
 		this.add(commitmentStatusPicker, "cell 1 4,alignx left,aligny baseline");
 		}

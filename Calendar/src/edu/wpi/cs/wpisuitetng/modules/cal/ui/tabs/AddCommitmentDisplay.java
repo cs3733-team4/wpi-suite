@@ -24,14 +24,11 @@ import org.joda.time.MutableDateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentStatus;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.DatePickerListener;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 
 /**
  * UI for adding and editing a commitment
- * @author TeamYOCO
- *
  */
 public class AddCommitmentDisplay extends DisplayableEditorView
 {
@@ -174,11 +171,11 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		e.setParticipants(participantsTextField.getText().trim());
 		e.setCategory(((Category)eventCategoryPicker.getSelectedItem()).getUuid());
 		if(commitmentStatusPicker.getSelectedItem()=="Not Started")
-			e.setStatus(CommitmentStatus.NotStarted);
+			e.setStatus(Commitment.Status.NOT_STARTED);
 		else if(commitmentStatusPicker.getSelectedItem()=="In Progress")
-			e.setStatus(CommitmentStatus.InProgress);
+			e.setStatus(Commitment.Status.IN_PROGRESS);
 		else
-			e.setStatus(CommitmentStatus.Complete);
+			e.setStatus(Commitment.Status.COMPLETE);
 		
 		if (isEditingCommitment) {
 			e.setUuid(existingCommitmentID);

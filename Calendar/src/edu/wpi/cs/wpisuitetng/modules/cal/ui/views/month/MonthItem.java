@@ -28,7 +28,6 @@ import javax.swing.border.EmptyBorder;
 
 import org.joda.time.DateTime;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentStatus;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
@@ -41,6 +40,12 @@ import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
  */
 public class MonthItem extends JPanel
 {	
+	
+	public static final String UNSTARTED_COMMITMENT_ICON = "/edu/wpi/cs/wpisuitetng/modules/cal/img/commitment_unstarted.png";
+	public static final String COMMITMENT_IN_PROGRESS_ICON = "/edu/wpi/cs/wpisuitetng/modules/cal/img/commitment_in_progress.png";
+	public static final String FINISHED_COMMITMENT = "/edu/wpi/cs/wpisuitetng/modules/cal/img/commitment_complete.png";
+	
+	
 	private JLabel time = new JLabel(), name = new JLabel(), arrow = new JLabel("");
 	private JPanel categoryColor = new JPanel();
 	private DateTime currentTime;
@@ -110,18 +115,26 @@ public class MonthItem extends JPanel
         	arrow.setForeground(Colors.COMMITMENT_NOT_STARTED);
         	arrow.setText("\uFF01");
         	
-        	try {
+        	try 
+        	{
         		// Get the appropriate image based on the commitment's status and put it on the label.
-        		if (((Commitment) ndisp).getStatus() != null)
+        		Commitment castedDisp = (Commitment) ndisp;
+        		Image img = ImageIO.read(getClass().getResource(UNSTARTED_COMMITMENT_ICON));
+        		
+        		if (Commitment.Status.IN_PROGRESS == castedDisp.getStatus())
         		{
-        			Image img = ImageIO.read(getClass().getResource("/edu/wpi/cs/wpisuitetng/modules/cal/img/commitment_unstarted.png"));
-        			if (((Commitment) ndisp).getStatus() == CommitmentStatus.InProgress)
-        				img = ImageIO.read(getClass().getResource("/edu/wpi/cs/wpisuitetng/modules/cal/img/commitment_in_progress.png"));
-        			else if (((Commitment) ndisp).getStatus() == CommitmentStatus.Complete)
-        				img = ImageIO.read(getClass().getResource("/edu/wpi/cs/wpisuitetng/modules/cal/img/commitment_complete.png"));
-        		    arrow = new JLabel(new ImageIcon(img));
-        		}    		    
-    		} catch (IOException ex) {}
+        			img = ImageIO.read(getClass().getResource(COMMITMENT_IN_PROGRESS_ICON));
+        		}
+        		else if (Commitment.Status.COMPLETE == castedDisp.getStatus())
+        		{
+        			img = ImageIO.read(getClass().getResource(FINISHED_COMMITMENT));
+        		}
+        		
+        		arrow = new JLabel(new ImageIcon(img));
+    		} 
+        	catch (IOException ex) {
+        		ex.printStackTrace();
+        	}
         	
         	categoryColor.setBackground((Colors.TABLE_BACKGROUND));
 	    	categoryColor.setBorder(new EmptyBorder(0, 0, 0, 0));

@@ -20,7 +20,6 @@ import org.joda.time.DateTimeZone;
 
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
-import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
 import edu.wpi.cs.wpisuitetng.modules.cal.MockData;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.server.CommitmentEntityManager;
@@ -39,13 +38,13 @@ public class CommitmentEntityManagerTest {
         
         
         
-        Commitment e = new Commitment().addName("First").setDueDate(one).addStatus(CommitmentStatus.NotStarted);
+        Commitment e = new Commitment().addName("First").setDueDate(one).addStatus(Commitment.Status.NOT_STARTED);
         String eString=e.toJSON();
         
-        Commitment ee=new Commitment().setDueDate(two).addName("Second").addStatus(CommitmentStatus.InProgress);
+        Commitment ee=new Commitment().setDueDate(two).addName("Second").addStatus(Commitment.Status.IN_PROGRESS);
         String eeString=ee.toJSON();
         
-        Commitment eee=new Commitment().setDueDate(three).addName("Third").addStatus(CommitmentStatus.Complete);
+        Commitment eee=new Commitment().setDueDate(three).addName("Third").addStatus(Commitment.Status.COMPLETE);
 
         String eeeString=eee.toJSON();
         
@@ -94,7 +93,7 @@ public class CommitmentEntityManagerTest {
                 cem.makeEntity(ses1, eString);
                 
                 assertEquals("GetAll will return commitments in the database in Commitment[] form; in the case of only 1 commitment being stored, it will return that Commitment", e.getName(), cem.getAll(ses1)[0].getName());
-                assertEquals("GetAll will return commitments in the database in Commitment[] form; in the case of only 1 commitment being stored, it will return that Commitment", e.getStart(), cem.getAll(ses1)[0].getStart());
+                assertEquals("GetAll will return commitments in the database in Commitment[] form; in the case of only 1 commitment being stored, it will return that Commitment", e.getEnd(), cem.getAll(ses1)[0].getEnd());
                 assertEquals("GetAll will return commitments in the database in Commitment[] form; in the case of only 1 commitment being stored, it will return that Commitment", e.getStatus(), cem.getAll(ses1)[0].getStatus());
 
         }
