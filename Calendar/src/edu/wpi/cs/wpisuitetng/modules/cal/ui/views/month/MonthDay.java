@@ -26,7 +26,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.joda.time.DateTime;
-import org.joda.time.Interval;
 import org.joda.time.MutableDateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.DayStyle;
@@ -54,7 +53,7 @@ public class MonthDay extends JPanel
 	
 	public MonthDay(DateTime initDay, DayStyle style, final MonthCalendar parent)
 	{
-		this.day = initDay.withMillisOfDay(0);
+		this.day = initDay;
 		this.parent = parent;
 		this.style = style;
 		Color grayit = Colors.TABLE_GRAY_HEADER, textit = Colors.TABLE_TEXT, bg = Colors.TABLE_BACKGROUND;
@@ -134,12 +133,12 @@ public class MonthDay extends JPanel
 					Displayable selected = MainPanel.getInstance().getSelectedEvent();
 					if (selected != null)
 					{
-						MutableDateTime newTime = new MutableDateTime(selected.getInterval().getStart());
+						MutableDateTime newTime = new MutableDateTime(selected.getStart());
 						
 						newTime.setYear(releasedDay.day.getYear());
 						newTime.setDayOfYear(releasedDay.day.getDayOfYear());
 						
-						selected.setInterval(new Interval(newTime.toDateTime(), selected.getInterval().toDuration()));
+						selected.setTime(newTime.toDateTime());
 						
 						selected.update();
 					}
@@ -267,7 +266,7 @@ public class MonthDay extends JPanel
 						return 1;
 				}
 				//if it gets to this poing then they are both commitments, or both multi day events, or both single day events
-				if (o1.getInterval().getStart().isBefore(o2.getInterval().getStart()))
+				if (o1.getStart().isBefore(o2.getStart()))
 					return -1;
 				else//will default to 1, no need to check if they start at the same time....
 					return 1;

@@ -30,11 +30,11 @@ public class CommitmentClientTest {
     
     
     
-    Commitment e = new Commitment().addName("First").setDate(one);
+    Commitment e = new Commitment().addName("First").setDueDate(one);
     
-    Commitment ee=new Commitment().setDate(two).addName("Second");
+    Commitment ee=new Commitment().setDueDate(two).addName("Second");
     
-    Commitment eee=new Commitment().setDate(three).addName("Third");
+    Commitment eee=new Commitment().setDueDate(three).addName("Third");
 
 	
 	   @Test

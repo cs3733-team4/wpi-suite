@@ -130,8 +130,8 @@ public class DayCalendar extends AbstractCalendar
 		
 		Collections.sort(visibleDisplayables, new Comparator<Displayable>() {
 			public int compare(Displayable d1, Displayable d2) {
-		        return d1.getInterval().getStart().getMinuteOfDay() < d2.getInterval().getStart().getMinuteOfDay() ? -1 :
-		        		d1.getInterval().getStart().getMinuteOfDay() > d2.getInterval().getStart().getMinuteOfDay() ? 1 : 0;
+		        return d1.getStart().getMinuteOfDay() < d2.getStart().getMinuteOfDay() ? -1 :
+		        		d1.getStart().getMinuteOfDay() > d2.getStart().getMinuteOfDay() ? 1 : 0;
 		    }
 		});
 		
@@ -192,9 +192,6 @@ public class DayCalendar extends AbstractCalendar
 
 		for (Displayable d : displayableList)
 		{
-//			if (d.getInterval().toDuration().getStandardHours()>24)
-//				continue;
-
 			if (isDisplayableInInterval(d, mInterval))
 			{
 				retrievedDisplayables.add(d);
@@ -206,7 +203,7 @@ public class DayCalendar extends AbstractCalendar
 	
 	private boolean isDisplayableInInterval(Displayable mDisplayable, Interval mInterval)
 	{
-		DateTime s = mDisplayable.getInterval().getStart(), e = mDisplayable.getInterval().getEnd();
+		DateTime s = mDisplayable.getStart(), e = mDisplayable.getEnd();
 		if (this.time.isAfter(s))
 			s = this.time;
 

@@ -49,11 +49,11 @@ public class EventEndpoints implements Comparable<EventEndpoints>
 		{
 			if (!isEnd)
 			{
-				this.time = displayable.getInterval().getStart();
+				this.time = displayable.getStart();
 			}
 			else
 			{
-				this.time = displayable.getInterval().getStart().plusMinutes(45);
+				this.time = displayable.getEnd();
 			}
 		}
 	}
@@ -123,7 +123,7 @@ public class EventEndpoints implements Comparable<EventEndpoints>
 		if (res == 0 && !isEnd) // sort by start, and if they are the same, by last end time
 		{
 			// at this point, will always return 0 for commitments
-			res = o.displayable.getInterval().getEnd().compareTo(displayable.getInterval().getEnd());
+			res = o.displayable.getEnd().compareTo(displayable.getEnd());
 		}
 		return res;
 	}

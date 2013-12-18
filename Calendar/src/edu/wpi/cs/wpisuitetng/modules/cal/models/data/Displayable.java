@@ -37,18 +37,30 @@ public interface Displayable
 	 * @return the participants for said event/commitment.
 	 */
 	public String getParticipants();
+
+	/**
+	 * The date to display. If there are more than one, the default date (start)
+	 * @return the start time
+	 */
+	public DateTime getStart();
+	
+	/**
+	 * Sets the date to display. If there are more than one, the default date (start)
+	 * @param newDate the date to set the start date to
+	 */
+	public void setStart(DateTime newDate);
+	
+	/**
+	 * Get the end date for the event/commitment.
+	 * @return the end date
+	 */
+	public DateTime getEnd();
 	
 	/**
 	 * Get the time interval
 	 * @return the interval
 	 */
 	public Interval getInterval();
-	
-	/**
-	 * Sets the spanning interval. Note that commitments ignore the end time
-	 * @param newInterval the interval to update
-	 */
-	public void setInterval(Interval newInterval);
 	
 	/**
 	 * See if event/commitment pertains to the project.
@@ -60,6 +72,11 @@ public interface Displayable
 	 * deletes this Displayable
 	 */
 	public void delete();
+	
+	/**
+	 * sets the time (for easy updating)
+	 */
+	public void setTime(DateTime newTime);
 	
 	/**
 	 * updates this event (sends call to db layer)
@@ -109,5 +126,13 @@ public interface Displayable
 	 * @param givenDay the day to check
 	 * @return the start time for that day
 	 */
-	public Interval getIntervalOnDay(DateTime givenDay);
+	public DateTime getStartTimeOnDay(DateTime givenDay);
+	
+	/**
+	 * Gets the end time of the event on a given day.
+	 * @param givenDay the day to check
+	 * @return the end time for that day
+	 */
+	public DateTime getEndTimeOnDay(DateTime givenDay);
+	
 }

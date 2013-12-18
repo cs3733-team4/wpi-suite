@@ -93,7 +93,7 @@ public class MonthCalendar extends AbstractCalendar
 				if (d != null && md != null)
 				{
 					md.setBackground(new Color(255, 255, 200));
-					d.setInterval(new Interval(md.getDay().plusMinutes(d.getInterval().getStart().getMinuteOfDay()), d.getInterval().toDuration()));
+					d.setTime(md.getDay());
 				}
 				else
 				{
@@ -154,7 +154,7 @@ public class MonthCalendar extends AbstractCalendar
 					Displayable selected = MainPanel.getInstance().getSelectedEvent();
 					if (selected != null && escaped)
 					{
-						display(selected.getInterval().getStart());
+						display(selected.getStart());
 					}
 				}
 			}

@@ -39,13 +39,13 @@ public class CommitmentEntityManagerTest {
         
         
         
-        Commitment e = new Commitment().addName("First").setDate(one).addStatus(CommitmentStatus.NotStarted);
+        Commitment e = new Commitment().addName("First").setDueDate(one).addStatus(CommitmentStatus.NotStarted);
         String eString=e.toJSON();
         
-        Commitment ee=new Commitment().setDate(two).addName("Second").addStatus(CommitmentStatus.InProgress);
+        Commitment ee=new Commitment().setDueDate(two).addName("Second").addStatus(CommitmentStatus.InProgress);
         String eeString=ee.toJSON();
         
-        Commitment eee=new Commitment().setDate(three).addName("Third").addStatus(CommitmentStatus.Complete);
+        Commitment eee=new Commitment().setDueDate(three).addName("Third").addStatus(CommitmentStatus.Complete);
 
         String eeeString=eee.toJSON();
         
@@ -94,7 +94,7 @@ public class CommitmentEntityManagerTest {
                 cem.makeEntity(ses1, eString);
                 
                 assertEquals("GetAll will return commitments in the database in Commitment[] form; in the case of only 1 commitment being stored, it will return that Commitment", e.getName(), cem.getAll(ses1)[0].getName());
-                assertTrue("GetAll will return commitments in the database in Commitment[] form; in the case of only 1 commitment being stored, it will return that Commitment", e.getInterval().equals(cem.getAll(ses1)[0].getInterval()));
+                assertEquals("GetAll will return commitments in the database in Commitment[] form; in the case of only 1 commitment being stored, it will return that Commitment", e.getStart(), cem.getAll(ses1)[0].getStart());
                 assertEquals("GetAll will return commitments in the database in Commitment[] form; in the case of only 1 commitment being stored, it will return that Commitment", e.getStatus(), cem.getAll(ses1)[0].getStatus());
 
         }

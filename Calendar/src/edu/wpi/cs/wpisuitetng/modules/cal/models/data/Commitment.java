@@ -68,6 +68,17 @@ public class Commitment extends AbstractModel implements Displayable
 		return this;
 	}
 	
+	/**
+	 * This does the same things as setDate, it is only kept for compatibility with older code.
+	 * @param date the starting time
+	 * @return this event after having its start date set
+	 */
+	public Commitment setDueDate(DateTime date)
+	{
+		setStart(date);
+		return this;
+	}
+	
 	@Override
 	public UUID getCategory()
 	{
@@ -181,28 +192,26 @@ public class Commitment extends AbstractModel implements Displayable
 	/**
 	 * @return the start
 	 */
-	@Override
-	public Interval getInterval()
+	public DateTime getStart()
 	{
-		return new Interval(new DateTime(duedate), new DateTime(duedate));
+		return new DateTime(duedate);
 	}
 
 	/**
 	 * @param start
 	 *            the start to set
 	 */
-	public void setInterval(Interval start)
+	public void setStart(DateTime start)
 	{
-		this.duedate = start.getStart().toDate();
+		this.duedate = start.toDate();
 	}
 	
 	/**
-	 * @param dt date to set the commitment to
+	 * @return the end (only used for displaying on day calendar, commitments don't actually hve duration)
 	 */
-	public Commitment setDate(DateTime dt)
+	public DateTime getEnd()
 	{
-		duedate = dt.toDate();
-		return this;
+		return new DateTime(duedate).plusMinutes(45);
 	}
 	
 	/**
@@ -275,6 +284,21 @@ public class Commitment extends AbstractModel implements Displayable
 	}
 
 	@Override
+	public void setTime(DateTime newTime)
+	{
+		MutableDateTime mdt = new MutableDateTime(this.duedate);
+		mdt.setDayOfYear(newTime.getDayOfYear());
+		mdt.setYear(newTime.getYear());
+		this.duedate = mdt.toDate();
+	}
+	
+	@Override
+	public Interval getInterval()
+	{
+		return new Interval(getStart(), getStart());
+	}
+
+	@Override
 	public void update()
 	{
 		CommitmentClient.getInstance().update(this);
@@ -314,24 +338,35 @@ public class Commitment extends AbstractModel implements Displayable
 	 * @param givenDay gets the time that this event starts on a given day
 	 * @return when this event starts
 	 */
-	@Override
-	public Interval getIntervalOnDay(DateTime givenDay)
+	public DateTime getStartTimeOnDay(DateTime givenDay)
 	{
-		DateTime start = new DateTime(duedate);
 		MutableDateTime mDisplayedDay = new MutableDateTime(givenDay);
-		mDisplayedDay.setMillisOfDay(0);
-		
-		if (start.isBefore(mDisplayedDay))
-		{
-			return new Interval(mDisplayedDay, mDisplayedDay);
+		mDisplayedDay.setMillisOfDay(1);
+		//if it starts before the beginning of the day then its a multi day event, or all day event
+		if (this.getStart().isBefore(mDisplayedDay)){
+			mDisplayedDay.setMillisOfDay(0);
+			return(mDisplayedDay.toDateTime());
 		}
-		mDisplayedDay.addDays(1);
-		mDisplayedDay.addMillis(-1);
-		if (start.isAfter(mDisplayedDay))
+		else
+			return this.getStart();
+	}
+	
+	/**
+	 * this is primarily used for multiday events
+	 * 
+	 * @param givenDay gets the time that this event ends on a given day
+	 * @return when this event ends
+	 */
+	public DateTime getEndTimeOnDay(DateTime givenDay)
+	{
+		MutableDateTime mDisplayedDay = new MutableDateTime(givenDay);;
+		mDisplayedDay.setMillisOfDay(86400000-2);
+		if (this.getStart().plusMinutes(30).isAfter(mDisplayedDay))
 		{
-			return new Interval(mDisplayedDay, mDisplayedDay);
+			return mDisplayedDay.toDateTime();
 		}
-		return new Interval(start, start);
+		else
+			return this.getStart().plusMinutes(30); 
 	}
 	
 	/**

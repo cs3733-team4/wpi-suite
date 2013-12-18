@@ -146,12 +146,12 @@ public class MonthItem extends JPanel
         	}
         	else if(isEndAfterCurrent(day, eventEnd))
         	{
-        		time.setText(simpleTime(mDisplayable.getInterval().getStart()));
+        		time.setText(simpleTime(mDisplayable.getStart()));
         		arrow.setText("\u2192");
         	}
         	else
         	{
-        		time.setText(simpleTime(mDisplayable.getInterval().getStart()));
+        		time.setText(simpleTime(mDisplayable.getStart()));
         	}
         }
 

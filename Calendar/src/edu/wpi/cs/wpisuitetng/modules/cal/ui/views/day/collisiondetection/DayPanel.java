@@ -56,7 +56,7 @@ public class DayPanel extends JPanel
 			public void mouseReleased(MouseEvent arg0) {
 				if(isSomethingDragging)
 				{
-					MainPanel.getInstance().display(selected.getDisplayable().getInterval().getStart());
+					MainPanel.getInstance().display(selected.getDisplayable().getStart());
 				}
 				isSomethingDragging = false;
 				selected = null;
