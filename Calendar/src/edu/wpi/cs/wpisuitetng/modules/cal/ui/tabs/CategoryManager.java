@@ -409,25 +409,17 @@ public class CategoryManager extends JPanel implements ICategoryRegister {
 					System.out.println("Tried to delete while not editing");
 					return;
 				}
-				System.out.println("a");
 				Category selectedCategory2 = selectedCategory;
 
-				System.out.println("b");
 				clearSelectedCategory();
 
-				System.out.println("c");
 				changeEventOnDelete(selectedCategory2.getCategoryID());
-				System.out.println("d");
 				changeCommitmentOnDelete(selectedCategory2.getCategoryID());
-				System.out.println("e");
 				removeCategory(selectedCategory2);
 
-				System.out.println("f");
 				
 				MainPanel.getInstance().refreshView();
-				System.out.println("g");
 				MainPanel.getInstance().refreshCategoryFilterTab();
-				System.out.println("h");
 			}
 			
 		});

@@ -271,9 +271,14 @@ public class DisplayableEditorView extends JPanel implements ICategoryRegister
 
 	@Override
 	public void fire(SerializedAction sa) {
-		if (sa.isDeleted) 
+		if (savedMap.get(sa.uuid) != null) 
 		{
 			eventCategoryPicker.removeItem(savedMap.get(sa.uuid));
+		}
+		if (!sa.isDeleted)
+		{
+			eventCategoryPicker.addItem(sa.object);
+			savedMap.put(sa.uuid, sa.object);
 		}
 	}
 }
