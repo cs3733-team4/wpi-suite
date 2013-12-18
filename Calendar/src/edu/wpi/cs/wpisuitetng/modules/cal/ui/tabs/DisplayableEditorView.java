@@ -14,6 +14,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.HashMap;
+import java.util.UUID;
 
 import javax.swing.Box;
 import javax.swing.Box.Filler;
@@ -54,6 +56,7 @@ public class DisplayableEditorView extends JPanel implements ICategoryRegister
 	protected JTextArea descriptionTextArea;
 	protected DatePicker startTimeDatePicker, endTimeDatePicker;
 	protected JComboBox<Category> eventCategoryPicker;
+	protected HashMap<UUID, Category> savedMap = new HashMap<>();
 	protected JComboBox<String> commitmentStatusPicker;
 	protected JButton cancelButton, saveButton;
 
@@ -132,6 +135,7 @@ public class DisplayableEditorView extends JPanel implements ICategoryRegister
 		for (Category c : CategoryClient.getInstance().getAllCategories())
 		{
 			this.eventCategoryPicker.addItem(c);
+			savedMap.put(c.getCategoryID(), c);
 		}
 
 		this.add(eventCategoryPicker, "cell 1 3,alignx left,aligny baseline");
@@ -269,7 +273,7 @@ public class DisplayableEditorView extends JPanel implements ICategoryRegister
 	public void fire(SerializedAction sa) {
 		if (sa.isDeleted) 
 		{
-			eventCategoryPicker.removeItem(sa.object);
+			eventCategoryPicker.removeItem(savedMap.get(sa.uuid));
 		}
 	}
 }
