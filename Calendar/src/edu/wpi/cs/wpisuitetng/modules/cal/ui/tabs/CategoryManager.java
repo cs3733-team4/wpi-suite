@@ -74,6 +74,7 @@ public class CategoryManager extends JPanel {
 	private Category selectedCategory;
 	private boolean clearSelected;
 	private boolean isEditing = false;
+	private boolean firstEdit = false;
 	
 	// TODO LIST 
 	// DONE -- When selecting category from list, repeated name alert shouldn't pop up
@@ -408,13 +409,20 @@ public class CategoryManager extends JPanel {
 			@Override
 			public void removeUpdate(DocumentEvent e) {
 				categoryNameErrorLabel.setVisible(!validateText(categoryName.getText(), categoryNameErrorLabel));
-					saveCategoryButton.setEnabled(isSaveable());
+				saveCategoryButton.setEnabled(isSaveable());
+				System.out.println("Remove update, and firstEdit is" + firstEdit);
+					
 			}
 			
 			@Override
 			public void insertUpdate(DocumentEvent e) {
-				categoryNameErrorLabel.setVisible(!validateText(categoryName.getText(), categoryNameErrorLabel));
-					saveCategoryButton.setEnabled(isSaveable());
+				categoryNameErrorLabel.setVisible(!validateText(categoryName.getText(), categoryNameErrorLabel));	
+				saveCategoryButton.setEnabled(isSaveable());
+				System.out.println("Insert update, and firstEdit is" + firstEdit);
+				if (firstEdit){
+					saveCategoryButton.setEnabled(false);
+					firstEdit = false;
+				}
 			}
 			
 			@Override
@@ -431,6 +439,8 @@ public class CategoryManager extends JPanel {
 				{
 					selectionChangeErrorLabel.setText("");
 					isEditing = true;
+					firstEdit = true;
+					System.out.println("Selection model, and firstEdit is" + firstEdit);
 					super.setSelectionInterval(index0, index1);
 				}
 				else
@@ -460,6 +470,8 @@ public class CategoryManager extends JPanel {
 	                          colorPicker.moveColorSelector(selectedCategory.getColor());
 	                      }
                       }
+                      
+                      System.out.println("Leaving selection listener, and firstEdit is" + firstEdit);
               }
 		});
 
