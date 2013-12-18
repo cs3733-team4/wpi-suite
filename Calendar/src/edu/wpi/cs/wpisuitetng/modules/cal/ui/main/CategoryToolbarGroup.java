@@ -89,7 +89,6 @@ public class CategoryToolbarGroup extends ToolbarGroupView {
 				return new Point(95, 40);
 			}
 		};
-		editCategory.setToolTipText("Testing!");
 		editCategory.addMouseListener(new ToolTipListener());
 		editCategory.addActionListener(new ActionListener(){
 			@Override
