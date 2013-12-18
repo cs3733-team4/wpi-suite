@@ -137,7 +137,8 @@ public class CacheTest {
 		c.put("takes the", "cake");
 		c.put("next", "level");
 		
-		String[] expected = {"level", "cake", "better", "epic!!!"};
+		//TODO: I'm not sure if this is a useful test anymore as we have changed these requirements
+		String[] expected = {"cake", "better", "epic!!!", ""};
 		int xpCount = 0;
 		
 		for(String q : c.timeOrderedCallIterator("next"))
