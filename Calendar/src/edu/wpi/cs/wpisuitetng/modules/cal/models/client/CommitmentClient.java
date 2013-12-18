@@ -15,7 +15,6 @@ import java.util.UUID;
 import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 
 public class CommitmentClient extends CachingDisplayableClient<Commitment, Commitment.SerializedAction>

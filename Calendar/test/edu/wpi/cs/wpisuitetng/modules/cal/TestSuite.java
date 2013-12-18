@@ -33,11 +33,8 @@ import edu.wpi.cs.wpisuitetng.modules.cal.formulae.MonthsTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.GoToPanelTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MainCalendarNavigationTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.SidebarTabbedPaneTest;
-<<<<<<< HEAD
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.CategoryManagerTest;
-=======
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.CategoryRefreshingTest;
->>>>>>> dev
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.CommitmentUIValidationTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.DatePickerTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.EventUIValidationTest;

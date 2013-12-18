@@ -17,11 +17,8 @@ import java.util.UUID;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 
-import edu.wpi.cs.wpisuitetng.Session;
-import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 
 /**

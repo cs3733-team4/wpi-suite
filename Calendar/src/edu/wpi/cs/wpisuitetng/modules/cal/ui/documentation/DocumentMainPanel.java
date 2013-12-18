@@ -17,9 +17,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.management.RuntimeErrorException;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
