@@ -21,16 +21,10 @@ import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentStatus;
-<<<<<<< HEAD
-import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CachingModel;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryModel;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CommitmentModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
-=======
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CachingClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CommitmentClient;
->>>>>>> origin/dev
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
