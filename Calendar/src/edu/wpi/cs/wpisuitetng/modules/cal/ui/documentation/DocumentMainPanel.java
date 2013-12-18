@@ -19,6 +19,8 @@ import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+
+
 import java.util.LinkedList;
 
 import javax.swing.JButton;
@@ -28,6 +30,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.border.Border;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
@@ -39,8 +42,6 @@ import edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs.AddCommitmentDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs.AddEventDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs.CategoryManager;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.BareBonesBrowserLaunch;
-import edu.wpi.cs.wpisuitetng.network.Network;
-import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
 
 public class DocumentMainPanel extends JFrame{
 
@@ -108,8 +109,8 @@ public class DocumentMainPanel extends JFrame{
     	this.setTitle("YOCO Calendar Help");
     	this.setLayout(new BorderLayout());
     	
-    	serverLocation = Network.getInstance().makeRequest("docs/Calendar/", HttpMethod.GET).getUrl().toString().replace("API/", "");
-        //serverLocation = "http://users.wpi.edu/~bkmcleod/Test%20Out/";
+    	//serverLocation = Network.getInstance().makeRequest("docs/Calendar/", HttpMethod.GET).getUrl().toString().replace("API/", "");
+        serverLocation = "http://users.wpi.edu/~bkmcleod/Test%20Out/";
     	System.out.println(serverLocation);
     	tableOfContents=new TableOfContents(serverLocation);
     	try
@@ -611,3 +612,4 @@ public class DocumentMainPanel extends JFrame{
     }
 
 }
+>>>>>>> 275a538ed519d7aa9e240d54420df7cff2485005
