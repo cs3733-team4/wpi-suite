@@ -58,8 +58,7 @@ public class CommitmentEntityManager extends CachedEntityManager<Commitment> {
 		if(!db.save(newCommitment, s.getProject())) {
 			throw new WPISuiteException();
 		}
-		if(newCommitment.isProjectwide())
-			PollPusher.getInstance(Commitment.class).updated(updated(newCommitment));
+		PollPusher.getInstance(Commitment.class).updated(updated(newCommitment));
 		return newCommitment;
 	}
 	
@@ -121,8 +120,7 @@ public class CommitmentEntityManager extends CachedEntityManager<Commitment> {
 		if (model.isProjectwide())
 			model.setProject(s.getProject());
 		db.save(model);
-		if(model.isProjectwide())
-			PollPusher.getInstance(Commitment.class).updated(updated(model));
+		PollPusher.getInstance(Commitment.class).updated(updated(model));
 	}
 	
 
@@ -135,7 +133,7 @@ public class CommitmentEntityManager extends CachedEntityManager<Commitment> {
 	@Override
 	public boolean deleteEntity(Session s, String id) throws WPISuiteException {
 		Commitment toDelete = db.delete(getEntity(s, id)[0]);
-		if (toDelete != null && toDelete.isProjectwide())
+		if (toDelete != null)
 			PollPusher.getInstance(Commitment.class).updated(deleted(UUID.fromString(id)));
 		return toDelete != null;
 	}
