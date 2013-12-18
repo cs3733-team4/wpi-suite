@@ -20,17 +20,20 @@ import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 
 public class CalendarSelector extends JPanel
 {
+	
+	JToggleButton day, week, month, year;
+	
 	public CalendarSelector()
 	{
 		// create components
 		JToggleButton personalCalendar = new JToggleButton("Personal");
 		JToggleButton teamCalendar = new JToggleButton("Team"),
-				bothCalendar = new JToggleButton("Both"),
-				month = new JToggleButton("Month"),
-				day = new JToggleButton("Day"),
-				year = new JToggleButton("Year"),
-				week = new JToggleButton("Week");
-		Filler filler1 = new Filler(new Dimension(6, 0), new Dimension(6, 0), new Dimension(6, 32767));
+				bothCalendar = new JToggleButton("Both");
+		month = new JToggleButton("Month");
+		day = new JToggleButton("Day");
+		year = new JToggleButton("Year");
+		week = new JToggleButton("Week");
+		Filler filler1 = new Filler(new Dimension(30, 0), new Dimension(30, 0), new Dimension(30, 32767));
 
 		// build button groups
 		ButtonGroup view = new ButtonGroup();
@@ -117,6 +120,13 @@ public class CalendarSelector extends JPanel
 		year.setFocusable(false);
 		week.setFocusable(false);
 		
+	}
+	
+	public void toDay() {
+		day.setSelected(true);
+		week.setSelected(false);
+		month.setSelected(false);
+		year.setSelected(false);
 	}
 
 }

@@ -9,6 +9,8 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.ui;
 
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
@@ -26,18 +28,18 @@ import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
  * MiniMonth-based popup calendar used for DatePicker.
  */
 public class PopupCalendar extends JFrame {
-	public PopupCalendar(DateTime date, MiniCalendarHostIface mc) {
+	public PopupCalendar(DateTime date, final MiniCalendarHostIface mc) {
 		MiniCalendarPanel cal = new MiniCalendarPanel(date, mc, true);
 		this.add(cal);
 		final JFrame me = this;
-		
+		((DatePicker)mc).requestDateFocusPost();
 		((JComponent) getContentPane()).setBorder(BorderFactory.createLineBorder(Colors.BORDER));
+		
 		this.addWindowListener(new WindowListener(){
 
 			@Override
 			public void windowActivated(WindowEvent arg0) {
-				// TODO Auto-generated method stub
-				
+				//((DatePicker)mc).requestDateFocusPost();
 			}
 
 			@Override
@@ -54,8 +56,7 @@ public class PopupCalendar extends JFrame {
 
 			@Override
 			public void windowDeactivated(WindowEvent arg0) {
-				me.dispose();
-				
+				((DatePicker)mc).hideMiniCalendar();
 			}
 
 			@Override
