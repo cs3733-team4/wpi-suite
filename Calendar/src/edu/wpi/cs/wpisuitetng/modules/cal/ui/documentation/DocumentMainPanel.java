@@ -601,8 +601,6 @@ public class DocumentMainPanel extends JFrame{
     public void goToPage(String page)
     {
     	goToPage(page, true);
-    	
     }
 
 }
->>>>>>> 275a538ed519d7aa9e240d54420df7cff2485005
