@@ -96,7 +96,7 @@ public class DayCalendar extends AbstractCalendar
 		this.displayableList = getVisibleDisplayables();
 		
 		this.current = new DayPanel();
-		this.current.setEvents(getDisplayablesInInterval(time,time.plusDays(1)), time);
+		this.current.setEvents(getDisplayablesInInterval(time.withMillisOfDay(0),time.plusDays(1).withMillisOfDay(0)), time);
 		this.current.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, Colors.BORDER));
 		
 		this.holder.add(new DayGridLabel(), BorderLayout.WEST);
@@ -224,6 +224,7 @@ public class DayCalendar extends AbstractCalendar
 			{
 				retrievedDisplayables.add(d);
 			}
+
 		}
 
 		return retrievedDisplayables;
@@ -231,10 +232,10 @@ public class DayCalendar extends AbstractCalendar
 	
 	private boolean isDisplayableInInterval(Displayable mDisplayable, Interval mInterval)
 	{
-		DateTime s = mDisplayable.getStart(), e = mDisplayable.getEnd();
+		DateTime s = mDisplayable.getStart();
 		if (this.time.isAfter(s))
 			s = this.time;
 
-		return (s.isBefore(e) && mInterval.contains(s));
+		return (mInterval.contains(s));
 	}
 }
