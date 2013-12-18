@@ -105,7 +105,11 @@ public class DayItem extends JPanel
 			bg = displayable.getColor();
 			setBorder(new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new LineBorder(bg.darker()), new EmptyBorder(6, 6, 6, 6))));
 		}else if(displayable instanceof Commitment)
-			setBorder(new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new MatteBorder(1, 0, 0, 0, ((Commitment) displayable).getStatusColor()), new CompoundBorder(new LineBorder(bg.darker()), new EmptyBorder(6, 6, 6, 6)))));
+		{
+			setBorder(new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new MatteBorder(1, 0, 0, 0, ((Commitment) displayable).getStatusColor()), new CompoundBorder(new LineBorder(bg.darker()), new EmptyBorder(0, 6, 0, 6)))));
+			top.setEnabled(false);
+			bottom.setEnabled(false);
+		}
 		setBackground(bg);
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		lblEventTitle = new JLabel();

@@ -78,6 +78,12 @@ public class DayCalendar extends AbstractCalendar
 		this.holder.setLayout(new BorderLayout());
 		
 		generateDay();
+
+		BoundedRangeModel jsb = scroll.getVerticalScrollBar().getModel();
+		double day = time.getMinuteOfDay();
+		day /= time.minuteOfDay().getMaximumValue();
+		day *= (jsb.getMaximum()) - jsb.getMinimum();
+		jsb.setValue((int)day);
 	}
 
 	private void generateDay()
@@ -100,11 +106,6 @@ public class DayCalendar extends AbstractCalendar
 		this.holder.add(new DayGridLabel(), BorderLayout.WEST);
 		this.holder.add(this.current, BorderLayout.CENTER);
 		
-		BoundedRangeModel jsb = scroll.getVerticalScrollBar().getModel();
-		double day = time.getMinuteOfDay();
-		day /= time.minuteOfDay().getMaximumValue();
-		day *= (jsb.getMaximum()) - jsb.getMinimum();
-		jsb.setValue((int)day);
 		
 		// notify mini-calendar to change
 		MainPanel.getInstance().miniMove(time);
