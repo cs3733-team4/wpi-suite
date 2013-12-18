@@ -7,31 +7,13 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
+package edu.wpi.cs.wpisuitetng.modules.cal.models.client;
 
-package edu.wpi.cs.wpisuitetng.modules.cal.models;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Category;
 
-/**
- * Style of a given status for commitments.
- */
-public enum CommitmentStatus
-{
-	NotStarted("Not Started"),
-	InProgress("In Progress"),
-	Complete("Complete");
-	
-	private String currstatus;
-	private CommitmentStatus(String currstatus)
-	{
-		this.currstatus = currstatus;
-	}
-	
+public interface ICategoryRegister {
 	/**
-	 * Overwrite the default toString method to return the string name for the enum.
+	 * Forces update for cache to refresh categories
 	 */
-	@Override
-	public String toString()
-	{
-		return this.currstatus;
-	}
+	public void fire(Category.SerializedAction sa);
 }
-

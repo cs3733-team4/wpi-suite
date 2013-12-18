@@ -30,9 +30,9 @@ import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthDayTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthItemTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.week.WeekCalendarTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.formulae.MonthsTest;
-import edu.wpi.cs.wpisuitetng.modules.cal.navigation.GoToPanelTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.MainCalendarNavigationTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.navigation.SidebarTabbedPaneTest;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.CategoryManagerTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.CategoryRefreshingTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.CommitmentUIValidationTest;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.DatePickerTest;
@@ -55,10 +55,11 @@ import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
 	MonthsTest.class,
 	CommitmentEntityManagerTest.class, EventEntityManagerTest.class, CommitmentClientTest.class,
 		EventClientTest.class, CategoryEntityManagerTest.class, PollPusherTest.class,
-	CalendarNavigationModuleTest.class, GoToPanelTest.class, MainCalendarNavigationTest.class, SidebarTabbedPaneTest.class,
+	CalendarNavigationModuleTest.class, MainCalendarNavigationTest.class, SidebarTabbedPaneTest.class,
 	MonthCalendarTest.class, MonthDayTest.class, MonthItemTest.class,
 	WeekCalendarTest.class,
-	CommitmentUIValidationTest.class, DatePickerTest.class,
+	CategoryManagerTest.class, CommitmentUIValidationTest.class, DatePickerTest.class,
+	EventUIValidationTest.class,
 	AccessOrderedListTest.class, CacheTest.class,
 	EventUIValidationTest.class, CategoryRefreshingTest.class,
 	YearCalendarTest.class })

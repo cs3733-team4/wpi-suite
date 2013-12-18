@@ -10,7 +10,6 @@
 
 package edu.wpi.cs.wpisuitetng.modules.cal.models.server;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -63,7 +62,8 @@ public class CategoryEntityManager extends CachedEntityManager<Category>
 		{
 			throw new WPISuiteException();
 		}
-		PollPusher.getInstance(Category.class).updated(updated(newCategory));
+		if(newCategory.isProjectCategory())
+			PollPusher.getInstance(Category.class).updated(updated(newCategory));
 		return newCategory;
 	}
 
@@ -81,109 +81,7 @@ public class CategoryEntityManager extends CachedEntityManager<Category>
 	@Override
 	public Category[] getEntity(Session s, String id) throws NotFoundException, WPISuiteException
 	{
-
-		String[] args = id.split(",");
-
-		Category[] retrievedCategories = null;
-
-		switch (args[0])
-		{
-			case "get-all-categories":
-				return getAll(s);
-			case "get-user-categories":
-				return getUserCategories(s);
-			case "get-team-categories":
-				return getTeamCategories(s);
-			case "get-category-by-name":
-				return getCategoryByName(s, args[1]);
-			case "get-category-by-id":
-				return getCategoryByID(s, args[1]);
-			case "get-category-by-color":
-				return getCategoryByColor(s, args[1]);
-			default:
-				System.out.println("Error: " + args[0] + " not a valid method");
-		}
-
-		return retrievedCategories;
-	}
-
-	/**
-	 * Returns an array of category exclusive to the user. Does not do any user
-	 * verification.
-	 * 
-	 * @param s
-	 * @return the user categories
-	 * @throws WPISuiteException
-	 */
-	private Category[] getUserCategories(Session s) throws WPISuiteException
-	{
-		List<Category> retrievedCategories = new ArrayList<>();
-		Category[] all = getAll(s);
-
-		for (Category c : all)
-		{
-			if (!c.isProjectCategory())
-			{
-				retrievedCategories.add(c);
-			}
-		}
-		Category[] userCategories = (Category[]) retrievedCategories.toArray();
-		return userCategories;
-	}
-
-	/**
-	 * Returns an array of team categories
-	 * 
-	 * @param s
-	 * @return the team categories
-	 * @throws WPISuiteException
-	 */
-	private Category[] getTeamCategories(Session s) throws WPISuiteException
-	{
-		List<Category> retrievedCategories = new ArrayList<>();
-		Category[] all = getAll(s);
-
-		for (Category c : all)
-		{
-			if (c.isProjectCategory())
-			{
-				retrievedCategories.add(c);
-			}
-		}
-		Category[] teamCategories = (Category[]) retrievedCategories.toArray();
-		return teamCategories;
-	}
-
-	/**
-	 * For now, only return the first category it finds with a matching name.
-	 * Currently have not decided how to approach categories with matching
-	 * names. If a matching name is not there, returns a blank array.
-	 * 
-	 * @param s
-	 *            session
-	 * @param name
-	 *            name given for the desired category
-	 * @return Category[] returns a new Category array of one category matching
-	 *         the given color
-	 * @throws WPISuiteException
-	 */
-	private Category[] getCategoryByName(Session s, String name) throws WPISuiteException
-	{
-		List<Category> retrievedCategories = new ArrayList<>();
-
-		Category[] all = getAll(s);
-
-		for (Category c : all)
-		{
-			if (c.getName() == name)
-			{
-				retrievedCategories.add(c);
-				return new Category[] { retrievedCategories.get(0) };
-			}
-		}
-
-		return new Category[] {};
-
+		return getCategoryByID(s, id);
 	}
 
 	/**
@@ -204,37 +102,7 @@ public class CategoryEntityManager extends CachedEntityManager<Category>
 		UUID idVal = UUID.fromString(id);
 		for (Category c : all)
 		{
-			if (c.getUuid() == idVal)
-			{
-				retrievedCategories.add(c);
-				return new Category[] { retrievedCategories.get(0) };
-			}
-		}
-		return new Category[] {};
-	}
-
-	/**
-	 * For now returns the first Category with the matching color. Colors must
-	 * be passed in RGB format.
-	 * 
-	 * @param s
-	 *            session
-	 * @param color
-	 *            color that the category must match
-	 * @return Category[] returns a new Category array of one category matching
-	 *         the given color
-	 * @throws WPISuiteException
-	 */
-	private Category[] getCategoryByColor(Session s, String color) throws WPISuiteException
-	{
-		List<Category> retrievedCategories = new ArrayList<>();
-		Category[] all = getAll(s);
-
-		for (Category c : all)
-		{
-			int rgbVal = Integer.parseInt(color);
-
-			if (c.getColor() == new Color(rgbVal))
+			if (c.getUuid().equals(idVal))
 			{
 				retrievedCategories.add(c);
 				return new Category[] { retrievedCategories.get(0) };
@@ -274,9 +142,8 @@ public class CategoryEntityManager extends CachedEntityManager<Category>
 		{
 			throw new WPISuiteException();
 		}
-
-		PollPusher.getInstance(Category.class).updated(updated(updatedCategory));
-
+		if(updatedCategory.isProjectCategory())
+			PollPusher.getInstance(Category.class).updated(updated(updatedCategory));
 		return updatedCategory;
 	}
 
@@ -292,17 +159,16 @@ public class CategoryEntityManager extends CachedEntityManager<Category>
 	@Override
 	public boolean deleteEntity(Session s, String id) throws WPISuiteException
 	{
-		boolean res = (db.delete(getEntity(s, id)[0]) != null) ? true : false;
-		if (res)
+		Category toDelete = db.delete(getEntity(s, id)[0]);
+		if (toDelete != null && toDelete.isProjectCategory())
 			PollPusher.getInstance(Category.class).updated(deleted(UUID.fromString(id)));
-		return res;
+		return toDelete != null;
 	}
 
 	@Override
 	public void deleteAll(Session s) throws WPISuiteException
 	{
 		db.deleteAll(new Category(), s.getProject());
-
 	}
 
 	@Override

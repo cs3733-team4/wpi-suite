@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CachingClient;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryClient;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 public class Category extends AbstractModel
@@ -31,6 +32,7 @@ public class Category extends AbstractModel
 	public static final Category DEFAULT_DISPLAY_CATEGORY = new Category("No Categories");
 	public static final Category COMMITMENT_CATEGORY = new Category("Commitments");
 	public static final Category EVENT_CATEGORY = new Category("Events");
+	public static final Category GOOGLE_EVENT_DEFAULT = new Category("GCal Event", new Color(41, 82, 163));
 
 	private Category(String s)
 	{
@@ -43,6 +45,30 @@ public class Category extends AbstractModel
 	public Category()
 	{
 	}
+	
+	/**
+     * makes a new category for google events
+     * 
+     * @param string the name
+     * @param color2 the color
+     */
+    public Category(String string, Color color2) {
+		name = string;
+		color = color2;
+		owner = null;
+		uuid = new UUID(0, 1);
+	}
+
+    /**
+     * 
+     * @param name the name of the category
+     * @return the category after name has been set
+     */
+    public Category addName(String name)
+    {
+    	setName(name);
+    	return this;
+    }
 
 	/**
 	 * Sets the name of the category
@@ -64,6 +90,17 @@ public class Category extends AbstractModel
 	{
 		return this.name;
 	}
+
+    /**
+     * 
+     * @param color the color of the category
+     * @return the category after color has been set
+     */
+    public Category addColor(Color color)
+    {
+    	setColor(color);
+    	return this;
+    }
 
 	/**
 	 * Sets the color of the category
@@ -106,8 +143,7 @@ public class Category extends AbstractModel
 	@Override
 	public void delete()
 	{
-		// TODO Auto-generated method stub
-
+        CategoryClient.getInstance().delete(this);
 	}
 
 	@Override

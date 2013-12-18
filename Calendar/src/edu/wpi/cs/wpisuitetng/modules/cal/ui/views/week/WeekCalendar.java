@@ -14,11 +14,9 @@ import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.UUID;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoundedRangeModel;
@@ -38,7 +36,6 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CommitmentClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
@@ -56,7 +53,6 @@ import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
  */
 public class WeekCalendar extends AbstractCalendar
 {
-
 	private DateTime time;
 	private DateTime weekStartTime;
 	private DateTime weekEndTime;
@@ -80,6 +76,7 @@ public class WeekCalendar extends AbstractCalendar
 	private JPanel smithsonian = new JPanel();
 	private JLabel dayHeaders[] = new JLabel[7];
 	private JPanel hourLabels;
+	private boolean scrolled = false;
 	/**
 	 * 
 	 * @param on
@@ -337,6 +334,9 @@ public class WeekCalendar extends AbstractCalendar
 			@Override
 			public void run()
 			{
+				if (scrolled)
+					return;
+				scrolled = true;
 				// Scroll to now
 				BoundedRangeModel jsb = smithsonianScroller.getVerticalScrollBar().getModel();
 				
@@ -571,8 +571,8 @@ public class WeekCalendar extends AbstractCalendar
 		selected = toPass;
 		if(selected != null)
 		{
-			this.daysOfWeekArray[selected.getEvent().getStart().getDayOfWeek()%7].add(selected.createPuppet());
-			selected.createPuppet().day = selected.getEvent().getStart().getDayOfWeek()%7;
+			this.daysOfWeekArray[selected.getDisplayable().getStart().getDayOfWeek()%7].add(selected.createPuppet());
+			selected.createPuppet().day = selected.getDisplayable().getStart().getDayOfWeek()%7;
 		}
 	}
 	public void mouseOverDay(int day)

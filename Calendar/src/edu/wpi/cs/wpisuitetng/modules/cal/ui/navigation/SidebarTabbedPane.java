@@ -51,12 +51,14 @@ import org.joda.time.format.DateTimeFormatter;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryClient;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.ICategoryRegister;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 
-public class SidebarTabbedPane extends JTabbedPane{
+public class SidebarTabbedPane extends JTabbedPane implements ICategoryRegister
+{
 	
 	private JPanel detailTab;
 	private JTextArea detailTextPane;
@@ -115,6 +117,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 		//this.addTab("Commitments", commitmentTab);
 		this.addTab("Filters", categoryFilterTab);
 		
+		MainPanel.getInstance().registerCategory(this);
 	}
 	
 	/**
@@ -457,7 +460,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 	    	categoryColor.setLayout(new GridLayout(1,1));
 	    	categoryColor.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 	    	
-	    	if (c.getName().equals("Uncategorized")) // If uncategorized
+	    	if ("Uncategorized".equals(c.getName())) // If uncategorized
 	    	{
 	    		// Show both colors (team and personal events)
 	    		JPanel doubleColor = new JPanel();
@@ -622,7 +625,9 @@ public class SidebarTabbedPane extends JTabbedPane{
 					}
 					catsLeft--;
 					if(catsLeft<=0)
+					{
 						clearAllButton.setEnabled(false);
+					}
 				}
 			}
 			if (isUser)
@@ -724,6 +729,11 @@ public class SidebarTabbedPane extends JTabbedPane{
 	public void selectFilterTab() {
 		this.setSelectedComponent(categoryFilterTab);
 		
+	}
+	
+	@Override
+	public void fire(Category.SerializedAction sa) {
+		populateCategoryList(categoryList);
 	}
 	
 }

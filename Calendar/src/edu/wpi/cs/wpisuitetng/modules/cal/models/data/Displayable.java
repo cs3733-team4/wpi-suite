@@ -13,6 +13,7 @@ import java.awt.Color;
 import java.util.UUID;
 
 import org.joda.time.DateTime;
+import com.google.gdata.data.calendar.CalendarEventEntry;
 import org.joda.time.Interval;
 
 /**
@@ -21,37 +22,51 @@ import org.joda.time.Interval;
 public interface Displayable
 {
 	/**
-	 * 
-	 * @return
+	 * Gets the name of the event/commitment.
+	 * @return the name
 	 */
 	public String getName();
 
 	/**
-	 * 
-	 * @return
+	 * Get the description for the event/commitment.
+	 * @return the respective description
 	 */
 	public String getDescription();
 
 	/**
-	 * 
-	 * @return
+	 * Gets the participants for the event/commitment.
+	 * @return the participants for said event/commitment.
 	 */
 	public String getParticipants();
 
 	/**
 	 * The date to display. If there are more than one, the default date (start)
+	 * @return the start time
 	 */
 	public DateTime getStart();
 	
 	/**
 	 * Sets the date to display. If there are more than one, the default date (start)
+	 * @param newDate the date to set the start date to
 	 */
 	public void setStart(DateTime newDate);
 	
+	/**
+	 * Get the end date for the event/commitment.
+	 * @return the end date
+	 */
 	public DateTime getEnd();
 	
+	/**
+	 * Get the time interval
+	 * @return the interval
+	 */
 	public Interval getInterval();
 	
+	/**
+	 * See if event/commitment pertains to the project.
+	 * @return true if it pertains to the project.
+	 */
 	public boolean isProjectwide();
 	
 	/**
@@ -101,10 +116,29 @@ public interface Displayable
 	 */
 	public Color getColor();
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public String toJSON();
 	
+	/**
+	 * 
+	 * @return this Displayable event converted to a GoogleCalendar compatable entry
+	 */
+	public CalendarEventEntry getGoogleCalendarEntry();
+	/*
+	 * Gets the start time of the event on a given day.
+	 * @param givenDay the day to check
+	 * @return the start time for that day
+	 */
 	public DateTime getStartTimeOnDay(DateTime givenDay);
 	
+	/**
+	 * Gets the end time of the event on a given day.
+	 * @param givenDay the day to check
+	 * @return the end time for that day
+	 */
 	public DateTime getEndTimeOnDay(DateTime givenDay);
 	
 }

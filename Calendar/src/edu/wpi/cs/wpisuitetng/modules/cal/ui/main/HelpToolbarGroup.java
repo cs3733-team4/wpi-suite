@@ -49,5 +49,6 @@ public class HelpToolbarGroup extends ToolbarGroupView {
 		} catch (IOException ex) {}
 
 		this.getContent().add(showHelp);
+		showHelp.setFocusable(false);
 	}
 }

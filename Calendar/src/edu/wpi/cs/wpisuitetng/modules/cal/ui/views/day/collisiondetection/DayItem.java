@@ -41,7 +41,6 @@ import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.MutableDateTime;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentStatus;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
@@ -105,7 +104,28 @@ public class DayItem extends JPanel
 			bg = displayable.getColor();
 			setBorder(new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new LineBorder(bg.darker()), new EmptyBorder(6, 6, 6, 6))));
 		}else if(displayable instanceof Commitment)
-			setBorder(new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new MatteBorder(1, 0, 0, 0, ((Commitment) displayable).getStatusColor()), new CompoundBorder(new LineBorder(bg.darker()), new EmptyBorder(6, 6, 6, 6)))));
+		{
+			Color b;
+			Commitment.Status s = ((Commitment) displayable).getStatus();
+			switch(s)
+			{
+				case COMPLETE:
+					b = new Color(192,255,192);
+					break;
+				case IN_PROGRESS:
+					b = new Color(255,255,192);
+					break;
+				case NOT_STARTED:
+					b = new Color(240,110, 110);
+					break;
+				default:
+					b = Color.BLACK;
+					break;
+			}
+			setBorder(new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new MatteBorder(1, 0, 0, 0,b ), new CompoundBorder(new LineBorder(bg.darker()), new EmptyBorder(0, 6, 0, 6)))));
+			top.setEnabled(false);
+			bottom.setEnabled(false);
+		}
 		setBackground(bg);
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		lblEventTitle = new JLabel();
@@ -136,7 +156,19 @@ public class DayItem extends JPanel
 			@Override
 			public void mouseReleased(MouseEvent e)
 			{
-				displayable.update();
+				if(isBeingDragged) {
+					if(puppet != null)
+					{
+						day = puppet.day;
+						int previous = displayable.getStart().getDayOfWeek()%7;
+						if(day > previous)
+							updateTime(displayable.getStart().plusDays(day - previous));
+						if(previous > day)
+							updateTime(displayable.getStart().minusDays(previous - day));
+					}
+					displayable.update();
+					MainPanel.getInstance().display(displayable.getStart());
+				}
 				getParent().dispatchEvent(e);
 			}
 			
@@ -160,13 +192,13 @@ public class DayItem extends JPanel
 			@Override
 			public void mouseEntered(MouseEvent e)
 			{
-				// TODO Auto-generated method stub
+				
 			}
 			
 			@Override
 			public void mouseClicked(MouseEvent e)
 			{
-				// TODO Auto-generated method stub	
+				
 			}
 		});
 		
@@ -379,8 +411,6 @@ public class DayItem extends JPanel
 		}
 		// remote buffer overflow
 		ratpack.remove(rows - 1);
-		
-		
 		return ratpack;
 	}
 	
@@ -391,17 +421,35 @@ public class DayItem extends JPanel
 	 */
 	public void setSelected(boolean b)
 	{
-		//lblEventTitle.setForeground(b?Color.WHITE:Color.BLACK);
 		//TODO: Fix the paint order or revert to old selection method
 		if(displayable instanceof Event)
 			setBorder(b ? new CompoundBorder(new LineBorder(displayable.getColor().darker()), new CompoundBorder(new LineBorder(displayable.getColor().darker()), new EmptyBorder(6, 6, 6, 6)))
 						: new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new LineBorder(displayable.getColor().darker()), new EmptyBorder(6, 6, 6, 6))));
 		else if(displayable instanceof Commitment)
-			setBorder(b ? new CompoundBorder(new LineBorder(displayable.getColor().darker()), new CompoundBorder(new MatteBorder(1, 0, 0, 0, ((Commitment) displayable).getStatusColor()), new CompoundBorder(new LineBorder(Colors.TABLE_GRAY_HEADER.darker()), new EmptyBorder(6, 6, 6, 6))))
-						: new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new MatteBorder(1, 0, 0, 0, ((Commitment) displayable).getStatusColor()), new CompoundBorder(new LineBorder(Colors.TABLE_GRAY_HEADER.darker()), new EmptyBorder(6, 6, 6, 6)))));
+		{
+			Color c;
+			Commitment.Status s = ((Commitment) displayable).getStatus();
+			switch(s)
+			{
+				case COMPLETE:
+					c = new Color(192,255,192);
+					break;
+				case IN_PROGRESS:
+					c = new Color(255,255,192);
+					break;
+				case NOT_STARTED:
+					c = new Color(240,110, 110);
+					break;
+				default:
+					c = Color.BLACK;
+					break;
+			}
+			setBorder(b ? new CompoundBorder(new LineBorder(displayable.getColor().darker()), new CompoundBorder(new MatteBorder(1, 0, 0, 0, c), new CompoundBorder(new LineBorder(Colors.TABLE_GRAY_HEADER.darker()), new EmptyBorder(6, 6, 6, 6))))
+						: new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new MatteBorder(1, 0, 0, 0, c), new CompoundBorder(new LineBorder(Colors.TABLE_GRAY_HEADER.darker()), new EmptyBorder(6, 6, 6, 6)))));
+		}
 	}
 
-	public Displayable getEvent() {
+	public Displayable getDisplayable() {
 		return displayable;
 	}
 	
@@ -409,6 +457,8 @@ public class DayItem extends JPanel
 	{
 		if(!this.displayable.getStart().equals(t))
 		{
+			if(puppet != null)
+				puppet.updateTime(t);
 			this.displayable.setStart(t);
 			if(this.displayable instanceof Event)
 				((Event) this.displayable).setEnd(t.plus(this.length.toDuration()));
@@ -434,16 +484,14 @@ public class DayItem extends JPanel
 		}else if(displayable instanceof Commitment)
 		{
 			URL imgurl = getClass().getResource("/edu/wpi/cs/wpisuitetng/modules/cal/img/commitment_unstarted.png");
-			String imgtag = "<img src='" + imgurl +"'/>";
         	// Get the appropriate image based on the commitment's status and put it on the label.
         	if (((Commitment) displayable).getStatus() != null)
         	{
         		// Set the appropriate url source based on the status.
-        		if (((Commitment) displayable).getStatus() == CommitmentStatus.InProgress)
+        		if (((Commitment) displayable).getStatus() == Commitment.Status.IN_PROGRESS)
         			imgurl = getClass().getResource("/edu/wpi/cs/wpisuitetng/modules/cal/img/commitment_in_progress.png");
-        		else if (((Commitment) displayable).getStatus() == CommitmentStatus.Complete)
+        		else if (((Commitment) displayable).getStatus() == Commitment.Status.COMPLETE)
         			imgurl = getClass().getResource("/edu/wpi/cs/wpisuitetng/modules/cal/img/commitment_complete.png");
-        		imgtag = "<img src='" + imgurl +"'/>";
         	}
 			lblTimeInfo.setText("<html></i><b><font face = \"DejaVu Sans\""
 					 + "color=\"rgb(" + Colors.COMMITMENT_NOT_STARTED.getRed() + ","

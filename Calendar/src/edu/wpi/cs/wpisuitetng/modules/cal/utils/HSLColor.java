@@ -226,7 +226,6 @@ public class HSLColor{
 
 
 		float l = (max + min) / 2;
-		//System.out.println(max + " : " + min + " : " + l);
 
 		float s = 0;
 

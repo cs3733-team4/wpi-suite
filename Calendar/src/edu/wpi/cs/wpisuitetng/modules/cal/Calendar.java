@@ -9,14 +9,10 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal;
 
-import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.print.attribute.standard.JobPrioritySupported;
 import javax.swing.ImageIcon;
-import javax.swing.JPanel;
-import javax.swing.JSplitPane;
 
 import edu.wpi.cs.wpisuitetng.janeway.modules.IJanewayModule;
 import edu.wpi.cs.wpisuitetng.janeway.modules.JanewayTabModel;

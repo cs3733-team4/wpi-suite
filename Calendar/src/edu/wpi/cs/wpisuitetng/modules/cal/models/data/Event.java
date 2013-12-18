@@ -18,9 +18,11 @@ import org.joda.time.Interval;
 import org.joda.time.MutableDateTime;
 import org.joda.time.format.DateTimeFormat;
 
+import com.google.gdata.data.calendar.CalendarEventEntry;
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.EventDualityFactory;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CachingClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventClient;
@@ -143,11 +145,17 @@ public class Event extends AbstractModel implements Displayable
 	public Boolean identify(Object o)
 	{
 		if (o instanceof String)
+		{
 			return getUuid().toString().equals((String)(o));
+		}
 		else if (o instanceof UUID)
+		{
 			return getUuid().equals((UUID)(o));
+		}
 		else if (o instanceof Event)
+		{
 			return getUuid().equals(((Event)(o)).getUuid());
+		}
 		return false;
 	}
 
@@ -258,6 +266,15 @@ public class Event extends AbstractModel implements Displayable
 		return category;
 	}
 
+	/**
+	 * 
+	 */
+	public Event addCategory(UUID category)
+	{
+		setCategory(category);
+		return this;
+	}
+	
 	/**
 	 * @param category
 	 *            the category to set
@@ -493,5 +510,16 @@ public class Event extends AbstractModel implements Displayable
 			uuid = eventID;
 			isDeleted = b;
 		}
+	}
+
+	@Override
+	public CalendarEventEntry getGoogleCalendarEntry() {
+		EventDualityFactory edf = EventDualityFactory.init(name);
+		edf.setDisplayableEnd(end)
+		   .setDisplayableStart(start)
+		   .setDisplayableID(uuid)
+		   .setDisplayableDescription(getDescription())
+		   .setProject(isProjectEvent);
+		return edf.getDuality().getB();
 	}
 }

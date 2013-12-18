@@ -44,13 +44,6 @@ public class CacheTest {
 	}
 	
 	@Test
-	public void lowLevelIteraterFromCacheNPE() {
-		Cache<String, String> c = new Cache<>("");
-		c.put("something", "epic!!!");
-		c.timeOrderedCallIterator("borked"); // should not throw NPE, should create session
-	}
-	
-	@Test
 	public void highLevelIteraterFromCacheWorksOnce() {
 		Cache<String, String> c = new Cache<>("");
 		c.put("something", "epic!!!");

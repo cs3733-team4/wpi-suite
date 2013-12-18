@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Category;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 
 public class CategoryClient extends CachingClient<Category, Category.SerializedAction> {
 
@@ -36,6 +37,7 @@ public class CategoryClient extends CachingClient<Category, Category.SerializedA
 		if (instance == null)
 		{
 			instance = new CategoryClient();
+			instance.put(Category.GOOGLE_EVENT_DEFAULT);
 		}
 		return instance;
 	}
@@ -61,7 +63,15 @@ public class CategoryClient extends CachingClient<Category, Category.SerializedA
 	@Override
 	protected void applySerializedChange(Category.SerializedAction serializedAction)
 	{
-		//TODO: update lists
+		if (serializedAction.isDeleted)
+		{
+			cache.remove(serializedAction.uuid);
+		}
+		else
+		{
+			cache.put(serializedAction.uuid, serializedAction.object);
+		}
+		MainPanel.getInstance().refreshCategories(serializedAction);
 	}
 
 	@Override

@@ -12,12 +12,11 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui.navigation;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.beans.PropertyChangeListener;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -43,10 +42,11 @@ public class MainCalendarNavigation extends JPanel {
 		todayButton.setFocusable(false);
 		navigationButtonPanel.setFocusable(false);
 		
-		navigationButtonPanel.setLayout(new BorderLayout());
-		navigationButtonPanel.add(nextButton, BorderLayout.EAST);
-		navigationButtonPanel.add(todayButton, BorderLayout.CENTER);
-		navigationButtonPanel.add(previousButton, BorderLayout.WEST);
+		navigationButtonPanel.setLayout(new BoxLayout(navigationButtonPanel, BoxLayout.X_AXIS));
+		navigationButtonPanel.add(todayButton);
+		navigationButtonPanel.add(Box.createHorizontalStrut(6));
+		navigationButtonPanel.add(previousButton);
+		navigationButtonPanel.add(nextButton);
 		
 		// Set current calendar
 		this.currentCalendar = mAbstractCalendar;

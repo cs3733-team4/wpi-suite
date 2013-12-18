@@ -24,14 +24,11 @@ import org.joda.time.MutableDateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentStatus;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.DatePickerListener;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 
 /**
  * UI for adding and editing a commitment
- * @author TeamYOCO
- *
  */
 public class AddCommitmentDisplay extends DisplayableEditorView
 {
@@ -174,11 +171,11 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		e.setParticipants(participantsTextField.getText().trim());
 		e.setCategory(((Category)eventCategoryPicker.getSelectedItem()).getUuid());
 		if(commitmentStatusPicker.getSelectedItem()=="Not Started")
-			e.setStatus(CommitmentStatus.NotStarted);
+			e.setStatus(Commitment.Status.NOT_STARTED);
 		else if(commitmentStatusPicker.getSelectedItem()=="In Progress")
-			e.setStatus(CommitmentStatus.InProgress);
+			e.setStatus(Commitment.Status.IN_PROGRESS);
 		else
-			e.setStatus(CommitmentStatus.Complete);
+			e.setStatus(Commitment.Status.COMPLETE);
 		
 		if (isEditingCommitment) {
 			e.setUuid(existingCommitmentID);
@@ -264,16 +261,9 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 	}
 
 	/**
-<<<<<<< HEAD
 	 * Checks if this display has the same commitment as the display provided
 	 * @param other the other display to compare
 	 * @return true if the displays' commitments match
-=======
-	 * Makes sure a commitment isn't being edited in another tab
-	 * @param other
-	 * 		Other tab being compared
-	 * @return true if both are the same, false if they are different or if the current commitment is null
->>>>>>> origin/commitment_status
 	 */
 	public boolean matchingCommitment(AddCommitmentDisplay other)
 	{
