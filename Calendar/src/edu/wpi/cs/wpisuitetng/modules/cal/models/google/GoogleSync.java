@@ -39,14 +39,17 @@ public class GoogleSync {
 		if (instance == null || a == null)
 		{
 			Pair<String, String> nameAndPass = a.getAuthenticationInformation();
-			try {
+			try
+			{
 				instance = new GoogleSync(nameAndPass.getA(), nameAndPass.getB());
 				a.succede();
-			} catch (AuthenticationException ae) {
+			} catch (AuthenticationException ae)
+			{
 				instance = null;
 				a.handleError(ae);
 				ae.printStackTrace();
-			} catch (MalformedURLException mue) {
+			} catch (MalformedURLException mue)
+			{
 				instance = null;
 				a.handleError(mue);
 				mue.printStackTrace();
@@ -77,12 +80,15 @@ public class GoogleSync {
 	
 	
 	private CalendarService service;
+	private boolean hasUpdated = true;
 	private URL feedURL;
 	private Map<UUID, Pair<Displayable, CalendarEventEntry>> syncedEvents;
+	private Map<UUID, Pair<Displayable, CalendarEventEntry>> updateMap;
 	
 	private GoogleSync(String username, String password) throws AuthenticationException, MalformedURLException
 	{
 		syncedEvents = new HashMap<UUID, Pair<Displayable, CalendarEventEntry>>();
+		updateMap = new HashMap<UUID, Pair<Displayable, CalendarEventEntry>>();
 		service = new CalendarService("WPISuiteCalendarSync");
 		service.setUserCredentials(username, password);
 		feedURL = new URL("https://www.google.com/calendar/feeds/" + username + "/private/full");
@@ -102,6 +108,7 @@ public class GoogleSync {
 	 */
 	public void pullEventsBetween(DateTime start, DateTime end) throws IOException, ServiceException
 	{
+		
 		com.google.gdata.data.DateTime startTime = new com.google.gdata.data.DateTime(start.toDate());
 		com.google.gdata.data.DateTime endTime = new com.google.gdata.data.DateTime(end.toDate());
 		
@@ -132,7 +139,6 @@ public class GoogleSync {
 			
 			this.syncedEvents.put(id, edf.getDuality());
 		}
-		System.out.println("Synced down "+resultFeed.getEntries().size()+" total events from google");
 	}
 	
 	/**
@@ -145,8 +151,14 @@ public class GoogleSync {
 		List<Event> result = new LinkedList<Event>();
 		for(Entry<UUID, Pair<Displayable, CalendarEventEntry>> e : this.syncedEvents.entrySet())
 		{
-			result.add((Event) e.getValue().getA());
+			if (!updateMap.containsKey(e.getKey()))
+			{
+				this.updateMap.put(e.getKey(), e.getValue());
+				result.add((Event) e.getValue().getA());
+			}
 		}
+		this.hasUpdated = result.size() > 0;
+		this.syncedEvents.clear();
 		return result;
 	}
 	
@@ -162,5 +174,15 @@ public class GoogleSync {
 			CalendarEventEntry cee = d.getGoogleCalendarEntry();
 			this.syncedEvents.put(d.getIdentification(), new Pair<Displayable, CalendarEventEntry>(d, cee));
 		}
+	}
+	
+	/**
+	 * Has google given us any new events?
+	 * 
+	 * @return a boolean
+	 */
+	public boolean hasUpdates()
+	{
+		return this.hasUpdated;
 	}
 }

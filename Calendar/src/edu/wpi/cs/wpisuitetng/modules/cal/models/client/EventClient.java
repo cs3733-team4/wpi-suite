@@ -65,7 +65,8 @@ public class EventClient extends CachingDisplayableClient<Event, Event.Serialize
 					put(e);
 				}
 			}
-			catch(Exception e){
+			catch(Exception e)
+			{
 				e.printStackTrace();
 			}
 		}

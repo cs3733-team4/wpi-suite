@@ -1,9 +1,13 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.ui.main;
 
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 import edu.wpi.cs.wpisuitetng.janeway.gui.container.toolbar.ToolbarGroupView;
@@ -17,11 +21,11 @@ public class GoogleCalendarSynchronizationGroup extends ToolbarGroupView {
 	 * make the menu for syncing with gcal
 	 */
 	public GoogleCalendarSynchronizationGroup() {
-		super("GCal Synchronization");
-		setPreferredWidth(200);
+		super("Import from Google");
+		//setPreferredWidth(200);
 		
 		this.content.setLayout(new BoxLayout(content, BoxLayout.X_AXIS));
-		syncButton = new JButton("<html>GCal Sync</html>");
+		syncButton = new JButton("<html>Import from Google</html>");
 		    
 		syncButton.addActionListener(new ActionListener()
 		{
@@ -29,9 +33,16 @@ public class GoogleCalendarSynchronizationGroup extends ToolbarGroupView {
 			public void actionPerformed(ActionEvent e)
 			{	
 				GoogleCalendarSyncAuthenticateDisplay ned = new GoogleCalendarSyncAuthenticateDisplay();
-				MainPanel.getInstance().addTopLevelTab(ned, "Log in with Google", true);
+				MainPanel.getInstance().addGoogleLoginPage(ned);
 			}
 		});
+		
+		try
+		{
+		    Image img = ImageIO.read(getClass().getResource("/edu/wpi/cs/wpisuitetng/modules/cal/img/go-down.png"));
+		    syncButton.setIcon(new ImageIcon(img));
+		} 
+		catch (IOException ex) {}
 		
 		this.getContent().add(syncButton);
 	}

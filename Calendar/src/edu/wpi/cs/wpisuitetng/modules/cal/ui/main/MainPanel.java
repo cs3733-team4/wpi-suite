@@ -40,9 +40,7 @@ import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.documentation.DocumentMainPanel;
-
 import edu.wpi.cs.wpisuitetng.modules.cal.models.google.GoogleSync;
-
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CommitmentClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventClient;
@@ -50,10 +48,10 @@ import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
-
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs.AddCommitmentDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs.AddEventDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs.CategoryManager;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs.GoogleCalendarSyncAuthenticateDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.navigation.CalendarSelector;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.navigation.GoToPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.navigation.MainCalendarNavigation;
@@ -308,7 +306,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 			tabPosition = mTabbedPane.indexOfComponent(component);
 			JPanel tabInformation = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
 			JLabel tabInfoName = new JLabel(name);
-			Title tabInfoClose = new Title("\u2716", tab_id++); // we need an icon for this eventually
+			Title tabInfoClose = new Title("\u2716", tab_id++); // we need an icon for this eventually //for historarical purposes
 			tabInfoClose.setFont(tabInfoClose.getFont().deriveFont((float) 8));
 			tabInfoClose.setMargin(new Insets(0, 0, 0, 0));
 			tabInfoClose.setPreferredSize(new Dimension(20,17));
@@ -549,6 +547,22 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		sideTabbedPanel.showDetails(item);
 	}
 	
+	public void addGoogleLoginPage(GoogleCalendarSyncAuthenticateDisplay gcsad)
+	{
+		boolean openNewTab = true;
+		JComponent tabToOpen = null;
+		
+		for(JComponent c : tabs.values())
+		{
+			openNewTab &= !(c instanceof GoogleCalendarSyncAuthenticateDisplay);
+		}
+		
+		if (openNewTab)
+		{
+			addTopLevelTab(gcsad, "Log in with Google", true);
+		}
+	}
+	
 	/**
 	 * Edits the selected displayable
 	 * @param Item the month item containing the displayable to edit
@@ -557,7 +571,8 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	{
 		updateSelectedDisplayable(item);
 		
-		if (item instanceof Event) {
+		if (item instanceof Event)
+		{
 			AddEventDisplay mAddEventDisplay = new AddEventDisplay((Event) item);
 			boolean openNewTab = true;
 			JComponent tabToOpen = null;
@@ -580,7 +595,8 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 			}
 			
 		}
-		else if (item instanceof Commitment) {
+		else if (item instanceof Commitment)
+		{
 			AddCommitmentDisplay mAddCommitmentDisplay = new AddCommitmentDisplay((Commitment) item);
 			boolean openNewTab = true;
 			JComponent tabToOpen = null;

@@ -147,7 +147,6 @@ public class EventDualityFactory {
 		e.addIsProjectEvent(project);
 		e.setEventID(defaultID);
 		e.setCategory(Category.GOOGLE_EVENT_DEFAULT.getCategoryID());
-		System.out.println(defaultID.toString());
 		
 		CalendarEventEntry cee = new CalendarEventEntry();
 		cee.setTitle(new PlainTextConstruct(title));
