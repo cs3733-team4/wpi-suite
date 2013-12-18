@@ -104,10 +104,16 @@ public class SidebarTabbedPane extends JTabbedPane{
 		setupCommitementTab();
 		setUpCategoryFilterTab();
 		
+		selectedStatuses=new ArrayList<String>();
+		selectedStatuses.add("Not Started");
+		selectedStatuses.add("In Progress");
+		selectedStatuses.add("Complete");
+		
 		//add tabs
 		this.addTab("Details", detailTab);
 		//this.addTab("Commitments", commitmentTab);
 		this.addTab("Filters", categoryFilterTab);
+		
 	}
 	
 	/**
@@ -520,7 +526,6 @@ public class SidebarTabbedPane extends JTabbedPane{
 	}
 	
 	/**
-<<<<<<< HEAD
 	 * Get the collection of selected commitment statuses
 	 * @return the collection of selected UUIDs
 	 */
@@ -530,8 +535,6 @@ public class SidebarTabbedPane extends JTabbedPane{
 	}
 	
 	/**
-=======
->>>>>>> origin/commitment_views
 	 * Custom listener for check boxes
 	 *
 	 * Maintains the selected category collection updated
