@@ -69,8 +69,6 @@ public class MonthDay extends JPanel
 			case Today:
 				grayit = Colors.TABLE_GRAY_HEADER;
 				textit = Colors.TABLE_GRAY_TEXT;
-				//grayit = Colors.SELECTED_BACKGROUND;
-				//textit = Colors.SELECTED_TEXT;
 				break;
 			default:
 				throw new IllegalStateException("DayStyle is not a valid DayStyle!");
@@ -96,13 +94,6 @@ public class MonthDay extends JPanel
 			Map attributes = font.getAttributes();
 			attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
 			header.setFont(font.deriveFont(attributes));
-
-			/*
-			try {
-			    Image img = ImageIO.read(getClass().getResource("/edu/wpi/cs/wpisuitetng/modules/cal/img/today_label_blue.png"));
-			    header.setIcon(new ImageIcon(img));
-			} catch (IOException ex) {}
-			*/
 		}
 		
 		add(header);
