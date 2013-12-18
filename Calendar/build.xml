@@ -78,7 +78,11 @@
 	<target name="compile" depends="janeway-jar, core-jar"/>
 
 	<target name="test" depends="compile-test">
-		
+		<junit printsummary="yes" haltonfailure="no">
+			<classpath refid="test-classpath" />
+			<formatter type="xml" />
+			<test name="edu.wpi.cs.wpisuitetng.modules.cal.TestSuite" todir="${test-results}" />
+		</junit>
 	</target>
 
 	<target name="clean">
