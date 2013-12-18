@@ -67,7 +67,7 @@ public class CategoryClient extends CachingClient<Category, Category.SerializedA
 	@Override
 	protected UUID getUuidFrom(Category obj)
 	{
-		return obj.getCategoryID();
+		return obj.getUuid();
 	}
 
 	@Override

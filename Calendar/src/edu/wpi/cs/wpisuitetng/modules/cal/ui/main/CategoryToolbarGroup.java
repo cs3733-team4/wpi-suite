@@ -18,6 +18,7 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -55,6 +56,7 @@ public class CategoryToolbarGroup extends ToolbarGroupView {
 			        button.addActionListener(new ActionListener() {  
 			        	public void actionPerformed(ActionEvent e) {
 			        		ToolTipManager.sharedInstance().setEnabled(false);
+			        		toolTip.setEnabled(false);
 			        		DocumentMainPanel.getInstance().setVisible(true);
 			        		DocumentMainPanel.getInstance().requestFocus();
 			        		DocumentMainPanel.getInstance().goToPage("CreateaCategory.html");  
@@ -63,25 +65,30 @@ public class CategoryToolbarGroup extends ToolbarGroupView {
 			        panel.add(label);
 			        panel.add(button); 
 			        toolTip = super.createToolTip();  
+			        //toolTip.setFocusable(false);
 			        toolTip.setLayout(new BorderLayout());  
 			        Insets insets = toolTip.getInsets();  
 			        Dimension panelSize = panel.getPreferredSize();  
 			        panelSize.width += insets.left + insets.right+5;  
 			        panelSize.height += insets.top + insets.bottom;  
 			        toolTip.setPreferredSize(panelSize);  
-			        toolTip.setBackground(super.createToolTip().getBackground());
 			        label.setBackground(toolTip.getBackground());
 			        toolTip.add(panel);  
+			       
+			        
 		        }  
 		        return toolTip;  
 			} 
+			
 			@Override
 			public Point getToolTipLocation(MouseEvent e)
 			{
+				int x, y;
+				x = e.getX() > (this.getSize().width-5) ? this.getSize().width-5 : e.getX();
+				y = e.getY() > (this.getSize().height-5) ? this.getSize().height-5 : e.getY();
 				return new Point(95, 40);
 			}
 		};
-		editCategory.setToolTipText(" ");
 		editCategory.addMouseListener(new ToolTipListener());
 		editCategory.addActionListener(new ActionListener(){
 			@Override

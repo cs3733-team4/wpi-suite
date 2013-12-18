@@ -25,7 +25,6 @@ import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.week.WeekCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
@@ -35,7 +34,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
  */
 public class DayPanel extends JPanel
 {
-	HashMap<Event, DayItem> guides = new HashMap<>();
+	HashMap<Displayable, DayItem> guides = new HashMap<>();
 	private DateTime date;
 	private DayItem selected;
 	private boolean isSomethingDragging;
@@ -57,7 +56,7 @@ public class DayPanel extends JPanel
 			public void mouseReleased(MouseEvent arg0) {
 				if(isSomethingDragging)
 				{
-					MainPanel.getInstance().display(selected.getEvent().getStart());
+					MainPanel.getInstance().display(selected.getDisplayable().getInterval().getStart());
 				}
 				isSomethingDragging = false;
 				selected = null;
@@ -82,7 +81,6 @@ public class DayPanel extends JPanel
 			
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				// TODO Auto-generated method stub
 				
 			}
 		});
@@ -124,7 +122,7 @@ public class DayPanel extends JPanel
 		this.inWeekView = inWeekView;
 	}
 	
-	public void setEvents(List<Event> events, DateTime displayedDay)
+	public void setEvents(List<Displayable> events, DateTime displayedDay)
 	{
 		this.date = displayedDay;
 		List<DayItem> collidingEvents = CollisionAlgorithms.createEventsReallyNicely(events, displayedDay);
@@ -133,7 +131,7 @@ public class DayPanel extends JPanel
 		guides.clear();
 		for (DayItem dayItem : collidingEvents)
 		{
-			guides.put(dayItem.getEvent(), dayItem);
+			guides.put(dayItem.getDisplayable(), dayItem);
 			add(dayItem);
 		}
 		revalidate();
@@ -171,11 +169,11 @@ public class DayPanel extends JPanel
 	{
 		for (DayItem v : guides.values())
 		{
-			if(item instanceof Event && v.getEvent().getEventID().equals(((Event) item).getEventID()))
-				item = v.getEvent();
+			if(item instanceof Displayable && v.getDisplayable().getUuid().equals(((Displayable) item).getUuid()))
+				item = v.getDisplayable();
 			v.setSelected(false);
 		}
-		if (item instanceof Event)
+		if (item instanceof Displayable)
 		{
 			selected = guides.get(item);
 			if(selected != null)

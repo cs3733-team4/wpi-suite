@@ -20,6 +20,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import org.joda.time.DateTime;
+import org.joda.time.MutableDateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
@@ -39,14 +40,14 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 	private Commitment commitmentToEdit;
 	private UUID existingCommitmentID; // UUID of event being edited
 	private boolean isEditingCommitment;
-	private DateTime currentTime;
+	private DateTime selectedTime;
 
 	// For a new commitment.
 	public AddCommitmentDisplay()
 	{
 		super(false);
 		this.isEditingCommitment = false;
-		this.currentTime = new DateTime();
+		this.selectedTime = new DateTime();
 		setCurrentDateAndTime();
 		setUpListeners();
 	}
@@ -57,7 +58,7 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		super(false);
 		this.isEditingCommitment = true;
 		this.commitmentToEdit = mCommitment;
-		this.existingCommitmentID = commitmentToEdit.getCommitmentID();
+		this.existingCommitmentID = commitmentToEdit.getUuid();
 		populateCommitmentFields(commitmentToEdit);
 		setUpListeners();
 	}
@@ -70,7 +71,7 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 	private void populateCommitmentFields(Commitment mCommitment)
 	{
 		nameTextField.setText(mCommitment.getName());
-		startTimeDatePicker.setDateTime(mCommitment.getDate());
+		startTimeDatePicker.setDateTime(mCommitment.getInterval().getStart());
 		participantsTextField.setText(mCommitment.getParticipants());
 		this.rdbtnPersonal.setSelected(!mCommitment.isProjectwide());
 		this.rdbtnTeam.setSelected(mCommitment.isProjectwide());
@@ -83,14 +84,7 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		{
 			this.eventCategoryPicker.setSelectedItem(Category.DEFAULT_CATEGORY);
 		}
-		if (mCommitment.getStatus()!=null)
-		{
-			this.commitmentStatusPicker.setSelectedItem(mCommitment.getStatus());
-		}
-		else
-		{
-			this.commitmentStatusPicker.setSelectedItem(Commitment.DEFAULT_STATUS.toString());
-		}
+		this.commitmentStatusPicker.setSelectedItem(mCommitment.getStatus().toString());
 	}
 
 	/**
@@ -178,7 +172,7 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		e.setDate(startTimeDatePicker.getDateTime());
 		e.setProjectCommitment(rdbtnTeam.isSelected());
 		e.setParticipants(participantsTextField.getText().trim());
-		e.setCategory(((Category)eventCategoryPicker.getSelectedItem()).getCategoryID());
+		e.setCategory(((Category)eventCategoryPicker.getSelectedItem()).getUuid());
 		if(commitmentStatusPicker.getSelectedItem()=="Not Started")
 			e.setStatus(CommitmentStatus.NotStarted);
 		else if(commitmentStatusPicker.getSelectedItem()=="In Progress")
@@ -187,7 +181,7 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 			e.setStatus(CommitmentStatus.Complete);
 		
 		if (isEditingCommitment) {
-			e.setCommitmentID(existingCommitmentID);
+			e.setUuid(existingCommitmentID);
 			MainPanel.getInstance().updateCommitment(e);
 		} else
 			MainPanel.getInstance().addCommitment(e);
@@ -270,10 +264,9 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 	}
 
 	/**
-	 * Makes sure a commitment isn't being edited in another tab
-	 * @param other
-	 * 		Other tab being compared
-	 * @return true if both are the same, false if they are different or if the current commitment is null
+	 * Checks if this display has the same commitment as the display provided
+	 * @param other the other display to compare
+	 * @return true if the displays' commitments match
 	 */
 	public boolean matchingCommitment(AddCommitmentDisplay other)
 	{
@@ -288,6 +281,16 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 	 */
 	public void setCurrentDateAndTime()
 	{
-		this.startTimeDatePicker.setDateTime(currentTime);
+		this.startTimeDatePicker.setDate(selectedTime);
+		MutableDateTime mdt = DateTime.now().toMutableDateTime();
+		int quarterHours = mdt.getMinuteOfHour()/15;
+		int minutes = quarterHours < 4 ? (quarterHours + 1)*15 : (quarterHours)*15;
+		if(minutes == 60)
+		{
+			mdt.addHours(1);
+			mdt.setMinuteOfHour(0);
+		}else
+			mdt.setMinuteOfHour(minutes);
+		this.startTimeDatePicker.setTime(mdt.toDateTime());
 	}
 }

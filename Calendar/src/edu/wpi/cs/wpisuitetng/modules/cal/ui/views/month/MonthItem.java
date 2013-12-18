@@ -28,10 +28,10 @@ import javax.swing.border.EmptyBorder;
 
 import org.joda.time.DateTime;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentStatus;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentStatus;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 
@@ -107,7 +107,7 @@ public class MonthItem extends JPanel
         // If displayable is commitment, show commitment sign and name
         if (ndisp instanceof Commitment)
         {
-        	arrow.setForeground(Colors.COMMITMENT_NOTIFICATION);
+        	arrow.setForeground(Colors.COMMITMENT_NOT_STARTED);
         	arrow.setText("\uFF01");
         	
         	try {
@@ -115,9 +115,9 @@ public class MonthItem extends JPanel
         		if (((Commitment) ndisp).getStatus() != null)
         		{
         			Image img = ImageIO.read(getClass().getResource("/edu/wpi/cs/wpisuitetng/modules/cal/img/commitment_unstarted.png"));
-        			if (((Commitment) ndisp).getStatus().equals(CommitmentStatus.InProgress.toString()))
+        			if (((Commitment) ndisp).getStatus() == CommitmentStatus.InProgress)
         				img = ImageIO.read(getClass().getResource("/edu/wpi/cs/wpisuitetng/modules/cal/img/commitment_in_progress.png"));
-        			else if (((Commitment) ndisp).getStatus().equals(CommitmentStatus.Complete.toString()))
+        			else if (((Commitment) ndisp).getStatus() == CommitmentStatus.Complete)
         				img = ImageIO.read(getClass().getResource("/edu/wpi/cs/wpisuitetng/modules/cal/img/commitment_complete.png"));
         		    arrow = new JLabel(new ImageIcon(img));
         		}    		    
@@ -146,12 +146,12 @@ public class MonthItem extends JPanel
         	}
         	else if(isEndAfterCurrent(day, eventEnd))
         	{
-        		time.setText(simpleTime(mDisplayable.getDate()));
+        		time.setText(simpleTime(mDisplayable.getInterval().getStart()));
         		arrow.setText("\u2192");
         	}
         	else
         	{
-        		time.setText(simpleTime(mDisplayable.getDate()));
+        		time.setText(simpleTime(mDisplayable.getInterval().getStart()));
         	}
         }
 

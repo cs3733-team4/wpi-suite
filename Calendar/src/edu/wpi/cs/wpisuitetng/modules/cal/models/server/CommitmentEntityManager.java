@@ -23,6 +23,7 @@ import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
+
 /**
  * This is the entity manager for the Commitment in the
  * CommitmentManager module.
@@ -82,7 +83,7 @@ public class CommitmentEntityManager extends CachedEntityManager<Commitment> {
 		UUID from = UUID.fromString(uuid);
 		try 
 		{
-			return db.retrieve(Commitment.class, "commitmentID", from, ses.getProject()).toArray(new Commitment[0]);
+			return db.retrieve(Commitment.class, "uuid", from, ses.getProject()).toArray(new Commitment[0]);
 		}
 		catch (WPISuiteException e)
 		{
@@ -170,7 +171,7 @@ public class CommitmentEntityManager extends CachedEntityManager<Commitment> {
 		 * We have to get the original defect from db4o, copy properties from updatedCommitments,
 		 * then save the original Commitment again.
 		 */
-		List<Model> oldCommitments = db.retrieve(Commitment.class, "commitmentID", updatedCommitment.getIdentification(), session.getProject());
+		List<Model> oldCommitments = db.retrieve(Commitment.class, "uuid", updatedCommitment.getUuid(), session.getProject());
 		if(oldCommitments.size() < 1 || oldCommitments.get(0) == null) {
 			throw new BadRequestException("Commitment with ID does not exist.");
 		}
@@ -217,7 +218,7 @@ public class CommitmentEntityManager extends CachedEntityManager<Commitment> {
 	@Override
 	protected String updated(Commitment e)
 	{
-		return new Gson().toJson(new Commitment.SerializedAction(e, e.getCommitmentID(), false));
+		return new Gson().toJson(new Commitment.SerializedAction(e, e.getUuid(), false));
 	}
 
 	@Override

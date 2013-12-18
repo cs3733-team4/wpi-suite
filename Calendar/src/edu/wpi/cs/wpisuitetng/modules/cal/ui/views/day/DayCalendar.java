@@ -10,15 +10,21 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day;
 
 import java.awt.BorderLayout;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoundedRangeModel;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
 import org.joda.time.DateTime;
+import org.joda.time.Interval;
 import org.joda.time.MutableDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -26,9 +32,9 @@ import org.joda.time.format.DateTimeFormatter;
 import com.lowagie.text.Font;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CommitmentClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.collisiondetection.DayPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
@@ -38,7 +44,12 @@ public class DayCalendar extends AbstractCalendar
 {
 
 	private DateTime time;
+	private DateTime dayStart;
+	private DateTime dayEnd;
+	
 	private DayPanel current;
+	
+	private List<Displayable> displayableList = new ArrayList<Displayable>();
 	
 	private JPanel holder = new JPanel();
 	private JScrollPane scroll = new JScrollPane(holder);
@@ -48,10 +59,19 @@ public class DayCalendar extends AbstractCalendar
 	public DayCalendar(DateTime on)
 	{
 		this.time = on;
+		
+		MutableDateTime mdt = time.toMutableDateTime();
+		mdt.setMillis(0);
+		this.dayStart = mdt.toDateTime();
+		mdt.addDays(1);
+		mdt.addMillis(-1);
+		this.dayEnd = mdt.toDateTime();
+		
 		scroll.setBackground(Colors.TABLE_BACKGROUND);
 		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scroll.getVerticalScrollBar().setUnitIncrement(20);
+		scroll.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		holder.setBackground(Colors.TABLE_BACKGROUND);
 		
 		this.setLayout(new BorderLayout());
@@ -71,16 +91,21 @@ public class DayCalendar extends AbstractCalendar
 		dayTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		this.add(dayTitle, BorderLayout.NORTH);
 
+		this.displayableList = getVisibleDisplayables();
+		
 		this.current = new DayPanel();
-		this.current.setEvents(getVisibleEvents(), time);
-
+		this.current.setEvents(getDisplayablesInInterval(time,time.plusDays(1)), time);
+		this.current.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, Colors.BORDER));
+		
 		this.holder.add(new DayGridLabel(), BorderLayout.WEST);
 		this.holder.add(this.current, BorderLayout.CENTER);
+		
 		BoundedRangeModel jsb = scroll.getVerticalScrollBar().getModel();
 		double day = time.getMinuteOfDay();
 		day /= time.minuteOfDay().getMaximumValue();
 		day *= (jsb.getMaximum()) - jsb.getMinimum();
 		jsb.setValue((int)day);
+		
 		// notify mini-calendar to change
 		MainPanel.getInstance().miniMove(time);
 	}
@@ -89,7 +114,7 @@ public class DayCalendar extends AbstractCalendar
 	 * Get visible events for the current day view
 	 * @return returns the list of events to display
 	 */
-	private List<Event> getVisibleEvents()
+	private List<Displayable> getVisibleDisplayables()
 	{
 		// Set up from and to datetime for search
 		MutableDateTime f = new MutableDateTime(time);
@@ -97,22 +122,32 @@ public class DayCalendar extends AbstractCalendar
 		DateTime from = f.toDateTime();
 		f.addDays(1);
 		DateTime to = f.toDateTime();
-		return EventClient.getInstance().getEvents(from, to);
+		
+		// Return list of events to be displayed
+		List<Displayable> visibleDisplayables = new ArrayList<Displayable>();
+		visibleDisplayables.addAll(EventClient.getInstance().getEvents(from, to));
+		visibleDisplayables.addAll(CommitmentClient.getInstance().getCommitments(from, to));
+		
+		Collections.sort(visibleDisplayables, new Comparator<Displayable>() {
+			public int compare(Displayable d1, Displayable d2) {
+		        return d1.getInterval().getStart().getMinuteOfDay() < d2.getInterval().getStart().getMinuteOfDay() ? -1 :
+		        		d1.getInterval().getStart().getMinuteOfDay() > d2.getInterval().getStart().getMinuteOfDay() ? 1 : 0;
+		    }
+		});
+		
+		return visibleDisplayables;
 	}
 
 	@Override
 	public void next()
 	{
-		this.time = Months.nextDay(this.time);
-		this.generateDay();
+		display(Months.nextDay(this.time));
 	}
 
 	@Override
 	public void previous()
 	{
-		this.time = Months.prevDay(this.time);
-		this.generateDay();
-
+		display(Months.prevDay(this.time));
 	}
 
 	@Override
@@ -121,8 +156,32 @@ public class DayCalendar extends AbstractCalendar
 		this.time = newTime;
 		this.generateDay();
 
-		this.current.repaint();
-		
+		SwingUtilities.invokeLater(new Runnable() {
+			
+			@Override
+			public void run()
+			{
+				// Scroll to now
+				BoundedRangeModel jsb = scroll.getVerticalScrollBar().getModel();
+				
+				double day;
+				
+				if(!displayableList.isEmpty())
+				{
+					day = displayableList.get(0).getInterval().getStart().getMinuteOfDay();
+				}else
+				{
+					day = DateTime.now().getMinuteOfDay();
+				}
+				
+				day-= (day > 60) ? 60 : day;
+				
+				day /= time.minuteOfDay().getMaximumValue();
+				day *= (jsb.getMaximum()-jsb.getMinimum());
+				jsb.setValue((int) day);
+			}
+		});
+
 		MainPanel.getInstance().revalidate();
 		MainPanel.getInstance().repaint();
 	}
@@ -138,5 +197,45 @@ public class DayCalendar extends AbstractCalendar
 	public void select(Displayable item)
 	{
 		current.select(item);		
+	}
+	
+	@Override
+	public void setSelectedDay(DateTime time)
+	{
+		
+	}
+	
+	/**
+	 * Gets all the events in the week that also are in the given interval
+	 * @param intervalStart start of the interval to check
+	 * @param intervalEnd end of the interval to check
+	 * @return list of events that are both in the week and interval
+	 */
+	private List<Displayable> getDisplayablesInInterval(DateTime intervalStart, DateTime intervalEnd)
+	{
+		List<Displayable> retrievedDisplayables = new ArrayList<>();
+		Interval mInterval = new Interval(intervalStart, intervalEnd);
+
+		for (Displayable d : displayableList)
+		{
+			if (d.getInterval().toDuration().getStandardHours()>24)
+				continue;
+
+			if (isDisplayableInInterval(d, mInterval))
+			{
+				retrievedDisplayables.add(d);
+			}
+		}
+
+		return retrievedDisplayables;
+	}
+	
+	private boolean isDisplayableInInterval(Displayable mDisplayable, Interval mInterval)
+	{
+		DateTime s = mDisplayable.getInterval().getStart(), e = mDisplayable.getInterval().getEnd();
+		if (this.time.isAfter(s))
+			s = this.time;
+
+		return (s.isBefore(e) && mInterval.contains(s));
 	}
 }

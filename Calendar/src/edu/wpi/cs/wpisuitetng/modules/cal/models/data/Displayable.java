@@ -21,41 +21,45 @@ import org.joda.time.Interval;
 public interface Displayable
 {
 	/**
-	 * 
-	 * @return
+	 * Gets the name of the event/commitment.
+	 * @return the name
 	 */
 	public String getName();
 
 	/**
-	 * 
-	 * @return
+	 * Get the description for the event/commitment.
+	 * @return the respective description
 	 */
 	public String getDescription();
 
 	/**
-	 * 
-	 * @return
+	 * Gets the participants for the event/commitment.
+	 * @return the participants for said event/commitment.
 	 */
 	public String getParticipants();
-
-	/**
-	 * The date to display. If there are more than one, the default date (start)
-	 */
-	public DateTime getDate();
 	
+	/**
+	 * Get the time interval
+	 * @return the interval
+	 */
 	public Interval getInterval();
 	
+	/**
+	 * Sets the spanning interval. Note that commitments ignore the end time
+	 * @param newInterval the interval to update
+	 */
+	public void setInterval(Interval newInterval);
+	
+	/**
+	 * See if event/commitment pertains to the project.
+	 * @return true if it pertains to the project.
+	 */
 	public boolean isProjectwide();
 	
 	/**
 	 * deletes this Displayable
 	 */
 	public void delete();
-	
-	/**
-	 * sets the time (for easy updating)
-	 */
-	public void setTime(DateTime newTime);
 	
 	/**
 	 * updates this event (sends call to db layer)
@@ -81,7 +85,7 @@ public interface Displayable
 	 * 
 	 * @return a UUID
 	 */
-	public UUID getIdentification();
+	public UUID getUuid();
 	
 	/**
 	 * @return the category
@@ -94,6 +98,16 @@ public interface Displayable
 	 */
 	public Color getColor();
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public String toJSON();
 	
+	/**
+	 * Gets the start time of the event on a given day.
+	 * @param givenDay the day to check
+	 * @return the start time for that day
+	 */
+	public Interval getIntervalOnDay(DateTime givenDay);
 }

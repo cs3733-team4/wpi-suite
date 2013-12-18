@@ -66,8 +66,8 @@ import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.year.YearCalendar;
  * The main UI of the Calendar module. This singleton is basically the controller for everything
  * in the calendar module. It manages most resources.
  */
-public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
-	
+public class MainPanel extends JTabbedPane implements MiniCalendarHostIface
+{	
 	private JTabbedPane mTabbedPane;
 	private MiniCalendarPanel mMiniCalendarPanel;
 	private JPanel mainPaneContainer;
@@ -160,7 +160,6 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 			finishInit();
 		}
 		super.paint(g);
-		this.mainCalendarNavigationPanel.grabFocus();
 	}
 	
 	/**
@@ -382,7 +381,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	 * @param updateEvent event to update
 	 */
 	public void updateEvent(Event updateEvent){
-		if((currentSelected instanceof Event) && updateEvent.getIdentification().equals(((Event) currentSelected).getIdentification()))
+		if((currentSelected instanceof Event) && updateEvent.getUuid().equals(((Event) currentSelected).getUuid()))
 			clearSelected();
 		events.update(updateEvent);
 	}
@@ -540,6 +539,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	public void updateSelectedDisplayable(Displayable item)
 	{
 		mCalendar.select(item);
+		this.sideTabbedPanel.selectDetailTab();
 		this.currentSelected = item;	
 		sideTabbedPanel.showDetails(item);
 	}
@@ -659,6 +659,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	public void setSelectedDay(DateTime time)
 	{
 		lastTime = time;
+		mCalendar.setSelectedDay(time);
 	}
 	
 	/**

@@ -21,6 +21,7 @@ import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentStatus;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CachingClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CommitmentClient;
@@ -34,7 +35,7 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
  */
 public class Commitment extends AbstractModel implements Displayable
 {
-	private UUID commitmentID = UUID.randomUUID();
+	private UUID uuid = UUID.randomUUID();
 	private String name;
 	private String description;
 	private Date duedate;
@@ -64,17 +65,6 @@ public class Commitment extends AbstractModel implements Displayable
 	public Commitment addDescription(String description)
 	{
 		setDescription(description);
-		return this;
-	}
-	
-	/**
-	 * This does the same things as setDate, it is only kept for compatibility with older code.
-	 * @param date the starting time
-	 * @return this event after having its start date set
-	 */
-	public Commitment setDueDate(DateTime date)
-	{
-		setDate(date);
 		return this;
 	}
 	
@@ -137,29 +127,21 @@ public class Commitment extends AbstractModel implements Displayable
 	public Boolean identify(Object o)
 	{
 		if (o instanceof String)
-			return getIdentification().toString().equals((String)(o));
+			return getUuid().toString().equals((String)(o));
 		else if (o instanceof UUID)
-			return getIdentification().equals((UUID)(o));
+			return getUuid().equals((UUID)(o));
 		else if (o instanceof Commitment)
-			return getIdentification().equals(((Commitment)(o)).getIdentification());
+			return getUuid().equals(((Commitment)(o)).getUuid());
 		return false;
-	}
-
-	/**
-	 * @return the commitmentID
-	 */
-	public UUID getCommitmentID()
-	{
-		return commitmentID;
 	}
 
 	/**
 	 * @param CommitmentID
 	 *            the CommitmentID to set
 	 */
-	public void setCommitmentID(UUID commitmentID)
+	public void setUuid(UUID commitmentID)
 	{
-		this.commitmentID = commitmentID;
+		this.uuid = commitmentID;
 	}
 
 	/**
@@ -199,18 +181,28 @@ public class Commitment extends AbstractModel implements Displayable
 	/**
 	 * @return the start
 	 */
-	public DateTime getDate()
+	@Override
+	public Interval getInterval()
 	{
-		return new DateTime(duedate);
+		return new Interval(new DateTime(duedate), new DateTime(duedate));
 	}
 
 	/**
 	 * @param start
 	 *            the start to set
 	 */
-	public void setDate(DateTime start)
+	public void setInterval(Interval start)
 	{
-		this.duedate = start.toDate();
+		this.duedate = start.getStart().toDate();
+	}
+	
+	/**
+	 * @param dt date to set the commitment to
+	 */
+	public Commitment setDate(DateTime dt)
+	{
+		duedate = dt.toDate();
+		return this;
 	}
 	
 	/**
@@ -283,21 +275,6 @@ public class Commitment extends AbstractModel implements Displayable
 	}
 
 	@Override
-	public void setTime(DateTime newTime)
-	{
-		MutableDateTime mdt = new MutableDateTime(this.duedate);
-		mdt.setDayOfYear(newTime.getDayOfYear());
-		mdt.setYear(newTime.getYear());
-		this.duedate = mdt.toDate();
-	}
-	
-	@Override
-	public Interval getInterval()
-	{
-		return new Interval(getDate(), getDate());
-	}
-
-	@Override
 	public void update()
 	{
 		CommitmentClient.getInstance().update(this);
@@ -326,18 +303,44 @@ public class Commitment extends AbstractModel implements Displayable
 	}
 	
 	@Override
-	public UUID getIdentification()
+	public UUID getUuid()
 	{
-		return commitmentID;
+		return uuid;
 	}
 
+	/**
+	 * this is primarily used for multiday events
+	 * 
+	 * @param givenDay gets the time that this event starts on a given day
+	 * @return when this event starts
+	 */
+	@Override
+	public Interval getIntervalOnDay(DateTime givenDay)
+	{
+		DateTime start = new DateTime(duedate);
+		MutableDateTime mDisplayedDay = new MutableDateTime(givenDay);
+		mDisplayedDay.setMillisOfDay(0);
+		
+		if (start.isBefore(mDisplayedDay))
+		{
+			return new Interval(mDisplayedDay, mDisplayedDay);
+		}
+		mDisplayedDay.addDays(1);
+		mDisplayedDay.addMillis(-1);
+		if (start.isAfter(mDisplayedDay))
+		{
+			return new Interval(mDisplayedDay, mDisplayedDay);
+		}
+		return new Interval(start, start);
+	}
+	
 	/**
 	 * Gets the current status the commitment is at.
 	 * @return the current commitment status as a String.
 	 */
-	public String getStatus()
+	public CommitmentStatus getStatus()
 	{
-		return this.status.toString();
+		return this.status;
 	}
 	
 	public Commitment addStatus(CommitmentStatus status) {
@@ -353,7 +356,14 @@ public class Commitment extends AbstractModel implements Displayable
 	{
 		this.status = status;
 	}
-
+	
+	public Color getStatusColor()
+	{
+		return status == CommitmentStatus.NotStarted ? Colors.COMMITMENT_NOT_STARTED :
+				status == CommitmentStatus.InProgress ? Colors.COMMITMENT_IN_PROGRESS :
+														Colors.COMMITMENT_COMPLETE;
+	}
+	
 	public static class SerializedAction extends CachingClient.SerializedAction<Commitment>
 	{
 		public SerializedAction(Commitment e, UUID eventID, boolean b)

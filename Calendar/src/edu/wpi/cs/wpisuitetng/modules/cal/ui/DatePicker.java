@@ -22,6 +22,7 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
@@ -36,8 +37,6 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.navigation.MiniCalendarHostIface;
-
-import javax.swing.BoxLayout;
 
 /**
  * This is the DateTime picker that enables picking dates, and datetimes. Has awesome drop-down mini-month 
@@ -310,8 +309,30 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 	 * @param previous the DateTime object from which to obtain values
 	 */
 	public void setDateTime(DateTime previous) {
-			this.date.setText(previous.toString(dateFmt));
-			this.time.setText(previous.toString(timeFmt));
+			this.date.setValue(previous.toString(dateFmt));
+			this.time.setValue(previous.toString(timeFmt));
+			if (previous.getHourOfDay() >= 12){
+				this.AMPM.setSelectedIndex(1);
+			}
+			else{
+				this.AMPM.setSelectedIndex(0);
+			}
+	}
+	
+	/**
+	 * Sets date of DatePicker to specified value
+	 * @param previous the DateTime object from which to obtain values
+	 */
+	public void setDate(DateTime previous) {
+			this.date.setValue(previous.toString(dateFmt));
+	}
+	
+	/**
+	 * Sets time of DatePicker to specified value
+	 * @param previous the DateTime object from which to obtain values
+	 */
+	public void setTime(DateTime previous) {
+			this.time.setValue(previous.toString(timeFmt));
 			if (previous.getHourOfDay() >= 12){
 				this.AMPM.setSelectedIndex(1);
 			}

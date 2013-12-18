@@ -70,8 +70,8 @@ public class SidebarTabbedPane extends JTabbedPane{
 	private JButton detailEditButton;
 	private JButton detailDeleteButton;
 	private JTextPane commitmentTab;
+	private DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("MM/dd/yy h:mm aa");
 	private DateTimeFormatter timeFormatter = DateTimeFormat.forPattern("h:mm aa");
-	private DateTimeFormatter dateFormatter = DateTimeFormat.forPattern("MM/dd/yy");
 	private Displayable currentDisplayable;
 	
 	// Category filter tab
@@ -126,7 +126,6 @@ public class SidebarTabbedPane extends JTabbedPane{
         boldRedTextStyle = new SimpleAttributeSet(normalTextStyle);
         StyleConstants.setBold(boldRedTextStyle, true);
         StyleConstants.setForeground(boldRedTextStyle, Color.MAGENTA);
-		
 	}
 	
 	/**
@@ -213,7 +212,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 	    // put entire tab into a scroll pane
 	    detailScrollPane = new JScrollPane(detailTextPane);
 	    detailScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-	    detailScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+	    detailScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 	    detailScrollPane.setBorder( new EmptyBorder(5,5,5,5));
 	    
 	    // add text area and button container to detail tab
@@ -341,8 +340,8 @@ public class SidebarTabbedPane extends JTabbedPane{
 					detailTextDoc.insertString(detailTextDoc.getLength(), "Time:\n   " + ((Event) mDisplayable).getStart().toString(timeFormatter) + " - " + ((Event) mDisplayable).getEnd().toString(timeFormatter) + "\n", normalTextStyle);
 				else
 				{
-					detailTextDoc.insertString(detailTextDoc.getLength(), "Starts:\n   " + ((Event) mDisplayable).getStart().toString(dateFormatter) + " " + ((Event) mDisplayable).getStart().toString(timeFormatter) + "\n", normalTextStyle);
-					detailTextDoc.insertString(detailTextDoc.getLength(), "Ends:\n   " + ((Event) mDisplayable).getEnd().toString(dateFormatter) + " " + ((Event) mDisplayable).getEnd().toString(timeFormatter) + "\n", normalTextStyle);
+					detailTextDoc.insertString(detailTextDoc.getLength(), "Starts:\n   " + ((Event) mDisplayable).getStart().toString(dateTimeFormatter) + "\n", normalTextStyle);
+					detailTextDoc.insertString(detailTextDoc.getLength(), "Ends:\n   " + ((Event) mDisplayable).getEnd().toString(dateTimeFormatter) + "\n", normalTextStyle);
 				}
 				
 				detailTextDoc.insertString(detailTextDoc.getLength(), "Description:\n   " + mDisplayable.getDescription() + "\n", normalTextStyle);
@@ -361,14 +360,13 @@ public class SidebarTabbedPane extends JTabbedPane{
 	        {
 				detailTitleLabel.setText(mDisplayable.getName());
 				detailTitleLabel.setOpaque(false);
-	        	detailTextDoc.insertString(detailTextDoc.getLength(), "Date:\n   " + ((Commitment) mDisplayable).getDate().toString(dateFormatter) + "\n", normalTextStyle);
-	        	detailTextDoc.insertString(detailTextDoc.getLength(), "Time:\n   " + ((Commitment) mDisplayable).getDate().toString(timeFormatter) + "\n", normalTextStyle);
+	        	detailTextDoc.insertString(detailTextDoc.getLength(), "Date:\n   " + mDisplayable.getInterval().getStart().toString(dateTimeFormatter) + "\n", normalTextStyle);
 	        	detailTextDoc.insertString(detailTextDoc.getLength(), "Description:\n   " + mDisplayable.getDescription() + "\n", normalTextStyle);
 	        	if (((Commitment)mDisplayable).getAssociatedCategory() != null)
 	        	{
 	        		detailTextDoc.insertString(detailTextDoc.getLength(), "Category:\n   " + ((Commitment)mDisplayable).getAssociatedCategory().getName() + "\n", normalTextStyle);	
 	        	}
-	        	detailTextDoc.insertString(detailTextDoc.getLength(), "Status:\n   " + ((Commitment)mDisplayable).getStatus() + "\n", normalTextStyle);
+	        	detailTextDoc.insertString(detailTextDoc.getLength(), "Status:\n   " + ((Commitment)mDisplayable).getStatus().toString() + "\n", normalTextStyle);
 	        }catch(Exception e)
 	        {
 	        	e.printStackTrace();
@@ -470,9 +468,9 @@ public class SidebarTabbedPane extends JTabbedPane{
 			container.setMaximumSize(new Dimension(10000, 20));
 			
 			// Store reference to check boxes and categories
-			if (categoryCheckBox.isSelected() && !(selectedCategories.contains(c.getCategoryID())))
+			if (categoryCheckBox.isSelected() && !(selectedCategories.contains(c.getUuid())))
 			{
-					selectedCategories.add(c.getCategoryID());
+					selectedCategories.add(c.getUuid());
 			}
 			
 			if (!checkBoxCategoryMap.containsKey(categoryCheckBox))
@@ -526,10 +524,8 @@ public class SidebarTabbedPane extends JTabbedPane{
 					showCommitments = true;
 				else
 				{
-					if (! selectedCategories.contains(referencedCategory.getCategoryID()))
-						selectedCategories.add(referencedCategory.getCategoryID());
-					catsLeft++;
-					clearAllButton.setEnabled(true);
+					if (! selectedCategories.contains(referencedCategory.getUuid()))
+						selectedCategories.add(referencedCategory.getUuid());
 				}
 			} else
 			{
@@ -539,11 +535,11 @@ public class SidebarTabbedPane extends JTabbedPane{
 					showCommitments = false;
 				else
 				{
-					if (selectedCategories.contains(referencedCategory.getCategoryID()))
-						selectedCategories.remove(referencedCategory.getCategoryID());
+					if (selectedCategories.contains(referencedCategory.getUuid()))
+						selectedCategories.remove(referencedCategory.getUuid());
 					catsLeft--;
-					if(catsLeft==0)
-						clearAllButton.setEnabled(false);
+					 if(catsLeft==0)
+						 clearAllButton.setEnabled(false);
 				}
 			}
 			if (isUser)
@@ -566,8 +562,8 @@ public class SidebarTabbedPane extends JTabbedPane{
 			if (!key.isSelected())
 			{
 				key.setSelected(true);
-				if(! selectedCategories.contains(value.getCategoryID()))
-					selectedCategories.add(value.getCategoryID());
+				if(! selectedCategories.contains(value.getUuid()))
+					selectedCategories.add(value.getUuid());
 			}
 		}
 		
@@ -614,6 +610,22 @@ public class SidebarTabbedPane extends JTabbedPane{
 	 */
 	public boolean showEvents(){
 		return this.showEvents;
+	}
+
+	/**
+	 * Focuses the details tab
+	 */
+	public void selectDetailTab() {
+		this.setSelectedComponent(detailTab);
+		
+	}
+	
+	/**
+	 * Focuses the filter tab
+	 */
+	public void selectFilterTab() {
+		this.setSelectedComponent(categoryFilterTab);
+		
 	}
 	
 }
