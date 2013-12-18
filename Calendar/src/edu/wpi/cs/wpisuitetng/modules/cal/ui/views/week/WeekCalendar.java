@@ -80,6 +80,7 @@ public class WeekCalendar extends AbstractCalendar
 	private JPanel smithsonian = new JPanel();
 	private JLabel dayHeaders[] = new JLabel[7];
 	private JPanel hourLabels;
+	private boolean scrolled = false;
 	/**
 	 * 
 	 * @param on
@@ -337,6 +338,9 @@ public class WeekCalendar extends AbstractCalendar
 			@Override
 			public void run()
 			{
+				if (scrolled)
+					return;
+				scrolled = true;
 				// Scroll to now
 				BoundedRangeModel jsb = smithsonianScroller.getVerticalScrollBar().getModel();
 				

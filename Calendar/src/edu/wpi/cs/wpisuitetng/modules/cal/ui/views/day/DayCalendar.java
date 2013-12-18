@@ -156,32 +156,6 @@ public class DayCalendar extends AbstractCalendar
 		this.time = newTime;
 		this.generateDay();
 
-		SwingUtilities.invokeLater(new Runnable() {
-			
-			@Override
-			public void run()
-			{
-				// Scroll to now
-				BoundedRangeModel jsb = scroll.getVerticalScrollBar().getModel();
-				
-				double day;
-				
-				if(!displayableList.isEmpty())
-				{
-					day = displayableList.get(0).getInterval().getStart().getMinuteOfDay();
-				}else
-				{
-					day = DateTime.now().getMinuteOfDay();
-				}
-				
-				day-= (day > 60) ? 60 : day;
-				
-				day /= time.minuteOfDay().getMaximumValue();
-				day *= (jsb.getMaximum()-jsb.getMinimum());
-				jsb.setValue((int) day);
-			}
-		});
-
 		MainPanel.getInstance().revalidate();
 		MainPanel.getInstance().repaint();
 	}
@@ -218,8 +192,8 @@ public class DayCalendar extends AbstractCalendar
 
 		for (Displayable d : displayableList)
 		{
-			if (d.getInterval().toDuration().getStandardHours()>24)
-				continue;
+//			if (d.getInterval().toDuration().getStandardHours()>24)
+//				continue;
 
 			if (isDisplayableInInterval(d, mInterval))
 			{
