@@ -20,8 +20,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 import javax.swing.BorderFactory;
@@ -43,6 +45,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.ui.documentation.DocumentMainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CommitmentClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventClient;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.ICategoryRegister;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
@@ -93,6 +96,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	private ViewSize view = ViewSize.Month;
 	private static MainPanel instance;
 	private Displayable currentSelected;
+	private List<ICategoryRegister> registered = new ArrayList<ICategoryRegister>();
 	
 	//Left these as public variables as they are updated & read in refresh loops so encapsulation makes no sense at all (just overhead)
 	public boolean showPersonal = true;
@@ -327,9 +331,14 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 				public void actionPerformed(ActionEvent e)
 				{
 					int ID = ((Title)e.getSource()).ID;
-					mTabbedPane.remove(tabs.get(ID));
+					JComponent jc = tabs.get(ID);
+					mTabbedPane.remove(jc);
 					tabs.remove(ID);
-					MainPanel.getInstance().mainCalendarNavigationPanel.grabFocus();
+					mainCalendarNavigationPanel.grabFocus();
+					if (jc instanceof ICategoryRegister)
+					{
+						unregisterCategory((ICategoryRegister) jc);
+					}
 				}
 			};
 			
@@ -501,6 +510,36 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 		mCalendar.display(lastTime);
 		revalidate();
 		repaint();
+	}
+	
+	/**
+	 * Unregister category
+	 * @param sa the category that was deleted
+	 */
+	public void unregisterCategory(ICategoryRegister e)
+	{
+		registered.remove(e);
+	}
+	
+	/**
+	 * Register category
+	 * @param sa the category that was added
+	 */
+	public void registerCategory(ICategoryRegister e)
+	{
+		registered.add(e);
+	}
+	
+	/**
+	 * Refresh categories
+	 */
+	public void refreshCategories(Category.SerializedAction sa)
+	{
+		for (ICategoryRegister e: registered)
+		{
+			e.fire(sa);
+		}
+		refreshView();
 	}
 
 	/**

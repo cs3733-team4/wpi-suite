@@ -33,16 +33,19 @@ import net.miginfocom.swing.MigLayout;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentStatus;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.SelectableField;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryClient;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.ICategoryRegister;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Category;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Category.SerializedAction;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.DatePicker;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.RequestFocusListener;
 
 /**
  * The UI for AddEvent & AddCommitment
  */
-public class DisplayableEditorView extends JPanel
+public class DisplayableEditorView extends JPanel implements ICategoryRegister
 {
 	protected JTextField nameTextField, participantsTextField;
 	protected final ButtonGroup buttonGroup = new ButtonGroup();
@@ -179,6 +182,8 @@ public class DisplayableEditorView extends JPanel
 		saveButton = new JButton("Save");
 		saveButton.setMinimumSize(new Dimension(80, 0));
 		this.add(saveButton, "cell 1 8,alignx right,aligny bottom,tag ok");
+		
+		MainPanel.getInstance().registerCategory(this);
 	}
 	
 	/**
@@ -257,6 +262,14 @@ public class DisplayableEditorView extends JPanel
 			jLabel1.setFont(list.getFont());
 
 			return jPanel1;
+		}
+	}
+
+	@Override
+	public void fire(SerializedAction sa) {
+		if (sa.isDeleted) 
+		{
+			eventCategoryPicker.removeItem(sa.object);
 		}
 	}
 }

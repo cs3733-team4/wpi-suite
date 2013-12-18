@@ -48,7 +48,9 @@ import javax.swing.event.ListSelectionListener;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CommitmentClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventClient;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.ICategoryRegister;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Category;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Category.SerializedAction;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
@@ -57,7 +59,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.utils.HSLColor;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.PastelColorPicker;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.RequestFocusListener;
 
-public class CategoryManager extends JPanel {
+public class CategoryManager extends JPanel implements ICategoryRegister {
 	
 	private int tabid;
 	private JPanel leftCategoryList;
@@ -254,6 +256,8 @@ public class CategoryManager extends JPanel {
 		this.add(leftCategoryList);
 		this.add(rightCategoryEdit);
 		
+		MainPanel.getInstance().registerCategory(this);
+		
 		// Set up listeners and add data to panel
 		
 		setUpListeners();
@@ -328,7 +332,7 @@ public class CategoryManager extends JPanel {
 			MainPanel.getInstance().addCategory(c);
 		}
 		
-		MainPanel.getInstance().refreshCategoryFilterTab(); // Update created/edited category filters
+		//MainPanel.getInstance().refreshCategoryFilterTab(); // Update created/edited category filters
 		
 		clearSelectedCategory();
 		
@@ -405,15 +409,25 @@ public class CategoryManager extends JPanel {
 					System.out.println("Tried to delete while not editing");
 					return;
 				}
-				
-				changeEventOnDelete(selectedCategory.getCategoryID());
-				changeCommitmentOnDelete(selectedCategory.getCategoryID());
-				removeCategory(selectedCategory);
-				
+				System.out.println("a");
+				Category selectedCategory2 = selectedCategory;
+
+				System.out.println("b");
 				clearSelectedCategory();
+
+				System.out.println("c");
+				changeEventOnDelete(selectedCategory2.getCategoryID());
+				System.out.println("d");
+				changeCommitmentOnDelete(selectedCategory2.getCategoryID());
+				System.out.println("e");
+				removeCategory(selectedCategory2);
+
+				System.out.println("f");
 				
 				MainPanel.getInstance().refreshView();
+				System.out.println("g");
 				MainPanel.getInstance().refreshCategoryFilterTab();
+				System.out.println("h");
 			}
 			
 		});
@@ -432,16 +446,13 @@ public class CategoryManager extends JPanel {
 			@Override
 			public void removeUpdate(DocumentEvent e) {
 				categoryNameErrorLabel.setVisible(!validateText(categoryName.getText(), categoryNameErrorLabel));
-				saveCategoryButton.setEnabled(isSaveable());
-				System.out.println("Remove update, and firstEdit is" + firstEdit);
-					
+				saveCategoryButton.setEnabled(isSaveable());					
 			}
 			
 			@Override
 			public void insertUpdate(DocumentEvent e) {
 				categoryNameErrorLabel.setVisible(!validateText(categoryName.getText(), categoryNameErrorLabel));	
 				saveCategoryButton.setEnabled(isSaveable());
-				System.out.println("Insert update, and firstEdit is" + firstEdit);
 				if (firstEdit){
 					saveCategoryButton.setEnabled(false);
 					firstEdit = false;
@@ -463,7 +474,6 @@ public class CategoryManager extends JPanel {
 					selectionChangeErrorLabel.setText("");
 					isEditing = true;
 					firstEdit = true;
-					System.out.println("Selection model, and firstEdit is" + firstEdit);
 					super.setSelectionInterval(index0, index1);
 				}
 				else
@@ -493,8 +503,6 @@ public class CategoryManager extends JPanel {
 	                          colorPicker.moveColorSelector(selectedCategory.getColor());
 	                      }
                       }
-                      
-                      System.out.println("Leaving selection listener, and firstEdit is" + firstEdit);
               }
 		});
 		
@@ -553,18 +561,11 @@ public class CategoryManager extends JPanel {
 	@SuppressWarnings("unchecked")
 	private void populateCategories(DefaultListModel<Category> listModel)
 	{	
-		clearSelected = true;
 		listModel.clear();
 		
-		List<Category> toSort = new ArrayList<Category>();
+		List<Category> toSort = CategoryClient.getInstance().getAllCategories();
 		
-		allCategories = CategoryClient.getInstance().getAllCategories();
-		
-		for (int i = 0; i < allCategories.size(); i++) {
-			Category temp = allCategories.get(i);
-			clearSelected = true;
-			toSort.add(temp);
-		}
+		clearSelected = toSort.size() > 0;
 						
 		Collections.sort(toSort, new Comparator<Category>() {
 
@@ -633,6 +634,11 @@ public class CategoryManager extends JPanel {
 		hideEditionButtons();
 		selectionChangeErrorLabel.setText("");
 		saveCategoryButton.setEnabled(false);
+	}
+
+	@Override
+	public void fire(SerializedAction sa) {
+		populateCategories(JListModel);
 	}
 
 }
