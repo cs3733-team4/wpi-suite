@@ -379,8 +379,6 @@ public class DayItem extends JPanel
 		}
 		// remote buffer overflow
 		ratpack.remove(rows - 1);
-		
-		
 		return ratpack;
 	}
 	
@@ -391,7 +389,6 @@ public class DayItem extends JPanel
 	 */
 	public void setSelected(boolean b)
 	{
-		//lblEventTitle.setForeground(b?Color.WHITE:Color.BLACK);
 		//TODO: Fix the paint order or revert to old selection method
 		if(displayable instanceof Event)
 			setBorder(b ? new CompoundBorder(new LineBorder(displayable.getColor().darker()), new CompoundBorder(new LineBorder(displayable.getColor().darker()), new EmptyBorder(6, 6, 6, 6)))
@@ -401,7 +398,7 @@ public class DayItem extends JPanel
 						: new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new MatteBorder(1, 0, 0, 0, ((Commitment) displayable).getStatusColor()), new CompoundBorder(new LineBorder(Colors.TABLE_GRAY_HEADER.darker()), new EmptyBorder(6, 6, 6, 6)))));
 	}
 
-	public Displayable getEvent() {
+	public Displayable getDisplayable() {
 		return displayable;
 	}
 	
@@ -434,7 +431,6 @@ public class DayItem extends JPanel
 		}else if(displayable instanceof Commitment)
 		{
 			URL imgurl = getClass().getResource("/edu/wpi/cs/wpisuitetng/modules/cal/img/commitment_unstarted.png");
-			String imgtag = "<img src='" + imgurl +"'/>";
         	// Get the appropriate image based on the commitment's status and put it on the label.
         	if (((Commitment) displayable).getStatus() != null)
         	{
@@ -443,7 +439,6 @@ public class DayItem extends JPanel
         			imgurl = getClass().getResource("/edu/wpi/cs/wpisuitetng/modules/cal/img/commitment_in_progress.png");
         		else if (((Commitment) displayable).getStatus() == CommitmentStatus.Complete)
         			imgurl = getClass().getResource("/edu/wpi/cs/wpisuitetng/modules/cal/img/commitment_complete.png");
-        		imgtag = "<img src='" + imgurl +"'/>";
         	}
 			lblTimeInfo.setText("<html></i><b><font face = \"DejaVu Sans\""
 					 + "color=\"rgb(" + Colors.COMMITMENT_NOT_STARTED.getRed() + ","
