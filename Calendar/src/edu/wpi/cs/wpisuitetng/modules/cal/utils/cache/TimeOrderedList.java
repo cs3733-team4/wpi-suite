@@ -21,15 +21,6 @@ public class TimeOrderedList<V, K> implements Iterable<V>{
 	}
 	
 	/**
-	 * Sets the current element
-	 * @param value new value
-	 */
-	public void setValue(V value)
-	{
-		this.value = value;
-	}
-	
-	/**
 	 * 
 	 * @param later the list of events that happened after
 	 */
@@ -65,7 +56,6 @@ public class TimeOrderedList<V, K> implements Iterable<V>{
 	{
 		return new TimeOrderedListIterator();
 	}
-	
 
 	private class TimeOrderedListIterator implements Iterator<V>, Iterable<V>
 	{

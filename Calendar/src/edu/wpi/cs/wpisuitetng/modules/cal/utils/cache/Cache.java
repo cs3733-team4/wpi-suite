@@ -86,6 +86,15 @@ public class Cache<K, V>{
 	}
 	
 	/**
+	 * Brings the session key up to the latest in the queue
+	 * @param key session to bring up
+	 */
+	public void bringUpToHead(K key)
+	{
+		cache.get(key).setValue(latest);
+	}
+	
+	/**
 	 * Get an iterator over the elements in the order that they were last accessed or inserted
 	 * NOTE: 
 	 * 	this iterator will start at the least recently used element and end at the

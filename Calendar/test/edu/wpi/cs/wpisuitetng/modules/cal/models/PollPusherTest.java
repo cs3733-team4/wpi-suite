@@ -108,23 +108,54 @@ public class PollPusherTest
 		assertEquals(1, t2.calls);
 		assertEquals(0, t1.calls);
 	}
-	
+
 	@Test
 	public void testLongHeldoff()
 	{
-		TestEvent t1 = new TestEvent("ses1", "Mydatax");
-		TestEvent t2 = new TestEvent("ses2", "Mydata");
-		TestEvent t3 = new TestEvent("ses3", "Mydata2");
+		TestEvent t1 = new TestEvent("ses1", "0");
+		TestEvent t2 = new TestEvent("ses2", "1");
+		TestEvent t3 = new TestEvent("ses3", "2");
+		TestEvent t4 = new TestEvent("ses3", "3");
 		assertNull(pp.listenSession(t1));
-		pp.updated("Mydatax");
+		pp.updated("0");
 		assertNull(pp.listenSession(t2));
-		pp.updated("Mydata");
+		pp.updated("1");
 		assertNull(pp.listenSession(t3));
-		pp.updated("Mydata2");
-		assertEquals("[Mydata,Mydata2]", pp.listenSession(t1));
+		pp.updated("2");
+		assertNull(pp.listenSession(t4));
+		pp.updated("3");
+		
+		String s = pp.listenSession(t1);
+		assertEquals("[1,2,3]", s);
 		assertEquals(1, t3.calls);
 		assertEquals(1, t2.calls);
 		assertEquals(1, t1.calls);
+	}
+
+	@Test
+	public void testDoublePunch()
+	{
+		TestEvent t1 = new TestEvent("ses1", "NOT_USED");
+		assertNull(pp.listenSession(t1));
+		pp.unlistenSession(t1);
+		pp.updated("Mydata");
+		assertEquals("[Mydata]", pp.listenSession(t1));
+		assertNull(pp.listenSession(t1));
+		assertEquals(0, t1.calls);
+	}
+	
+	@Test
+	public void testDoublePunchExtra()
+	{
+		TestEvent t1 = new TestEvent("ses1", "NOT_USED");
+		assertNull(pp.listenSession(t1));
+		pp.unlistenSession(t1);
+		pp.updated("Mydata");
+		assertEquals("[Mydata]", pp.listenSession(t1));
+		pp.updated("Mydata2");
+		assertEquals("[Mydata2]", pp.listenSession(t1));
+		assertNull(pp.listenSession(t1));
+		assertEquals(0, t1.calls);
 	}
 
 	@Test
