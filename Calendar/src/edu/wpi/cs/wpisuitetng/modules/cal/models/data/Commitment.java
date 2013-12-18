@@ -14,8 +14,10 @@ import java.util.Date;
 import java.util.UUID;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeField;
 import org.joda.time.Interval;
 import org.joda.time.MutableDateTime;
+import org.joda.time.format.DateTimeFormat;
 
 import com.google.gson.Gson;
 
@@ -307,12 +309,7 @@ public class Commitment extends AbstractModel implements Displayable
 	@Override
 	public String getFormattedHoverTextTime()
 	{
-		DateTime s = new DateTime(this.duedate);
-		StringBuilder timeFormat = new StringBuilder()
-			.append(s.getHourOfDay())
-			.append(":")
-			.append(s.getMinuteOfHour());
-		return timeFormat.toString();
+		return new DateTime(this.duedate).toString(DateTimeFormat.forPattern("h:mma"));
 	}
 
 	@Override
