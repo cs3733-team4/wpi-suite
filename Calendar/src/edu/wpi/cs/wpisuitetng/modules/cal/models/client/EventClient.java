@@ -17,11 +17,11 @@ import org.joda.time.DateTime;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 
-public class EventModel extends CachingDisplayableModel<Event, Event.SerializedAction>
+public class EventClient extends CachingDisplayableClient<Event, Event.SerializedAction>
 {
-	private static EventModel instance;
+	private static EventClient instance;
 
-	private EventModel()
+	protected EventClient()
 	{
 		super("events", Event.SerializedAction[].class, Event[].class);
 	}
@@ -34,11 +34,11 @@ public class EventModel extends CachingDisplayableModel<Event, Event.SerializedA
 		return e;
 	}
 
-	public static EventModel getInstance()
+	public static EventClient getInstance()
 	{
 		if (instance == null)
 		{
-			instance = new EventModel();
+			instance = new EventClient();
 		}
 		return instance;
 	}

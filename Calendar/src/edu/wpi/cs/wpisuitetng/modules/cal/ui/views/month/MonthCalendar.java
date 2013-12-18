@@ -36,8 +36,8 @@ import org.joda.time.ReadableDateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.DayStyle;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CommitmentModel;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CommitmentClient;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
@@ -401,8 +401,8 @@ public class MonthCalendar extends AbstractCalendar
 	@SuppressWarnings("unchecked")
 	private List<Displayable> getVisibleItems(DateTime from, DateTime to)
 	{
-		List<Displayable> visible = (List<Displayable>) (List<? extends Displayable>)EventModel.getInstance().getEvents(from, to);
-		visible.addAll(CommitmentModel.getInstance().getCommitments(from, to));
+		List<Displayable> visible = (List<Displayable>) (List<? extends Displayable>)EventClient.getInstance().getEvents(from, to);
+		visible.addAll(CommitmentClient.getInstance().getCommitments(from, to));
 		return visible;
 	}
 

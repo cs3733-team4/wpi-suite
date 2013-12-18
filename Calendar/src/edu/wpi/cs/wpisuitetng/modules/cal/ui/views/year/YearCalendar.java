@@ -33,7 +33,7 @@ import org.joda.time.Interval;
 import org.joda.time.MutableDateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
@@ -47,14 +47,14 @@ public class YearCalendar extends AbstractCalendar
 {
 	private MutableDateTime calendarStart;
 	private Map<Integer, Integer> events = new HashMap<Integer, Integer>();
-	private EventModel eventModel;
+	private EventClient eventModel;
 	
 	/**
 	 * 
 	 * @param dt any date time in the year that you wish to display
 	 * @param eventModel the event model so that this can access the database
 	 */
-	public YearCalendar(DateTime dt, EventModel eventModel)
+	public YearCalendar(DateTime dt, EventClient eventModel)
 	{
 		this.setLayout(new BorderLayout());
 		drawCalendar(new MutableDateTime(dt));

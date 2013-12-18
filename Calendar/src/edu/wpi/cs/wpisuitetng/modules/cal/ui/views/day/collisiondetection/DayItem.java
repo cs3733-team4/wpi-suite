@@ -11,8 +11,25 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.collisiondetection;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
+import javax.imageio.ImageIO;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
@@ -21,28 +38,12 @@ import javax.swing.border.MatteBorder;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentStatus;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
-
-import javax.swing.Icon;
-import javax.swing.JLabel;
-import javax.swing.BoxLayout;
-
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 
 
 /**
@@ -424,12 +425,25 @@ public class DayItem extends JPanel
 				lblTimeInfo.setText(formatTime(displayable.getStart()) + " - " + formatTime(displayable.getEnd()));
 		}else if(displayable instanceof Commitment)
 		{
+			URL imgurl = getClass().getResource("/edu/wpi/cs/wpisuitetng/modules/cal/img/commitment_unstarted.png");
+			String imgtag = "<img src='" + imgurl +"'/>";
+        	// Get the appropriate image based on the commitment's status and put it on the label.
+        	if (((Commitment) displayable).getStatus() != null)
+        	{
+        		// Set the appropriate url source based on the status.
+        		if (((Commitment) displayable).getStatus() == CommitmentStatus.InProgress)
+        			imgurl = getClass().getResource("/edu/wpi/cs/wpisuitetng/modules/cal/img/commitment_in_progress.png");
+        		else if (((Commitment) displayable).getStatus() == CommitmentStatus.Complete)
+        			imgurl = getClass().getResource("/edu/wpi/cs/wpisuitetng/modules/cal/img/commitment_complete.png");
+        		imgtag = "<img src='" + imgurl +"'/>";
+        	}
 			lblTimeInfo.setText("<html></i><b><font face = \"DejaVu Sans\""
-								 + "color=\"rgb(" + Colors.COMMITMENT_NOT_STARTED.getRed() + ","
-													+ Colors.COMMITMENT_NOT_STARTED.getGreen() + "," 
-													+ Colors.COMMITMENT_NOT_STARTED.getBlue() 
-													+ "\">\uFF01</font></b>" 
-													+ formatTime(displayable.getStart()) + "</html>");
+					 + "color=\"rgb(" + Colors.COMMITMENT_NOT_STARTED.getRed() + ","
+										+ Colors.COMMITMENT_NOT_STARTED.getGreen() + "," 
+										+ Colors.COMMITMENT_NOT_STARTED.getBlue() 
+										+ "\"></font></b>" 
+										+ formatTime(displayable.getStart()) + "</html>");
+			try { lblEventTitle.setIcon(new ImageIcon(ImageIO.read(imgurl))); } catch (IOException e) {}
 		}
 	}
 }

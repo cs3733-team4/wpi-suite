@@ -13,9 +13,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import edu.wpi.cs.wpisuitetng.Session;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryModel;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CommitmentModel;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryClient;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CommitmentClient;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.server.CategoryEntityManager;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.server.CommitmentEntityManager;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.server.EventEntityManager;
@@ -93,8 +93,8 @@ public class MockNetwork extends Network {
 		categoryManager = new CategoryEntityManager(new MockData(new HashSet<Object>()));
 		
 		// Should we put these here? Doing so breaks the network, but makes a global "clear cache" method
-		CategoryModel.getInstance().invalidateCache();
-		EventModel.getInstance().invalidateCache();
-		CommitmentModel.getInstance().invalidateCache();
+		CategoryClient.getInstance().invalidateCache();
+		EventClient.getInstance().invalidateCache();
+		CommitmentClient.getInstance().invalidateCache();
 	}
 }

@@ -25,9 +25,9 @@ import javax.swing.JCheckBox;
 import org.junit.Test;
 import org.junit.BeforeClass;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryModel;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CommitmentModel;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryClient;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CommitmentClient;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
@@ -43,8 +43,8 @@ import edu.wpi.cs.wpisuitetng.network.Network;
 
 public class SidebarTabbedPaneTest {
 
-	private EventModel dummyModel = EventModel.getInstance();
-	private CommitmentModel dummyModel2 = CommitmentModel.getInstance();
+	private EventClient dummyModel = EventClient.getInstance();
+	private CommitmentClient dummyModel2 = CommitmentClient.getInstance();
 	
 	@BeforeClass
 	public static void setUp() throws Exception
@@ -191,10 +191,10 @@ public class SidebarTabbedPaneTest {
 		assertNotNull("Filtering tab list exists", catList.get(sidebar));
 		// note getSelectedCategories is a list of category UUIDs that correspond to each category
 		for( UUID c : sidebar.getSelectedCategories())
-			System.out.println(CategoryModel.getInstance().getCategoryByUUID(c));
+			System.out.println(CategoryClient.getInstance().getCategoryByUUID(c));
 		assertEquals("The filtering tab list starts with only one categorty to filter: uncategorized", 1, sidebar.getSelectedCategories().size());
 		// Should only be one? no categories added
-		assertNull("The filtering tab list starts with only one categorty to filter: uncategorized", CategoryModel.getInstance().getCategoryByUUID((UUID) sidebar.getSelectedCategories().toArray()[0]));
+		assertNull("The filtering tab list starts with only one categorty to filter: uncategorized", CategoryClient.getInstance().getCategoryByUUID((UUID) sidebar.getSelectedCategories().toArray()[0]));
 		// Why doesn't this work? At this point it should return an out of bounds error, but it has the blue/red categories from below tests? Cache isn't cleared?
 		
 		// show commitments is also a member of the list, but isn't included in the list of getSelectedCategories. It should always be on the list, can be turned off / on like
@@ -210,7 +210,7 @@ public class SidebarTabbedPaneTest {
 		Category blue=new Category();
 		blue.setName("blue");
 		blue.setColor(Color.blue);
-		CategoryModel.getInstance().put(blue);
+		CategoryClient.getInstance().put(blue);
 		
 		SidebarTabbedPane sidebar = new SidebarTabbedPane();
 		
@@ -228,7 +228,7 @@ public class SidebarTabbedPaneTest {
 		Category blue=new Category();
 		blue.setName("blue");
 		blue.setColor(Color.blue);
-		CategoryModel.getInstance().put(blue);
+		CategoryClient.getInstance().put(blue);
 		
 		SidebarTabbedPane sidebar = new SidebarTabbedPane();
 		
@@ -241,7 +241,7 @@ public class SidebarTabbedPaneTest {
 		Category red=new Category();
 		red.setName("red");
 		red.setColor(Color.red);
-		CategoryModel.getInstance().put(red);
+		CategoryClient.getInstance().put(red);
 		
 		assertEquals("The filtering tab list still only has the old categories,", 2, sidebar.getSelectedCategories().size());
 		sidebar.refreshFilterTab();
@@ -257,12 +257,12 @@ public class SidebarTabbedPaneTest {
 		Category blue=new Category();
 		blue.setName("blue");
 		blue.setColor(Color.blue);
-		CategoryModel.getInstance().put(blue);
+		CategoryClient.getInstance().put(blue);
 		
 		Category red=new Category();
 		red.setName("red");
 		red.setColor(Color.red);
-		CategoryModel.getInstance().put(red);
+		CategoryClient.getInstance().put(red);
 		
 		SidebarTabbedPane sidebar = new SidebarTabbedPane();
 		
@@ -289,17 +289,17 @@ public class SidebarTabbedPaneTest {
 		Category blue=new Category();
 		blue.setName("blue");
 		blue.setColor(Color.blue);
-		CategoryModel.getInstance().put(blue);
+		CategoryClient.getInstance().put(blue);
 		
 		Category red=new Category();
 		red.setName("red");
 		red.setColor(Color.red);
-		CategoryModel.getInstance().put(red);
+		CategoryClient.getInstance().put(red);
 		
 		Category green=new Category();
 		green.setName("green");
 		green.setColor(Color.green);
-		CategoryModel.getInstance().put(green);
+		CategoryClient.getInstance().put(green);
 		
 		SidebarTabbedPane sidebar = new SidebarTabbedPane();
 		

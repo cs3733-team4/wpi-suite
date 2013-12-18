@@ -16,14 +16,25 @@ import java.util.UUID;
 
 import edu.wpi.cs.wpisuitetng.modules.Model;
 
-public abstract class CachingModel<T extends Model, SA extends CachingModel.SerializedAction<T>>
+/**
+ * CachingClient is a base class to enable long polling and caching on all server access
+ * @param <T> Model type
+ * @param <SA> SerializedAction type for restoring data
+ */
+public abstract class CachingClient<T extends Model, SA extends CachingClient.SerializedAction<T>>
 {
 	protected HashMap<UUID, T> cache = new HashMap<>();
 	protected boolean valid = false;
 	final private String urlname;
 	final private Class<T[]> singleClass;
 
-	public CachingModel(final String urlname, final Class<SA[]> serializedActionClass, final Class<T[]> singleClass)
+	/**
+	 * Build a new Caching client
+	 * @param urlname the url path of the type
+	 * @param serializedActionClass class instance of SA
+	 * @param singleClass class of T
+	 */
+	public CachingClient(final String urlname, final Class<SA[]> serializedActionClass, final Class<T[]> singleClass)
 	{
 		this.urlname = urlname;
 		this.singleClass = singleClass;
@@ -37,7 +48,7 @@ public abstract class CachingModel<T extends Model, SA extends CachingModel.Seri
 				{
 					try
 					{
-						List<SA> acts = ServerManager.get("Advanced/cal/" + urlname + "/poll", serializedActionClass);
+						List<SA> acts = ServerClient.get("Advanced/cal/" + urlname + "/poll", serializedActionClass);
 						for (SA serializedAction : acts)
 						{
 							applySerializedChange(serializedAction);
@@ -63,10 +74,31 @@ public abstract class CachingModel<T extends Model, SA extends CachingModel.Seri
 		t.start();
 	}
 	
+	/**
+	 * Called when a new item is pushed from remote clients
+	 * @param serializedAction the change event
+	 */
 	protected abstract void applySerializedChange(SA serializedAction);
+	
+	/**
+	 * Pulls a unique id from an object
+	 * @param obj the object to pull the ID from
+	 * @return the ID
+	 */
 	protected abstract UUID getUuidFrom(T obj);
+	
+	/**
+	 * Called when clients access this. Should change based on UI
+	 * @param obj object to filter
+	 * @return if this event should be filtered out or kept (true)
+	 */
 	protected abstract boolean filter(T obj);
 
+	/**
+	 * Finds the element associated with the ID. Supports filters
+	 * @param id ID to find
+	 * @return the element with the id given or null
+	 */
 	public T getByUUID(UUID id)
 	{
 		validateCache();
@@ -74,6 +106,10 @@ public abstract class CachingModel<T extends Model, SA extends CachingModel.Seri
 		return filter(e) ? e : null;
 	}
 
+	/**
+	 * Gets all visible events
+	 * @return
+	 */
 	protected List<T> getAll()
 	{
 		validateCache();
@@ -87,22 +123,32 @@ public abstract class CachingModel<T extends Model, SA extends CachingModel.Seri
 		return filteredEvents;
 	}
 	
+	/**
+	 * Caches the object
+	 * @param obj object to cache
+	 */
 	protected void cache(T obj)
 	{
 		cache.put(getUuidFrom(obj), obj);
 	}
 
+	/**
+	 * Marks the cache as invalid to hit the server next time
+	 */
 	public void invalidateCache()
 	{
 		valid = false;
 	}
 
+	/**
+	 * Pulls everything from database to revalidate the cache
+	 */
 	protected void validateCache()
 	{
 		if (valid)
 			return;
 		cache.clear();
-		List<T> all = ServerManager.get("cal/" + urlname, this.singleClass);
+		List<T> all = ServerClient.get("cal/" + urlname, this.singleClass);
 		for (T event : all)
 		{
 			cache(event);
@@ -110,24 +156,42 @@ public abstract class CachingModel<T extends Model, SA extends CachingModel.Seri
 		valid = true;
 	}
 
+	/**
+	 * Saves a new item to the database
+	 * @param toAdd item to add
+	 * @return did we succeed?
+	 */
 	public boolean put(T toAdd)
 	{
 		cache(toAdd);
-		return ServerManager.put("cal/" + urlname, toAdd.toJSON());
+		return ServerClient.put("cal/" + urlname, toAdd.toJSON());
 	}
 
+	/**
+	 * Updates an existing item to the database, the ID's must be the same
+	 * @param toAdd item to update
+	 * @return did we succeed?
+	 */
 	public boolean update(T toUpdate)
 	{
 		cache(toUpdate);
-		return ServerManager.post("cal/" + urlname, toUpdate.toJSON());
+		return ServerClient.post("cal/" + urlname, toUpdate.toJSON());
 	}
 
+	/**
+	 * Deletes item from the database with the given ID
+	 * @param toAdd item to add
+	 * @return did we succeed?
+	 */
 	public boolean delete(T toRemove)
 	{
 		cache(toRemove);
-		return ServerManager.delete("cal/" + urlname, getUuidFrom(toRemove).toString());
+		return ServerClient.delete("cal/" + urlname, getUuidFrom(toRemove).toString());
 	}
 	
+	/**
+	 * Used to serialize actions (deletes vs updates) across the network
+	 */
 	public static abstract class SerializedAction<T>
 	{
 		public T object;

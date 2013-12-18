@@ -16,7 +16,7 @@ import java.util.UUID;
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CachingModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CachingClient;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 public class Category extends AbstractModel
@@ -189,7 +189,7 @@ public class Category extends AbstractModel
 		this.categoryID = categoryID;
 	}
 
-	public static class SerializedAction extends CachingModel.SerializedAction<Category>
+	public static class SerializedAction extends CachingClient.SerializedAction<Category>
 	{
 		public SerializedAction(Category e, UUID eventID, boolean b)
 		{

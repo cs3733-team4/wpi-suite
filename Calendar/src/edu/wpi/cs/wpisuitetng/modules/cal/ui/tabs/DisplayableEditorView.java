@@ -12,6 +12,8 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.Box;
 import javax.swing.Box.Filler;
@@ -30,7 +32,7 @@ import javax.swing.ListCellRenderer;
 import net.miginfocom.swing.MigLayout;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentStatus;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.SelectableField;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.DatePicker;
@@ -57,6 +59,27 @@ public class DisplayableEditorView extends JPanel
 		nameTextField = new JTextField();
 		nameTextField.setColumns(30);
 		nameTextField.addAncestorListener(new RequestFocusListener());
+		nameTextField.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyTyped(KeyEvent e)
+			{
+
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e)
+			{
+
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e)
+			{
+				if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_ENTER)
+					saveButton.doClick();
+			}
+		});
 
 		nameLabel = new JLabel("Name:");
 		this.setLayout(new MigLayout("", "[45px][334px,grow]",
@@ -103,7 +126,7 @@ public class DisplayableEditorView extends JPanel
 		eventCategoryPicker = new JComboBox<>();
 		eventCategoryPicker.setRenderer(new CategoryComboBoxRenderer());
 		this.eventCategoryPicker.addItem(Category.DEFAULT_CATEGORY);
-		for (Category c : CategoryModel.getInstance().getAllCategories())
+		for (Category c : CategoryClient.getInstance().getAllCategories())
 		{
 			this.eventCategoryPicker.addItem(c);
 		}

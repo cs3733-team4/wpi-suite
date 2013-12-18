@@ -20,21 +20,15 @@ import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.database.Data;
 import edu.wpi.cs.wpisuitetng.exceptions.BadRequestException;
 import edu.wpi.cs.wpisuitetng.exceptions.NotFoundException;
-import edu.wpi.cs.wpisuitetng.exceptions.NotImplementedException;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
-import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.server.PollPusher.PushedInfo;
+
 /**
  * This is the entity manager for the Commitment in the
  * CommitmentManager module.
- *
- * @version $Revision: 1.0 $
  */
-public class CommitmentEntityManager implements EntityManager<Commitment> {
-	/** The database */
-	Data db;
+public class CommitmentEntityManager extends CachedEntityManager<Commitment> {
 	
 	/**
 	 * Constructs the entity manager. This constructor is called by
@@ -45,7 +39,8 @@ public class CommitmentEntityManager implements EntityManager<Commitment> {
 	 * @param db a reference to the persistent database
 	 */
 	public CommitmentEntityManager(Data db) {
-		this.db = db;
+		super(db);
+		pollPusher = PollPusher.getInstance(Commitment.class);
 	}
 
 	/**
@@ -75,43 +70,6 @@ public class CommitmentEntityManager implements EntityManager<Commitment> {
 	public Commitment[] getEntity(Session s, String data) throws NotFoundException
 	{
 		return getCommitmentByUUID(s, data);
-	}
-
-	/**
-	 * Comet/Long Polling implementation for real-time updating. Waits 20s for any changes, then returns
-	 * @param s Session this is on
-	 * @return json string with the results
-	 */
-	private String getFromPoll(Session s)
-	{
-		PollPusher<Commitment> pp = PollPusher.getInstance(Commitment.class);
-		final String[] stringList = new String[]{"[]"}; // so we can modify the string from the listener
-		final Thread thisthread = Thread.currentThread();
-		PushedInfo listener = (new PushedInfo(s) {
-			
-			@Override
-			public void pushUpdates(String item)
-			{
-				// poor mans json. its only one item
-				stringList[0] = "[" + item + "]";
-				thisthread.interrupt();
-			}
-		});
-		String events = pp.listenSession(listener);
-		if (events == null)
-		{
-			try
-			{
-				Thread.sleep(20000);
-			}
-			catch (InterruptedException e)
-			{
-				// we were interruped!
-			}
-			return stringList[0];
-		}
-		else
-			return events;
 	}
 	
 	/**
@@ -256,50 +214,16 @@ public class CommitmentEntityManager implements EntityManager<Commitment> {
 				throw new NotFoundException("Error: " + args[0] + " not a valid method");
 		}
 	}
-
-	/**
-	 * Simple wrapper to make json from event array
-	 * @param events list of events to stringify
-	 * @return json data
-	 */
-	private String json(Object... events)
-	{
-		return new Gson().toJson(events);
-	}
 	
-	private String updated(Commitment e)
+	@Override
+	protected String updated(Commitment e)
 	{
 		return new Gson().toJson(new Commitment.SerializedAction(e, e.getIdentification(), false));
 	}
-	
-	private String deleted(UUID id)
+
+	@Override
+	protected String deleted(UUID id)
 	{
 		return new Gson().toJson(new Commitment.SerializedAction(null, id, true));
 	}
-	/**
-	 * Method advancedPost.
-	 * @param arg0 Session
-	 * @param arg1 String
-	 * @param arg2 String
-	 * @return String * @throws NotImplementedException * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#advancedPost(Session, String, String) * @throws NotImplementedException
-	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#advancedPost(Session, String, String)
-	 */
-	@Override
-	public String advancedPost(Session arg0, String arg1, String arg2) throws NotImplementedException {
-		throw new NotImplementedException();
-	}
-
-	/**
-	 * Method advancedPut.
-	 * @param arg0 Session
-	 * @param arg1 String[]
-	 * @param arg2 String
-	 * @return String * @throws NotImplementedException * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#advancedPut(Session, String[], String) * @throws NotImplementedException
-	 * @see edu.wpi.cs.wpisuitetng.modules.EntityManager#advancedPut(Session, String[], String)
-	 */
-	@Override
-	public String advancedPut(Session arg0, String[] arg1, String arg2) throws NotImplementedException {
-		throw new NotImplementedException();
-	}
-
 }

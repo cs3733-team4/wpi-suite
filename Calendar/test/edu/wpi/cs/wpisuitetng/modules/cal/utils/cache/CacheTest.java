@@ -9,14 +9,14 @@ public class CacheTest {
 
 	@Test
 	public void creatingCacheNoFail() {
-		Cache<String, String> c = new Cache<>();
+		Cache<String, String> c = new Cache<>("");
 		//we didnt error!
 		assertTrue(true);
 	}
 	
 	@Test
 	public void addingToCacheNoFail() {
-		Cache<String, String> c = new Cache<>();
+		Cache<String, String> c = new Cache<>("");
 		c.put("something", "epic!!!");
 		//we didnt error!
 		assertTrue(true);
@@ -24,37 +24,37 @@ public class CacheTest {
 	
 	@Test
 	public void highLevelIteraterFromCacheNoFail() {
-		Cache<String, String> c = new Cache<>();
+		Cache<String, String> c = new Cache<>("");
 		c.put("something", "epic!!!");
 		assertTrue(c.accessOrderedCallIterator("something") != null);
 	}
 	
 	@Test
 	public void highLevelIteraterFromCacheNull() {
-		Cache<String, String> c = new Cache<>();
+		Cache<String, String> c = new Cache<>("");
 		c.put("something", "epic!!!");
 		assertTrue(c.accessOrderedCallIterator("borked") == null);
 	}
 	
 	@Test
 	public void lowLevelIteraterFromCacheNoFail() {
-		Cache<String, String> c = new Cache<>();
+		Cache<String, String> c = new Cache<>("");
 		c.put("something", "epic!!!");
 		assertTrue(c.timeOrderedCallIterator("something") != null);
 	}
 	
-	@Test(expected=NullPointerException.class)
+	@Test
 	public void lowLevelIteraterFromCacheNPE() {
-		Cache<String, String> c = new Cache<>();
+		Cache<String, String> c = new Cache<>("");
 		c.put("something", "epic!!!");
-		c.timeOrderedCallIterator("borked");
+		c.timeOrderedCallIterator("borked"); // should not throw NPE, should create session
 	}
 	
 	@Test
 	public void highLevelIteraterFromCacheWorksOnce() {
-		Cache<String, String> c = new Cache<>();
+		Cache<String, String> c = new Cache<>("");
 		c.put("something", "epic!!!");
-		for(TimeOrderedList<String> q : c.accessOrderedCallIterator("something"))
+		for(TimeOrderedList<String, String> q : c.accessOrderedCallIterator("something"))
 		{
 			assertTrue(q.getValue().equals("epic!!!"));
 		}
@@ -63,7 +63,7 @@ public class CacheTest {
 	
 	@Test
 	public void cacheUpdatesAccessOrder() {
-		Cache<String, String> c = new Cache<>();
+		Cache<String, String> c = new Cache<>("");
 		c.put("something", "epic!!!");
 		c.put("even", "better");
 		
@@ -73,7 +73,7 @@ public class CacheTest {
 	
 	@Test
 	public void highLevelIteraterFromCacheWorksMultiInsert() {
-		Cache<String, String> c = new Cache<>();
+		Cache<String, String> c = new Cache<>("");
 		c.put("something", "epic!!!");
 		c.put("even", "better");
 		c.put("takes the", "cake");
@@ -83,7 +83,7 @@ public class CacheTest {
 		int xpCount = 0;
 		boolean successes = true;
 		
-		for(TimeOrderedList<String> q : c.accessOrderedCallIterator("something"))
+		for(TimeOrderedList<String, String> q : c.accessOrderedCallIterator("something"))
 		{
 			successes &= q.getValue().equals(expected[xpCount++]);
 		}
@@ -92,7 +92,7 @@ public class CacheTest {
 	
 	@Test
 	public void cacheUpdatesAccessOrderAfterAccess() {
-		Cache<String, String> c = new Cache<>();
+		Cache<String, String> c = new Cache<>("");
 		c.put("something", "epic!!!");
 		c.put("even", "better");
 		c.put("a", "a");
@@ -109,7 +109,7 @@ public class CacheTest {
 	
 	@Test
 	public void highLevelIteraterFromCacheWorksMultiInsertShuffle() {
-		Cache<String, String> c = new Cache<>();
+		Cache<String, String> c = new Cache<>("");
 		c.put("something", "epic!!!");
 		c.put("even", "better");
 		c.put("takes the", "cake");
@@ -121,7 +121,7 @@ public class CacheTest {
 		int xpCount = 0;
 		boolean successes = true;
 		
-		for(TimeOrderedList<String> q : c.accessOrderedCallIterator("something"))
+		for(TimeOrderedList<String, String> q : c.accessOrderedCallIterator("something"))
 		{
 			successes &= q.getValue().equals(expected[xpCount++]);
 		}
@@ -131,23 +131,20 @@ public class CacheTest {
 	
 	@Test
 	public void lowLevelIteraterFromCacheWorksMultiInsertShuffle() {
-		Cache<String, String> c = new Cache<>();
+		Cache<String, String> c = new Cache<>("");
 		c.put("something", "epic!!!");
 		c.put("even", "better");
 		c.put("takes the", "cake");
 		c.put("next", "level");
 		
-		c.access("takes the");
-		
-		String[] expected = {"level", "cake", "better", "epic!!!"};
+		//TODO: I'm not sure if this is a useful test anymore as we have changed these requirements
+		String[] expected = {"cake", "better", "epic!!!", ""};
 		int xpCount = 0;
-		boolean successes = true;
 		
 		for(String q : c.timeOrderedCallIterator("next"))
 		{
-			System.out.println(q);
-			successes &= q.equals(expected[xpCount++]);
+			assertEquals(q, expected[xpCount++]);
+			assertTrue(xpCount <= expected.length);
 		}
-		assertTrue(successes);
 	}
 }

@@ -21,9 +21,20 @@ import edu.wpi.cs.wpisuitetng.modules.Model;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 
-public abstract class CachingDisplayableModel<T extends Model & Displayable, SA extends CachingModel.SerializedAction<T>> extends CachingModel<T, SA>
+/**
+ * CachingClient specialized for Displayable items (Events and Commitments)
+ * @param <T> Displayable item
+ * @param <SA> SerializedAction to represent the changes pushed from the server
+ */
+public abstract class CachingDisplayableClient<T extends Model & Displayable, SA extends CachingClient.SerializedAction<T>> extends CachingClient<T, SA>
 {
-	public CachingDisplayableModel(String urlname, Class<SA[]> serializedActionClass, Class<T[]> singleClass)
+	/**
+	 * Creates new client
+	 * @param urlname name of the url fragment
+	 * @param serializedActionClass the class object of the SA
+	 * @param singleClass the class object for T
+	 */
+	public CachingDisplayableClient(String urlname, Class<SA[]> serializedActionClass, Class<T[]> singleClass)
 	{
 		super(urlname, serializedActionClass, singleClass);
 	}
@@ -45,6 +56,11 @@ public abstract class CachingDisplayableModel<T extends Model & Displayable, SA 
 		MainPanel.getInstance().getMOCA().updateDisplayable(obj, !serializedAction.isDeleted);
 	}
 
+	/**
+	 * Builds new displayable from UUID for deletion
+	 * @param uuid
+	 * @return new displayable item with given uuid
+	 */
 	protected abstract T buildUuidOnlyObject(UUID uuid);
 	
 	@Override
