@@ -71,7 +71,7 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 	private void populateCommitmentFields(Commitment mCommitment)
 	{
 		nameTextField.setText(mCommitment.getName());
-		startTimeDatePicker.setDateTime(mCommitment.getStart());
+		startTimeDatePicker.setDateTime(mCommitment.getInterval().getStart());
 		participantsTextField.setText(mCommitment.getParticipants());
 		this.rdbtnPersonal.setSelected(!mCommitment.isProjectwide());
 		this.rdbtnTeam.setSelected(mCommitment.isProjectwide());
@@ -169,7 +169,7 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		Commitment e = new Commitment();
 		e.setName(nameTextField.getText().trim());
 		e.setDescription(descriptionTextArea.getText());
-		e.setStart(startTimeDatePicker.getDateTime());
+		e.setDate(startTimeDatePicker.getDateTime());
 		e.setProjectCommitment(rdbtnTeam.isSelected());
 		e.setParticipants(participantsTextField.getText().trim());
 		e.setCategory(((Category)eventCategoryPicker.getSelectedItem()).getUuid());

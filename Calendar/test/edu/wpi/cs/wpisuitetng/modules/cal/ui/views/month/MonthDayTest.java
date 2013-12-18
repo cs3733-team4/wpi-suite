@@ -119,7 +119,7 @@ public class MonthDayTest {
 		MonthDay MD = new MonthDay(now, DayStyle.Normal, null);
 		Commitment icecreamDay=new Commitment().addName("Icecream day")
 									 .addDescription("Eat icecream by today!")
-									 .setDueDate(new DateTime(2000, 10, 10, 0, 0));
+									 .setDate(new DateTime(2000, 10, 10, 0, 0));
 									
 		MD.addDisplayable(icecreamDay);
 		
@@ -129,7 +129,7 @@ public class MonthDayTest {
 		
 		Commitment venganceDay=new Commitment().addName("Vengance day")
 				 .addDescription("Exact vengance by today!")
-				 .setDueDate(new DateTime(2000, 10, 10, 0, 30));
+				 .setDate(new DateTime(2000, 10, 10, 0, 30));
 		MD.addDisplayable(venganceDay);
 		
 		assertTrue("Multiple commitments can be added to a MonthDay", f.contains(icecreamDay));
@@ -141,7 +141,7 @@ public class MonthDayTest {
 		MonthDay MD = new MonthDay(now, DayStyle.Normal, null);
 		Commitment icecreamDay=new Commitment().addName("Icecream day")
 				 					 .addDescription("Eat icecream by today!")
-				 					 .setDueDate(new DateTime(2000, 10, 10, 0, 0));
+				 					 .setDate(new DateTime(2000, 10, 10, 0, 0));
 				
 		MD.addDisplayable(icecreamDay);
 		
@@ -160,13 +160,13 @@ public class MonthDayTest {
 		MonthDay MD = new MonthDay(now, DayStyle.Normal, null);
 		Commitment icecreamDay=new Commitment().addName("Icecream day")
 				 					 .addDescription("Eat icecream by today!")
-				 					 .setDueDate(new DateTime(2000, 10, 10, 0, 0));
+				 					 .setDate(new DateTime(2000, 10, 10, 0, 0));
 				
 		MD.addDisplayable(icecreamDay);
 		
 		Commitment venganceDay=new Commitment().addName("Vengance day")
 										 .addDescription("Exact vengace by today!")
-										 .setDueDate(new DateTime(2000, 10, 10, 0, 30));
+										 .setDate(new DateTime(2000, 10, 10, 0, 30));
 		MD.addDisplayable(venganceDay);
 		
 		MD.removeDisplayable(venganceDay);

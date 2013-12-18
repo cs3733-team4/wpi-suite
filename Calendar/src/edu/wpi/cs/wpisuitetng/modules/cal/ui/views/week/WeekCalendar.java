@@ -303,8 +303,8 @@ public class WeekCalendar extends AbstractCalendar
 		
 		Collections.sort(visibleDisplayables, new Comparator<Displayable>() {
 			public int compare(Displayable d1, Displayable d2) {
-		        return d1.getStart().getMinuteOfDay() < d2.getStart().getMinuteOfDay() ? -1 :
-		        		d1.getStart().getMinuteOfDay() > d2.getStart().getMinuteOfDay() ? 1 : 0;
+		        return d1.getInterval().getStart().getMinuteOfDay() < d2.getInterval().getStart().getMinuteOfDay() ? -1 :
+		        		d1.getInterval().getStart().getMinuteOfDay() > d2.getInterval().getStart().getMinuteOfDay() ? 1 : 0;
 		    }
 		});
 		
@@ -344,7 +344,7 @@ public class WeekCalendar extends AbstractCalendar
 				
 				if(!displayableList.isEmpty())
 				{
-					day = displayableList.get(0).getStart().getMinuteOfDay();
+					day = displayableList.get(0).getInterval().getStart().getMinuteOfDay();
 				}else
 				{
 					day = DateTime.now().getMinuteOfDay();
@@ -404,7 +404,7 @@ public class WeekCalendar extends AbstractCalendar
 				day = null;
 				for (DayPanel lt : daysOfWeekArray)
 				{
-					if (lastSelection.getStart().getDayOfYear() == lt.getDisplayDate().getDayOfYear())
+					if (lastSelection.getInterval().getStart().getDayOfYear() == lt.getDisplayDate().getDayOfYear())
 					{
 						day = lt;
 						break;
@@ -425,7 +425,7 @@ public class WeekCalendar extends AbstractCalendar
 			day = null;
 			for (DayPanel lt : daysOfWeekArray)
 			{
-				if (oitem.getStart().getDayOfYear() == lt.getDisplayDate().getDayOfYear())
+				if (oitem.getInterval().getStart().getDayOfYear() == lt.getDisplayDate().getDayOfYear())
 				{
 					day = lt;
 					break;
@@ -522,7 +522,7 @@ public class WeekCalendar extends AbstractCalendar
 
 		for (Displayable d : displayableList)
 		{
-			if (new Interval(d.getStart(),d.getEnd()).toDuration().getStandardHours()>24)
+			if (d.getInterval().toDuration().getStandardHours()>24)
 				continue;
 
 			if (isDisplayableInInterval(d, mInterval))
@@ -547,9 +547,7 @@ public class WeekCalendar extends AbstractCalendar
 			if(!(d instanceof Event))
 				continue;
 			
-			DateTime intervalStart = d.getStart();
-			DateTime intervalEnd = d.getEnd();
-			Interval mInterval = new Interval(intervalStart, intervalEnd);
+			Interval mInterval = d.getInterval();
 			if (mInterval.toDuration().getStandardHours()>24)
 				retrievedEvents.add(((Event) d));
 		}
@@ -559,7 +557,7 @@ public class WeekCalendar extends AbstractCalendar
 
 	private boolean isDisplayableInInterval(Displayable mDisplayable, Interval mInterval)
 	{
-		DateTime s = mDisplayable.getStart(), e = mDisplayable.getEnd();
+		DateTime s = mDisplayable.getInterval().getStart(), e = mDisplayable.getInterval().getEnd();
 		if (this.weekStartTime.isAfter(s))
 			s = weekStartTime;
 
@@ -571,8 +569,8 @@ public class WeekCalendar extends AbstractCalendar
 		selected = toPass;
 		if(selected != null)
 		{
-			this.daysOfWeekArray[selected.getDisplayable().getStart().getDayOfWeek()%7].add(selected.createPuppet());
-			selected.createPuppet().day = selected.getDisplayable().getStart().getDayOfWeek()%7;
+			this.daysOfWeekArray[selected.getDisplayable().getInterval().getStart().getDayOfWeek()%7].add(selected.createPuppet());
+			selected.createPuppet().day = selected.getDisplayable().getInterval().getStart().getDayOfWeek()%7;
 		}
 	}
 	public void mouseOverDay(int day)

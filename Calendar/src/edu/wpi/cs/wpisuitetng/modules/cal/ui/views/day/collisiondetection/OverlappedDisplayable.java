@@ -100,13 +100,13 @@ public class OverlappedDisplayable implements Comparable<OverlappedDisplayable>
 	public int compareTo(OverlappedDisplayable toCompare) {
 		int res = Integer.compare(toCompare.xpos.toInt(10000), xpos.toInt(10000));
 		if (res == 0)
-			return toCompare.displayable.getStart().compareTo(displayable.getStart());
+			return toCompare.displayable.getInterval().getStart().compareTo(displayable.getInterval().getStart());
 		return res;
 	}
 	
 	@Override
 	public String toString()
 	{
-		return super.toString() + "{" + getEvent().getName() + "@" + getEvent().getStart().toString() + " collisions: " + collisionCount + "}";
+		return super.toString() + "{" + getEvent().getName() + "@" + getEvent().getInterval().getStart().toString() + " collisions: " + collisionCount + "}";
 	}
 }

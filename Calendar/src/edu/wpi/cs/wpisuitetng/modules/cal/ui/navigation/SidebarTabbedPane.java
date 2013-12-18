@@ -70,8 +70,8 @@ public class SidebarTabbedPane extends JTabbedPane{
 	private JButton detailEditButton;
 	private JButton detailDeleteButton;
 	private JTextPane commitmentTab;
+	private DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("MM/dd/yy h:mm aa");
 	private DateTimeFormatter timeFormatter = DateTimeFormat.forPattern("h:mm aa");
-	private DateTimeFormatter dateFormatter = DateTimeFormat.forPattern("MM/dd/yy");
 	private Displayable currentDisplayable;
 	
 	// Category filter tab
@@ -340,8 +340,8 @@ public class SidebarTabbedPane extends JTabbedPane{
 					detailTextDoc.insertString(detailTextDoc.getLength(), "Time:\n   " + ((Event) mDisplayable).getStart().toString(timeFormatter) + " - " + ((Event) mDisplayable).getEnd().toString(timeFormatter) + "\n", normalTextStyle);
 				else
 				{
-					detailTextDoc.insertString(detailTextDoc.getLength(), "Starts:\n   " + ((Event) mDisplayable).getStart().toString(dateFormatter) + " " + ((Event) mDisplayable).getStart().toString(timeFormatter) + "\n", normalTextStyle);
-					detailTextDoc.insertString(detailTextDoc.getLength(), "Ends:\n   " + ((Event) mDisplayable).getEnd().toString(dateFormatter) + " " + ((Event) mDisplayable).getEnd().toString(timeFormatter) + "\n", normalTextStyle);
+					detailTextDoc.insertString(detailTextDoc.getLength(), "Starts:\n   " + ((Event) mDisplayable).getStart().toString(dateTimeFormatter) + "\n", normalTextStyle);
+					detailTextDoc.insertString(detailTextDoc.getLength(), "Ends:\n   " + ((Event) mDisplayable).getEnd().toString(dateTimeFormatter) + "\n", normalTextStyle);
 				}
 				
 				detailTextDoc.insertString(detailTextDoc.getLength(), "Description:\n   " + mDisplayable.getDescription() + "\n", normalTextStyle);
@@ -360,8 +360,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 	        {
 				detailTitleLabel.setText(mDisplayable.getName());
 				detailTitleLabel.setOpaque(false);
-	        	detailTextDoc.insertString(detailTextDoc.getLength(), "Date:\n   " + ((Commitment) mDisplayable).getStart().toString(dateFormatter) + "\n", normalTextStyle);
-	        	detailTextDoc.insertString(detailTextDoc.getLength(), "Time:\n   " + ((Commitment) mDisplayable).getStart().toString(timeFormatter) + "\n", normalTextStyle);
+	        	detailTextDoc.insertString(detailTextDoc.getLength(), "Date:\n   " + mDisplayable.getInterval().getStart().toString(dateTimeFormatter) + "\n", normalTextStyle);
 	        	detailTextDoc.insertString(detailTextDoc.getLength(), "Description:\n   " + mDisplayable.getDescription() + "\n", normalTextStyle);
 	        	if (((Commitment)mDisplayable).getAssociatedCategory() != null)
 	        	{

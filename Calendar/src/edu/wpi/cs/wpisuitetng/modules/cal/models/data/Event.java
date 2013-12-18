@@ -375,15 +375,16 @@ public class Event extends AbstractModel implements Displayable
 	 */
 	public DateTime getStartTimeOnDay(DateTime givenDay)
 	{
+		DateTime start = this.getStart();
 		MutableDateTime mDisplayedDay = new MutableDateTime(givenDay);
-		mDisplayedDay.setMillisOfDay(1);
-		//if it starts before the beginning of the day then its a multi day event, or all day event
-		if (this.getStart().isBefore(mDisplayedDay)){
-			mDisplayedDay.setMillisOfDay(0);
-			return(mDisplayedDay.toDateTime());
+		mDisplayedDay.setMillisOfDay(0);
+		
+		if (start.isBefore(mDisplayedDay))
+		{
+			return mDisplayedDay.toDateTime();
 		}
 		else
-			return this.getStart();
+			return start;
 	}
 	
 	/**
@@ -394,49 +395,30 @@ public class Event extends AbstractModel implements Displayable
 	 */
 	public DateTime getEndTimeOnDay(DateTime givenDay)
 	{
-		MutableDateTime mDisplayedDay = new MutableDateTime(givenDay);;
-		mDisplayedDay.setMillisOfDay(86400000-2);
-		if (this.getEnd().isAfter(mDisplayedDay))
+		DateTime end = this.getEnd();
+		MutableDateTime mDisplayedDay = new MutableDateTime(givenDay);
+		mDisplayedDay.setMillisOfDay(0);
+		mDisplayedDay.addDays(1);
+		mDisplayedDay.addMillis(-1);
+		if (end.isAfter(mDisplayedDay))
 		{
 			return mDisplayedDay.toDateTime();
 		}
 		else
-			return this.getEnd();
+			return end;
 	}
 
 	@Override
-	public void setTime(DateTime newTime)
+	public void setInterval(Interval interval)
 	{
-		if (new Interval(new DateTime(this.start), new DateTime(this.end)).contains(newTime))
-		{
-			//this is what stops the events from being dragged to the next day. leaving it in case we might want it later
-			//return;
-		}
-		
-		Interval i;
-		int daysBetween = 0;
-		if (new DateTime(this.start).isAfter(newTime))
-		{
-			i = new Interval(newTime, new DateTime(this.start));
-			daysBetween = 0 - (int) i.toDuration().getStandardDays();
-		}
-		else
-		{
-			i = new Interval(new DateTime(this.start), newTime);
-			daysBetween = (int) i.toDuration().getStandardDays();
-		}
-		
-		
-		
-		MutableDateTime newEnd = new MutableDateTime(this.end);
-		newEnd.addDays(daysBetween);
-		
-		MutableDateTime newStart = new MutableDateTime(this.start);
-		newStart.addDays(daysBetween);
-		
-		this.end = newEnd.toDate();
-		this.start = newStart.toDate();
-		
+		setStart(interval.getStart());
+		setEnd(interval.getEnd());
+	}
+
+	@Override
+	public Interval getIntervalOnDay(DateTime givenDay)
+	{
+		return new Interval(getStartTimeOnDay(givenDay), getEndTimeOnDay(givenDay));
 	}
 
 	@Override

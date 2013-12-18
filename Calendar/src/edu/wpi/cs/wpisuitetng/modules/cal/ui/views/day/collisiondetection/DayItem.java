@@ -40,6 +40,7 @@ import javax.swing.border.MatteBorder;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.MutableDateTime;
+import org.joda.time.MutableInterval;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentStatus;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
@@ -96,7 +97,7 @@ public class DayItem extends JPanel
 		this.eventPositionalInformation = eventPositionalInformation;
 		height = 25;
 		displayable = eventPositionalInformation.getEvent();
-		length = new Interval(displayable.getStart(), displayable.getEnd());
+		length = displayable.getInterval();
 		
 		Color bg = Colors.TABLE_GRAY_HEADER;
 		
@@ -140,14 +141,14 @@ public class DayItem extends JPanel
 					if(puppet != null)
 					{
 						day = puppet.day;
-						int previous = displayable.getStart().getDayOfWeek()%7;
+						int previous = displayable.getInterval().getStart().getDayOfWeek()%7;
 						if(day > previous)
-							updateTime(displayable.getStart().plusDays(day - previous));
+							updateTime(displayable.getInterval().getStart().plusDays(day - previous));
 						if(previous > day)
-							updateTime(displayable.getStart().minusDays(previous - day));
+							updateTime(displayable.getInterval().getStart().minusDays(previous - day));
 					}
 					displayable.update();
-					MainPanel.getInstance().display(displayable.getStart());
+					MainPanel.getInstance().display(displayable.getInterval().getStart());
 				}
 				getParent().dispatchEvent(e);
 			}
@@ -217,7 +218,7 @@ public class DayItem extends JPanel
 	{
 		if(firstDraw)
 		{
-			height = (int) map(new Interval(displayable.getStartTimeOnDay(displayedDay), displayable.getEndTimeOnDay(displayedDay)).toDurationMillis(), this.getParent().getHeight());
+			height = (int) map(displayable.getIntervalOnDay(displayedDay).toDurationMillis(), this.getParent().getHeight());
 			height = Math.max(height, 45);
 			recalcBounds(getParent().getWidth(), getParent().getHeight());
 			FontMetrics descriptionMetrics = getGraphics().getFontMetrics(lblStarryNightdutch.getFont());
@@ -260,7 +261,7 @@ public class DayItem extends JPanel
 	{
 		lblStarryNightdutch.setMaximumSize(new Dimension(width.toInt(parentWidth), height-20));
 		int outWidth = width.toInt(parentWidth);
-		this.setBounds(x.toInt(parentWidth), (int) map(displayable.getStartTimeOnDay(displayedDay).getMillisOfDay(), parentHeight), outWidth, height);
+		this.setBounds(x.toInt(parentWidth), (int) map(displayable.getIntervalOnDay(displayedDay).getStart().getMillisOfDay(), parentHeight), outWidth, height);
 		if(!firstDraw)
 		{
 			wrapDescription(outWidth-16);
@@ -361,9 +362,10 @@ public class DayItem extends JPanel
 	{
 		int lineheight = pxToMs(lineheightp);
 		int headerHeight = height > hdesc ? hdesc : 0;
-		int zero = eventPositionalInformation.getEvent().getStartTimeOnDay(displayedDay).getMillisOfDay() + pxToMs(headerHeight);
+		Interval epival = eventPositionalInformation.getEvent().getIntervalOnDay(displayedDay);
+		int zero = epival.getStart().getMillisOfDay() + pxToMs(headerHeight);
 		
-		double erowsInter = (eventPositionalInformation.getEvent().getEndTimeOnDay(displayedDay).getMillisOfDay() - zero) / (double) lineheight;
+		double erowsInter = (epival.getEnd().getMillisOfDay() - zero) / (double) lineheight;
 		
 		int emax = (int)Math.floor(erowsInter);
 		int rows = (int)Math.ceil(erowsInter);
@@ -377,8 +379,9 @@ public class DayItem extends JPanel
 		{
 			if (who.getXpos().toInt(10000) < eventPositionalInformation.getXpos().toInt(10000))
 				continue;
-			int from = (int)Math.floor((who.getEvent().getStartTimeOnDay(displayedDay).getMillisOfDay() - zero) / (double) lineheight);
-			int to = (int)Math.ceil((who.getEvent().getEndTimeOnDay(displayedDay).getMillisOfDay() - zero) / (double) lineheight);
+			Interval whoival = who.getEvent().getIntervalOnDay(displayedDay);
+			int from = (int)Math.floor((whoival.getStart().getMillisOfDay() - zero) / (double) lineheight);
+			int to = (int)Math.ceil((whoival.getEnd().getMillisOfDay() - zero) / (double) lineheight);
 			from = Math.max(0, from);
 			to = Math.min(emax, to);
 			for (int i = from; i <= to; i++)
@@ -416,11 +419,9 @@ public class DayItem extends JPanel
 	
 	public void updateTime(DateTime t)
 	{
-		if(!this.displayable.getStart().equals(t))
+		if(!this.displayable.getInterval().getStart().equals(t))
 		{
-			this.displayable.setStart(t);
-			if(this.displayable instanceof Event)
-				((Event) this.displayable).setEnd(t.plus(this.length.toDuration()));
+			this.displayable.setInterval(new Interval(t, this.length.toDuration()));
 			putTimeOn();
 		}
 	}
@@ -439,7 +440,7 @@ public class DayItem extends JPanel
 				else
 					lblTimeInfo.setText("\u2190 \u2192");
 			}else
-				lblTimeInfo.setText(formatTime(displayable.getStart()) + " - " + formatTime(displayable.getEnd()));
+				lblTimeInfo.setText(formatTime(((Event)displayable).getStart()) + " - " + formatTime(((Event)displayable).getEnd()));
 		}else if(displayable instanceof Commitment)
 		{
 			URL imgurl = getClass().getResource("/edu/wpi/cs/wpisuitetng/modules/cal/img/commitment_unstarted.png");
@@ -457,7 +458,7 @@ public class DayItem extends JPanel
 										+ Colors.COMMITMENT_NOT_STARTED.getGreen() + "," 
 										+ Colors.COMMITMENT_NOT_STARTED.getBlue() 
 										+ "\"></font></b>" 
-										+ formatTime(displayable.getStart()) + "</html>");
+										+ formatTime(displayable.getInterval().getStart()) + "</html>");
 			try { lblEventTitle.setIcon(new ImageIcon(ImageIO.read(imgurl))); } catch (IOException e) {}
 		}
 	}	
@@ -472,11 +473,9 @@ public class DayItem extends JPanel
 	
 	public void addMinutesToEnd(int minutes)
 	{
-		MutableDateTime d = displayable.getEnd().toMutableDateTime();
-		d.addMinutes(minutes);
-		if (displayable instanceof Event)
-			((Event) displayable).setEnd(d.toDateTime());
-		length = new Interval ( displayable.getStart(), displayable.getEnd());
+		MutableInterval d = displayable.getInterval().toMutableInterval();
+		d.setDurationAfterStart(d.toDurationMillis() + (minutes * 60 * 1000));
+		displayable.setInterval(length = d.toInterval());
 		height = Math.max(45, height+minutes);
 		firstDraw = true;
 		isBeingDragged = true;
@@ -487,10 +486,9 @@ public class DayItem extends JPanel
 	
 	public void addMinutesToStart(int minutes)
 	{
-		MutableDateTime d = displayable.getStart().toMutableDateTime();
-		d.addMinutes(minutes);
-		displayable.setStart(d.toDateTime());
-		length = new Interval ( displayable.getStart(), displayable.getEnd());
+		MutableInterval d = displayable.getInterval().toMutableInterval();
+		d.setDurationBeforeEnd(d.toDurationMillis() + (minutes * 60 * 1000));
+		displayable.setInterval(length = d.toInterval());
 		height += minutes;
 		firstDraw = true;
 		isBeingDragged = true;
