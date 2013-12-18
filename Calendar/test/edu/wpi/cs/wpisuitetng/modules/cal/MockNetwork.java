@@ -13,11 +13,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import edu.wpi.cs.wpisuitetng.Session;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryEntityManager;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryModel;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentEntityManager;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.EventEntityManager;
-import edu.wpi.cs.wpisuitetng.modules.core.models.*;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryClient;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CommitmentClient;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventClient;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.server.CategoryEntityManager;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.server.CommitmentEntityManager;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.server.EventEntityManager;
+import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
+import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
@@ -90,6 +93,8 @@ public class MockNetwork extends Network {
 		categoryManager = new CategoryEntityManager(new MockData(new HashSet<Object>()));
 		
 		// Should we put these here? Doing so breaks the network, but makes a global "clear cache" method
-		CategoryModel.getInstance().updateCache();
+		CategoryClient.getInstance().invalidateCache();
+		EventClient.getInstance().invalidateCache();
+		CommitmentClient.getInstance().invalidateCache();
 	}
 }

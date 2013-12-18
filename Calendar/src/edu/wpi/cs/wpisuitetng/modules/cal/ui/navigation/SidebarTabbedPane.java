@@ -50,11 +50,11 @@ import org.joda.time.format.DateTimeFormatter;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryModel;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Commitment;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Displayable;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryClient;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Category;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 
 public class SidebarTabbedPane extends JTabbedPane{
 	
@@ -363,6 +363,11 @@ public class SidebarTabbedPane extends JTabbedPane{
 	        	detailTextDoc.insertString(detailTextDoc.getLength(), "Date:\n   " + ((Commitment) mDisplayable).getDate().toString(dateFormatter) + "\n", normalTextStyle);
 	        	detailTextDoc.insertString(detailTextDoc.getLength(), "Time:\n   " + ((Commitment) mDisplayable).getDate().toString(timeFormatter) + "\n", normalTextStyle);
 	        	detailTextDoc.insertString(detailTextDoc.getLength(), "Description:\n   " + mDisplayable.getDescription() + "\n", normalTextStyle);
+	        	if (((Commitment)mDisplayable).getAssociatedCategory() != null)
+	        	{
+	        		detailTextDoc.insertString(detailTextDoc.getLength(), "Category:\n   " + ((Commitment)mDisplayable).getAssociatedCategory().getName() + "\n", normalTextStyle);	
+	        	}
+	        	detailTextDoc.insertString(detailTextDoc.getLength(), "Status:\n   " + ((Commitment)mDisplayable).getStatus() + "\n", normalTextStyle);
 	        }catch(Exception e)
 	        {
 	        	e.printStackTrace();
@@ -405,7 +410,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 		selectedCategories.clear();
 		checkBoxCategoryMap.clear();
 		
-		List<Category> allCategories = CategoryModel.getInstance().getAllCategories();
+		List<Category> allCategories = CategoryClient.getInstance().getAllCategories();
 		
 		// Use different list to avoid commitment and uncategorized from displaying in other places
 		// since the allCategories list is passed by reference

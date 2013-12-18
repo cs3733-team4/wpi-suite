@@ -9,14 +9,17 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.modules.EntityManager;
 import edu.wpi.cs.wpisuitetng.modules.Model;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryEntityManager;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentEntityManager;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.EventEntityManager;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.server.CategoryEntityManager;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.server.CommitmentEntityManager;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.server.EventEntityManager;
 import edu.wpi.cs.wpisuitetng.network.Request;
 import edu.wpi.cs.wpisuitetng.network.configuration.NetworkConfiguration;
 import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
@@ -60,10 +63,13 @@ public class MockRequest extends Request
 	public void send() throws IllegalStateException
 	{
 		String[] bitsOfUrl = relPath.split("/");
+		boolean advanced;
+		if (advanced = bitsOfUrl[0].equals("Advanced"))
+		{
+			bitsOfUrl = Arrays.copyOfRange(bitsOfUrl, 1, bitsOfUrl.length);
+		}
 		if (!bitsOfUrl[0].equals("cal"))
 			throw new IllegalStateException("Not a calender!" + bitsOfUrl[0] + "|yay");
-		if (bitsOfUrl.length >= 3)
-			bitsOfUrl[2] = bitsOfUrl[2].replaceAll("%2C", ",");
 		
 		this.setResponse(new ResponseModel());
 		sent = true;
@@ -88,7 +94,7 @@ public class MockRequest extends Request
 			switch (getHttpMethod())
 			{
 				case GET:
-					this.response.setBody(new Gson().toJson(em.getEntity(session, bitsOfUrl[2])));
+					this.response.setBody(advanced ? em.advancedGet(session, bitsOfUrl) : new Gson().toJson(bitsOfUrl.length > 2 ? em.getEntity(session, bitsOfUrl[2]) : em.getAll(session)));
 					break;
 				case POST:
 					em.update(session, getBody());
