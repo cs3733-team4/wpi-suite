@@ -538,6 +538,9 @@ public class SidebarTabbedPane extends JTabbedPane{
 				{
 					if (selectedCategories.contains(referencedCategory.getUuid()))
 						selectedCategories.remove(referencedCategory.getUuid());
+					catsLeft--;
+					 if(catsLeft==0)
+						 clearAllButton.setEnabled(false);
 				}
 			}
 			if (isUser)
