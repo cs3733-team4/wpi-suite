@@ -42,7 +42,7 @@ public class AddEventDisplay extends DisplayableEditorView
 		super(true);
 		this.eventToEdit = mEvent;
 		this.isEditingEvent = true;
-		this.existingEventID = eventToEdit.getIdentification();
+		this.existingEventID = eventToEdit.getUuid();
 		populateEventFields(eventToEdit);
 		setUpListeners();
 		
@@ -172,10 +172,10 @@ public class AddEventDisplay extends DisplayableEditorView
 		e.setEnd(endTimeDatePicker.getDateTime());
 		e.setProjectEvent(rdbtnTeam.isSelected());
 		e.setParticipants(participantsTextField.getText().trim());
-		e.setCategory(((Category)eventCategoryPicker.getSelectedItem()).getCategoryID());
+		e.setCategory(((Category)eventCategoryPicker.getSelectedItem()).getUuid());
 		
 		if (isEditingEvent){
-			e.setEventID(existingEventID);
+			e.setUuid(existingEventID);
 			MainPanel.getInstance().updateEvent(e);
 		} else {
 			MainPanel.getInstance().addEvent(e);
@@ -256,7 +256,7 @@ public class AddEventDisplay extends DisplayableEditorView
 	 */
 	public boolean matchingEvent(AddEventDisplay other)
 	{
-		return this.eventToEdit != null && this.eventToEdit.getIdentification().equals(other.eventToEdit.getIdentification());
+		return this.eventToEdit != null && this.eventToEdit.getUuid().equals(other.eventToEdit.getUuid());
 	}
 	
 	

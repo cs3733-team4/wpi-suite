@@ -473,7 +473,7 @@ public class WeekCalendar extends AbstractCalendar
 		{
 			for(WeekMultidayEventItem multidayItem : multidayItemList)
 			{
-				if(setTo != null && multidayItem.getEvent().getIdentification().equals(((Event) on).getIdentification()))
+				if(setTo != null && multidayItem.getEvent().getUuid().equals(((Event) on).getUuid()))
 					multidayItem.setSelected(true);
 				else
 					multidayItem.setSelected(false);

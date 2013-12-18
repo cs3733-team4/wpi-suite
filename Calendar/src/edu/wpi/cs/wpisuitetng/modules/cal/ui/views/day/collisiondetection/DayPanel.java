@@ -171,7 +171,7 @@ public class DayPanel extends JPanel
 	{
 		for (DayItem v : guides.values())
 		{
-			if(item instanceof Displayable && v.getEvent().getIdentification().equals(((Displayable) item).getIdentification()))
+			if(item instanceof Displayable && v.getEvent().getUuid().equals(((Displayable) item).getUuid()))
 				item = v.getEvent();
 			v.setSelected(false);
 		}

@@ -292,7 +292,7 @@ public class CategoryManager extends JPanel {
 		c.setColor(colorPicker.getCurrentColorState()); // Get color from color picker
 
 		if (editCategory){
-			c.setCategoryID(selectedCategoryUUID);
+			c.setUuid(selectedCategoryUUID);
 			MainPanel.getInstance().updateCategory(c);
 			JListModel.removeElement(selectedCategory);
 			JListModel.addElement(c);

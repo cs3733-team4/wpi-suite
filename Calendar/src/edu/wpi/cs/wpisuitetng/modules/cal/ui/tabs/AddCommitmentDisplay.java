@@ -58,7 +58,7 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		super(false);
 		this.isEditingCommitment = true;
 		this.commitmentToEdit = mCommitment;
-		this.existingCommitmentID = commitmentToEdit.getIdentification();
+		this.existingCommitmentID = commitmentToEdit.getUuid();
 		populateCommitmentFields(commitmentToEdit);
 		setUpListeners();
 	}
@@ -172,7 +172,7 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 		e.setStart(startTimeDatePicker.getDateTime());
 		e.setProjectCommitment(rdbtnTeam.isSelected());
 		e.setParticipants(participantsTextField.getText().trim());
-		e.setCategory(((Category)eventCategoryPicker.getSelectedItem()).getCategoryID());
+		e.setCategory(((Category)eventCategoryPicker.getSelectedItem()).getUuid());
 		if(commitmentStatusPicker.getSelectedItem()=="Not Started")
 			e.setStatus(CommitmentStatus.NotStarted);
 		else if(commitmentStatusPicker.getSelectedItem()=="In Progress")
@@ -181,7 +181,7 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 			e.setStatus(CommitmentStatus.Complete);
 		
 		if (isEditingCommitment) {
-			e.setIdentification(existingCommitmentID);
+			e.setUuid(existingCommitmentID);
 			MainPanel.getInstance().updateCommitment(e);
 		} else
 			MainPanel.getInstance().addCommitment(e);

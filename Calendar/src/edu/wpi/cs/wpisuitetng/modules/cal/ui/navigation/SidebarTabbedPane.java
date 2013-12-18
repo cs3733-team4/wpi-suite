@@ -466,9 +466,9 @@ public class SidebarTabbedPane extends JTabbedPane{
 			container.setMaximumSize(new Dimension(10000, 20));
 			
 			// Store reference to check boxes and categories
-			if (categoryCheckBox.isSelected() && !(selectedCategories.contains(c.getCategoryID())))
+			if (categoryCheckBox.isSelected() && !(selectedCategories.contains(c.getUuid())))
 			{
-					selectedCategories.add(c.getCategoryID());
+					selectedCategories.add(c.getUuid());
 			}
 			
 			if (!checkBoxCategoryMap.containsKey(categoryCheckBox))
@@ -520,8 +520,8 @@ public class SidebarTabbedPane extends JTabbedPane{
 					showCommitments = true;
 				else
 				{
-					if (! selectedCategories.contains(referencedCategory.getCategoryID()))
-						selectedCategories.add(referencedCategory.getCategoryID());
+					if (! selectedCategories.contains(referencedCategory.getUuid()))
+						selectedCategories.add(referencedCategory.getUuid());
 				}
 			} else
 			{
@@ -531,8 +531,8 @@ public class SidebarTabbedPane extends JTabbedPane{
 					showCommitments = false;
 				else
 				{
-					if (selectedCategories.contains(referencedCategory.getCategoryID()))
-						selectedCategories.remove(referencedCategory.getCategoryID());
+					if (selectedCategories.contains(referencedCategory.getUuid()))
+						selectedCategories.remove(referencedCategory.getUuid());
 				}
 			}
 			if (isUser)
@@ -555,8 +555,8 @@ public class SidebarTabbedPane extends JTabbedPane{
 			if (!key.isSelected())
 			{
 				key.setSelected(true);
-				if(! selectedCategories.contains(value.getCategoryID()))
-					selectedCategories.add(value.getCategoryID());
+				if(! selectedCategories.contains(value.getUuid()))
+					selectedCategories.add(value.getUuid());
 			}
 		}
 		

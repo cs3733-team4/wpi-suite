@@ -35,7 +35,7 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
  */
 public class Commitment extends AbstractModel implements Displayable
 {
-	private UUID commitmentID = UUID.randomUUID();
+	private UUID uuid = UUID.randomUUID();
 	private String name;
 	private String description;
 	private Date duedate;
@@ -138,11 +138,11 @@ public class Commitment extends AbstractModel implements Displayable
 	public Boolean identify(Object o)
 	{
 		if (o instanceof String)
-			return getIdentification().toString().equals((String)(o));
+			return getUuid().toString().equals((String)(o));
 		else if (o instanceof UUID)
-			return getIdentification().equals((UUID)(o));
+			return getUuid().equals((UUID)(o));
 		else if (o instanceof Commitment)
-			return getIdentification().equals(((Commitment)(o)).getIdentification());
+			return getUuid().equals(((Commitment)(o)).getUuid());
 		return false;
 	}
 
@@ -150,9 +150,9 @@ public class Commitment extends AbstractModel implements Displayable
 	 * @param CommitmentID
 	 *            the CommitmentID to set
 	 */
-	public void setIdentification(UUID commitmentID)
+	public void setUuid(UUID commitmentID)
 	{
-		this.commitmentID = commitmentID;
+		this.uuid = commitmentID;
 	}
 
 	/**
@@ -327,9 +327,9 @@ public class Commitment extends AbstractModel implements Displayable
 	}
 	
 	@Override
-	public UUID getIdentification()
+	public UUID getUuid()
 	{
-		return commitmentID;
+		return uuid;
 	}
 
 	/**

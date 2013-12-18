@@ -146,7 +146,7 @@ public class CommitmentEntityManagerTest {
                 cem.makeEntity(ses1, eString);
                 cem.makeEntity(ses1, eeString);
                 assertEquals("At this point, there should be 2 commitments in the database", 2, cem.Count());											// Commitments from 1/1/2000 1:00 - 1/2/2000 1:00
-                assertEquals("The deleteEntity method will return true if the deletion was successful", true, cem.deleteEntity(ses1, e.getIdentification().toString()));
+                assertEquals("The deleteEntity method will return true if the deletion was successful", true, cem.deleteEntity(ses1, e.getUuid().toString()));
                 assertEquals("At this point, there should be only one commitment in the database", 1, cem.Count());
                 assertEquals("At this point, only the second commitment should still be in the database", "Second", cem.getAll(ses1)[0].getName());
                 
