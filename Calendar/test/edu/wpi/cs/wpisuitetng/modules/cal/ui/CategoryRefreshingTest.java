@@ -52,7 +52,7 @@ public class CategoryRefreshingTest {
 		CategoryEntityManager cem = new CategoryEntityManager(db);
 		cem.save(ses1, c1);
 		aed.refreshCategories();
-		assertEquals(2, eventCategoryPicker.getItemCount());
+		assertEquals(3, eventCategoryPicker.getItemCount());
 	}
 
 }
