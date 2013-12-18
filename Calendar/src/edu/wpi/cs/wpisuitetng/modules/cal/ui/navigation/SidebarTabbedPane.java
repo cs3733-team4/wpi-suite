@@ -443,7 +443,7 @@ public class SidebarTabbedPane extends JTabbedPane implements ICategoryRegister
 	    	categoryColor.setLayout(new GridLayout(1,1));
 	    	categoryColor.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 	    	
-	    	if (c.getName().equals("Uncategorized")) // If uncategorized
+	    	if ("Uncategorized".equals(c.getName())) // If uncategorized
 	    	{
 	    		// Show both colors (team and personal events)
 	    		JPanel doubleColor = new JPanel();

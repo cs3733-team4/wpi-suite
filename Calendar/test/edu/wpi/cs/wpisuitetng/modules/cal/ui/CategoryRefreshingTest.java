@@ -11,6 +11,7 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui;
 
 import static org.junit.Assert.*;
 
+import java.awt.Color;
 import java.util.HashSet;
 
 import javax.swing.JComboBox;
@@ -47,8 +48,8 @@ public class CategoryRefreshingTest {
 	
 	@Test
 	public void AddEventTabCategoryRefresh() throws WPISuiteException, NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		Category c1 = new Category();
-		Category c2 = new Category();
+		Category c1 = new Category("magic and horses", Color.black);
+		Category c2 = new Category("sillystring", Color.black);
 		CategoryEntityManager cem = new CategoryEntityManager(db);
 		cem.save(ses1, c1);
 		aed.refreshCategories();
