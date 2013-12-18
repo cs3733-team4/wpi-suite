@@ -15,6 +15,8 @@ import javax.swing.JLabel;
 
 import org.joda.time.DateTime;
 
+
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.DatePickerListener;
@@ -80,7 +82,19 @@ public class AddEventDisplay extends DisplayableEditorView
 	 * Adds button listeners based on whether an event is being edited or created
 	 */
 	private void setUpListeners(){
-		
+		eventCategoryPicker.addFocusListener(new FocusListener()
+		{
+			@Override
+			public void focusGained(FocusEvent e) {
+				refreshCategories();
+			}
+
+			@Override
+			public void focusLost(FocusEvent e) {
+				// TODO Auto-generated method stub
+				
+			}	
+		});
 		nameTextField.addFocusListener(new FocusListener() {
 			
 			@Override
@@ -274,5 +288,14 @@ public class AddEventDisplay extends DisplayableEditorView
 	public boolean editingEvent()
 	{
 		return this.isEditingEvent;
+	}
+	public void refreshCategories()
+	{
+		this.eventCategoryPicker.removeAllItems();
+		this.eventCategoryPicker.addItem(Category.DEFAULT_CATEGORY);
+		for (Category c : CategoryClient.getInstance().getAllCategories())
+		{
+			this.eventCategoryPicker.addItem(c);
+		}
 	}
 }

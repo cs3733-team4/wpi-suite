@@ -196,8 +196,9 @@ public class YearCalendar extends AbstractCalendar
 				
 				@Override
 				public void mouseClicked(MouseEvent me) {
-					// possibly go to this day or something?
-					// TODO: make it happen
+					YearlyDayHolder event = (YearlyDayHolder)(me.getSource());
+					MainPanel.getInstance().miniMove(event.getDateTime());
+					MainPanel.getInstance().viewDay();
 				}
 
 				@Override

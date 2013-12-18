@@ -88,6 +88,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 	private List<Category> allPlusDefault = new ArrayList<Category>();
 	private HashMap<JCheckBox, Category> checkBoxCategoryMap = new HashMap<JCheckBox, Category>();
 	private Collection<UUID> selectedCategories = new ArrayList<UUID>();
+	private int catsLeft; // The # of categories left before there are none selected
 	
 	/**
 	 * Tabbed panel in the navigation sidebar to hold additional details of selected items
@@ -393,6 +394,8 @@ public class SidebarTabbedPane extends JTabbedPane{
 	public void refreshFilterTab()
 	{
 		populateCategoryList(categoryList);
+		if(catsLeft!=0)
+			clearAllButton.setSelected(true);
 		categoryScroll.getVerticalScrollBar().setValue(0); // Scroll to top after adding element
 		this.categoryFilterTab.revalidate();
 		this.categoryFilterTab.repaint();
@@ -486,6 +489,8 @@ public class SidebarTabbedPane extends JTabbedPane{
 		}
 		
 		categoryListHolder.add(Box.createVerticalGlue());
+		
+		catsLeft=this.getSelectedCategories().size();
 	}
 	
 	/**
@@ -523,6 +528,8 @@ public class SidebarTabbedPane extends JTabbedPane{
 				{
 					if (! selectedCategories.contains(referencedCategory.getCategoryID()))
 						selectedCategories.add(referencedCategory.getCategoryID());
+					catsLeft++;
+					clearAllButton.setEnabled(true);
 				}
 			} else
 			{
@@ -534,6 +541,9 @@ public class SidebarTabbedPane extends JTabbedPane{
 				{
 					if (selectedCategories.contains(referencedCategory.getCategoryID()))
 						selectedCategories.remove(referencedCategory.getCategoryID());
+					catsLeft--;
+					if(catsLeft==0)
+						clearAllButton.setEnabled(false);
 				}
 			}
 			if (isUser)
@@ -563,6 +573,9 @@ public class SidebarTabbedPane extends JTabbedPane{
 		
 		MainPanel.getInstance().refreshView(); //Update all events	
 		isUser = true; // set is user back to true
+		
+		catsLeft=this.getSelectedCategories().size();
+		clearAllButton.setEnabled(true);
 	}
 	
 	/**
@@ -579,8 +592,12 @@ public class SidebarTabbedPane extends JTabbedPane{
 		for (JCheckBox key : checkBoxCategoryMap.keySet())
 			key.setSelected(false);
 		
-		MainPanel.getInstance().refreshView(); //Update all events	
+		MainPanel.getInstance().refreshView(); //Update all events
 		isUser = true; // set is user back to true
+
+		catsLeft=0;
+		clearAllButton.setEnabled(false);
+		
 	}
 	
 	/**
