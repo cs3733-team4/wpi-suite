@@ -27,6 +27,7 @@ public class ResizingHandle extends JComponent{
 			public void mouseReleased(MouseEvent arg0) {
 				currIncrement = 0;
 				startPos = -1;
+				getParent().dispatchEvent(arg0);
 			}
 			
 			@Override

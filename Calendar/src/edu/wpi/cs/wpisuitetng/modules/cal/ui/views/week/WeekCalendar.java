@@ -209,8 +209,6 @@ public class WeekCalendar extends AbstractCalendar
 		
 		while (!multidayEvents.isEmpty())
 		{
-			System.out.print("multiGridContainer Comp Count: " + headerBox.getComponentCount() + "\n");
-
 			JPanel multiGrid = new JPanel();
 			multiGrid.setBorder(BorderFactory.createEmptyBorder());
 			multiGrid.setLayout(new MigLayout("insets 0,gap 0", "[sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow]", "[]"));
@@ -219,7 +217,6 @@ public class WeekCalendar extends AbstractCalendar
 
 			next: while (gridIndex < 7)
 			{
-				System.out.print("Current grid index: " + gridIndex + "\n");
 				Interval mInterval = new Interval(daysOfWeekArray[gridIndex].getDisplayDate(), daysOfWeekArray[gridIndex].getDisplayDate().plusDays(1));
 
 				for (Event currEvent : multidayEvents)
@@ -227,12 +224,10 @@ public class WeekCalendar extends AbstractCalendar
 					if (isEventInInterval(currEvent, mInterval))
 					{
 						boolean firstPanel = true;
-						System.out.print("currEvent Name: " + currEvent.getName() + "\n");
 						do
 						{
 							if (firstPanel)
 							{
-								System.out.print("currEvent Name:Name  " + currEvent.getName() + "\n");
 								JLabel multidayPanel = new JLabel(" " + currEvent.getName());
 								multidayPanel.setMinimumSize(new Dimension(0, 0));
 								multidayPanel.setBackground(currEvent.getColor());
@@ -245,7 +240,6 @@ public class WeekCalendar extends AbstractCalendar
 							}
 							else
 							{
-								System.out.print("currEvent Color: " + currEvent.getName() + "\n");
 								JPanel multidayPanel = new JPanel();
 								multidayPanel.setBackground(currEvent.getColor());
 								multidayPanel.setBorder(new CompoundBorder(BorderFactory.createMatteBorder(rows == 0 ? 1 : 0, 0, 1, 1, currEvent.getColor().darker()), new EmptyBorder(3, 3, 3, 3)));
@@ -267,7 +261,6 @@ public class WeekCalendar extends AbstractCalendar
 				multiGrid.add(spacer, "cell " + (gridIndex-1) + " 0, grow");
 			}
 
-			System.out.print("multiGrid Comp Count: " + multiGrid.getComponentCount() + "\n");
 			if (multiGrid.getComponentCount() > 0)
 				headerBox.add(multiGrid);
 			rows++;

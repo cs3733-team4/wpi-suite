@@ -104,7 +104,6 @@ public class DayPanel extends JPanel
 					{
 						isSomethingDragging = true;
 						offset = arg0.getY();
-						System.out.println(offset + " " + arg0.getY() + " " + selected.getEvent().getStart().getMinuteOfDay() + "\nIn Week View? " + inWeekView);
 						if(inWeekView)
 						{
 							inWeek.passTo(selected);
@@ -221,5 +220,4 @@ public class DayPanel extends JPanel
 		d.setMinuteOfHour(min);
 		return d.toDateTime();
 	}
-	
 }

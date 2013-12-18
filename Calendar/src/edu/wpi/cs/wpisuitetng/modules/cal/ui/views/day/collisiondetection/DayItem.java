@@ -82,8 +82,9 @@ public class DayItem extends JPanel
 	{
 		bottom = new ResizingHandle(this, false);
 		top = new ResizingHandle(this, true);
-		top.setMinimumSize(new Dimension(0,12));
-		top.setMaximumSize(new Dimension(10000,12));
+		top.setMinimumSize(new Dimension(0,6));
+		top.setMaximumSize(new Dimension(10000,6));
+		top.setPreferredSize(new Dimension(10000,6));
 		top.setCursor(new Cursor(Cursor.S_RESIZE_CURSOR));
 		this.add(top);
 		isBeingDragged = false;
@@ -113,8 +114,9 @@ public class DayItem extends JPanel
 		lblStarryNightdutch.setBackground(bg);
 		lblStarryNightdutch.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblStarryNightdutch.setMinimumSize(new Dimension(0,0));
-		bottom.setMinimumSize(new Dimension(0,12));
-		bottom.setMaximumSize(new Dimension(10000,12));
+		bottom.setMinimumSize(new Dimension(0,6));
+		bottom.setMaximumSize(new Dimension(10000,6));
+		bottom.setPreferredSize(new Dimension(10000,6));
 		this.add(Box.createVerticalGlue());
 		bottom.setCursor(new Cursor(Cursor.S_RESIZE_CURSOR));
 		this.add(bottom);
@@ -134,6 +136,7 @@ public class DayItem extends JPanel
 							updateTime(event.getStart().minusDays(previous - day));
 					}
 					event.update();
+					MainPanel.getInstance().display(event.getStart());
 				}
 				getParent().dispatchEvent(e);
 			}
@@ -282,7 +285,6 @@ public class DayItem extends JPanel
 	 */
 	private void wrapDescription(int myWidth)
 	{
-		//System.out.println("We are " + myWidth + " for event " + event);
 		int line = 0;
 		int lengthRemaining = lineLengths.size() > 0 ? lineLengths.get(0).toInt(myWidth) : 0;
 		String formattedDescription = "<html>";
@@ -303,14 +305,12 @@ public class DayItem extends JPanel
 					break;
 				}
 				lengthRemaining = lineLengths.get(line).toInt(myWidth);
-				//System.out.println("New line! rat wtih" + lineLengths.get(line).toString() + lengthRemaining);
 			}
 			lengthRemaining -= wordLengths.get(tword).intValue() + spaceLength;
 			formattedDescription += " ";
 			
 		}
 		formattedDescription += "</html>";
-		//System.out.println(formattedDescription);
 		lblStarryNightdutch.setText(formattedDescription);
 	}
 	
@@ -364,26 +364,21 @@ public class DayItem extends JPanel
 		}
 		for (OverlappedEvent who : eventPositionalInformation.getOverlappedEvents())
 		{
-			//System.out.println("" + who + " was in" + traveller);
 			if (who.getXpos().toInt(10000) < eventPositionalInformation.getXpos().toInt(10000))
 				continue;
-			//System.out.println("and is good");
 			int from = (int)Math.floor((who.getEvent().getStartTimeOnDay(displayedDay).getMillisOfDay() - zero) / (double) lineheight);
 			int to = (int)Math.ceil((who.getEvent().getEndTimeOnDay(displayedDay).getMillisOfDay() - zero) / (double) lineheight);
 			from = Math.max(0, from);
 			to = Math.min(emax, to);
-			//System.out.println(rows + " of from " + from + " to " + to);
 			for (int i = from; i <= to; i++)
 			{
 				// the vermin
 				Rational redRat = ratpack.get(i);
 				Rational blackRat = who.getXpos().subtract(eventPositionalInformation.getXpos()).divide(width);
-				//System.out.println(" Comparing rats["+i+"] " + redRat + " vs " +blackRat + " (generated from " + traveller.getXpos() + ", " + who.getXpos() + ", " + Width + ")");
 				ratpack.set(i, redRat.toInt(10000) < blackRat.toInt(10000) ? redRat : blackRat);
 			}
 		}
 		// remote buffer overflow
-//		ratpack.remove(rows);
 		ratpack.remove(rows - 1);
 		
 		
@@ -445,8 +440,9 @@ public class DayItem extends JPanel
 		d.addMinutes(minutes);
 		event.setEnd(d.toDateTime());
 		length = new Interval ( event.getStart(), event.getEnd());
-		//height = Math.max(45, height+minutes);
-		System.out.println(formatTime(event.getStart()) + " - " + formatTime(event.getEnd()));
+		height = Math.max(45, height+minutes);
+		firstDraw = true;
+		isBeingDragged = true;
 		putTimeOn();
 		revalidate();
 		repaint();
@@ -459,7 +455,8 @@ public class DayItem extends JPanel
 		event.setStart(d.toDateTime());
 		length = new Interval ( event.getStart(), event.getEnd());
 		height += minutes;
-		//height = Math.max(45, height+minutes);
+		firstDraw = true;
+		isBeingDragged = true;
 		putTimeOn();
 		getParent().revalidate();
 		getParent().repaint();
