@@ -81,7 +81,6 @@ public class DayPanel extends JPanel
 			
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				// TODO Auto-generated method stub
 				
 			}
 		});
