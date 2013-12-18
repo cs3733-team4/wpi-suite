@@ -18,13 +18,10 @@ import org.joda.time.Interval;
 import org.joda.time.MutableDateTime;
 import org.joda.time.format.DateTimeFormat;
 
-import com.google.gdata.data.PlainTextConstruct;
 import com.google.gdata.data.calendar.CalendarEventEntry;
-import com.google.gdata.data.extensions.When;
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthCalendar;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.EventDualityFactory;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CachingClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryClient;
