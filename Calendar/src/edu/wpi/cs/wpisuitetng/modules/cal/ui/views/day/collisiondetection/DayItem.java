@@ -10,6 +10,7 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.collisiondetection;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -25,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.imageio.ImageIO;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -37,14 +39,15 @@ import javax.swing.border.MatteBorder;
 
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
+import org.joda.time.MutableDateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentStatus;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.ResizingHandle;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
-
 
 /**
  * Beautiful images of what is in the days.
@@ -69,7 +72,10 @@ public class DayItem extends JPanel
 	private DateTime displayedDay;
 	private Interval length;
 	private boolean isBeingDragged;
-	
+	private DayItem puppet;
+	public int day;
+	private ResizingHandle bottom;
+	private ResizingHandle top;
 	/**
 	 * Creates a DayItem (drawable) based on an overlapping Displayable (Information) on the given day
 	 * 
@@ -78,6 +84,13 @@ public class DayItem extends JPanel
 	 */
 	public DayItem(OverlappedDisplayable eventPositionalInformation, DateTime displayedDay)
 	{
+		bottom = new ResizingHandle(this, false);
+		top = new ResizingHandle(this, true);
+		top.setMinimumSize(new Dimension(0,6));
+		top.setMaximumSize(new Dimension(10000,6));
+		top.setPreferredSize(new Dimension(10000,6));
+		top.setCursor(new Cursor(Cursor.S_RESIZE_CURSOR));
+		this.add(top);
 		isBeingDragged = false;
 		this.displayedDay=displayedDay;
 		this.eventPositionalInformation = eventPositionalInformation;
@@ -93,7 +106,6 @@ public class DayItem extends JPanel
 			setBorder(new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new LineBorder(bg.darker()), new EmptyBorder(6, 6, 6, 6))));
 		}else if(displayable instanceof Commitment)
 			setBorder(new CompoundBorder(new LineBorder(Colors.TABLE_BACKGROUND), new CompoundBorder(new MatteBorder(1, 0, 0, 0, ((Commitment) displayable).getStatusColor()), new CompoundBorder(new LineBorder(bg.darker()), new EmptyBorder(6, 6, 6, 6)))));
-		
 		setBackground(bg);
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		lblEventTitle = new JLabel();
@@ -113,7 +125,12 @@ public class DayItem extends JPanel
 		lblStarryNightdutch.setBackground(bg);
 		lblStarryNightdutch.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblStarryNightdutch.setMinimumSize(new Dimension(0,0));
-		
+		bottom.setMinimumSize(new Dimension(0,6));
+		bottom.setMaximumSize(new Dimension(10000,6));
+		bottom.setPreferredSize(new Dimension(10000,6));
+		this.add(Box.createVerticalGlue());
+		bottom.setCursor(new Cursor(Cursor.S_RESIZE_CURSOR));
+		this.add(bottom);
 		addMouseListener(new MouseListener()
 		{
 			@Override
@@ -168,7 +185,6 @@ public class DayItem extends JPanel
 				getParent().dispatchEvent(arg0);
 			}
 		});
-		
 		width = new Rational(((eventPositionalInformation.getCollisions() > 1) ? 2 : 1), 1 + eventPositionalInformation.getCollisions());
 		x = eventPositionalInformation.getXpos();
 		description = Arrays.asList(eventPositionalInformation.getEvent().getDescription().split(" "));
@@ -187,19 +203,6 @@ public class DayItem extends JPanel
 	@Override
 	public void doLayout()
 	{
-		if(isBeingDragged)
-		{
-			width = new Rational(1,1);
-			x = new Rational(0,1);
-			this.setBackground(new Color(getBackground().getRed(), getBackground().getGreen(),getBackground().getBlue(), 150));
-			int parentWidth = this.getParent().getWidth();
-			recalcBounds(parentWidth, getParent().getHeight());
-			super.doLayout();
-			lblEventTitle.revalidate();
-			lblTimeInfo.revalidate();
-			
-			return;
-		}
 		if(firstDraw)
 		{
 			height = (int) map(new Interval(displayable.getStartTimeOnDay(displayedDay), displayable.getEndTimeOnDay(displayedDay)).toDurationMillis(), this.getParent().getHeight());
@@ -216,6 +219,19 @@ public class DayItem extends JPanel
 			spaceLength = descriptionMetrics.stringWidth(" ");
 			lineLengths = infest(descriptionMetrics.getHeight(), totalHeight);
 			firstDraw = false;
+		}
+		if(isBeingDragged)
+		{
+			width = new Rational(1,1);
+			x = new Rational(0,1);
+			this.setBackground(new Color(getBackground().getRed(), getBackground().getGreen(),getBackground().getBlue(), 150));
+			int parentWidth = this.getParent().getWidth();
+			recalcBounds(parentWidth, getParent().getHeight());
+			super.doLayout();
+			lblEventTitle.revalidate();
+			lblTimeInfo.revalidate();
+			
+			return;
 		}
 		int parentWidth = this.getParent().getWidth();
 		recalcBounds(parentWidth, getParent().getHeight());
@@ -268,7 +284,6 @@ public class DayItem extends JPanel
 	 */
 	private void wrapDescription(int myWidth)
 	{
-		//System.out.println("We are " + myWidth + " for Displayable " + Displayable);
 		int line = 0;
 		int lengthRemaining = lineLengths.size() > 0 ? lineLengths.get(0).toInt(myWidth) : 0;
 		String formattedDescription = "<html>";
@@ -289,14 +304,12 @@ public class DayItem extends JPanel
 					break;
 				}
 				lengthRemaining = lineLengths.get(line).toInt(myWidth);
-				//System.out.println("New line! rat wtih" + lineLengths.get(line).toString() + lengthRemaining);
 			}
 			lengthRemaining -= wordLengths.get(tword).intValue() + spaceLength;
 			formattedDescription += " ";
 			
 		}
 		formattedDescription += "</html>";
-		//System.out.println(formattedDescription);
 		lblStarryNightdutch.setText(formattedDescription);
 	}
 	
@@ -350,26 +363,21 @@ public class DayItem extends JPanel
 		}
 		for (OverlappedDisplayable who : eventPositionalInformation.getOverlappedEvents())
 		{
-			//System.out.println("" + who + " was in" + traveller);
 			if (who.getXpos().toInt(10000) < eventPositionalInformation.getXpos().toInt(10000))
 				continue;
-			//System.out.println("and is good");
 			int from = (int)Math.floor((who.getEvent().getStartTimeOnDay(displayedDay).getMillisOfDay() - zero) / (double) lineheight);
 			int to = (int)Math.ceil((who.getEvent().getEndTimeOnDay(displayedDay).getMillisOfDay() - zero) / (double) lineheight);
 			from = Math.max(0, from);
 			to = Math.min(emax, to);
-			//System.out.println(rows + " of from " + from + " to " + to);
 			for (int i = from; i <= to; i++)
 			{
 				// the vermin
 				Rational redRat = ratpack.get(i);
 				Rational blackRat = who.getXpos().subtract(eventPositionalInformation.getXpos()).divide(width);
-				//System.out.println(" Comparing rats["+i+"] " + redRat + " vs " +blackRat + " (generated from " + traveller.getXpos() + ", " + who.getXpos() + ", " + Width + ")");
 				ratpack.set(i, redRat.toInt(10000) < blackRat.toInt(10000) ? redRat : blackRat);
 			}
 		}
 		// remote buffer overflow
-		// ratpack.remove(rows);
 		ratpack.remove(rows - 1);
 		
 		
@@ -445,5 +453,42 @@ public class DayItem extends JPanel
 										+ formatTime(displayable.getStart()) + "</html>");
 			try { lblEventTitle.setIcon(new ImageIcon(ImageIO.read(imgurl))); } catch (IOException e) {}
 		}
+	}	
+	public DayItem createPuppet(){
+		this.setVisible(false);
+		if(puppet != null)
+			return puppet;
+		this.puppet = new DayItem(eventPositionalInformation, displayedDay);
+		puppet.isBeingDragged = true;
+		return puppet;
+	}
+	
+	public void addMinutesToEnd(int minutes)
+	{
+		MutableDateTime d = displayable.getEnd().toMutableDateTime();
+		d.addMinutes(minutes);
+		if (displayable instanceof Event)
+			((Event) displayable).setEnd(d.toDateTime());
+		length = new Interval ( displayable.getStart(), displayable.getEnd());
+		height = Math.max(45, height+minutes);
+		firstDraw = true;
+		isBeingDragged = true;
+		putTimeOn();
+		revalidate();
+		repaint();
+	}
+	
+	public void addMinutesToStart(int minutes)
+	{
+		MutableDateTime d = displayable.getStart().toMutableDateTime();
+		d.addMinutes(minutes);
+		displayable.setStart(d.toDateTime());
+		length = new Interval ( displayable.getStart(), displayable.getEnd());
+		height += minutes;
+		firstDraw = true;
+		isBeingDragged = true;
+		putTimeOn();
+		getParent().revalidate();
+		getParent().repaint();
 	}
 }

@@ -89,6 +89,7 @@ public class SidebarTabbedPane extends JTabbedPane{
 	private HashMap<JCheckBox, Category> checkBoxCategoryMap = new HashMap<JCheckBox, Category>();
 	private Collection<UUID> selectedCategories = new ArrayList<UUID>();
 	private Collection<String> selectedStatuses = new ArrayList<String>();
+	private int catsLeft; // The # of categories left before there are none selected
 	
 	/**
 	 * Tabbed panel in the navigation sidebar to hold additional details of selected items
@@ -397,6 +398,10 @@ public class SidebarTabbedPane extends JTabbedPane{
 	public void refreshFilterTab()
 	{
 		populateCategoryList(categoryList);
+		if(catsLeft!=0)
+		{
+			clearAllButton.setSelected(true);
+		}
 		categoryScroll.getVerticalScrollBar().setValue(0); // Scroll to top after adding element
 		this.categoryFilterTab.revalidate();
 		this.categoryFilterTab.repaint();
@@ -468,20 +473,22 @@ public class SidebarTabbedPane extends JTabbedPane{
 	    		doubleColor.add(red);
 	    		categoryColor.add(doubleColor);
 	    	}
-	    	else if (c.getName().equals("Not Started")) // If not started
+	    	else if ("Not Started".equals(c.getName())) // If not started
 	    	{
 	    		categoryColor.setBackground(Color.RED);
 	    	}
-	    	else if (c.getName().equals("In Progress")) // If in progress
+	    	else if ("In Progress".equals(c.getName())) // If in progress
 	    	{
 	    		categoryColor.setBackground(Color.YELLOW);
 	    	}
-	    	else if (c.getName().equals("Complete")) // If uncategorized
+	    	else if ("Complete".equals(c.getName())) // If uncategorized
 	    	{
 	    		categoryColor.setBackground(Color.GREEN);
 	    	}
 	    	else // If not, get category color
+	    	{
 	    		categoryColor.setBackground(c.getColor());
+	    	}
 	    	
 	    	categoryColor.setAlignmentX(BOTTOM_ALIGNMENT);
 			
@@ -494,13 +501,15 @@ public class SidebarTabbedPane extends JTabbedPane{
 			container.setMaximumSize(new Dimension(10000, 20));
 			
 			// Store reference to check boxes and categories
-			if (categoryCheckBox.isSelected() && !(selectedCategories.contains(c.getCategoryID()) && c.getName()!="Not Started" && c.getName()!="In Progress" && c.getName()!="Complete"))
+			if (categoryCheckBox.isSelected() && !(selectedCategories.contains(c.getUuid()) && !c.getName().equals("Not Started") && !c.getName().equals("In Progress") && !c.getName().equals("Complete")))
 			{
-					selectedCategories.add(c.getCategoryID());
+					selectedCategories.add(c.getUuid());
 			}
 			
 			if (!checkBoxCategoryMap.containsKey(categoryCheckBox))
+			{
 				checkBoxCategoryMap.put(categoryCheckBox, c);
+			}
 			
 			// Set up container UI
 			container.add(categoryColor);
@@ -513,6 +522,8 @@ public class SidebarTabbedPane extends JTabbedPane{
 		}
 		
 		categoryListHolder.add(Box.createVerticalGlue());
+		
+		catsLeft=this.getSelectedCategories().size();
 	}
 	
 	/**
@@ -552,36 +563,59 @@ public class SidebarTabbedPane extends JTabbedPane{
 			if(tmp.isSelected())
 			{
 				if (referencedCategory == null && tmp.getText().equals("Events"))
-					showEvents = true;
-				else if (referencedCategory == null && tmp.getText().equals("Commits"))
-					showCommitments = true;
-				else
 				{
-					if(referencedCategory.getName()=="Not Started")
-						selectedStatuses.add("Not Started");
-					else if(referencedCategory.getName()=="In Progress")
-						selectedStatuses.add("In Progress");
-					else if(referencedCategory.getName()=="Complete")
-						selectedStatuses.add("Complete");
-					else if (! selectedCategories.contains(referencedCategory.getCategoryID()))
-						selectedCategories.add(referencedCategory.getCategoryID());
+					showEvents = true;
 				}
-			} else
+				else if (referencedCategory == null && tmp.getText().equals("Commits"))
+				{
+					showCommitments = true;
+				}
+				else
+					if("Not Started".equals(referencedCategory.getName()))
+					{
+						selectedStatuses.add("Not Started");
+					}
+					else if("In Progress".equals(referencedCategory.getName()))
+					{
+						selectedStatuses.add("In Progress");
+					}
+					else if("Complete".equals(referencedCategory.getName()))
+					{
+						selectedStatuses.add("Complete");
+					}
+					else if (! selectedCategories.contains(referencedCategory.getUuid()))
+					{
+						selectedCategories.add(referencedCategory.getUuid());
+					}
+			}
+			else 
 			{
 				if (referencedCategory == null && tmp.getText().equals("Events"))
+				{
 					showEvents = false;
+				}
 				else if (referencedCategory == null && tmp.getText().equals("Commits"))
+				{
 					showCommitments = false;
+				}
 				else
 				{
-					if(referencedCategory.getName()=="Not Started")
+					if("Not Started".equals(referencedCategory.getName()))
+					{
 						selectedStatuses.remove("Not Started");
-					else if(referencedCategory.getName()=="In Progress")
+					}
+					else if("In Progress".equals(referencedCategory.getName()))
+					{
 						selectedStatuses.remove("In Progress");
-					else if(referencedCategory.getName()=="Complete")
+					}
+					else if("Complete".equals(referencedCategory.getName()))
+					{
 						selectedStatuses.remove("Complete");
-					else if (selectedCategories.contains(referencedCategory.getCategoryID()))
-						selectedCategories.remove(referencedCategory.getCategoryID());
+					}
+					else if (selectedCategories.contains(referencedCategory.getUuid()))
+					{
+						selectedCategories.remove(referencedCategory.getUuid());
+					}
 				}
 			}
 			if (isUser)
@@ -604,19 +638,30 @@ public class SidebarTabbedPane extends JTabbedPane{
 			if (!key.isSelected())
 			{
 				key.setSelected(true);
-				if(value.getName()=="Not Started")
+				if("Not Started".equals(value.getName()))
+				{
 					selectedStatuses.add("Not Started");
-				else if(value.getName()=="In Progress")
+				}
+				else if("In Progress".equals(value.getName()))
+				{
 					selectedStatuses.add("In Progress");
-				else if(value.getName()=="Complete")
+				}
+				else if("Complete".equals(value.getName()))
+				{
 					selectedStatuses.add("Complete");
-				else if(! selectedCategories.contains(value.getCategoryID()))
-					selectedCategories.add(value.getCategoryID());
+				}
+				else if(! selectedCategories.contains(value.getUuid()))
+				{
+					selectedCategories.add(value.getUuid());
+				}
 			}
 		}
 		
 		MainPanel.getInstance().refreshView(); //Update all events	
 		isUser = true; // set is user back to true
+		
+		catsLeft=this.getSelectedCategories().size();
+		clearAllButton.setEnabled(true);
 	}
 	
 	/**
@@ -634,8 +679,12 @@ public class SidebarTabbedPane extends JTabbedPane{
 		for (JCheckBox key : checkBoxCategoryMap.keySet())
 			key.setSelected(false);
 		
-		MainPanel.getInstance().refreshView(); //Update all events	
+		MainPanel.getInstance().refreshView(); //Update all events
 		isUser = true; // set is user back to true
+
+		catsLeft=0;
+		clearAllButton.setEnabled(false);
+		
 	}
 	
 	/**

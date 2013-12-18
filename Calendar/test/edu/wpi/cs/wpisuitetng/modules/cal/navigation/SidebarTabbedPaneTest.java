@@ -217,7 +217,7 @@ public class SidebarTabbedPaneTest {
 		assertNotNull("sidebar exists", sidebar);
 		
 		assertEquals("The filtering tab list starts with all added categories as well as an uncategorized checkbox", 2, sidebar.getSelectedCategories().size());
-		assertEquals("The filtering tab list will contain the newly created category", blue.getCategoryID(), sidebar.getSelectedCategories().toArray()[1]);
+		assertEquals("The filtering tab list will contain the newly created category", blue.getUuid(), sidebar.getSelectedCategories().toArray()[1]);
 	}
 	
 	@Test
@@ -269,8 +269,7 @@ public class SidebarTabbedPaneTest {
 		assertNotNull("sidebar exists", sidebar);
 		
 		assertEquals("The filtering tab list starts with all added categories as well as an uncategorized checkbox", 3, sidebar.getSelectedCategories().size());
-		assertTrue("The filtering tab list starts with all added categories as well as an uncategorized checkbox", sidebar.getSelectedCategories().contains(red.getCategoryID()));
-
+		assertTrue("The filtering tab list starts with all added categories as well as an uncategorized checkbox", sidebar.getSelectedCategories().contains(red.getUuid()));
 		
 		// insert manual unchecking of red's box here
 		Field cBoxList = ReflectUtils.getField(sidebar, "checkBoxCategoryMap");
@@ -309,11 +308,17 @@ public class SidebarTabbedPaneTest {
 		
 		sidebar.deselectAllCategories();
 		
-		assertEquals("Clicking on deselect-all will cause all categories to be unselected", 0, sidebar.getSelectedCategories().size());
+		assertEquals("Clicking on the clear will cause all categories to be unselected", 0, sidebar.getSelectedCategories().size());
+		
+		Field cButton = sidebar.getClass().getDeclaredField("clearAllButton");
+		cButton.setAccessible(true);
+		assertFalse("Clicking the clear button will disable it until one or more categories are reselected", ((JButton)cButton.get(sidebar)).isEnabled());
+		
 
 		sidebar.selectAllCategories();
 		
 		assertEquals("Clicking on select-all will cause all categories to be selected", 4, sidebar.getSelectedCategories().size());
 		assertTrue("showCommitments will also be selected", sidebar.showCommitments());
+		assertTrue("Clicking the select all button will re-enable the clear button if it was disabled before", ((JButton)cButton.get(sidebar)).isEnabled());
 	}
 }

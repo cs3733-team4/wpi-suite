@@ -83,12 +83,12 @@ public class EventEntityManager extends CachedEntityManager<Event> {
 		UUID from = UUID.fromString(uuid);
 		try 
 		{
-			return db.retrieve(Event.class, "eventID", from, ses.getProject()).toArray(new Event[0]);
+			return db.retrieve(Event.class, "uuid", from, ses.getProject()).toArray(new Event[0]);
 		}
 		catch (WPISuiteException e)
 		{
 			System.out.println("Tryiing to find " + uuid + " fAILED!");
-			throw new NotFoundException(uuid);
+			throw new NotFoundException(e.toString());
 		}
 		
 	}
@@ -173,7 +173,7 @@ public class EventEntityManager extends CachedEntityManager<Event> {
 		 * We have to get the original defect from db4o, copy properties from updatedEvent,
 		 * then save the original Event again.
 		 */
-		List<Model> oldEvents = db.retrieve(Event.class, "eventID", updatedEvent.getIdentification(), session.getProject());
+		List<Model> oldEvents = db.retrieve(Event.class, "uuid", updatedEvent.getUuid(), session.getProject());
 		if(oldEvents.size() < 1 || oldEvents.get(0) == null) {
 			throw new BadRequestException("Event with ID does not exist.");
 		}
@@ -224,7 +224,7 @@ public class EventEntityManager extends CachedEntityManager<Event> {
 	@Override
 	protected String updated(Event e)
 	{
-		return new Gson().toJson(new Event.SerializedAction(e, e.getIdentification(), false));
+		return new Gson().toJson(new Event.SerializedAction(e, e.getUuid(), false));
 	}
 
 	@Override

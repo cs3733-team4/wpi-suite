@@ -88,7 +88,7 @@ public interface Displayable
 	 * 
 	 * @return a UUID
 	 */
-	public UUID getIdentification();
+	public UUID getUuid();
 	
 	/**
 	 * @return the category

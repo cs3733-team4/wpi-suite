@@ -16,6 +16,8 @@ import javax.swing.JLabel;
 import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
 
+
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.DatePickerListener;
@@ -42,7 +44,7 @@ public class AddEventDisplay extends DisplayableEditorView
 		super(true);
 		this.eventToEdit = mEvent;
 		this.isEditingEvent = true;
-		this.existingEventID = eventToEdit.getIdentification();
+		this.existingEventID = eventToEdit.getUuid();
 		populateEventFields(eventToEdit);
 		setUpListeners();
 		
@@ -81,7 +83,19 @@ public class AddEventDisplay extends DisplayableEditorView
 	 * Adds button listeners based on whether an event is being edited or created
 	 */
 	private void setUpListeners(){
-		
+		eventCategoryPicker.addFocusListener(new FocusListener()
+		{
+			@Override
+			public void focusGained(FocusEvent e) {
+				refreshCategories();
+			}
+
+			@Override
+			public void focusLost(FocusEvent e) {
+				// TODO Auto-generated method stub
+				
+			}	
+		});
 		nameTextField.addFocusListener(new FocusListener() {
 			
 			@Override
@@ -172,10 +186,10 @@ public class AddEventDisplay extends DisplayableEditorView
 		e.setEnd(endTimeDatePicker.getDateTime());
 		e.setProjectEvent(rdbtnTeam.isSelected());
 		e.setParticipants(participantsTextField.getText().trim());
-		e.setCategory(((Category)eventCategoryPicker.getSelectedItem()).getCategoryID());
+		e.setCategory(((Category)eventCategoryPicker.getSelectedItem()).getUuid());
 		
 		if (isEditingEvent){
-			e.setEventID(existingEventID);
+			e.setUuid(existingEventID);
 			MainPanel.getInstance().updateEvent(e);
 		} else {
 			MainPanel.getInstance().addEvent(e);
@@ -256,7 +270,7 @@ public class AddEventDisplay extends DisplayableEditorView
 	 */
 	public boolean matchingEvent(AddEventDisplay other)
 	{
-		return this.eventToEdit != null && this.eventToEdit.getIdentification().equals(other.eventToEdit.getIdentification());
+		return this.eventToEdit != null && this.eventToEdit.getUuid().equals(other.eventToEdit.getUuid());
 	}
 	
 	
@@ -289,5 +303,14 @@ public class AddEventDisplay extends DisplayableEditorView
 	public boolean editingEvent()
 	{
 		return this.isEditingEvent;
+	}
+	public void refreshCategories()
+	{
+		this.eventCategoryPicker.removeAllItems();
+		this.eventCategoryPicker.addItem(Category.DEFAULT_CATEGORY);
+		for (Category c : CategoryClient.getInstance().getAllCategories())
+		{
+			this.eventCategoryPicker.addItem(c);
+		}
 	}
 }

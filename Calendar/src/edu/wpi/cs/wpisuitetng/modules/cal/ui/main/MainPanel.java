@@ -328,6 +328,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 				{
 					int ID = ((Title)e.getSource()).ID;
 					mTabbedPane.remove(tabs.get(ID));
+					tabs.get(ID).repaint();
 					tabs.remove(ID);
 					MainPanel.getInstance().mainCalendarNavigationPanel.grabFocus();
 				}
@@ -381,7 +382,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	 * @param updateEvent event to update
 	 */
 	public void updateEvent(Event updateEvent){
-		if((currentSelected instanceof Event) && updateEvent.getIdentification().equals(((Event) currentSelected).getIdentification()))
+		if((currentSelected instanceof Event) && updateEvent.getUuid().equals(((Event) currentSelected).getUuid()))
 			clearSelected();
 		events.update(updateEvent);
 	}
@@ -457,6 +458,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 	{
 		view = ViewSize.Day;
 		refreshView(dayCal);
+		this.mCalendarSelector.toDay();
 	}
 	
 	public void viewYear()

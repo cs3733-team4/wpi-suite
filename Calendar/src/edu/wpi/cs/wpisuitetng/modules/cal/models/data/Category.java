@@ -21,7 +21,7 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 public class Category extends AbstractModel
 {
-	private UUID categoryID = UUID.randomUUID();
+	private UUID uuid = UUID.randomUUID();
 	private String name;
 	private Color color;
 	private User owner;
@@ -37,7 +37,7 @@ public class Category extends AbstractModel
 		name = s;
 		color = null;
 		owner = null;
-		categoryID = new UUID(0, 0);
+		uuid = new UUID(0, 0);
 	}
 
 	public Category()
@@ -91,9 +91,9 @@ public class Category extends AbstractModel
 	 * 
 	 * @return categoryID the UUID of the given category
 	 */
-	public UUID getCategoryID()
+	public UUID getUuid()
 	{
-		return categoryID;
+		return uuid;
 	}
 
 	@Override
@@ -184,9 +184,9 @@ public class Category extends AbstractModel
 	 * @param categoryID
 	 *            the categoryID to set
 	 */
-	public void setCategoryID(UUID categoryID)
+	public void setUuid(UUID categoryID)
 	{
-		this.categoryID = categoryID;
+		this.uuid = categoryID;
 	}
 
 	public static class SerializedAction extends CachingClient.SerializedAction<Category>

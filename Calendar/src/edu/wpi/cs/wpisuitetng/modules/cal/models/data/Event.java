@@ -34,7 +34,7 @@ import edu.wpi.cs.wpisuitetng.modules.core.models.User;
  */
 public class Event extends AbstractModel implements Displayable
 {
-	private UUID eventID = UUID.randomUUID();
+	private UUID uuid = UUID.randomUUID();
 	private String name;
 	private String description;
 	private Date start;
@@ -143,27 +143,27 @@ public class Event extends AbstractModel implements Displayable
 	public Boolean identify(Object o)
 	{
 		if (o instanceof String)
-			return getIdentification().toString().equals((String)(o));
+			return getUuid().toString().equals((String)(o));
 		else if (o instanceof UUID)
-			return getIdentification().equals((UUID)(o));
+			return getUuid().equals((UUID)(o));
 		else if (o instanceof Event)
-			return getIdentification().equals(((Event)(o)).getIdentification());
+			return getUuid().equals(((Event)(o)).getUuid());
 		return false;
 	}
 
 	@Override
-	public UUID getIdentification()
+	public UUID getUuid()
 	{
-		return eventID;
+		return uuid;
 	}
 
 	/**
 	 * @param eventID
 	 *            the eventID to set
 	 */
-	public void setEventID(UUID eventID)
+	public void setUuid(UUID eventID)
 	{
-		this.eventID = eventID;
+		this.uuid = eventID;
 	}
 
 	/**

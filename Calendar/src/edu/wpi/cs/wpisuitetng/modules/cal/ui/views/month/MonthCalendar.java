@@ -245,7 +245,7 @@ public class MonthCalendar extends AbstractCalendar
 	 */
 	public void addDisplayable(final Displayable disp)
 	{
-		emap.put(disp.getIdentification(), disp);
+		emap.put(disp.getUuid(), disp);
 
 		traverseDisplayable(disp, new Lambda<MonthDay>() {
 			
@@ -303,7 +303,7 @@ public class MonthCalendar extends AbstractCalendar
 				md.removeDisplayable(disp);
 			}
 		});
-		emap.remove(disp.getIdentification());
+		emap.remove(disp.getUuid());
 	}
 
 	/**
@@ -431,7 +431,7 @@ public class MonthCalendar extends AbstractCalendar
 	@Override
 	public void updateDisplayable(Displayable events, boolean added)
 	{
-		removeDisplayable(emap.get(events.getIdentification()));
+		removeDisplayable(emap.get(events.getUuid()));
 		if (added)
 			addDisplayable(events);
 		revalidate();
