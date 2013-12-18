@@ -77,7 +77,15 @@
 	<target name="compile" depends="janeway-jar, core-jar"/>
 
 	<target name="test" depends="compile-test">
-		
+		<junit printsummary="yes" haltonfailure="no">
+			<classpath refid="test-classpath"/>
+			<formatter type="xml"/>
+			<batchtest fork="yes" todir="${test-results}">
+				<fileset dir="test">
+					<include name="**/*Test*.java"/>
+				</fileset>
+			</batchtest>
+		</junit>
 	</target>
 
 	<target name="clean">
