@@ -66,8 +66,8 @@ import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.year.YearCalendar;
  * The main UI of the Calendar module. This singleton is basically the controller for everything
  * in the calendar module. It manages most resources.
  */
-public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
-	
+public class MainPanel extends JTabbedPane implements MiniCalendarHostIface
+{	
 	private JTabbedPane mTabbedPane;
 	private MiniCalendarPanel mMiniCalendarPanel;
 	private JPanel mainPaneContainer;
@@ -160,7 +160,6 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface {
 			finishInit();
 		}
 		super.paint(g);
-		//this.mainCalendarNavigationPanel.grabFocus();
 	}
 	
 	/**

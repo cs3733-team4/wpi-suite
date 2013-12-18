@@ -39,7 +39,6 @@ import javax.swing.border.MatteBorder;
 
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
-import org.joda.time.MutableDateTime;
 import org.joda.time.MutableInterval;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentStatus;
@@ -173,13 +172,13 @@ public class DayItem extends JPanel
 			@Override
 			public void mouseEntered(MouseEvent e)
 			{
-				// TODO Auto-generated method stub
+				
 			}
 			
 			@Override
 			public void mouseClicked(MouseEvent e)
 			{
-				// TODO Auto-generated method stub	
+				
 			}
 		});
 		
