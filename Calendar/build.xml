@@ -21,6 +21,10 @@
 			<include name="miglayout-4.0-swing.jar"/>
 			<include name="swingx-all-1.6.4.jar"/>
 			<include name="joda-time-2.3.jar"/>
+			<include name="gdata-calendar-2.0.jar"/>
+			<include name="gdata-client-1.0.jar"/>
+			<include name="guava-11.0.2.jar"/>
+
 		</fileset>
 		<pathelement path="build"/>
 	</path>

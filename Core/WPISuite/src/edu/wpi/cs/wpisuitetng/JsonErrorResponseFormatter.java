@@ -43,7 +43,11 @@ public class JsonErrorResponseFormatter implements ErrorResponseFormatter {
 		
 		json.append("}");
 		
+		e.printStackTrace();
+		
 		return json.toString();
+		
+		
 	}
 
 }

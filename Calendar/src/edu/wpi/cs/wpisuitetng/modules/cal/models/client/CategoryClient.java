@@ -37,6 +37,7 @@ public class CategoryClient extends CachingClient<Category, Category.SerializedA
 		if (instance == null)
 		{
 			instance = new CategoryClient();
+			instance.put(Category.GOOGLE_EVENT_DEFAULT);
 		}
 		return instance;
 	}

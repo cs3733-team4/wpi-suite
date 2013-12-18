@@ -18,9 +18,11 @@ import org.joda.time.Interval;
 import org.joda.time.MutableDateTime;
 import org.joda.time.format.DateTimeFormat;
 
+import com.google.gdata.data.calendar.CalendarEventEntry;
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.utils.EventDualityFactory;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CachingClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventClient;
@@ -515,5 +517,16 @@ public class Event extends AbstractModel implements Displayable
 			uuid = eventID;
 			isDeleted = b;
 		}
+	}
+
+	@Override
+	public CalendarEventEntry getGoogleCalendarEntry() {
+		EventDualityFactory edf = EventDualityFactory.init(name);
+		edf.setDisplayableEnd(end)
+		   .setDisplayableStart(start)
+		   .setDisplayableID(eventID)
+		   .setDisplayableDescription(getDescription())
+		   .setProject(isProjectEvent);
+		return edf.getDuality().getB();
 	}
 }

@@ -372,7 +372,7 @@ public class SidebarTabbedPane extends JTabbedPane implements ICategoryRegister
 	        	{
 	        		detailTextDoc.insertString(detailTextDoc.getLength(), "Category:\n   " + ((Commitment)mDisplayable).getAssociatedCategory().getName() + "\n", normalTextStyle);	
 	        	}
-	        	detailTextDoc.insertString(detailTextDoc.getLength(), "Status:\n   " + ((Commitment)mDisplayable).getStatus() + "\n", normalTextStyle);
+	        	detailTextDoc.insertString(detailTextDoc.getLength(), "Status:\n   " + ((Commitment)mDisplayable).getStatus().toString() + "\n", normalTextStyle);
 	        }catch(Exception e)
 	        {
 	        	e.printStackTrace();
