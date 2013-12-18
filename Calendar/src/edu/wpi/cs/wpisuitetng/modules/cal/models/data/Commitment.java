@@ -7,19 +7,23 @@
  * 
  * Contributors: Team YOCO (You Only Compile Once)
  ******************************************************************************/
-package edu.wpi.cs.wpisuitetng.modules.cal.models;
+package edu.wpi.cs.wpisuitetng.modules.cal.models.data;
 
 import java.awt.Color;
 import java.util.Date;
 import java.util.UUID;
 
 import org.joda.time.DateTime;
+import org.joda.time.Interval;
 import org.joda.time.MutableDateTime;
 
 import com.google.gson.Gson;
 
 import edu.wpi.cs.wpisuitetng.modules.AbstractModel;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthCalendar;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentStatus;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CachingClient;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryClient;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CommitmentClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Months;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
@@ -38,9 +42,11 @@ public class Commitment extends AbstractModel implements Displayable
 	private String participants;
 	private boolean isProjectCommitment;
 	private User owner;
+	private CommitmentStatus status;
+	// Default status for new commitments.
+	public static final CommitmentStatus DEFAULT_STATUS = CommitmentStatus.NotStarted;
 
 	/**
-	 * 
 	 * @param name the name of the event
 	 * @return this event after having it's name set
 	 */
@@ -93,6 +99,7 @@ public class Commitment extends AbstractModel implements Displayable
 	public Commitment()
 	{
 		super();
+		status=DEFAULT_STATUS;
 	}
 
 	/**
@@ -115,7 +122,7 @@ public class Commitment extends AbstractModel implements Displayable
 	@Override
 	public void delete()
 	{
-		CommitmentModel.getInstance().deleteCommitment(this);
+		CommitmentClient.getInstance().delete(this);
 	}
 
 	/**
@@ -223,7 +230,7 @@ public class Commitment extends AbstractModel implements Displayable
 		this.participants = participants;
 	}
 	
-	public boolean isProjectCommitment()
+	public boolean isProjectwide()
 	{
 		return isProjectCommitment;
 	}
@@ -239,13 +246,13 @@ public class Commitment extends AbstractModel implements Displayable
 	
 	public Category getAssociatedCategory()
 	{
-		return CategoryModel.getInstance().getCategoryByUUID(category);
+		return CategoryClient.getInstance().getCategoryByUUID(category);
 	}
 	
 	public Color getColor()
 	{
 		Color fallbackColor = isProjectCommitment ? new Color(125,157,227) : new Color(227,125,147);
-		Category cat = CategoryModel.getInstance().getCategoryByUUID(category);
+		Category cat = CategoryClient.getInstance().getCategoryByUUID(category);
 		if (cat == null)
 		{
 			return fallbackColor;
@@ -283,11 +290,17 @@ public class Commitment extends AbstractModel implements Displayable
 		mdt.setYear(newTime.getYear());
 		this.duedate = mdt.toDate();
 	}
+	
+	@Override
+	public Interval getInterval()
+	{
+		return new Interval(getDate(), getDate());
+	}
 
 	@Override
 	public void update()
 	{
-		CommitmentModel.getInstance().updateCommitment(this);
+		CommitmentClient.getInstance().update(this);
 	}
 	
 	@Override
@@ -317,17 +330,37 @@ public class Commitment extends AbstractModel implements Displayable
 	{
 		return commitmentID;
 	}
-	
-	@Override
-	public void deselect(MonthCalendar monthCalendar)
+
+	/**
+	 * Gets the current status the commitment is at.
+	 * @return the current commitment status as a String.
+	 */
+	public String getStatus()
 	{
-		monthCalendar.deselect(this);
+		return this.status.toString();
 	}
 	
-	@Override
-	public void select(MonthCalendar monthCalendar)
+	public Commitment addStatus(CommitmentStatus status) {
+		this.status=status;
+		return this;
+	}
+	
+	/**
+	 * Set the status to a given status input.
+	 * @param status
+	 */
+	public void setStatus(CommitmentStatus status)
 	{
-		monthCalendar.select(this);
+		this.status = status;
 	}
 
+	public static class SerializedAction extends CachingClient.SerializedAction<Commitment>
+	{
+		public SerializedAction(Commitment e, UUID eventID, boolean b)
+		{
+			object = e;
+			uuid = eventID;
+			isDeleted = b;
+		}
+	}
 }

@@ -12,54 +12,87 @@ package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.collisiondetection;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 
-/**
- * TimeTravelers are the result of colliding particles at the speed of light. They keep track 
- * of the number of collisions and where the x detector detected them. Also knows who its comrads are.
- */
 public class OverlappedEvent implements Comparable<OverlappedEvent>
 {
-	private int collisions = 0;
+	private int collisionCount = 0;
 	private Event event;
 	private Rational xpos = new Rational(1, 1);
-	private List<OverlappedEvent> commies = new ArrayList<>(); // the reds will invade you
+	private List<OverlappedEvent> collisions = new ArrayList<>();
 	
+	/**
+	 * 
+	 * @param event the event that this encapsulates
+	 */
 	public OverlappedEvent(Event event)
 	{
 		this.event = event;
 	}
 	
+	/**
+	 * 
+	 * @return the maximum number of collisions this event has
+	 * 		   at any given time
+	 */
 	public int getCollisions()
 	{
-		return collisions;
+		return collisionCount;
 	}
+	
+	/**
+	 * 
+	 * @param collisions set the max num of collisions
+	 */
 	public void setCollisions(int collisions)
 	{
-		this.collisions = collisions;
+		this.collisionCount = collisions;
 	}
+	
+	/**
+	 * 
+	 * @return get this event's horizontal position
+	 */
 	public Rational getXpos()
 	{
 		return xpos;
 	}
+	
+	/**
+	 * 
+	 * @param xpos set this event's horizontal position
+	 */
 	public void setXpos(Rational xpos)
 	{
 		this.xpos = xpos;
 	}
+	
+	/**
+	 * 
+	 * @return the event we encapsulate
+	 */
 	public Event getEvent()
 	{
 		return event;
 	}
 	
-	public void addOverlappedEvent(OverlappedEvent karl)
+	/**
+	 * 
+	 * @param overlapped add an overlapping event to the list of events that this overlaps with
+	 */
+	public void addOverlappedEvent(OverlappedEvent overlapped)
 	{
-		if (!commies.contains(karl))
-			commies.add(karl);
+		if (!collisions.contains(overlapped))
+			collisions.add(overlapped);
 	}
 	
+	/**
+	 * 
+	 * @return all of the events that we overlap with
+	 */
 	public List<OverlappedEvent> getOverlappedEvents()
 	{
-		return commies;
+		return collisions;
 	}
 
 	@Override
@@ -73,6 +106,6 @@ public class OverlappedEvent implements Comparable<OverlappedEvent>
 	@Override
 	public String toString()
 	{
-		return super.toString() + "{" + getEvent().getName() + "@" + getEvent().getStart().toString() + " collisions: " + collisions + "}";
+		return super.toString() + "{" + getEvent().getName() + "@" + getEvent().getStart().toString() + " collisions: " + collisionCount + "}";
 	}
 }

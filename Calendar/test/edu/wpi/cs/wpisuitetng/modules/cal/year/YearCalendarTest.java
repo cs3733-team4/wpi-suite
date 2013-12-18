@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import java.lang.reflect.Field;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventClient;
 
 /**
  * Tests for MonthItem class
@@ -18,7 +18,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 
 public class YearCalendarTest {
 	
-	EventModel events=EventModel.getInstance();
+	EventClient events=EventClient.getInstance();
 	DateTime time2000 = new DateTime(2000, 1, 1, 1, 1);
 	MutableDateTime Mtime2000 = new MutableDateTime(2000, 1, 1, 1, 1, 0, 0);
 	MutableDateTime Mtime2001 = new MutableDateTime(2001, 1, 1, 1, 1, 0, 0);

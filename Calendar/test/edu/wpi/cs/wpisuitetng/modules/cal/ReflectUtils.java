@@ -17,6 +17,15 @@ import java.lang.reflect.Method;
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ReflectUtils
 {
+	/**
+	 * Easy way to get accessible private fields from inherited children
+	 * @param obj The object
+	 * @param name name of field to pull
+	 * @return accessible field
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 * @throws NoSuchFieldException
+	 */
 	public static Field getField(Object obj, String name) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException
 	{
 		Class c = obj.getClass();
@@ -36,11 +45,30 @@ public class ReflectUtils
 		throw new NoSuchFieldException(name);
 	}
 	
+	/**
+	 * Easy way to get private fields values from inherited children
+	 * @param obj The object
+	 * @param name name of field to pull
+	 * @return accessible field
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 * @throws NoSuchFieldException
+	 */
 	public static <T> T getFieldValue(Object obj, String name) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException
 	{
 		return (T)getField(obj, name).get(obj);
 	}
 	
+	/**
+	 * Easy way to get accessible methods from inherited children
+	 * @param obj The object
+	 * @param name name of method to pull from the project
+	 * @param types argument types
+	 * @return accessible method
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 * @throws NoSuchMethodException
+	 */
 	public static Method getMethod(Object obj, String name, Class... types)  throws IllegalArgumentException, IllegalAccessException, NoSuchMethodException
 	{
 		Class c = obj.getClass();
@@ -59,7 +87,17 @@ public class ReflectUtils
 		}
 		throw new NoSuchMethodException(name);	
 	}
-	
+
+	/**
+	 * Easy way to call accessible methods from inherited children
+	 * @param obj The object
+	 * @param name name of method to pull from the project
+	 * @param types arguments for the method
+	 * @return return value of the method
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 * @throws NoSuchMethodException
+	 */
 	public static <T> T callMethod(Object obj, String name, Object... args) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException
 	{
 		Class[] argTypes = new Class[args.length];

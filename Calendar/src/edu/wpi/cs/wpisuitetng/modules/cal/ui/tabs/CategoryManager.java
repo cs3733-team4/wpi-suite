@@ -45,10 +45,10 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.CategoryModel;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryClient;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventClient;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Category;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.HSLColor;
@@ -102,7 +102,7 @@ public class CategoryManager extends JPanel {
 	public CategoryManager() {
 		
 		// Get categories
-		allCategories = CategoryModel.getInstance().getAllCategories();
+		allCategories = CategoryClient.getInstance().getAllCategories();
 
 		
 		/** Set up UI **/
@@ -346,7 +346,7 @@ public class CategoryManager extends JPanel {
 	 */
 	private void changeEventOnDelete(UUID categoryID) 
 	{
-		List<Event> affectedEvents = EventModel.getInstance().getEvents(categoryID);
+		List<Event> affectedEvents = EventClient.getInstance().getEventsByCategory(categoryID);
 		
 		for(Event e: affectedEvents)
 		{
@@ -539,7 +539,7 @@ public class CategoryManager extends JPanel {
 		
 		List<Category> toSort = new ArrayList<Category>();
 		
-		allCategories = CategoryModel.getInstance().getAllCategories();
+		allCategories = CategoryClient.getInstance().getAllCategories();
 		
 		for (int i = 0; i < allCategories.size(); i++) {
 			Category temp = allCategories.get(i);

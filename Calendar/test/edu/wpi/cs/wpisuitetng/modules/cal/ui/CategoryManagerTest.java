@@ -13,7 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.ReflectUtils;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Category;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs.CategoryManager;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.PastelColorPicker;
 

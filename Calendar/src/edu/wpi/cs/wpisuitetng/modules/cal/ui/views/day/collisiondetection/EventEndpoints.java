@@ -10,9 +10,8 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day.collisiondetection;
 
 import org.joda.time.DateTime;
-import org.joda.time.MutableDateTime;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.models.Event;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 
 /**
  * Class used for day calendar collisions
@@ -21,14 +20,19 @@ public class EventEndpoints implements Comparable<EventEndpoints>
 {
 	private Event event;
 	private DateTime time;
-	private boolean isEnd; //is this the start of an event or the end of an event
+	private boolean isEnd;
 	private OverlappedEvent result;
 	
+	/**
+	 * 
+	 * @param event the event to getEndpoints from
+	 * @param isEnd whether this is the end of an event (for multiday)
+	 * @param displayedDay the day on which the event is being displayed
+	 */
 	public EventEndpoints(Event event, boolean isEnd, DateTime displayedDay)
 	{
 		this.event = event;
 		this.isEnd = isEnd;
-		MutableDateTime mDisplayedDay = new MutableDateTime(displayedDay);
 		
 		if (!isEnd)
 		{
@@ -40,27 +44,56 @@ public class EventEndpoints implements Comparable<EventEndpoints>
 		}
 	}
 	
+	/**
+	 * 
+	 * @return this event
+	 */
 	public Event getEvent()
 	{
 		return event;
 	}
 	
+	/**
+	 * 
+	 * @return this time
+	 */
 	public DateTime getTime()
 	{
 		return time;
 	}
+	
+	/**
+	 * 
+	 * @return return whether this is the end
+	 */
 	public boolean isEnd()
 	{
 		return isEnd;
 	}
+	
+	/**
+	 * 
+	 * @param isEnd set whether this is the end
+	 */
 	public void setEnd(boolean isEnd)
 	{
 		this.isEnd = isEnd;
 	}
+	
+	/**
+	 * 
+	 * @return get the overlappingEvent that we encapsulate
+	 */
 	public OverlappedEvent getResult()
 	{
 		return result;
 	}
+	
+	/**
+	 * 
+	 * @param result the overlap to set
+	 * @return this overlapping event once it has been set
+	 */
 	public OverlappedEvent setResult(OverlappedEvent result)
 	{
 		this.result = result;
