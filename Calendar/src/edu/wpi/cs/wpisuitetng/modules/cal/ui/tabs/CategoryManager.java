@@ -46,8 +46,10 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryClient;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CommitmentClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Category;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
@@ -341,7 +343,7 @@ public class CategoryManager extends JPanel {
 	}
 	
 	/**
-	 * Changes the category of events related to categories being deleted
+	 * Changes the category of events related to category being deleted
 	 * @param categoryID the category to fetch events by
 	 */
 	private void changeEventOnDelete(UUID categoryID) 
@@ -352,6 +354,22 @@ public class CategoryManager extends JPanel {
 		{
 			e.setCategory(Category.DEFAULT_CATEGORY.getCategoryID());
 			MainPanel.getInstance().updateEvent(e);
+			MainPanel.getInstance().refreshView();
+		}
+	}
+	
+	/**
+	 * Changes the category of the commitments related to category being deleted
+	 * @param categoryID the category to fetch commitments by
+	 */
+	private void changeCommitmentOnDelete(UUID categoryID)
+	{
+		List<Commitment> affectedCommitments = CommitmentClient.getInstance().getCommitmentsByCategory(categoryID);
+		
+		for(Commitment c: affectedCommitments)
+		{
+			c.setCategory(Category.DEFAULT_CATEGORY.getCategoryID());
+			MainPanel.getInstance().updateCommitment(c);
 			MainPanel.getInstance().refreshView();
 		}
 	}
@@ -389,6 +407,7 @@ public class CategoryManager extends JPanel {
 				}
 				
 				changeEventOnDelete(selectedCategory.getCategoryID());
+				changeCommitmentOnDelete(selectedCategory.getCategoryID());
 				removeCategory(selectedCategory);
 				
 				clearSelectedCategory();
