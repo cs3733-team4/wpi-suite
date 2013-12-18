@@ -264,16 +264,9 @@ public class AddCommitmentDisplay extends DisplayableEditorView
 	}
 
 	/**
-<<<<<<< HEAD
 	 * Checks if this display has the same commitment as the display provided
 	 * @param other the other display to compare
 	 * @return true if the displays' commitments match
-=======
-	 * Makes sure a commitment isn't being edited in another tab
-	 * @param other
-	 * 		Other tab being compared
-	 * @return true if both are the same, false if they are different or if the current commitment is null
->>>>>>> origin/commitment_status
 	 */
 	public boolean matchingCommitment(AddCommitmentDisplay other)
 	{

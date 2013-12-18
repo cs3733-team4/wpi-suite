@@ -143,11 +143,17 @@ public class Event extends AbstractModel implements Displayable
 	public Boolean identify(Object o)
 	{
 		if (o instanceof String)
+		{
 			return getUuid().toString().equals((String)(o));
+		}
 		else if (o instanceof UUID)
+		{
 			return getUuid().equals((UUID)(o));
+		}
 		else if (o instanceof Event)
+		{
 			return getUuid().equals(((Event)(o)).getUuid());
+		}
 		return false;
 	}
 
