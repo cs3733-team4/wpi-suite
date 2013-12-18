@@ -12,8 +12,13 @@ package edu.wpi.cs.wpisuitetng.modules.cal.models;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
+/*
+ * This handles enabling and disabling the tooltips when the mouse hovers over a button
+ */
 public class ToolTipListener implements MouseListener {
 	@Override
 	public void mouseReleased(MouseEvent e) {
@@ -34,7 +39,12 @@ public class ToolTipListener implements MouseListener {
 	
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		ToolTipManager.sharedInstance().setEnabled(true);
+		if (SwingUtilities.getWindowAncestor(MainPanel.getInstance()).isActive())//only enable tool tips is its the active window
+			ToolTipManager.sharedInstance().setEnabled(true);
+		else
+			ToolTipManager.sharedInstance().setEnabled(false);
+			
+		ToolTipManager.sharedInstance().setDismissDelay(1500);
 		
 	}
 	

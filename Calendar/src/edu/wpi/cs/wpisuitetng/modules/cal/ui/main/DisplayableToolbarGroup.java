@@ -52,7 +52,7 @@ public class DisplayableToolbarGroup extends ToolbarGroupView {
 		    public JToolTip createToolTip() {  
 				if (toolTip == null) {  
 					JPanel panel = new JPanel(new GridLayout(0, 1));  
-					JLabel label = new JLabel("<html> Lets you make a new event in<br>the calendar</html>");
+					JLabel label = new JLabel(" Lets you make a new event in<br>the calendar");
 			        JButton button = new JButton("Get Help");  
 			        button.addActionListener(new ActionListener() {  
 			        	public void actionPerformed(ActionEvent e) { 
@@ -65,13 +65,13 @@ public class DisplayableToolbarGroup extends ToolbarGroupView {
 			        panel.add(label);
 			        panel.add(button); 
 			        toolTip = super.createToolTip();  
-			        toolTip.setLayout(new BorderLayout());  
+			        toolTip.setLayout(new BorderLayout()); 
+			        toolTip.setFocusable(false);  
 			        Insets insets = toolTip.getInsets();  
 			        Dimension panelSize = panel.getPreferredSize();  
 			        panelSize.width += insets.left + insets.right+5;  
 			        panelSize.height += insets.top + insets.bottom;  
 			        toolTip.setPreferredSize(panelSize);  
-			        toolTip.setBackground(super.createToolTip().getBackground());
 			        label.setBackground(toolTip.getBackground());
 			        toolTip.add(panel);  
 		        }  
@@ -101,7 +101,7 @@ public class DisplayableToolbarGroup extends ToolbarGroupView {
 		    public JToolTip createToolTip() {  
 				if (toolTip == null) {  
 					JPanel panel = new JPanel(new GridLayout(0, 1));  
-					JLabel label = new JLabel("<html> Lets you make a new commitment in<br>the calendar</html>");
+					JLabel label = new JLabel(" Lets you make a new commitment in<br>the calendar");
 			        JButton button = new JButton("Get Help");  
 			        button.addActionListener(new ActionListener() {  
 			        	public void actionPerformed(ActionEvent e) { 
@@ -115,12 +115,12 @@ public class DisplayableToolbarGroup extends ToolbarGroupView {
 			        panel.add(button); 
 			        toolTip = super.createToolTip();  
 			        toolTip.setLayout(new BorderLayout());  
+			        toolTip.setFocusable(false); 
 			        Insets insets = toolTip.getInsets();  
 			        Dimension panelSize = panel.getPreferredSize();  
 			        panelSize.width += insets.left + insets.right+5;  
 			        panelSize.height += insets.top + insets.bottom;  
 			        toolTip.setPreferredSize(panelSize);  
-			        toolTip.setBackground(super.createToolTip().getBackground());
 			        label.setBackground(toolTip.getBackground());
 			        toolTip.add(panel);  
 		        }  
