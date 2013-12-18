@@ -68,7 +68,6 @@ public class WeekCalendar extends AbstractCalendar
 	private DayPanel[] daysOfWeekArray = new DayPanel[7];
 	private List<Displayable> displayableList = new ArrayList<Displayable>();
 	private List<WeekMultidayEventItem> multidayItemList = new ArrayList<WeekMultidayEventItem>();;
-
 	private int currentDayUnderMouse;
 	private DateTimeFormatter monthDayFmt = DateTimeFormat.forPattern("MMM d");
 	private DateTimeFormatter dayYearFmt = DateTimeFormat.forPattern("d, yyyy");
@@ -80,7 +79,7 @@ public class WeekCalendar extends AbstractCalendar
 	private JScrollPane smithsonianScroller = new JScrollPane();
 	private JPanel smithsonian = new JPanel();
 	private JLabel dayHeaders[] = new JLabel[7];
-
+	private JPanel hourLabels;
 	/**
 	 * 
 	 * @param on
@@ -91,7 +90,6 @@ public class WeekCalendar extends AbstractCalendar
 		this.selected = null;
 		this.mainPanel = MainPanel.getInstance();
 		this.time = on;
-		this.currentDayUnderMouse = -1;
 		updateWeekStartAndEnd(time);
 		
 		// ui layout
@@ -136,15 +134,9 @@ public class WeekCalendar extends AbstractCalendar
 			@Override
 			public void mouseDragged(MouseEvent e) {
 				if(selected != null)
-				{
-					if(selected.getEvent().getStart().getDayOfWeek() != currentDayUnderMouse)
-					{
-						daysOfWeekArray[selected.getEvent().getStart().getDayOfWeek()].remove(selected);
-						daysOfWeekArray[currentDayUnderMouse].add(selected);
-						revalidate();
-					}
-				}
+						revalidate();			
 			}
+			
 		});
 	}
 
@@ -158,7 +150,8 @@ public class WeekCalendar extends AbstractCalendar
 		headerBox.removeAll();
 		
 		// add the day grid back in
-		smithsonian.add(new DayGridLabel(), "cell 0 0,grow");
+		hourLabels = new DayGridLabel();
+		smithsonian.add(hourLabels, "cell 0 0,grow");
 
 		MutableDateTime increment = new MutableDateTime(weekStartTime);
 		increment.setMillisOfDay(0);
@@ -235,7 +228,6 @@ public class WeekCalendar extends AbstractCalendar
 					{
 						boolean firstPanel = true;
 						WeekMultidayEventItem multidayPanel;
-						
 						do
 						{
 							if (firstPanel)
@@ -574,13 +566,27 @@ public class WeekCalendar extends AbstractCalendar
 		return (s.isBefore(e) && mInterval.contains(s));
 	}
 	
-	public void passTo(int day, DayItem toPass)
+	public void passTo(DayItem toPass)
 	{
 		selected = toPass;
+		if(selected != null)
+		{
+			this.daysOfWeekArray[selected.getEvent().getStart().getDayOfWeek()%7].add(selected.createPuppet());
+			selected.createPuppet().day = selected.getEvent().getStart().getDayOfWeek()%7;
+		}
 	}
 	public void mouseOverDay(int day)
 	{
-		this.currentDayUnderMouse = day;
+		if(selected != null){
+			int previous = selected.createPuppet().day;
+			if(previous != day)
+			{
+				selected.createPuppet().day += day-previous;
+				this.daysOfWeekArray[day].add(selected.createPuppet());
+				revalidate();
+				repaint();
+			}
+		}
 	}
 	
 	@Override

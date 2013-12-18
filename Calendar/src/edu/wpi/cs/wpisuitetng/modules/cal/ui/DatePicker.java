@@ -15,6 +15,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -48,6 +50,9 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 	JFormattedTextField time;
 	DatePicker linked;
 	ArrayList<DatePickerListener> changeListeners = new ArrayList<DatePickerListener>();
+	JFrame cal;
+	
+	boolean instance;
 	
 	public DatePicker(boolean showTime, DatePicker mLinked) {
 		super();
@@ -59,6 +64,7 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 		try {
 			date = new JFormattedTextField(new MaskFormatter("##/##/##"));
 			date.setFont(new Font("Monospaced", Font.PLAIN, 12));
+			
 			date.getDocument().addDocumentListener(new DocumentListener() {
 				
 				@Override
@@ -171,7 +177,26 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 				AMPM.addItem("PM");
 				AMPM.setSelectedIndex(0);
 			}
-			
+			date.addKeyListener(new KeyListener() {
+
+				@Override
+				public void keyPressed(KeyEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void keyReleased(KeyEvent e) {
+					hideMiniCalendar();
+				}
+
+				@Override
+				public void keyTyped(KeyEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+			});
 			date.addMouseListener(new MouseListener() {
 
 				public void mouseClicked(MouseEvent e) {
@@ -205,6 +230,8 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 	 */
 	private void showMiniCalendar()
 	{
+		if (!instance)
+		{
 		JFrame cal;
 		if(getDate()!=null)
 			cal = new PopupCalendar(getDate(), this);
@@ -216,14 +243,43 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 	    loc.setLocation(loc.x, loc.y + 26);
 		cal.setLocation(loc);
 		cal.setSize(220, 220);
-	    cal.setVisible(true);
+		this.cal = cal;
+		this.cal.setAlwaysOnTop(true);
+		this.miniCalendarInstance(true);
+	    this.cal.setVisible(true);
+		}
 	}
-	public void display(DateTime value) {		
+	/**
+	 * Hides the calendar popup.
+	 */
+	public void hideMiniCalendar()
+	{
+		this.miniCalendarInstance(false);
+		this.cal.setVisible(false);
+	}
+	/**
+	 * Set this to true when there is an instance of a popup already open.
+	 * @param status
+	 */
+	public void miniCalendarInstance(boolean status)
+	{
+		this.instance = status;
+	}
+	/**
+	 * Make the date field display the selected date.
+	 */
+	public void display(DateTime value) {
+		this.miniCalendarInstance(false);
+		this.cal.setVisible(false);
 		date.setText(value.toString(dateFmt));
-		if(linked != null)
+		if(linked != null) {
 			linked.display(value);
+		}
 	}
-	
+	/**
+	 * Return the Date in the date field.
+	 * @return DateTime
+	 */
 	public DateTime getDate()	{
 		try
 		{
@@ -233,7 +289,10 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 			return null;
 		}
 	}
-	
+	/**
+	 * Return the Date and Time from their respective fields.
+	 * @return DateTime
+	 */
 	public DateTime getDateTime() {
 		try
 		{
@@ -281,17 +340,32 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 				this.AMPM.setSelectedIndex(0);
 			}
 	}
-	
+	/**
+	 * Add a listener to the changeListeners
+	 * @param newListener
+	 */
 	public void addChangeListener(DatePickerListener newListener)
 	{
 		changeListeners.add(newListener);
 	}
-	
+	/**
+	 * Date field gets focus and opens a calendar popup.
+	 */
 	public void requestDateFocus()
 	{
 		date.requestFocus();
 		showMiniCalendar();
 	}
+	/**
+	 * Request focus for date field.
+	 */
+	public void requestDateFocusPost()
+	{
+		date.requestFocus();
+	}
+	/**
+	 * Request focus for time field.
+	 */
 	public void requestTimeFocus()
 	{
 		time.requestFocus();
