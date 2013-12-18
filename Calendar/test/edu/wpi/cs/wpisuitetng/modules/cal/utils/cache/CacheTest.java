@@ -47,7 +47,7 @@ public class CacheTest {
 	public void highLevelIteraterFromCacheWorksOnce() {
 		Cache<String, String> c = new Cache<>("");
 		c.put("something", "epic!!!");
-		for(TimeOrderedList<String> q : c.accessOrderedCallIterator("something"))
+		for(TimeOrderedList<String, String> q : c.accessOrderedCallIterator("something"))
 		{
 			assertTrue(q.getValue().equals("epic!!!"));
 		}
@@ -76,7 +76,7 @@ public class CacheTest {
 		int xpCount = 0;
 		boolean successes = true;
 		
-		for(TimeOrderedList<String> q : c.accessOrderedCallIterator("something"))
+		for(TimeOrderedList<String, String> q : c.accessOrderedCallIterator("something"))
 		{
 			successes &= q.getValue().equals(expected[xpCount++]);
 		}
@@ -114,7 +114,7 @@ public class CacheTest {
 		int xpCount = 0;
 		boolean successes = true;
 		
-		for(TimeOrderedList<String> q : c.accessOrderedCallIterator("something"))
+		for(TimeOrderedList<String, String> q : c.accessOrderedCallIterator("something"))
 		{
 			successes &= q.getValue().equals(expected[xpCount++]);
 		}
@@ -130,17 +130,14 @@ public class CacheTest {
 		c.put("takes the", "cake");
 		c.put("next", "level");
 		
-		c.access("takes the");
-		
-		String[] expected = {"level", "cake", "better", "epic!!!"};
+		//TODO: I'm not sure if this is a useful test anymore as we have changed these requirements
+		String[] expected = {"cake", "better", "epic!!!", ""};
 		int xpCount = 0;
-		boolean successes = true;
 		
 		for(String q : c.timeOrderedCallIterator("next"))
 		{
-			System.out.println(q);
-			successes &= q.equals(expected[xpCount++]);
+			assertEquals(q, expected[xpCount++]);
+			assertTrue(xpCount <= expected.length);
 		}
-		assertTrue(successes);
 	}
 }

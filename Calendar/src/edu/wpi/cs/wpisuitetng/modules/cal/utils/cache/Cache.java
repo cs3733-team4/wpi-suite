@@ -5,17 +5,17 @@ import java.util.Map;
 
 public class Cache<K, V>{
 	
-	Map<K, AccessOrderedList<TimeOrderedList<V>>> cache = 
-			new HashMap<K, AccessOrderedList<TimeOrderedList<V>>>();
+	Map<K, AccessOrderedList<TimeOrderedList<V, K>>> cache = 
+			new HashMap<K, AccessOrderedList<TimeOrderedList<V, K>>>();
 	
-	AccessOrderedList<TimeOrderedList<V>> head;
-	TimeOrderedList<V> latest;
+	AccessOrderedList<TimeOrderedList<V, K>> head;
+	TimeOrderedList<V, K> latest;
 	
 	public Cache(V value)
 	{
-		TimeOrderedList<V> newLatest = new TimeOrderedList<V>(value, latest);
+		TimeOrderedList<V, K> newLatest = new TimeOrderedList<V, K>(value, latest);
 		latest = newLatest;
-		AccessOrderedList<TimeOrderedList<V>> newHead = new AccessOrderedList<TimeOrderedList<V>>(newLatest);
+		AccessOrderedList<TimeOrderedList<V, K>> newHead = new AccessOrderedList<TimeOrderedList<V, K>>(newLatest);
 		head = newHead.access(head).getB();
 	}
 	
@@ -30,9 +30,9 @@ public class Cache<K, V>{
 	 */
 	public void put(K key, V value)
 	{
-		TimeOrderedList<V> newLatest = new TimeOrderedList<V>(value, latest);
+		TimeOrderedList<V, K> newLatest = new TimeOrderedList<V, K>(value, latest);
 		latest = newLatest;
-		AccessOrderedList<TimeOrderedList<V>> newHead = new AccessOrderedList<TimeOrderedList<V>>(newLatest);
+		AccessOrderedList<TimeOrderedList<V, K>> newHead = new AccessOrderedList<TimeOrderedList<V, K>>(newLatest);
 		cache.put(key, newHead);
 		head = newHead.access(head).getB();
 	}
@@ -46,7 +46,7 @@ public class Cache<K, V>{
 	 */
 	public void remove(K key)
 	{
-		AccessOrderedList<TimeOrderedList<V>> fromMap = this.cache.get(key);
+		AccessOrderedList<TimeOrderedList<V, K>> fromMap = this.cache.get(key);
 		if (fromMap != null)
 		{ //move it to the front so that the whole is cleaned up, then delete it from the map
 			fromMap.access(head);
@@ -60,7 +60,8 @@ public class Cache<K, V>{
 	 */
 	public void pushChange(V value)
 	{
-		TimeOrderedList<V> newLatest = new TimeOrderedList<V>(value, latest);
+		TimeOrderedList<V, K> newLatest = new TimeOrderedList<V, K>(value, null);
+		latest.addLater(newLatest);
 		latest = newLatest;
 	}
 	
@@ -74,14 +75,23 @@ public class Cache<K, V>{
 	 */
 	public V access(K key)
 	{
-		AccessOrderedList<TimeOrderedList<V>> fromMap = this.cache.get(key);
+		AccessOrderedList<TimeOrderedList<V, K>> fromMap = this.cache.get(key);
 		if (fromMap != null)
 		{
-			Pair<TimeOrderedList<V>, AccessOrderedList<TimeOrderedList<V>>> result = fromMap.access(head);
+			Pair<TimeOrderedList<V, K>, AccessOrderedList<TimeOrderedList<V, K>>> result = fromMap.access(head);
 			head = result.getB();
 			return result.getA().getValue();
 		}
 		return null;
+	}
+	
+	/**
+	 * Brings the session key up to the latest in the queue
+	 * @param key session to bring up
+	 */
+	public void bringUpToHead(K key)
+	{
+		cache.get(key).setValue(latest);
 	}
 	
 	/**
@@ -94,7 +104,7 @@ public class Cache<K, V>{
 	 * @param key the key from the KVP to start the iterator at
 	 * @return an iterator over the values in access order
 	 */
-	public Iterable<TimeOrderedList<V>> accessOrderedCallIterator(K key)
+	public Iterable<TimeOrderedList<V, K>> accessOrderedCallIterator(K key)
 	{
 		return cache.get(key);
 	}
@@ -110,11 +120,11 @@ public class Cache<K, V>{
 	 * @param key the key from the KVP to start the iterator at
 	 * @return an iterator over the values in time order
 	 */
-	public TimeOrderedList<V> timeOrderedCallIterator(K key)
+	public TimeOrderedList<V, K> timeOrderedCallIterator(K key)
 	{
 		if (cache.get(key) == null)
-			cache.put(key, new AccessOrderedList<TimeOrderedList<V>>(latest));
-		return cache.get(key).access(head).getA();
+			cache.put(key, new AccessOrderedList<TimeOrderedList<V, K>>(latest));
+		return cache.get(key).access(head).getA().boundOn(this, key);
 	}
 	
 }

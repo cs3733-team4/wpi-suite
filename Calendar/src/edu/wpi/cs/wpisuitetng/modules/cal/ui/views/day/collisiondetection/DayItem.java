@@ -22,7 +22,6 @@ import javax.swing.border.LineBorder;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.models.client.EventClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;

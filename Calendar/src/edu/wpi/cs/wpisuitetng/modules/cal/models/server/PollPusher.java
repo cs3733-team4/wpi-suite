@@ -17,6 +17,10 @@ import java.util.List;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.cache.Cache;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.cache.TimeOrderedList;
 
+/**
+ * Keeps track of who needs to be notified when using long polling.
+ * @param <T> Type of objects to be notified of
+ */
 public class PollPusher<T>
 {	
 	private Cache<String, String> changesc = new Cache<>(" ");
@@ -36,22 +40,29 @@ public class PollPusher<T>
 		return pp;
 	}
 	
+	/**
+	 * Send a new update to all listeners, attached or not.
+	 * @param item JSON data to send to all clients
+	 */
 	public synchronized void updated(String item)
 	{
+		//TODO: expire
 		changesc.pushChange(item);
 		for (PushedInfo pi : waiting)
 		{
 			pi.pushUpdates(item);
-			TimeOrderedList<String> iter = changesc.timeOrderedCallIterator(pi.getSessionID());
-			Iterator<String> is =  iter.iterator();
-			while(is.hasNext())
-			{
-				iter.setValue(is.next());
-			}
+			changesc.bringUpToHead(pi.getSessionID());
 		}
 		waiting.clear();
 	}
 	
+	/**
+	 * Register a listener for data pushes. If there are pending requests, this returns the json data of all 
+	 * pending requests, otherwise null. If changes are returned, the listener is not registered. Otherwise,
+	 * unlistenSession needs to be called when time has expired
+	 * @param listener Listener to register
+	 * @return JSON data or null
+	 */
 	public synchronized String listenSession(PushedInfo listener)
 	{
 		Iterable<String> iter = changesc.timeOrderedCallIterator(listener.getSessionID());
@@ -74,11 +85,18 @@ public class PollPusher<T>
 		}
 	}
 	
+	/**
+	 * Removes the given listener from the pending updates chain
+	 * @param listener Listener to remove
+	 */
 	public synchronized void unlistenSession(PushedInfo listener)
 	{
 		waiting.remove(listener);
 	}
 	
+	/**
+	 * Interface for pushing updates to clients
+	 */
 	public static abstract class PushedInfo
 	{
 		private String session;
@@ -90,6 +108,10 @@ public class PollPusher<T>
 		{
 			return session;
 		}
+		/**
+		 * This method is called asynchronously on an undefined thread when changes occur
+		 * @param item single JSON data item
+		 */
 		public abstract void pushUpdates(String item);
 	}
 }

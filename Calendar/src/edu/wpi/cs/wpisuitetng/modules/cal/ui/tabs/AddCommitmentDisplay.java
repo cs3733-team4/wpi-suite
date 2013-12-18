@@ -28,8 +28,6 @@ import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 
 /**
  * UI for adding and editing a commitment
- * @author TeamYOCO
- *
  */
 public class AddCommitmentDisplay extends DisplayableEditorView
 {

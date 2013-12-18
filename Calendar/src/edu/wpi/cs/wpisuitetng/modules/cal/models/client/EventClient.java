@@ -22,7 +22,7 @@ public class EventClient extends CachingDisplayableClient<Event, Event.Serialize
 {
 	private static EventClient instance;
 
-	private EventClient()
+	protected EventClient()
 	{
 		super("events", Event.SerializedAction[].class, Event[].class);
 	}
