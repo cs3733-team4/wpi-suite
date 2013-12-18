@@ -62,7 +62,8 @@ public class CategoryEntityManager extends CachedEntityManager<Category>
 		{
 			throw new WPISuiteException();
 		}
-		PollPusher.getInstance(Category.class).updated(updated(newCategory));
+		if(newCategory.isProjectCategory())
+			PollPusher.getInstance(Category.class).updated(updated(newCategory));
 		return newCategory;
 	}
 
@@ -141,9 +142,8 @@ public class CategoryEntityManager extends CachedEntityManager<Category>
 		{
 			throw new WPISuiteException();
 		}
-
-		PollPusher.getInstance(Category.class).updated(updated(updatedCategory));
-
+		if(updatedCategory.isProjectCategory())
+			PollPusher.getInstance(Category.class).updated(updated(updatedCategory));
 		return updatedCategory;
 	}
 
@@ -159,17 +159,16 @@ public class CategoryEntityManager extends CachedEntityManager<Category>
 	@Override
 	public boolean deleteEntity(Session s, String id) throws WPISuiteException
 	{
-		boolean res = (db.delete(getEntity(s, id)[0]) != null) ? true : false;
-		if (res)
+		Category toDelete = db.delete(getEntity(s, id)[0]);
+		if (toDelete != null && toDelete.isProjectCategory())
 			PollPusher.getInstance(Category.class).updated(deleted(UUID.fromString(id)));
-		return res;
+		return toDelete != null;
 	}
 
 	@Override
 	public void deleteAll(Session s) throws WPISuiteException
 	{
 		db.deleteAll(new Category(), s.getProject());
-
 	}
 
 	@Override
