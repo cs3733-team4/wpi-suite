@@ -16,31 +16,35 @@ import static org.junit.Assert.assertNotNull;
 import java.awt.Color;
 import java.util.HashSet;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import edu.wpi.cs.wpisuitetng.Session;
 import edu.wpi.cs.wpisuitetng.exceptions.WPISuiteException;
 import edu.wpi.cs.wpisuitetng.modules.cal.MockData;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Category;
+import edu.wpi.cs.wpisuitetng.modules.cal.models.server.CategoryEntityManager;
 import edu.wpi.cs.wpisuitetng.modules.core.models.Project;
 import edu.wpi.cs.wpisuitetng.modules.core.models.User;
 
 public class CategoryEntityManagerTest {
 	 MockData db = new MockData(new HashSet<Object>());
 
-	 Category c1 = new Category();
-     String eString=c1.toJSON();
+	 static Category c1 = new Category();
+     static String eString;
 	 
-     Category c2 = new Category();
-	 String eeString=c2.toJSON();
+     static Category c2 = new Category();
+	 static String eeString;
 	 
-	 Category c3 = new Category();
-	 String eeeString=c3.toJSON();	 
+	 static Category c3 = new Category();
+	 static String eeeString;
 	 
-	 Project p=new Project("p","26");
-     User u1 = new User("User1", "U1", null, 0);
-     Session ses1 = new Session(u1, p, "26");
-     
-    private void setupCategories(){
+	 static Project p=new Project("p","26");
+     static User u1 = new User("User1", "U1", null, 0);
+     static Session ses1 = new Session(u1, p, "26");
+    
+     @BeforeClass
+    public static void setupCategories(){
     	c1.setName("cat1");
     	c1.setColor(Color.BLUE);
     	
@@ -48,7 +52,11 @@ public class CategoryEntityManagerTest {
     	c2.setColor(Color.GREEN);
     	
     	c3.setName("cat3");
-    	c3.setColor(Color.ORANGE);    	
+    	c3.setColor(Color.ORANGE);
+    	
+    	eString=c1.toJSON();
+    	eeString=c2.toJSON();
+    	eeeString=c3.toJSON();
     }
 	 
     @Test

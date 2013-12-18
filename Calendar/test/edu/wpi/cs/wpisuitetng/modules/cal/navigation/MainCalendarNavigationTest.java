@@ -1,8 +1,8 @@
 package edu.wpi.cs.wpisuitetng.modules.cal.navigation;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-import java.awt.Component;
 import java.lang.reflect.Field;
 
 import javax.swing.JButton;
@@ -11,8 +11,6 @@ import javax.swing.JPanel;
 import org.joda.time.DateTime;
 import org.junit.Test;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.models.CommitmentModel;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.EventModel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.navigation.MainCalendarNavigation;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.views.month.MonthCalendar;
@@ -21,7 +19,7 @@ public class MainCalendarNavigationTest {
 
 	MainPanel dummyPanel;
 	
-	MainCalendarNavigation mc = new MainCalendarNavigation(dummyPanel ,new MonthCalendar(new DateTime(), EventModel.getInstance(), CommitmentModel.getInstance()));
+	MainCalendarNavigation mc = new MainCalendarNavigation(dummyPanel ,new MonthCalendar(new DateTime()));
 	
 	@Test
 	public void testMainCalendarFocused() {
