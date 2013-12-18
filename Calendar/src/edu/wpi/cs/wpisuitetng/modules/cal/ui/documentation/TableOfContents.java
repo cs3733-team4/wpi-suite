@@ -46,7 +46,7 @@ public class TableOfContents extends JPanel {
         theMap = new HashMap<>();
         this.setBackground(Color.getColor("FFFFFF"));
         //Create the nodes.
-        DefaultMutableTreeNode top = new DefaultMutableTreeNode("Team YOCO Calendar");
+        DefaultMutableTreeNode top = new DefaultMutableTreeNode("Team Calendar");
         populateFromTOC(top, serverLocation);
         
         
