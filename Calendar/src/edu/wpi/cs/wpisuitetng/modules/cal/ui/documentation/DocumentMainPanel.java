@@ -96,7 +96,7 @@ public class DocumentMainPanel extends JFrame{
 		});
     	tocView = new JPanel(new BorderLayout());
     	openInBrowser = new JButton("Open In Browser");
-    	this.setTitle("YOCO Calendar Help");
+    	this.setTitle("Calendar Help");
     	this.setLayout(new BorderLayout());
     	
     	serverLocation = Network.getInstance().makeRequest("docs/Calendar/", HttpMethod.GET).getUrl().toString().replace("API/", "");
@@ -136,7 +136,7 @@ public class DocumentMainPanel extends JFrame{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				BareBonesBrowserLaunch.openURL(serverLocation + "YOCO Calendar.html?" + webPage.getPage().getPath().replace(serverLocation, ""));
+				BareBonesBrowserLaunch.openURL(serverLocation + "Calendar.html?" + webPage.getPage().getPath().replace(serverLocation, ""));
 				
 			}
 		});
