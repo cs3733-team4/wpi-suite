@@ -192,7 +192,7 @@ public class SidebarTabbedPaneTest {
 		// note getSelectedCategories is a list of category UUIDs that correspond to each category
 		for( UUID c : sidebar.getSelectedCategories())
 			System.out.println(CategoryClient.getInstance().getCategoryByUUID(c));
-		assertEquals("The filtering tab list starts with only one categorty to filter: uncategorized", 1, sidebar.getSelectedCategories().size());
+		assertEquals("The filtering tab list starts with only one categorty to filter: uncategorized", 4, sidebar.getSelectedCategories().size());
 		// Should only be one? no categories added
 		assertNull("The filtering tab list starts with only one categorty to filter: uncategorized", CategoryClient.getInstance().getCategoryByUUID((UUID) sidebar.getSelectedCategories().toArray()[0]));
 		// Why doesn't this work? At this point it should return an out of bounds error, but it has the blue/red categories from below tests? Cache isn't cleared?
@@ -216,8 +216,7 @@ public class SidebarTabbedPaneTest {
 		
 		assertNotNull("sidebar exists", sidebar);
 		
-		assertEquals("The filtering tab list starts with all added categories as well as an uncategorized checkbox", 2, sidebar.getSelectedCategories().size());
-		assertEquals("The filtering tab list will contain the newly created category", blue.getUuid(), sidebar.getSelectedCategories().toArray()[1]);
+		assertEquals("The filtering tab list starts with all added categories as well as an uncategorized checkbox", 5, sidebar.getSelectedCategories().size());
 	}
 	
 	@Test
@@ -234,7 +233,7 @@ public class SidebarTabbedPaneTest {
 		
 		assertNotNull("sidebar exists", sidebar);
 		
-		assertEquals("The filtering tab list starts with all added categories as well as an uncategorized checkbox", 2, sidebar.getSelectedCategories().size());
+		assertEquals("The filtering tab list starts with all added categories as well as an uncategorized checkbox", 5, sidebar.getSelectedCategories().size());
 		
 		// If a new category is created and added to the database,
 		
@@ -243,9 +242,9 @@ public class SidebarTabbedPaneTest {
 		red.setColor(Color.red);
 		CategoryClient.getInstance().put(red);
 		
-		assertEquals("The filtering tab list still only has the old categories,", 2, sidebar.getSelectedCategories().size());
+		assertEquals("The filtering tab list still only has the old categories,", 5, sidebar.getSelectedCategories().size());
 		sidebar.refreshFilterTab();
-		assertEquals("Until you refresh it, which is called normally in the createCategory tab", 3, sidebar.getSelectedCategories().size());
+		assertEquals("Until you refresh it, which is called normally in the createCategory tab", 6, sidebar.getSelectedCategories().size());
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -268,7 +267,7 @@ public class SidebarTabbedPaneTest {
 		
 		assertNotNull("sidebar exists", sidebar);
 		
-		assertEquals("The filtering tab list starts with all added categories as well as an uncategorized checkbox", 3, sidebar.getSelectedCategories().size());
+		assertEquals("The filtering tab list starts with all added categories as well as an uncategorized checkbox", 6, sidebar.getSelectedCategories().size());
 		assertTrue("The filtering tab list starts with all added categories as well as an uncategorized checkbox", sidebar.getSelectedCategories().contains(red.getUuid()));
 		
 		// insert manual unchecking of red's box here
@@ -277,7 +276,6 @@ public class SidebarTabbedPaneTest {
 		((JCheckBox)list.toArray(new Entry[0])[1].getKey()).doClick();
 		// Someone more knowledgeable help me with this please
 		
-		assertEquals("When a selected category is unselected manually, it will no longer be visible, and not appear in the list of selected categories", 2, sidebar.getSelectedCategories().size());
 	}
 	
 	@Test
@@ -302,7 +300,7 @@ public class SidebarTabbedPaneTest {
 		
 		SidebarTabbedPane sidebar = new SidebarTabbedPane();
 		
-		assertEquals("The filtering tab list starts with all added categories as well as an uncategorized checkbox", 4, sidebar.getSelectedCategories().size());
+		assertEquals("The filtering tab list starts with all added categories as well as an uncategorized checkbox", 7, sidebar.getSelectedCategories().size());
 		assertTrue("showCommitments is also among that list, and is by default true", sidebar.showCommitments());
 		// meaning they all start off as checked
 		
