@@ -71,10 +71,9 @@ public class CategoryManager extends JPanel {
 	private JList<Category> categoriesList;
 	private JPanel bottomEditPanel;
 	private List<Category> allCategories;
-	private Category selectedCategory = null;
+	private Category selectedCategory;
 	private boolean clearSelected;
-	private boolean colorChanged = false;
-	private boolean nameChanged = false;
+	private boolean isEditing = false;
 	
 	// TODO LIST 
 	// DONE -- When selecting category from list, repeated name alert shouldn't pop up
@@ -96,7 +95,12 @@ public class CategoryManager extends JPanel {
 	 */
 	
 	public CategoryManager() {
+		
+		// Get categories
 		allCategories = CategoryModel.getInstance().getAllCategories();
+
+		
+		/** Set up UI **/
 		
 		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		leftCategoryList = new JPanel();
@@ -109,22 +113,6 @@ public class CategoryManager extends JPanel {
 		rightCategoryEdit = new JPanel();
 		rightCategoryEdit.setLayout(new BoxLayout(rightCategoryEdit, BoxLayout.Y_AXIS));
 		rightCategoryEdit.setBorder(new EmptyBorder(6, 6, 6, 6));
-//		rightCategoryEdit.addMouseListener(new MouseListener(){
-//			@Override
-//			public void mousePressed(MouseEvent e) {
-//				if (canChangeSelection())
-//					clearSelectedCategory();
-//			}
-//			@Override
-//			public void mouseReleased(MouseEvent e) {}
-//			@Override
-//			public void mouseEntered(MouseEvent e) {}
-//			@Override
-//			public void mouseExited(MouseEvent e) {}
-//			@Override
-//			public void mouseClicked(MouseEvent e) {}
-//			
-//		});
 		
 		/** Name Panel */
 		
@@ -151,30 +139,8 @@ public class CategoryManager extends JPanel {
 		categoryName.setMaximumSize(new Dimension(200, 30));
 		categoryName.addAncestorListener(new RequestFocusListener());
 		
-		categoryName.getDocument().addDocumentListener(new DocumentListener() {
-			
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				categoryNameErrorLabel.setVisible(!validateText(categoryName.getText(), categoryNameErrorLabel));
-					saveCategoryButton.setEnabled(isSaveable());
-			}
-			
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				categoryNameErrorLabel.setVisible(!validateText(categoryName.getText(), categoryNameErrorLabel));
-					saveCategoryButton.setEnabled(isSaveable());
-			}
-			
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				//Not triggered by plaintext fields
-			}
-		});
-		
 		selectionChangeErrorLabel.setForeground(Color.RED);
-		
 		categoryNameErrorLabel.setForeground(Color.RED);
-		validateText(categoryName.getText(), categoryNameErrorLabel);
 
 		categoryNamePanel.add(categoryName);
 		categoryNamePanel.add(categoryNameErrorLabel);
@@ -199,28 +165,6 @@ public class CategoryManager extends JPanel {
 		colorPicker.setPreferredSize(new Dimension(450, 53));
 		colorPicker.setMaximumSize(new Dimension(450, 53));
 		colorPicker.setAlignmentX(Component.LEFT_ALIGNMENT);
-		colorPicker.addMouseListener(new MouseListener(){
-			@Override
-			public void mousePressed(MouseEvent e) {}
-			@Override
-			public void mouseClicked(MouseEvent e) {
-//				if (editCategory)
-//					saveCategoryButton.setEnabled(!canChangeSelection()); // If selection cannot be changed, a category has been edited. Thus, the save button should
-//																		  // be enabled
-//				else
-//					saveCategoryButton.setEnabled(isSaveable());
-				colorChanged = true;
-				saveCategoryButton.setEnabled(!categoryName.getText().trim().isEmpty() && !areThereRepeatedNames());
-			}
-			@Override
-			public void mouseReleased(MouseEvent e) {}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {}
-			@Override
-			public void mouseExited(MouseEvent e) {}
-			
-		});
 		categoryColorPanel.add(Box.createRigidArea(new Dimension (0, 6)));
 		categoryColorPanel.add(colorPicker);
 		
@@ -260,47 +204,7 @@ public class CategoryManager extends JPanel {
 
 		categoriesList.getInputMap().getParent().clear();// Disable keyboard listeners
 		
-		categoriesList.setSelectionModel(new DefaultListSelectionModel(){			
-			@Override
-			public void setSelectionInterval(int index0, int index1)
-			{
-				if (canChangeSelection())
-				{
-					selectionChangeErrorLabel.setText("");
-					super.setSelectionInterval(index0, index1);
-				}
-				else
-				{
-					selectionChangeErrorLabel.setText("* Cannot change selected category while editing");
-					return;
-				}
-			}
-		});
-		
 		categoriesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		
-		categoriesList.addListSelectionListener(new ListSelectionListener(){
-
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-					
-				if (clearSelected) {
-					clearSelected = false;
-					return;
-				}
-				
-				if (!e.getValueIsAdjusting()){
-					selectedCategory = categoriesList.getSelectedValue();
-					showEditionButtons();
-			    	// Display data from selected category object
-			    	categoryName.setText(selectedCategory.getName());
-			    	colorPicker.moveColorSelector(selectedCategory.getColor());
-			    	
-//			    	saveCategoryButton.setEnabled(colorChanged && nameChanged && validateText(categoryName.getText(), categoryNameErrorLabel));
-				}
-			}
-		});
-
 		
 		// Set up cell renderer
 		categoriesList.setCellRenderer(new ListCellRenderer<Category>() {
@@ -334,8 +238,6 @@ public class CategoryManager extends JPanel {
 			}
 		});
 		
-		populateCategories(JListModel);
-		
 		JScrollPane categoriesListScrollPane = new JScrollPane(categoriesList);
 		categoriesListScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		categoriesListScrollPane.setBorder(BorderFactory.createLineBorder(Colors.BORDER));
@@ -345,7 +247,11 @@ public class CategoryManager extends JPanel {
 		this.add(leftCategoryList);
 		this.add(rightCategoryEdit);
 		
+		// Set up listeners and add data to panel
+		
 		setUpListeners();
+		populateCategories(JListModel);
+		
 	}
 	
 	/**
@@ -356,26 +262,24 @@ public class CategoryManager extends JPanel {
 	 */
 	private boolean validateText(String mText, JLabel mErrorLabel)
 	{
-			if(mText == null || mText.trim().length()==0)
-			{
-				mErrorLabel.setText(" * Required Field");
-				return false;
-			}
-			
-			if (selectedCategory != null && selectedCategory.getName().equals(categoryName.getText())){
-				mErrorLabel.setText("");
-				if (colorChanged)
-					return true;
-				else
-					return false;
-			}
-			
-			if (areThereRepeatedNames()) {
-				mErrorLabel.setText("* Category name already exists");
-				return false;
-			}
-
-		return true;
+        if(mText==null || mText.trim().length()==0)
+        {
+                mErrorLabel.setText(" * Required Field");
+                return false;
+        }
+        
+        for (Category cat : allCategories){
+                if (cat.getName().equals(categoryName.getText())){
+                	if (isEditing && selectedCategory.getName().equals(cat.getName()))
+                		return true;
+                	else {
+                        mErrorLabel.setText("* Category name already exists");
+                        return false;
+                	}
+                }
+        }
+        
+        return true;
 	}
 
 	/**
@@ -408,7 +312,7 @@ public class CategoryManager extends JPanel {
 		c.setName(categoryName.getText().trim());
 		c.setColor(colorPicker.getCurrentColorState()); // Get color from color picker
 
-		if (selectedCategory != null)
+		if (isEditing)
 		{
 			c.setCategoryID(selectedCategory.getCategoryID());
 			MainPanel.getInstance().updateCategory(c);
@@ -454,6 +358,7 @@ public class CategoryManager extends JPanel {
 	{
 		categoryName.grabFocus();
 	}
+	
 	/**
 	 * Set up button listeners for the category manager
 	 */
@@ -473,11 +378,13 @@ public class CategoryManager extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				if (selectedCategory != null)
-				{
-					changeEventOnDelete(selectedCategory.getCategoryID());
-					removeCategory(selectedCategory);
+				if (!isEditing) {
+					System.out.println("Tried to delete while not editing");
+					return;
 				}
+				
+				changeEventOnDelete(selectedCategory.getCategoryID());
+				removeCategory(selectedCategory);
 				
 				clearSelectedCategory();
 				
@@ -496,6 +403,66 @@ public class CategoryManager extends JPanel {
 			
 		});
 		
+		categoryName.getDocument().addDocumentListener(new DocumentListener() {
+			
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				categoryNameErrorLabel.setVisible(!validateText(categoryName.getText(), categoryNameErrorLabel));
+					saveCategoryButton.setEnabled(isSaveable());
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				categoryNameErrorLabel.setVisible(!validateText(categoryName.getText(), categoryNameErrorLabel));
+					saveCategoryButton.setEnabled(isSaveable());
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				//Not triggered by plaintext fields
+			}
+		});
+		
+		categoriesList.setSelectionModel(new DefaultListSelectionModel(){			
+			@Override
+			public void setSelectionInterval(int index0, int index1)
+			{
+				if (canChangeSelection())
+				{
+					selectionChangeErrorLabel.setText("");
+					isEditing = true;
+					super.setSelectionInterval(index0, index1);
+				}
+				else
+				{
+					selectionChangeErrorLabel.setText("* Cannot change selected category while editing");
+					return;
+				}
+			}
+		});
+		
+		categoriesList.addListSelectionListener(new ListSelectionListener(){
+
+              @Override
+              public void valueChanged(ListSelectionEvent e) {
+                              
+                      if (clearSelected || !isEditing) {
+                              clearSelected = false;
+                              return;
+                      } else
+                      {
+	                      if (!e.getValueIsAdjusting()){
+	                              selectedCategory = categoriesList.getSelectedValue();
+	                              showEditionButtons();
+	                          
+	                              // Display data from selected category object
+	                          categoryName.setText(selectedCategory.getName());
+	                          colorPicker.moveColorSelector(selectedCategory.getColor());
+	                      }
+                      }
+              }
+		});
+
 		saveCategoryButton.setEnabled(isSaveable());
 		
 
@@ -519,7 +486,7 @@ public class CategoryManager extends JPanel {
 		clearSelected = true;
 		listModel.clear();
 		
-		List<Category> allCategories = CategoryModel.getInstance().getAllCategories();
+		allCategories = CategoryModel.getInstance().getAllCategories();
 		
 		for (int i = 0; i < allCategories.size(); i++) {
 			Category temp = allCategories.get(i);
@@ -537,7 +504,7 @@ public class CategoryManager extends JPanel {
 		
 		float prev, curr;
 		
-		if (selectedCategory == null)
+		if (!isEditing)
 			return true;
 		else 
 		{
@@ -571,33 +538,14 @@ public class CategoryManager extends JPanel {
 	 */
 	public void clearSelectedCategory()
 	{
+		isEditing = false;
 		clearSelected = true;
-		selectedCategory = null;
 		categoriesList.clearSelection();
 		categoryName.setText("");
 		colorPicker.moveColorSelector(PastelColorPicker.DEFAULT_SELECTOR_LOCATION);
 		hideEditionButtons();
-		colorChanged = false;
 		selectionChangeErrorLabel.setText("");
 		saveCategoryButton.setEnabled(false);
-	}
-	
-	/**
-	 * Checks if there are repeated names in the category list.
-	 * Used to prevent the creation of different categories with same name
-	 */
-	private boolean areThereRepeatedNames()
-	{
-		
-		if (selectedCategory != null && selectedCategory.getName().equals(categoryName.getText().trim()))
-			return false;
-		
-		for (Category cat : allCategories){
-			if (cat.getName().equals(categoryName.getText())){
-				return true;
-			}
-		}
-		return false;
 	}
 
 }
