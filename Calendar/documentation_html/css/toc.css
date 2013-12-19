@@ -20,8 +20,8 @@ ul.dynatree-container {
 
 #tabs .ui-tabs-nav {
 	border: 0;
-	border-bottom: 1px solid #ccc;
-	padding-top: 19px;
+	border-bottom: 1px solid #cccccc;
+	padding-top: 20px;
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -29,7 +29,7 @@ ul.dynatree-container {
 }
 
 #tabs .ui-widget-header{
-	background: #fff url(../img/header-bg.png) left bottom repeat-x;
+	background: #AB192D;
 }
 
 #tabs .ui-tabs-panel {
