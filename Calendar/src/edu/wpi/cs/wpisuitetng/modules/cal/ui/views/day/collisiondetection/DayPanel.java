@@ -60,7 +60,7 @@ public class DayPanel extends JPanel
 				}
 				isSomethingDragging = false;
 				selected = null;
-				inWeek.passTo(null);
+				inWeek.passTo(selected);
 			}
 			
 			@Override
