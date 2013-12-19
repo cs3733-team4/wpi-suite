@@ -19,7 +19,6 @@ import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import java.util.LinkedList;
 
 import javax.swing.JButton;
@@ -40,6 +39,7 @@ import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs.AddCommitmentDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs.AddEventDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs.CategoryManager;
+import edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs.GoogleCalendarSyncAuthenticateDisplay;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.BareBonesBrowserLaunch;
 import edu.wpi.cs.wpisuitetng.network.Network;
 import edu.wpi.cs.wpisuitetng.network.models.HttpMethod;
@@ -253,7 +253,11 @@ public class DocumentMainPanel extends JFrame{
      */
     private boolean doAction(String actionPath) 
     {
-    	
+    	if (actionPath.contains("#OpenGoogleImport"))
+    	{
+    		GoogleCalendarSyncAuthenticateDisplay ned = new GoogleCalendarSyncAuthenticateDisplay();
+			MainPanel.getInstance().addGoogleLoginPage(ned);
+    	}
     	if (actionPath.contains("#OpenNewEventWindow"))
 		{
 			AddEventDisplay ned = new AddEventDisplay();
