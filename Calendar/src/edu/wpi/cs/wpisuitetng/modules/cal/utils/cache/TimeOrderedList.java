@@ -2,12 +2,16 @@ package edu.wpi.cs.wpisuitetng.modules.cal.utils.cache;
 
 import java.util.Iterator;
 
+import org.joda.time.DateTime;
+
+
 public class TimeOrderedList<V, K> implements Iterable<V>{
 
 	private V value;
 	private TimeOrderedList<V, K> later;
 	private K keyedOn;
 	private Cache<K, V> inCache;
+	private DateTime dt;
 	
 	/**
 	 * 
@@ -18,6 +22,7 @@ public class TimeOrderedList<V, K> implements Iterable<V>{
 	{
 		this.value = value;
 		this.addLater(later);
+		this.dt = DateTime.now();
 	}
 	
 	/**
@@ -56,6 +61,11 @@ public class TimeOrderedList<V, K> implements Iterable<V>{
 	{
 		return new TimeOrderedListIterator();
 	}
+	
+	public TimeOrderedList<V, K> getLater()
+	{
+		return this.later;
+	}
 
 	private class TimeOrderedListIterator implements Iterator<V>, Iterable<V>
 	{
@@ -93,6 +103,16 @@ public class TimeOrderedList<V, K> implements Iterable<V>{
 			return this;
 		}
 		
+	}
+	
+	/**
+	 * 
+	 * @param after
+	 * @return
+	 */
+	public boolean isBefore(DateTime after)
+	{
+		return this.dt.isBefore(after);
 	}
 
 }

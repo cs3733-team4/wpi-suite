@@ -64,6 +64,7 @@ public class PollPusher<T>
 	 */
 	public synchronized String listenSession(PushedInfo listener)
 	{
+		changesc.removeOldByMinute(2);
 		Iterable<String> iter = changesc.timeOrderedCallIterator(listener.getSessionID());
 		if (!iter.iterator().hasNext())
 		{

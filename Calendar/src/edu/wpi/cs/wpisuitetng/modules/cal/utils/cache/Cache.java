@@ -3,6 +3,9 @@ package edu.wpi.cs.wpisuitetng.modules.cal.utils.cache;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.joda.time.DateTime;
+import org.joda.time.MutableDateTime;
+
 public class Cache<K, V>{
 	
 	Map<K, AccessOrderedList<TimeOrderedList<V, K>>> cache = 
@@ -10,10 +13,12 @@ public class Cache<K, V>{
 	
 	AccessOrderedList<TimeOrderedList<V, K>> head;
 	TimeOrderedList<V, K> latest;
+	TimeOrderedList<V, K> oldest;
 	
 	public Cache(V value)
 	{
 		TimeOrderedList<V, K> newLatest = new TimeOrderedList<V, K>(value, latest);
+		oldest = latest;
 		latest = newLatest;
 		AccessOrderedList<TimeOrderedList<V, K>> newHead = new AccessOrderedList<TimeOrderedList<V, K>>(newLatest);
 		head = newHead.access(head).getB();
@@ -125,6 +130,19 @@ public class Cache<K, V>{
 		if (cache.get(key) == null)
 			cache.put(key, new AccessOrderedList<TimeOrderedList<V, K>>(latest));
 		return cache.get(key).access(head).getA().boundOn(this, key);
+	}
+
+
+	public void removeOldByMinute(int i)
+	{
+		MutableDateTime bef = new MutableDateTime(DateTime.now());
+		bef.addMinutes(1);
+		while(this.oldest!=null && this.oldest.isBefore(bef.toDateTime()))
+		{
+			this.oldest = this.oldest.getLater();
+			bef = new MutableDateTime(DateTime.now());
+			bef.addMinutes(1);
+		}
 	}
 	
 }
