@@ -270,8 +270,14 @@ public class DatePicker extends JPanel implements MiniCalendarHostIface {
 	 */
 	public void display(DateTime value) {
 		this.miniCalendarInstance(false);
-		this.cal.setVisible(false);
-		date.setText(value.toString(dateFmt));
+		if (this.cal != null)
+		{
+			this.cal.setVisible(false);
+		}
+		if (this.date != null)
+		{
+			date.setText(value.toString(dateFmt));
+		}
 		if(linked != null) {
 			linked.display(value);
 		}
