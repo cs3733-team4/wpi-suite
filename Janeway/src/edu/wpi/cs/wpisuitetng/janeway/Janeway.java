@@ -48,7 +48,7 @@ public class Janeway {
 		// Set the look and feel to cross-platform so the UI looks
 		// the same across operating systems
 		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
 		} 
 		catch (Exception e) {
 			System.out.println("Error setting UI manager to cross-platform!");

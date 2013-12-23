@@ -136,12 +136,12 @@ public class Cache<K, V>{
 	public void removeOldByMinute(int i)
 	{
 		MutableDateTime bef = new MutableDateTime(DateTime.now());
-		bef.addMinutes(1);
+		bef.addMinutes(-i);
 		while(this.oldest!=null && this.oldest.isBefore(bef.toDateTime()))
 		{
 			this.oldest = this.oldest.getLater();
 			bef = new MutableDateTime(DateTime.now());
-			bef.addMinutes(1);
+			bef.addMinutes(-i);
 		}
 	}
 	
