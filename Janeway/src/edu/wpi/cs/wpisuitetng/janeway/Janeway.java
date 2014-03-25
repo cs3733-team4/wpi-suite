@@ -20,8 +20,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
 
 import edu.wpi.cs.wpisuitetng.janeway.gui.container.JanewayFrame;
 import edu.wpi.cs.wpisuitetng.janeway.gui.login.LoginController;
@@ -49,6 +51,24 @@ public class Janeway {
 		// the same across operating systems
 		try {
 			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+			System.out.println("\n\n\n\n\n\n"+UIManager.getCrossPlatformLookAndFeelClassName()+"\n\n\n\n\n");
+			
+			for (LookAndFeelInfo x : UIManager.getInstalledLookAndFeels())
+			{
+				if (x == null)
+				{
+					System.out.println("fucking hell");
+				}
+				else
+				{
+					System.out.println(x.getName());
+					if (x.getName().equals("GTK+"))
+					{
+						UIManager.setLookAndFeel(x.getClassName());
+						throw new Exception("manually set to gtk+!");
+					}
+				}
+			}
 		} 
 		catch (Exception e) {
 			System.out.println("Error setting UI manager to cross-platform!");

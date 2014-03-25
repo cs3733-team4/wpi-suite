@@ -195,6 +195,7 @@ public class LoginController implements ActionListener {
 			System.out.println(Network.getInstance().getDefaultNetworkConfiguration().getRequestHeaders().get("cookie").get(0));
 			
 			// Show the main GUI
+			mainGUI.pack();
 			mainGUI.setVisible(true);
 			view.dispose();
 		}
