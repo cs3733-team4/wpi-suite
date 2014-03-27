@@ -63,8 +63,7 @@ public class WeekCalendar extends AbstractCalendar
 
 	private DayPanel[] daysOfWeekArray = new DayPanel[7];
 	private List<Displayable> displayableList = new ArrayList<Displayable>();
-	private List<WeekMultidayEventItem> multidayItemList = new ArrayList<WeekMultidayEventItem>();;
-	private int currentDayUnderMouse;
+	private List<WeekMultidayEventItem> multidayItemList = new ArrayList<WeekMultidayEventItem>();
 	private DateTimeFormatter monthDayFmt = DateTimeFormat.forPattern("MMM d");
 	private DateTimeFormatter dayYearFmt = DateTimeFormat.forPattern("d, yyyy");
 	private DateTimeFormatter monthDayYearFmt = DateTimeFormat.forPattern("MMM d, yyyy");
@@ -79,8 +78,7 @@ public class WeekCalendar extends AbstractCalendar
 	private boolean scrolled = false;
 	/**
 	 * 
-	 * @param on
-	 *            the DateTime that the Week Calendar is focused/centered on
+	 * @param on the DateTime that the Week Calendar is focused/centered on
 	 */
 	public WeekCalendar(DateTime on)
 	{
@@ -91,7 +89,7 @@ public class WeekCalendar extends AbstractCalendar
 		
 		// ui layout
 		String rs = (new JScrollBar().getPreferredSize().width) + "px";
-		setLayout(new MigLayout("insets 0,gap 0", "[50px:50px:50px][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow]["+rs+":"+rs+":"+rs+"]", "[][][::100px,grow][grow]"));
+		setLayout(new MigLayout("insets 0,gap 0", "[60px:60px:60px][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow]["+rs+":"+rs+":"+rs+"]", "[][][::100px,grow][grow]"));
 		
 		weekTitle.setFont(new Font("DejaVu Sans", Font.BOLD, 25));
 		add(weekTitle, "cell 0 0 9 1,alignx center");
@@ -117,14 +115,14 @@ public class WeekCalendar extends AbstractCalendar
 		add(smithsonianScroller, "cell 0 3 9 1,grow");
 
 		smithsonianScroller.setViewportView(smithsonian);
-		smithsonian.setLayout(new MigLayout("insets 0,gap 0", "[50px:50px:50px][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow]", "[grow]"));
+		smithsonian.setLayout(new MigLayout("insets 0,gap 0", "[60px:60px:60px][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow][sizegroup a,grow]", "[grow]"));
 		
 		generateDay();
 		this.addMouseMotionListener(new MouseMotionListener() {
 			
 			@Override
 			public void mouseMoved(MouseEvent e) {
-				// TODO Auto-generated method stub
+				// TODO Auto-gene// silently ignore as this is apparently not in the viewrated method stub
 				
 			}
 			

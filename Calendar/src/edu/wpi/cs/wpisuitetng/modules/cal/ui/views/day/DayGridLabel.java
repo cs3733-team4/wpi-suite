@@ -9,6 +9,7 @@
  ******************************************************************************/
 package edu.wpi.cs.wpisuitetng.modules.cal.ui.views.day;
 
+import java.awt.Dimension;
 import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
@@ -23,11 +24,13 @@ public class DayGridLabel extends JPanel
 	{
 		this.setLayout(new GridLayout(24, 1));
 		this.setBackground(Colors.TABLE_BACKGROUND);
+		this.setPreferredSize(new Dimension(60, 1440));
+		this.setMaximumSize(new Dimension(60,1440));
 
 		for (int i = 0; i < 24; i++)
 		{
 			int hour = i % 12 == 0 ? 12 : i % 12;
-			String padding = (hour < 10) ? "    " : "   ";
+			String padding = (hour < 10) ? "  " : " ";
 			StringBuilder currtime = new StringBuilder();
 			currtime.append(" ").append(hour);
 			if (i <= 11)
