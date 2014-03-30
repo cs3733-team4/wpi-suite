@@ -71,7 +71,6 @@ public class ServerClient {
 				System.err.println("The request to select events errored:");
 				System.err.println(iReq.getResponse().getBody());
 				sem.release();
-
 			}
 
 			@Override

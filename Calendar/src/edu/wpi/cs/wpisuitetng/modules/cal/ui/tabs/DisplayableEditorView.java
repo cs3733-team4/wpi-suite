@@ -58,6 +58,7 @@ public class DisplayableEditorView extends JPanel implements ICategoryRegister
 	protected HashMap<UUID, Category> savedMap = new HashMap<>();
 	protected JComboBox<String> commitmentStatusPicker;
 	protected JButton cancelButton, saveButton;
+	protected JButton repeating;
 
 	public DisplayableEditorView(boolean showEnd)
 	{
@@ -117,16 +118,19 @@ public class DisplayableEditorView extends JPanel implements ICategoryRegister
 		dateErrorLabel.setForeground(Color.RED);
 		dateErrorLabel.setVisible(false);
 		this.add(dateErrorLabel, "flowx,cell 1 1,alignx left,growy");
+		
+		repeating = new JButton("set repeat");
+		this.add(repeating, "cell 0 2,alignx right, aligny baseline");
 
 		participantsLabel = new JLabel("Participants:");
-		this.add(participantsLabel, "cell 0 2,alignx right,aligny baseline");
+		this.add(participantsLabel, "cell 0 3,alignx right,aligny baseline");
 
 		participantsTextField = new JTextField();
-		this.add(participantsTextField, "cell 1 2,alignx left,aligny baseline");
+		this.add(participantsTextField, "cell 1 3,alignx left,aligny baseline");
 		participantsTextField.setColumns(40);
 
 		lblCategory = new JLabel("Category:");
-		this.add(lblCategory, "cell 0 3,alignx right,aligny baseline");
+		this.add(lblCategory, "cell 0 4,alignx right,aligny baseline");
 
 		eventCategoryPicker = new JComboBox<>();
 		eventCategoryPicker.setRenderer(new CategoryComboBoxRenderer());
@@ -143,31 +147,31 @@ public class DisplayableEditorView extends JPanel implements ICategoryRegister
 		if(!showEnd)
 		{
 		lblStatus = new JLabel("Status:");
-		this.add(lblStatus, "cell 0 4,alignx right,aligny baseline");
+		this.add(lblStatus, "cell 0 5,alignx right,aligny baseline");
 
 		commitmentStatusPicker = new JComboBox<>();
 		this.commitmentStatusPicker.addItem(Commitment.DEFAULT_STATUS.toString());
 		this.commitmentStatusPicker.addItem(Commitment.Status.IN_PROGRESS.toString());
 		this.commitmentStatusPicker.addItem(Commitment.Status.COMPLETE.toString());
 
-		this.add(commitmentStatusPicker, "cell 1 4,alignx left,aligny baseline");
+		this.add(commitmentStatusPicker, "cell 1 5,alignx left,aligny baseline");
 		}
 		
 		
 		lblCalendar = new JLabel("Calendar:");
-		this.add(lblCalendar, "cell 0 5,alignx right,aligny baseline");
+		this.add(lblCalendar, "cell 0 6,alignx right,aligny baseline");
 
 		rdbtnPersonal = new JRadioButton("Personal");
 		buttonGroup.add(rdbtnPersonal);
-		this.add(rdbtnPersonal, "flowx,cell 1 5,alignx left,growy");
+		this.add(rdbtnPersonal, "flowx,cell 1 6,alignx left,growy");
 
 		rdbtnTeam = new JRadioButton("Team");
 		rdbtnTeam.setSelected(true);
 		buttonGroup.add(rdbtnTeam);
-		this.add(rdbtnTeam, "cell 1 5");
+		this.add(rdbtnTeam, "cell 1 6");
 
 		descriptionLabel = new JLabel("Description:");
-		this.add(descriptionLabel, "cell 0 6,alignx right,aligny top");
+		this.add(descriptionLabel, "cell 0 7,alignx right,aligny top");
 
 		descriptionTextArea = new JTextArea();
 		descriptionTextArea.setLineWrap(true);
@@ -176,22 +180,22 @@ public class DisplayableEditorView extends JPanel implements ICategoryRegister
 
 		JScrollPane descriptionScrollPane = new JScrollPane(descriptionTextArea);
 		descriptionScrollPane.setBorder(nameTextField.getBorder());
-		this.add(descriptionScrollPane, "cell 1 6,grow");
+		this.add(descriptionScrollPane, "cell 1 7,grow");
 
 		cancelButton = new JButton("Cancel");
 		cancelButton.setMinimumSize(new Dimension(80, 0));
-		this.add(cancelButton, "flowx,cell 1 8,alignx right,aligny bottom,tag cancel");
+		this.add(cancelButton, "flowx,cell 1 9,alignx right,aligny bottom,tag cancel");
 
 		saveButton = new JButton("Save");
 		saveButton.setMinimumSize(new Dimension(80, 0));
-		this.add(saveButton, "cell 1 8,alignx right,aligny bottom,tag ok");
+		this.add(saveButton, "cell 1 9,alignx right,aligny bottom,tag ok");
 		
 		MainPanel.getInstance().registerCategory(this);
 	}
 	
 	/**
 	 * Sets the selected field based on user selection
-	 * @param field
+	 * @param field8
 	 * 			the field that was selected
 	 */
 	public void setSelected(SelectableField field)
