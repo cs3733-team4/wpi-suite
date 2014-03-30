@@ -21,37 +21,42 @@ import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
  */
 public class ToolTipListener implements MouseListener {
 	@Override
-	public void mouseReleased(MouseEvent e) {
+	public void mouseReleased(MouseEvent e)
+	{
 		// TODO Auto-generated method stub
-		
 	}
 	
 	@Override
-	public void mousePressed(MouseEvent e) {
+	public void mousePressed(MouseEvent e)
+	{
 		// TODO Auto-generated method stub
-		
 	}
 	
 	@Override
-	public void mouseExited(MouseEvent e) {
-		
+	public void mouseExited(MouseEvent e)
+	{
+		// TODO Auto-generated method stub
 	}
 	
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		if (SwingUtilities.getWindowAncestor(MainPanel.getInstance()).isActive())//only enable tool tips is its the active window
+		{
 			ToolTipManager.sharedInstance().setEnabled(true);
+		}
 		else
+		{
 			ToolTipManager.sharedInstance().setEnabled(false);
+		}
 			
 		ToolTipManager.sharedInstance().setDismissDelay(1500);
 		
 	}
 	
 	@Override
-	public void mouseClicked(MouseEvent e) {
+	public void mouseClicked(MouseEvent e)
+	{
 		// TODO Auto-generated method stub
-		
 	}
 
 }

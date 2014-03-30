@@ -20,6 +20,7 @@ import com.google.gdata.data.extensions.When;
 import com.google.gdata.util.AuthenticationException;
 import com.google.gdata.util.ServiceException;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.CalendarLogger;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.EventDualityFactory;
@@ -43,16 +44,18 @@ public class GoogleSync {
 			{
 				instance = new GoogleSync(nameAndPass.getA(), nameAndPass.getB());
 				a.succede();
-			} catch (AuthenticationException ae)
+			}
+			catch (AuthenticationException ae)
 			{
 				instance = null;
 				a.handleError(ae);
-				ae.printStackTrace();
-			} catch (MalformedURLException mue)
+				CalendarLogger.LOGGER.severe(ae.toString());
+			}
+			catch (MalformedURLException mue)
 			{
 				instance = null;
 				a.handleError(mue);
-				mue.printStackTrace();
+				CalendarLogger.LOGGER.severe(mue.toString());
 			}
 		}
 		return instance;

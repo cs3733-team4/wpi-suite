@@ -32,6 +32,7 @@ import javax.swing.border.Border;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.CalendarLogger;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.SelectableField;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
@@ -70,27 +71,31 @@ public class DocumentMainPanel extends JFrame{
     public void init()
     {
     	if (serverLocation!=null)
+    	{
     		return;
+    	}
     	
     	navPanel = new JPanel(new FlowLayout());
     	forwardButton = new JButton("Forward");
     	backButton = new JButton("Back");
     	forwardButton.setEnabled(false);
     	backButton.setEnabled(false);
-    	forwardButton.addActionListener(new ActionListener() {
+    	forwardButton.addActionListener(new ActionListener()	
+    	{
 			
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)	
+			{
 				forward();
-				
 			}
 		});
-    	backButton.addActionListener(new ActionListener() {
+    	backButton.addActionListener(new ActionListener()	
+    	{
 			
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
+			public void actionPerformed(ActionEvent arg0)	
+			{
 				backward();
-				
 			}
 		});
     	tocView = new JPanel(new BorderLayout());
@@ -105,7 +110,8 @@ public class DocumentMainPanel extends JFrame{
         {
         	url = new URL(serverLocation + "Introduction.html");
         }
-        catch(MalformedURLException mue) {
+        catch(MalformedURLException mue)
+        {
             JOptionPane.showMessageDialog(null,mue);
         }
         
@@ -120,7 +126,8 @@ public class DocumentMainPanel extends JFrame{
             //set the editor pane to false.
             webPage.setEditable(false);
         }
-        catch(IOException ioe) {
+        catch(IOException ioe)
+        {
             JOptionPane.showMessageDialog(null,ioe);
         }
         
@@ -131,18 +138,22 @@ public class DocumentMainPanel extends JFrame{
         scroll = new JScrollPane(webPage);
         scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        openInBrowser.addActionListener(new ActionListener() {
+        openInBrowser.addActionListener(new ActionListener()	
+        {
 			
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)	
+			{
 				BareBonesBrowserLaunch.openURL(serverLocation + "Calendar.html?" + webPage.getPage().getPath().replace(serverLocation, ""));
 				
 			}
 		});
         //create the JTextField that shows the HTML Page
         webPage.setBackground(Color.getColor("EFEFEF"));
-        webPage.addHyperlinkListener(new HyperlinkListener() {
-            public void hyperlinkUpdate(HyperlinkEvent e) {
+        webPage.addHyperlinkListener(new HyperlinkListener()	
+        {
+            public void hyperlinkUpdate(HyperlinkEvent e)	
+            {
                 if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED)
                 {
           			if (doAction(e.getURL().toString()))
@@ -172,16 +183,19 @@ public class DocumentMainPanel extends JFrame{
        
         this.add(splitPane, BorderLayout.CENTER);
         
-        webPage.addMouseListener(new MouseListener() {
+        webPage.addMouseListener(new MouseListener()	
+        {
 			
 			@Override
-			public void mouseReleased(MouseEvent arg0) {
+			public void mouseReleased(MouseEvent arg0)	
+			{
 				// TODO Auto-generated method stub
 				
 			}
 			
 			@Override
-			public void mousePressed(MouseEvent arg0) {
+			public void mousePressed(MouseEvent arg0)	
+			{
 				switch (arg0.getButton()){
 				case 4:
 					backward();
@@ -194,19 +208,22 @@ public class DocumentMainPanel extends JFrame{
 			}
 			
 			@Override
-			public void mouseExited(MouseEvent arg0) {
+			public void mouseExited(MouseEvent arg0)	
+			{
 				// TODO Auto-generated method stub
 				
 			}
 			
 			@Override
-			public void mouseEntered(MouseEvent arg0) {
+			public void mouseEntered(MouseEvent arg0)	
+			{
 				// TODO Auto-generated method stub
 				
 			}
 			
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
+			public void mouseClicked(MouseEvent arg0)	
+			{
 				// TODO Auto-generated method stub
 				
 			}
@@ -587,10 +604,14 @@ public class DocumentMainPanel extends JFrame{
 				visitedPages.add(page.replace(serverLocation, ""));
 				onPage = visitedPages.size()-1;
 			}
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		}
+    	catch (MalformedURLException e)	
+		{
+			CalendarLogger.LOGGER.severe(e.toString());
+		}
+    	catch (IOException e)	
+		{
+			CalendarLogger.LOGGER.severe(e.toString());
 		}
 
 		tableOfContents.expandToPage(page.replace(serverLocation, ""));

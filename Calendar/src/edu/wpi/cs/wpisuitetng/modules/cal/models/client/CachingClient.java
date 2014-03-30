@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 import edu.wpi.cs.wpisuitetng.modules.Model;
+import edu.wpi.cs.wpisuitetng.modules.cal.CalendarLogger;
 
 /**
  * CachingClient is a base class to enable long polling and caching on all server access
@@ -57,7 +58,7 @@ public abstract class CachingClient<T extends Model, SA extends CachingClient.Se
 					catch (Exception ex)
 					{
 						invalidateCache();
-						ex.printStackTrace();// network went down?
+						CalendarLogger.LOGGER.severe(ex.toString());// network went down?
 						try
 						{
 							Thread.sleep(20000);

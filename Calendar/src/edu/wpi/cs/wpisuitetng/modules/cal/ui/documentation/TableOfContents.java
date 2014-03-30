@@ -33,6 +33,8 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.CalendarLogger;
+
 
 public class TableOfContents extends JPanel {
     private JTree tree;
@@ -239,7 +241,7 @@ public class TableOfContents extends JPanel {
 			}
         
         } catch (IOException e) {
-			e.printStackTrace();
+        	CalendarLogger.LOGGER.severe(e.toString());
 		}       
     }   
 }

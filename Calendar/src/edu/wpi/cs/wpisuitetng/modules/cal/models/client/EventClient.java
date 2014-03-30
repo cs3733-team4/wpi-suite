@@ -14,6 +14,7 @@ import java.util.UUID;
 
 import org.joda.time.DateTime;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.CalendarLogger;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.google.GoogleSync;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
@@ -52,8 +53,6 @@ public class EventClient extends CachingDisplayableClient<Event, Event.Serialize
 	 */
 	public List<Event> getEvents(DateTime from, DateTime to)
 	{
-		
-		
 		GoogleSync gs = MainPanel.getInstance().getGoogleCalendarSyncer();
 		if (gs != null)
 		{ //make sure the user has logged in!
@@ -67,7 +66,7 @@ public class EventClient extends CachingDisplayableClient<Event, Event.Serialize
 			}
 			catch(Exception e)
 			{
-				e.printStackTrace();
+				CalendarLogger.LOGGER.severe(e.toString());
 			}
 		}
 		

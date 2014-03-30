@@ -28,6 +28,7 @@ import javax.swing.border.EmptyBorder;
 
 import org.joda.time.DateTime;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.CalendarLogger;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Commitment;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
@@ -132,8 +133,9 @@ public class MonthItem extends JPanel
         		
         		arrow = new JLabel(new ImageIcon(img));
     		} 
-        	catch (IOException ex) {
-        		ex.printStackTrace();
+        	catch (IOException ex)
+        	{
+        		CalendarLogger.LOGGER.severe(ex.toString());
         	}
         	
         	categoryColor.setBackground((Colors.TABLE_BACKGROUND));
@@ -176,15 +178,18 @@ public class MonthItem extends JPanel
         add(name);
 
 		// Set up click listener
-		addMouseListener(new MouseListener() {
+		addMouseListener(new MouseListener()
+		{
 			
 			@Override
-			public void mouseReleased(MouseEvent e) {
+			public void mouseReleased(MouseEvent e)
+			{
 				parent.dispatchEvent(e);
 			}
 			
 			@Override
-			public void mousePressed(MouseEvent e) {
+			public void mousePressed(MouseEvent e)
+			{
 				parent.dispatchEvent(e);
 				MainPanel.getInstance().setSelectedDay(currentTime);
 				if (e.getClickCount() > 1){
@@ -195,28 +200,33 @@ public class MonthItem extends JPanel
 			}
 			
 			@Override
-			public void mouseExited(MouseEvent e) {
+			public void mouseExited(MouseEvent e)
+			{
 				parent.dispatchEvent(e);
 			}
 			
 			@Override
-			public void mouseEntered(MouseEvent e) {
+			public void mouseEntered(MouseEvent e)
+			{
 			}
 			
 			@Override
-			public void mouseClicked(MouseEvent e) {				
+			public void mouseClicked(MouseEvent e)
+			{				
 			}
 		});
 		
 		addMouseMotionListener(new MouseMotionListener(){
 
 			@Override
-			public void mouseDragged(MouseEvent e) {
+			public void mouseDragged(MouseEvent e)
+			{
 				parent.dispatchEvent(e);
 			}
 
 			@Override
-			public void mouseMoved(MouseEvent e) {
+			public void mouseMoved(MouseEvent e)
+			{
 				parent.dispatchEvent(e);
 			}
 			

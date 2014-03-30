@@ -11,6 +11,7 @@ package edu.wpi.cs.wpisuitetng.modules.cal;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.swing.ImageIcon;
 
@@ -26,7 +27,7 @@ public class Calendar implements IJanewayModule
 {
 	/** The tabs used by this module. We only have one */
 	private ArrayList<JanewayTabModel> tabs;
-
+	
 	/**
 	 * Construct a new Calendar Tab Module
 	 */
