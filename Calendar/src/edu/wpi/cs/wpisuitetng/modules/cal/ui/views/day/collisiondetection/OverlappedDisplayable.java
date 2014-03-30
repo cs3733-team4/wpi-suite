@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Displayable;
-import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;
 
 public class OverlappedDisplayable implements Comparable<OverlappedDisplayable>
 {
@@ -97,10 +96,13 @@ public class OverlappedDisplayable implements Comparable<OverlappedDisplayable>
 	}
 
 	@Override
-	public int compareTo(OverlappedDisplayable toCompare) {
+	public int compareTo(OverlappedDisplayable toCompare)
+	{
 		int res = Integer.compare(toCompare.xpos.toInt(10000), xpos.toInt(10000));
 		if (res == 0)
+		{
 			return toCompare.displayable.getStart().compareTo(displayable.getStart());
+		}
 		return res;
 	}
 	
@@ -108,5 +110,24 @@ public class OverlappedDisplayable implements Comparable<OverlappedDisplayable>
 	public String toString()
 	{
 		return super.toString() + "{" + getEvent().getName() + "@" + getEvent().getStart().toString() + " collisions: " + collisionCount + "}";
+	}
+	
+	@Override
+	public boolean equals(Object o)
+	{
+		if (o instanceof OverlappedDisplayable)
+		{
+			return this.compareTo((OverlappedDisplayable)o) == 0;
+		}
+		return false;
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return displayable.hashCode() ^
+			   xpos.hashCode() ^
+			   collisions.hashCode() ^
+			   collisionCount;
 	}
 }

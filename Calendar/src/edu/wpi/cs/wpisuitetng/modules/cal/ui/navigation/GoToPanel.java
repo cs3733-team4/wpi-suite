@@ -32,9 +32,11 @@ import org.joda.time.MutableDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.CalendarLogger;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 
-public class GoToPanel extends JPanel {
+public class GoToPanel extends JPanel
+{
 
 	final private static DateTimeFormatter gotoExampleField = DateTimeFormat.forPattern("M/d/yyyy");
 	final private static DateTimeFormatter gotoField = DateTimeFormat.forPattern("M/d/yy");
@@ -45,7 +47,8 @@ public class GoToPanel extends JPanel {
 	private JButton updateGotoButton;
 	private DateTime currentDate;
 	
-	public GoToPanel(DateTime date) {
+	public GoToPanel(DateTime date)
+	{
 		
 		JPanel top = new JPanel();
 		JPanel bot = new JPanel();
@@ -61,7 +64,7 @@ public class GoToPanel extends JPanel {
 		} 
 		catch (ParseException e1)
 		{
-			e1.printStackTrace();
+			CalendarLogger.LOGGER.severe(e1.toString());
 		}
 		this.gotoDateField.setText(currentDate.toString(gotoExampleField));
 		// Go to label
@@ -79,18 +82,22 @@ public class GoToPanel extends JPanel {
 		updateGotoButton.setBorder(new EmptyBorder(5, 5, 5, 5));
 		
 		// Set up listener
-		updateGotoButton.addActionListener(new ActionListener() {
+		updateGotoButton.addActionListener(new ActionListener()
+		{
 			
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 				parseGoto(gotoDateField.getText());
 			}
 		});
 		
-		gotoDateField.addActionListener(new ActionListener() {
+		gotoDateField.addActionListener(new ActionListener()
+		{
 			
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 				parseGoto(gotoDateField.getText());
 			}
 		});
@@ -114,15 +121,15 @@ public class GoToPanel extends JPanel {
 		gotoDateField.addFocusListener(new FocusListener(){
 
 			@Override
-			public void focusLost(FocusEvent e) {
+			public void focusLost(FocusEvent e)
+			{
 				MainPanel.getInstance().getCalNav().grabFocus();
-				
 			}
 
 			@Override
-			public void focusGained(FocusEvent e) {
+			public void focusGained(FocusEvent e)
+			{
 				// TODO Auto-generated method stub
-				
 			}
 			
 		});
@@ -134,7 +141,8 @@ public class GoToPanel extends JPanel {
 	 * syntax errors
 	 * @param text string to parse
 	 */
-	public void parseGoto(String text) {
+	public void parseGoto(String text)
+	{
 		
 		DateTime dt;
 		boolean isValidYear = true;

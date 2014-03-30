@@ -45,7 +45,8 @@ public class EventEndpoints implements Comparable<EventEndpoints>
 			{
 				this.time=((Event) displayable).getEndTimeOnDay(displayedDay);
 			}
-		}else if (displayable instanceof Commitment)
+		}
+		else if (displayable instanceof Commitment)
 		{
 			if (!isEnd)
 			{
@@ -119,12 +120,33 @@ public class EventEndpoints implements Comparable<EventEndpoints>
 	{
 		int res = time.compareTo(o.time);
 		if (res == 0 && isEnd != o.isEnd)
+		{
 			res = isEnd ? -1 : 1;
+		}
 		if (res == 0 && !isEnd) // sort by start, and if they are the same, by last end time
 		{
 			// at this point, will always return 0 for commitments
 			res = o.displayable.getEnd().compareTo(displayable.getEnd());
 		}
 		return res;
+	}
+	
+	@Override
+	public boolean equals(Object o)
+	{
+		if (o instanceof EventEndpoints)
+		{
+			return this.compareTo((EventEndpoints)o) == 0;
+		}
+		return false;
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return displayable.hashCode() ^
+			   time.hashCode() ^
+			   result.hashCode() ^
+			   (isEnd ? 0 : 1);
 	}
 }

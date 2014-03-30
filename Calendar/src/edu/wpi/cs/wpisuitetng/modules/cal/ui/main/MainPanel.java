@@ -41,6 +41,7 @@ import javax.swing.border.EmptyBorder;
 import org.joda.time.DateTime;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.AbstractCalendar;
+import edu.wpi.cs.wpisuitetng.modules.cal.CalendarLogger;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.documentation.DocumentMainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.google.GoogleSync;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryClient;
@@ -126,41 +127,49 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface
 		if (mTabbedPane != this)
 		{
 			DocumentMainPanel.getInstance().init();
-			((JFrame) SwingUtilities.getWindowAncestor(this)).addWindowListener(new WindowListener() {
+			((JFrame) SwingUtilities.getWindowAncestor(this)).addWindowListener(new WindowListener()
+			{
 				
 				@Override
-				public void windowOpened(WindowEvent arg0) {
+				public void windowOpened(WindowEvent arg0)
+				{
 					
 				}
 				
 				@Override
-				public void windowIconified(WindowEvent arg0) {
+				public void windowIconified(WindowEvent arg0)
+				{
 					
 				}
 				
 				@Override
-				public void windowDeiconified(WindowEvent arg0) {
+				public void windowDeiconified(WindowEvent arg0)
+				{
 					
 				}
 				
 				@Override
-				public void windowDeactivated(WindowEvent arg0) {
+				public void windowDeactivated(WindowEvent arg0)
+				{
 					
 				}
 				
 				@Override
-				public void windowClosing(WindowEvent arg0) {
+				public void windowClosing(WindowEvent arg0)
+				{
 					
 				}
 				
 				@Override
-				public void windowClosed(WindowEvent arg0) {
+				public void windowClosed(WindowEvent arg0)
+				{
 					DocumentMainPanel.getInstance().setVisible(false);
 					DocumentMainPanel.getInstance().dispose();					
 				}
 				
 				@Override
-				public void windowActivated(WindowEvent arg0) {
+				public void windowActivated(WindowEvent arg0)
+				{
 					
 				}
 			});
@@ -260,7 +269,8 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface
 			}
 		});
 		popup.add(closeAll);
-		closeAll.addActionListener(new ActionListener() {
+		closeAll.addActionListener(new ActionListener()
+		{
 			
 			@Override
 			public void actionPerformed(ActionEvent e)
@@ -697,7 +707,7 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface
 			this.mTabbedPane.setSelectedComponent(tabToFocus);
 		}catch(IllegalArgumentException e)
 		{
-			e.printStackTrace(); //tab not found
+			CalendarLogger.LOGGER.severe(e.toString()); //tab not found
 		}
 	}
 
@@ -792,14 +802,16 @@ public class MainPanel extends JTabbedPane implements MiniCalendarHostIface
 	/**
 	 * @return the googleCalendarSyncer
 	 */
-	public GoogleSync getGoogleCalendarSyncer() {
+	public GoogleSync getGoogleCalendarSyncer()
+	{
 		return googleCalendarSyncer;
 	}
 
 	/**
 	 * @param googleCalendarSyncer the googleCalendarSyncer to set
 	 */
-	public void setGoogleCalendarSyncer(GoogleSync googleCalendarSyncer) {
+	public void setGoogleCalendarSyncer(GoogleSync googleCalendarSyncer)
+	{
 		this.googleCalendarSyncer = googleCalendarSyncer;
 	}
 }

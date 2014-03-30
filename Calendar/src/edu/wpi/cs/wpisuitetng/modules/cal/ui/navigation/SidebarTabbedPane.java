@@ -48,6 +48,7 @@ import javax.swing.text.StyleConstants;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import edu.wpi.cs.wpisuitetng.modules.cal.CalendarLogger;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.main.MainPanel;
 import edu.wpi.cs.wpisuitetng.modules.cal.utils.Colors;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryClient;
@@ -96,7 +97,8 @@ public class SidebarTabbedPane extends JTabbedPane implements ICategoryRegister
 	/**
 	 * Tabbed panel in the navigation sidebar to hold additional details of selected items
 	 */
-	public SidebarTabbedPane() {
+	public SidebarTabbedPane()
+	{
 		
 		//setup
 		this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
@@ -123,7 +125,8 @@ public class SidebarTabbedPane extends JTabbedPane implements ICategoryRegister
 	/**
 	 * Initializes some text styles to be used in the JTextAreas
 	 */
-	private void setupTextStyles() {
+	private void setupTextStyles()
+	{
 		normalTextStyle = new SimpleAttributeSet();
         StyleConstants.setFontFamily(normalTextStyle, "Tahoma");
         StyleConstants.setFontSize(normalTextStyle, 12);
@@ -141,7 +144,8 @@ public class SidebarTabbedPane extends JTabbedPane implements ICategoryRegister
 	/**
 	 * initializes all the components of the commitment tab
 	 */
-	private void setupCommitementTab() {
+	private void setupCommitementTab()
+	{
 		commitmentTab = new JTextPane();
 		commitmentTab.setEditable(false);
 		commitmentTab.setCursor(null);
@@ -191,20 +195,24 @@ public class SidebarTabbedPane extends JTabbedPane implements ICategoryRegister
 	    // setup buttons and listeners
 	    detailEditButton = new JButton("Edit");
 	    detailEditButton.setFocusable(false);
-	    detailEditButton.addActionListener(new ActionListener() {
+	    detailEditButton.addActionListener(new ActionListener()
+	    {
 			
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
+			public void actionPerformed(ActionEvent arg0)
+			{
 				MainPanel instance = MainPanel.getInstance();
 				instance.editSelectedDisplayable(currentDisplayable)	;
 			}
 		});
 	    
 	    detailDeleteButton = new JButton("Delete");
-	    detailDeleteButton.addActionListener(new ActionListener() {
+	    detailDeleteButton.addActionListener(new ActionListener()
+	    {
 			
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
+			public void actionPerformed(ActionEvent arg0)
+			{
 				MainPanel.getInstance().deleteDisplayable(currentDisplayable);
 			}
 		});
@@ -295,7 +303,8 @@ public class SidebarTabbedPane extends JTabbedPane implements ICategoryRegister
 		selectAllButton.putClientProperty("html.disable", true);
 		selectAllButton.addActionListener(new ActionListener(){
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 				selectAllCategories();
 			}
 		});
@@ -304,7 +313,8 @@ public class SidebarTabbedPane extends JTabbedPane implements ICategoryRegister
 		clearAllButton.putClientProperty("html.disable", true);
 		clearAllButton.addActionListener(new ActionListener(){
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 				deselectAllCategories();
 			}
 		});
@@ -326,7 +336,8 @@ public class SidebarTabbedPane extends JTabbedPane implements ICategoryRegister
 	 * Sets the enabled status of the edit and cancel buttons
 	 * @param enabled flag to set enabled status
 	 */
-	private void setButtonsEnabled(boolean enabled) {
+	private void setButtonsEnabled(boolean enabled)
+	{
 		detailEditButton.setEnabled(enabled);
 		detailDeleteButton.setEnabled(enabled);
 	}
@@ -361,7 +372,7 @@ public class SidebarTabbedPane extends JTabbedPane implements ICategoryRegister
 		        
 	        }catch(Exception e)
 	        {
-	        	e.printStackTrace();
+	        	CalendarLogger.LOGGER.severe(e.toString());
 	        }
 
 	        setButtonsEnabled(true);
@@ -379,7 +390,7 @@ public class SidebarTabbedPane extends JTabbedPane implements ICategoryRegister
 	        	detailTextDoc.insertString(detailTextDoc.getLength(), "Status:\n   " + ((Commitment)mDisplayable).getStatus().toString() + "\n", normalTextStyle);
 	        }catch(Exception e)
 	        {
-	        	e.printStackTrace();
+	        	CalendarLogger.LOGGER.severe(e.toString());
 	        }
 			
 			setButtonsEnabled(true);
@@ -389,7 +400,8 @@ public class SidebarTabbedPane extends JTabbedPane implements ICategoryRegister
 	/**
 	 * clears the text area of any details
 	 */
-	public void clearDetails() {
+	public void clearDetails()
+	{
 		detailTitleLabel.setOpaque(false);
 		detailTitleLabel.setText("");
 		detailTextPane.setText("");
@@ -557,11 +569,13 @@ public class SidebarTabbedPane extends JTabbedPane implements ICategoryRegister
 		
 		private Category referencedCategory;
 		
-		public CheckBoxListener(Category c) {
+		public CheckBoxListener(Category c)
+		{
 			this.referencedCategory = c;
 		}
 		
-		public void itemStateChanged(ItemEvent e) {
+		public void itemStateChanged(ItemEvent e)
+		{
 			JCheckBox tmp = ((JCheckBox)e.getSource());
 			
 			if(tmp.isSelected())
@@ -704,7 +718,8 @@ public class SidebarTabbedPane extends JTabbedPane implements ICategoryRegister
 	 * Returns whether commitments should be shown or not
 	 * @return boolean indicating whether commitments should be shown in current calendar view
 	 */
-	public boolean showCommitments(){
+	public boolean showCommitments()
+	{
 		return this.showCommitments;
 	}
 	
@@ -712,28 +727,30 @@ public class SidebarTabbedPane extends JTabbedPane implements ICategoryRegister
 	 * Returns whether events should be shown or not
 	 * @return boolean indicating whether events should be shown in current calendar view
 	 */
-	public boolean showEvents(){
+	public boolean showEvents()
+	{
 		return this.showEvents;
 	}
 
 	/**
 	 * Focuses the details tab
 	 */
-	public void selectDetailTab() {
+	public void selectDetailTab()
+	{
 		this.setSelectedComponent(detailTab);
-		
 	}
 	
 	/**
 	 * Focuses the filter tab
 	 */
-	public void selectFilterTab() {
+	public void selectFilterTab()
+	{
 		this.setSelectedComponent(categoryFilterTab);
-		
 	}
 	
 	@Override
-	public void fire(Category.SerializedAction sa) {
+	public void fire(Category.SerializedAction sa)
+	{
 		populateCategoryList(categoryList);
 	}
 	

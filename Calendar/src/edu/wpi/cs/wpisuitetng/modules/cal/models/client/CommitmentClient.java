@@ -22,11 +22,19 @@ public class CommitmentClient extends CachingDisplayableClient<Commitment, Commi
 {
 	private static CommitmentClient instance;
 
+	/**
+	 *  singleton constructor
+	 */
 	protected CommitmentClient()
 	{
 		super("commitments", Commitment.SerializedAction[].class, Commitment[].class);
 	}
 	
+	/**
+	 * singleton method
+	 * 
+	 * @return the singleton instance of the CommitmentClient
+	 */
 	public static CommitmentClient getInstance()
 	{
 		if (instance == null)
@@ -73,7 +81,8 @@ public class CommitmentClient extends CachingDisplayableClient<Commitment, Commi
 	 * @param commitment to be checked
 	 * @return if the commitment is visible or not
 	 */
-	public boolean visibleStatus(Commitment obj) {
+	public boolean visibleStatus(Commitment obj)
+	{
 		Collection<String> statuses =MainPanel.getInstance().getSelectedStatuses();
 		return statuses.contains(obj.getStatus().toString());
 	}
