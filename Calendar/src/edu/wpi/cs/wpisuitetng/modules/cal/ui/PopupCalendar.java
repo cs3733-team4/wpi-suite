@@ -30,6 +30,7 @@ public class PopupCalendar extends JFrame {
 		MiniCalendarPanel cal = new MiniCalendarPanel(date, mc, true);
 		this.add(cal);
 		final JFrame me = this;
+		this.setResizable(false);
 		((DatePicker)mc).requestDateFocusPost();
 		((JComponent) getContentPane()).setBorder(BorderFactory.createLineBorder(Colors.BORDER));
 		

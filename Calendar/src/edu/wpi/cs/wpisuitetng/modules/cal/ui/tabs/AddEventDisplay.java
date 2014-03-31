@@ -16,7 +16,6 @@ import javax.swing.JLabel;
 import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
 
-
 import edu.wpi.cs.wpisuitetng.modules.cal.models.client.CategoryClient;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Category;
 import edu.wpi.cs.wpisuitetng.modules.cal.models.data.Event;

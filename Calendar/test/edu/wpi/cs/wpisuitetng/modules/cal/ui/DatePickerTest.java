@@ -6,8 +6,6 @@ import javax.swing.JCheckBox;
 
 import org.junit.Test;
 
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.DatePicker;
-
 public class DatePickerTest
 {
 	private DatePicker datepickertest = new DatePicker(false, null);

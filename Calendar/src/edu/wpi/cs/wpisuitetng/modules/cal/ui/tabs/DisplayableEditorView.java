@@ -58,7 +58,7 @@ public class DisplayableEditorView extends JPanel implements ICategoryRegister
 	protected HashMap<UUID, Category> savedMap = new HashMap<>();
 	protected JComboBox<String> commitmentStatusPicker;
 	protected JButton cancelButton, saveButton;
-	protected JButton repeating;
+	protected JLabel repeating_label;
 
 	public DisplayableEditorView(boolean showEnd)
 	{
@@ -119,8 +119,8 @@ public class DisplayableEditorView extends JPanel implements ICategoryRegister
 		dateErrorLabel.setVisible(false);
 		this.add(dateErrorLabel, "flowx,cell 1 1,alignx left,growy");
 		
-		repeating = new JButton("set repeat");
-		this.add(repeating, "cell 0 2,alignx right, aligny baseline");
+		repeating_label = new JLabel("event repeats:");
+		this.add(repeating_label, "cell 0 2,alignx right, aligny baseline");
 
 		participantsLabel = new JLabel("Participants:");
 		this.add(participantsLabel, "cell 0 3,alignx right,aligny baseline");

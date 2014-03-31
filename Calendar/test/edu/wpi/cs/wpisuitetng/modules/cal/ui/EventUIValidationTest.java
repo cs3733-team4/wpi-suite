@@ -10,7 +10,6 @@ import org.junit.Test;
 
 import edu.wpi.cs.wpisuitetng.modules.cal.ReflectUtils;
 import edu.wpi.cs.wpisuitetng.modules.cal.ui.tabs.AddEventDisplay;
-import edu.wpi.cs.wpisuitetng.modules.cal.ui.DatePicker;
 
 public class EventUIValidationTest
 {
