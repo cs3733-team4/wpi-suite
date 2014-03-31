@@ -141,7 +141,7 @@ public class DisplayableEditorView extends JPanel implements ICategoryRegister
 			savedMap.put(c.getUuid(), c);
 		}
 
-		this.add(eventCategoryPicker, "cell 1 3,alignx left,aligny baseline");
+		this.add(eventCategoryPicker, "cell 1 4,alignx left,aligny baseline");
 
 		
 		if(!showEnd)
